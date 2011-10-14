@@ -75,7 +75,7 @@ switch($field_type) {
 	case "cct-text": ?>
 	
 		<div class="text">
-			<input type="text" tabindex="<?php $this->tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text medium" spellcheck="false" name="profile_field[<?php echo $field_type; ?>]" id=""> 
+			<input type="text" tabindex="<?php $this->field_tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text medium" spellcheck="false" name="profile_field[<?php echo $field_type; ?>]" id=""> 
 		</div>
 
 	<?php

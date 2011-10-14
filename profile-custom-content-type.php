@@ -39,18 +39,18 @@ if(isset( $_GET['delete_profile'])):
 	delete_option('Profile_CCT_page_fields', $fields);
 endif;
 class Profile_CCT {
-
+	private static $instance;
 	static private $classobj = NULL;
 	
 	static public $textdomain = NULL;
 	
 	static private $settings_options = NULL;
-	static private $form_fields = NULL;
-	static private $page_fields = NULL;
+	static public $form_fields = NULL;
+	static public $page_fields = NULL;
 	static private $field = NULL;
 	static private $form_field_counter = 0;
 	
-	public $tab_index = 4;
+	public $tab_index = 5; // name should always be first
 	/**
 	* construct
 	*
@@ -78,9 +78,32 @@ class Profile_CCT {
 		register_setting( 'Profile_CCT_page_fields', 'Profile_CCT_page_fields', array($this,'validate_page_fields'));
 		register_setting( 'Profile_CCT_list_page', 'Profile_CCT_list_page'  );
 		register_setting( 'Profile_CCT_settings', 'Profile_CCT_settings' );
+		$dir    = plugin_dir_path(__FILE__).'views/fields/';
+		
+		// include all files in the fields folder
+		if ($handle = opendir($dir)) :
+   			/* This is the correct way to loop over the directory. */
+   			while (false !== ($file = readdir($handle))):
+   				if(substr($file,0,1) != ".")
+   					require_once($dir.$file);
+   				// var_dump($dir.$file);
+        		// 
+    		endwhile;
+
+    		closedir($handle);
+		endif;
+		
 	}
 	
+	function set(){
+		if (!isset(self::$instance)):
+            $className = __CLASS__;
+            self::$instance = new $className;
+        endif;
+        return self::$instance;
 	
+	}
+
 	/**
 	* points the class
 	*
@@ -104,8 +127,8 @@ class Profile_CCT {
 	function add_style_edit() {
 		global $current_screen;
 		if($current_screen->id == 'profile_cct'):
-			wp_enqueue_style( 'profile-cct-edit-post', WP_PLUGIN_URL . '/profile-custom-content-type/css/profile-page.css' );
-			wp_enqueue_script( 'profile-cct-edit-post', WP_PLUGIN_URL . '/profile-custom-content-type/js/profile-page.js',array('jquery-ui-tabs') );
+			wp_enqueue_style( 'profile-cct-edit-post', WP_PLUGIN_URL . '/profile-cct/css/profile-page.css' );
+			wp_enqueue_script( 'profile-cct-edit-post', WP_PLUGIN_URL . '/profile-cct/js/profile-page.js',array('jquery-ui-tabs') );
 		endif;
 		
 	}
@@ -155,26 +178,26 @@ class Profile_CCT {
 	 * @return void
 	 */
 	public function admin_styles(){
-		wp_enqueue_style( 'profile-cct-admin', WP_PLUGIN_URL . '/profile-custom-content-type/css/admin.css' );
+		wp_enqueue_style( 'profile-cct-admin', WP_PLUGIN_URL . '/profile-cct/css/admin.css' );
 		switch( $_GET['view'] ) {
 			case "form":
 				
-				wp_enqueue_style( 'profile-cct-form', WP_PLUGIN_URL . '/profile-custom-content-type/css/form.css' );
+				wp_enqueue_style( 'profile-cct-form', WP_PLUGIN_URL . '/profile-cct/css/form.css' );
 			break;
 			case "page":
 			case "list":
-				wp_enqueue_style( 'profile-cct-page', WP_PLUGIN_URL . '/profile-custom-content-type/css/page-list.css' );
+				wp_enqueue_style( 'profile-cct-page', WP_PLUGIN_URL . '/profile-cct/css/page-list.css' );
 			break;
 			/*case "helper":
-				wp_register_style( 'profile-cct-helper', WP_PLUGIN_URL . '/profile-custom-content-type/stylesheet.css' );
+				wp_register_style( 'profile-cct-helper', WP_PLUGIN_URL . '/profile-cct/stylesheet.css' );
 			break;
 			*/
 			default:
-				wp_enqueue_style( 'profile-cct-settings', WP_PLUGIN_URL . '/profile-custom-content-type/css/settings.css' );
+				wp_enqueue_style( 'profile-cct-settings', WP_PLUGIN_URL . '/profile-cct/css/settings.css' );
 			break;
 			
 		}
-		wp_enqueue_style( 'profile-cct-general', WP_PLUGIN_URL . '/profile-custom-content-type/css/general.css' );	
+		wp_enqueue_style( 'profile-cct-general', WP_PLUGIN_URL . '/profile-cct/css/general.css' );	
 	}
 	/**
 	 * admin_scripts function.
@@ -189,33 +212,33 @@ class Profile_CCT {
 				wp_enqueue_script('jquery-ui-droppable');
 				wp_enqueue_script('jquery-ui-sortable');
 				wp_enqueue_script('jquery-ui-tabs');
-				wp_enqueue_script( 'profile-cct-form', WP_PLUGIN_URL . '/profile-custom-content-type/js/form.js',array('jquery','jquery-ui-sortable') );
-				wp_enqueue_script( 'profile-cct-tabs', WP_PLUGIN_URL . '/profile-custom-content-type/js/tabs.js',array('jquery','jquery-ui-tabs') );
+				wp_enqueue_script( 'profile-cct-form', WP_PLUGIN_URL . '/profile-cct/js/form.js',array('jquery','jquery-ui-sortable') );
+				wp_enqueue_script( 'profile-cct-tabs', WP_PLUGIN_URL . '/profile-cct/js/tabs.js',array('jquery','jquery-ui-tabs') );
 				wp_localize_script( 'profile-cct-tabs', 'ProfileCCT', array(
 	  				'type' => 'form'
 				));
 			break;
 				case "page":
-				wp_enqueue_script( 'profile-cct-tabs', WP_PLUGIN_URL . '/profile-custom-content-type/js/tabs.js',array('jquery','jquery-ui-tabs') );
+				wp_enqueue_script( 'profile-cct-tabs', WP_PLUGIN_URL . '/profile-cct/js/tabs.js',array('jquery','jquery-ui-tabs') );
 				wp_localize_script( 'profile-cct-tabs', 'ProfileCCT', array(
 	  				'type' => 'page'
 				));
 				case "list":
-				wp_enqueue_script( 'profile-cct-page', WP_PLUGIN_URL . '/profile-custom-content-type/js/page-list.js', array('jquery','jquery-ui-sortable','jquery-ui-tabs','jquery-ui-droppable') );
+				wp_enqueue_script( 'profile-cct-page', WP_PLUGIN_URL . '/profile-cct/js/page-list.js', array('jquery','jquery-ui-sortable','jquery-ui-tabs','jquery-ui-droppable') );
 			
 			break;
 			/*case "helper":
-				wp_register_style( 'profile-cct-helper', WP_PLUGIN_URL . '/profile-custom-content-type/stylesheet.css' );
+				wp_register_style( 'profile-cct-helper', WP_PLUGIN_URL . '/profile-cct/stylesheet.css' );
 			break;
 			*/
 			default:
-				wp_enqueue_script( 'profile-cct-settings', WP_PLUGIN_URL . '/profile-custom-content-type/js/settings.js' );
+				wp_enqueue_script( 'profile-cct-settings', WP_PLUGIN_URL . '/profile-cct/js/settings.js' );
 			break;
 			
 			
 		
 		}
-		wp_enqueue_style( 'profile-cct-general', WP_PLUGIN_URL . '/profile-custom-content-type/js/general.js' );	
+		wp_enqueue_style( 'profile-cct-general', WP_PLUGIN_URL . '/profile-cct/js/general.js' );	
 	}
 	/**
 	 * get_style_examples function.
@@ -233,15 +256,15 @@ class Profile_CCT {
 		<h3 class="nav-tab-wrapper">
 		
 		<a class="nav-tab <?php if( !isset($_GET['view']) ) { echo "nav-tab-active"; } ?>" 
-			href="edit.php?post_type=profile_cct&page=profile-custom-content-type/profile-custom-content-type.php">Settings</a>
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php">Settings</a>
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='form' ) { echo "nav-tab-active"; } ?>" 
-			href="edit.php?post_type=profile_cct&page=profile-custom-content-type/profile-custom-content-type.php&view=form">Form Builder</a>
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=form">Form Builder</a>
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='page' ) { echo "nav-tab-active"; } ?>" 
-			href="edit.php?post_type=profile_cct&page=profile-custom-content-type/profile-custom-content-type.php&view=page">Page Builder</a>
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=page">Page Builder</a>
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='list' ) { echo "nav-tab-active"; } ?>" 
-			href="edit.php?post_type=profile_cct&page=profile-custom-content-type/profile-custom-content-type.php&view=list">List Builder</a>
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list">List Builder</a>
 		<a class="nav-tab <?php if( isset($_GET['view']) && $_GET['view'] =='helper' ) { echo "nav-tab-active"; } ?>" 
-			href="edit.php?post_type=profile_cct&page=profile-custom-content-type/profile-custom-content-type.php&view=helper">HELPER</a>
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=helper">HELPER</a>
 		</h3>
 		
 		<?php switch( $_GET['view'] ) {
@@ -465,7 +488,67 @@ class Profile_CCT {
 
 	 }
 	 
+	 
+	 function start_field($field_type,$action, $options ) {
+	 	extract( $options );
+	 	?>
+	 	<li class="<?php echo $field_type; ?> field-item" for="cct-<?php echo $field_type; ?>">
+	 	<?php 
+	 	if($action == 'edit'): ?>
+		 	<a href="#remove-field" class="remove">Remove</a>
+			<a href="#edit-field" class="edit">Edit</a>
+			<div class="edit-shell" style="display:none;">
+				<?php 
+					$this->label_field();
+					if(isset($description))
+				 	$this->textarea_field();				
+					if(isset($show_fields))
+						$this->select_field('multiple',$show_fields,$show); 				
+				$this->default_value(); ?>
+			</div>
+		<?php 	
+		endif;
+	 	?>
+	 	<label for="" id="" class="desc"><?php echo $label; ?></label>
+	 	<?php 
+	 }
 	
+	 function end_field()
+	 {
+	 	echo "</li>";
+	 }
+	 
+	 function label_field(){
+	 	
+	 
+	 }
+	 function input_field()
+	 {
+	 
+	 }
+	 function select_field($type,$all_fields,$selected_fields)
+	 {
+	 	switch($type){
+	 		case "multiple":
+	 				foreach($all_fields as $field): ?>
+
+	 					<label><input type="checkbox" <?php checked( in_array($field,$selected_fields) ); ?> value="<?php echo $field; ?>" name="show[]" /> <?php echo $field; ?></label>
+	 				<?php
+	 				endforeach;
+	 		break;
+	 	
+	 	
+	 	}
+	 
+	 }
+	 function textarea_field(){
+	 
+	 }
+	 
+	 function default_value(){
+	 	
+	 }
+	 
 	/**
 	 * add_field function.
 	 * function return by ajax to be displayed
@@ -547,7 +630,7 @@ class Profile_CCT {
 		<li class="<?php echo $raw_field_type; ?> field-item" for="<?php echo $field_type; ?>">
 		
 		<?php
-		if($action=="edit"): 
+		if($action=="edit"):
 			if( $label =="" || $label == NULL)
 				$label = $raw_type;
 		?>
@@ -556,11 +639,9 @@ class Profile_CCT {
 			<a href="#edit-field" class="edit">Edit</a>
 			<div class="edit-shell" style="display:none;">
 			
-				<label>Field Label</label>
-				<input type="text" value="<?php echo esc_attr($label); ?>" name="field_label[]" title='<?php echo esc_attr($raw_field_type); ?>' class="field-label" />
-				<br />
 				
-				<?php $this->show_edit_field($type,$field_type,$options); ?>
+				
+				<?php $this->show_edit_field($type,$field_type,$label,$raw_field_type, $options); ?>
 			</div>
 		<?php 
 		endif;
@@ -714,7 +795,7 @@ class Profile_CCT {
 		
 	}
 	
-	function tab_index(){
+	public function field_field_tab_index(){
 		$this->tab_index++;
 		echo $this->tab_index;
 	}

@@ -77,8 +77,9 @@
 	<h3>Preview</h3>
 	
 	<?php
-		$this->show_name_field("edit");
-		$this->show_tabs('form','edit');
+		do_action('profile_cct_form','edit');
+		// $this->show_name_field("edit");
+		// $this->show_tabs('form','edit');
 	?>
 
 	</div>

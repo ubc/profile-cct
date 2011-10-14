@@ -27,8 +27,9 @@
 		<strong>Header</strong>
 		<ul id="static-fields" class="sort connectedSortable dropzone"></ul>
 		<strong>Tabs</strong>
-		<?php 
-		$this->show_tabs('page','edit');
+		<?php
+		do_action('profile_cct_page_builder','edit'); 
+		//$this->show_tabs('page','edit');
 		?>
 	
 		</div>

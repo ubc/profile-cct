@@ -5,16 +5,15 @@ var Profile_CCT_FORM ={
 		jQuery( "#cct-fields").find("a").click(Profile_CCT_FORM.addField);
 		
 		// sort fields 
-		var formB = jQuery(".sortable",tab_shell);
-		
-		formB.sortable( {
+		var form_sortable = jQuery(".sortable",tab_shell);
+		var formB = jQuery(".form-builder");
+		form_sortable.sortable( {
 				placeholder: "ui-state-highlight",
 				forcePlaceholderSize: true,
 				handle:"label.desc", 
 				update:Profile_CCT_FORM.updateSort, 
 			});
 		
-		formB.find(".edit-shell").hide(); // hide the un neccesary items
 		formB.find(".edit").live("click",Profile_CCT_FORM.editField);
 		formB.find(".remove").live("click",Profile_CCT_FORM.removeField);
 		formB.find(".field-label").live("keyup",Profile_CCT_FORM.updateLabel);

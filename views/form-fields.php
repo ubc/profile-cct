@@ -12,7 +12,7 @@ switch($field_type) {
 	case "cct-name": 
 	
 	
-	$fields = array('title','first','last','suffix');
+	$fields = array('title','first','middle','last','suffix');
 	foreach($fields as $field):
 		
 		if( !isset($data[$field_type][$field]) )
@@ -30,11 +30,15 @@ switch($field_type) {
 			<label for="">First</label>
 		</span>
 		<span>
-			<input type="text" tabindex="3" size="19" value="<?php echo esc_attr($data[$field_type]['last']); ?>" class="field text ln" name="profile_field[<?php echo $field_type; ?>][last]" id="">
+			<input type="text" tabindex="3" size="3" value="<?php echo esc_attr($data[$field_type]['middle']); ?>" class="field text fn" name="profile_field[<?php echo $field_type; ?>][middle]" id="">
+			<label for="">Middle</label>
+		</span>
+		<span>
+			<input type="text" tabindex="4" size="19" value="<?php echo esc_attr($data[$field_type]['last']); ?>" class="field text ln" name="profile_field[<?php echo $field_type; ?>][last]" id="">
 			<label for="">Last</label>
 		</span>
 		<span>
-			<input type="text" tabindex="4" size="3" value="<?php echo esc_attr($data[$field_type]['suffix']); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>][suffix]" id="">
+			<input type="text" tabindex="5" size="3" value="<?php echo esc_attr($data[$field_type]['suffix']); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>][suffix]" id="">
 			<label for="">Suffix</label>
 		</span>
 		</div>
@@ -49,35 +53,35 @@ switch($field_type) {
 	?>
 		<div class="address">
 			<span class="left">
-				<input type="text" tabindex="<?php $this->tab_index();?>" value="<?php echo esc_attr($data[$field_type]['building-name']); ?>" class="field text addr" name="profile_field[<?php echo $field_type; ?>][city]" id="">
+				<input type="text" tabindex="<?php $this->field_tab_index();?>" value="<?php echo esc_attr($data[$field_type]['building-name']); ?>" class="field text addr" name="profile_field[<?php echo $field_type; ?>][city]" id="">
 				<label for="">Building Name</label>
 			</span>
 			<span class="right">
-				<input type="text" tabindex="<?php $this->tab_index();?>" value="<?php echo esc_attr($data[$field_type]['room-number']); ?>" class="field text addr" name="profile_field[<?php echo $field_type; ?>][room-number]" id="">
+				<input type="text" tabindex="<?php $this->field_tab_index();?>" value="<?php echo esc_attr($data[$field_type]['room-number']); ?>" class="field text addr" name="profile_field[<?php echo $field_type; ?>][room-number]" id="">
 				<label for="">Room number</label>
 			</span>
 			<span class="full addr1">
-			<input type="text" tabindex="<?php $this->tab_index();?>" value="<?php echo esc_attr($data[$field_type]['street-1']); ?>" class="field text addr" name="profile_field[<?php echo $field_type; ?>][street-1]" id="">
+			<input type="text" tabindex="<?php $this->field_tab_index();?>" value="<?php echo esc_attr($data[$field_type]['street-1']); ?>" class="field text addr" name="profile_field[<?php echo $field_type; ?>][street-1]" id="">
 			<label for="">Street Address</label>
 			</span>
 			<span class="full addr2">
-			<input type="text" tabindex="<?php $this->tab_index();?>" value="<?php echo esc_attr($data[$field_type]['street-2']); ?>" class="field text addr" name="profile_field[<?php echo $field_type; ?>][street-2]" id="">
+			<input type="text" tabindex="<?php $this->field_tab_index();?>" value="<?php echo esc_attr($data[$field_type]['street-2']); ?>" class="field text addr" name="profile_field[<?php echo $field_type; ?>][street-2]" id="">
 			<label for="">Address Line 2</label>
 			</span>
 			<span class="left">
-			<input type="text" tabindex="<?php $this->tab_index();?>" value="<?php echo esc_attr($data[$field_type]['city']); ?>" class="field text addr" name="profile_field[<?php echo $field_type; ?>][city]" id="">
+			<input type="text" tabindex="<?php $this->field_tab_index();?>" value="<?php echo esc_attr($data[$field_type]['city']); ?>" class="field text addr" name="profile_field[<?php echo $field_type; ?>][city]" id="">
 			<label for="">City</label>
 			</span>
 			<span class="right">
-			<input type="text" tabindex="<?php $this->tab_index();?>" value="<?php echo esc_attr($data[$field_type]['province']); ?>" class="field text addr" name="profile_field[<?php echo $field_type; ?>][province]" id="">
+			<input type="text" tabindex="<?php $this->field_tab_index();?>" value="<?php echo esc_attr($data[$field_type]['province']); ?>" class="field text addr" name="profile_field[<?php echo $field_type; ?>][province]" id="">
 			<label for="">State / Province / Region</label>
 			</span>
 			<span class="left">
-			<input type="text" tabindex="<?php $this->tab_index();?>" maxlength="15" value="<?php echo esc_attr($data[$field_type]['postal']); ?>" class="field text addr" name="profile_field[<?php echo $field_type; ?>][postal]" id="">
+			<input type="text" tabindex="<?php $this->field_tab_index();?>" maxlength="15" value="<?php echo esc_attr($data[$field_type]['postal']); ?>" class="field text addr" name="profile_field[<?php echo $field_type; ?>][postal]" id="">
 			<label for="">Postal / Zip Code</label>
 			</span>
 			<span class="right">
-			<select tabindex="<?php $this->tab_index();?>" class="field select addr" name="profile_field[<?php echo $field_type; ?>][country]" id="">
+			<select tabindex="<?php $this->field_tab_index();?>" class="field select addr" name="profile_field[<?php echo $field_type; ?>][country]" id="">
 				<option selected="selected" value="<?php echo esc_attr($data[$field_type]['country']); ?>"><?php echo esc_attr($data[$field_type]['country']); ?></option>
 				<option value="Canada">Canada</option>
 				<option value="United States">United States</option>
@@ -308,7 +312,7 @@ switch($field_type) {
 	endforeach;  ?>
 		<div class="telephone">
 		<span class="select-span">
-			<select  tabindex="<?php $this->tab_index();?>"  class="field text" name="profile_field[<?php echo $field_type; ?>][type]" >
+			<select  tabindex="<?php $this->field_tab_index();?>"  class="field text" name="profile_field[<?php echo $field_type; ?>][type]" >
 				<option>Work</option>
 				<option>Mobile</option>
 				<option>Fax</option>
@@ -319,17 +323,17 @@ switch($field_type) {
 			<label for="">Type</label>
 		</span>
 		<span>
-			<input type="text" tabindex="<?php $this->tab_index();?>" maxlength="3" size="3" value="<?php echo esc_attr($data[$field_type]['tel-1']); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>][tel-1]" id="">
+			<input type="text" tabindex="<?php $this->field_tab_index();?>" maxlength="3" size="3" value="<?php echo esc_attr($data[$field_type]['tel-1']); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>][tel-1]" id="">
 			<label for="">###</label>
 		</span>
 		<span class="symbol">-</span>
 		<span>
-			<input type="text" tabindex="<?php $this->tab_index();?>" maxlength="3" size="3" value="<?php echo esc_attr($data[$field_type]['tel-2']); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>][tel-2]" id="">
+			<input type="text" tabindex="<?php $this->field_tab_index();?>" maxlength="3" size="3" value="<?php echo esc_attr($data[$field_type]['tel-2']); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>][tel-2]" id="">
 			<label for="">###</label>
 		</span>
 		<span class="symbol">-</span>
 		<span>
-		 	<input type="text" tabindex="<?php $this->tab_index();?>" maxlength="4" size="4" value="<?php echo esc_attr($data[$field_type]['tel-3']); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>][tel-3]" id="">
+		 	<input type="text" tabindex="<?php $this->field_tab_index();?>" maxlength="4" size="4" value="<?php echo esc_attr($data[$field_type]['tel-3']); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>][tel-3]" id="">
 			<label for="">####</label>
 		</span>
 		
@@ -340,7 +344,7 @@ switch($field_type) {
 	case "cct-email": 
 	?>
 		<div class="email">
-			<input type="text" tabindex="<?php $this->tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text medium" spellcheck="false" name="profile_field[<?php echo $field_type; ?>]" id=""> 
+			<input type="text" tabindex="<?php $this->field_tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text medium" spellcheck="false" name="profile_field[<?php echo $field_type; ?>]" id=""> 
 		</div>
 		<a href="#" class="add-fields button">Add</a>
 
@@ -349,7 +353,7 @@ switch($field_type) {
 	case "cct-position": ?>
 	
 		<div class="position">
-			<input type="text" tabindex="<?php $this->tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text medium" spellcheck="false" name="profile_field[<?php echo $field_type; ?>]" id=""> 
+			<input type="text" tabindex="<?php $this->field_tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text medium" spellcheck="false" name="profile_field[<?php echo $field_type; ?>]" id=""> 
 		</div>
 		<a href="#" class="add-fields button">Add</a>
 
@@ -358,7 +362,7 @@ switch($field_type) {
 	case "cct-text": ?>
 	
 		<div class="text">
-			<input type="text" tabindex="<?php $this->tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text medium" spellcheck="false" name="profile_field[<?php echo $field_type; ?>]" id=""> 
+			<input type="text" tabindex="<?php $this->field_tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text medium" spellcheck="false" name="profile_field[<?php echo $field_type; ?>]" id=""> 
 		</div>
 
 	<?php
@@ -367,7 +371,7 @@ switch($field_type) {
 	case "cct-website": ?>
 
 		<div class="website">
-			<input type="text" tabindex="<?php $this->tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" size="200" class="field text large" name="profile_field[<?php echo $field_type; ?>]" id=""> 
+			<input type="text" tabindex="<?php $this->field_tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" size="200" class="field text large" name="profile_field[<?php echo $field_type; ?>]" id=""> 
 		</div>
 
 	<?php
@@ -383,22 +387,22 @@ switch($field_type) {
 	?>
 		<div class="educaton">
 		<span>
-			<input type="text" tabindex="<?php $this->tab_index();?>"  size="30" value="<?php echo esc_attr($data[$field_type]['school']); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>][school]" id="">
+			<input type="text" tabindex="<?php $this->field_tab_index();?>"  size="30" value="<?php echo esc_attr($data[$field_type]['school']); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>][school]" id="">
 			<label for="">School</label>
 		</span>
 		<span class="symbol"></span>
 		<span class="short">
-			<input type="text" tabindex="<?php $this->tab_index();?>" maxlength="5" size="5" value="<?php echo esc_attr($data[$field_type]['year']); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>][year]" id="">
+			<input type="text" tabindex="<?php $this->field_tab_index();?>" maxlength="5" size="5" value="<?php echo esc_attr($data[$field_type]['year']); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>][year]" id="">
 			<label for="">Year</label>
 		</span>
 		<span class="symbol"></span>
 		<span class="short">
-		 	<input type="text" tabindex="<?php $this->tab_index();?>" maxlength="5" size="5" value="<?php echo esc_attr($data[$field_type]['degree']); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>][degree]" id="">
+		 	<input type="text" tabindex="<?php $this->field_tab_index();?>" maxlength="5" size="5" value="<?php echo esc_attr($data[$field_type]['degree']); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>][degree]" id="">
 			<label for="">Degree</label>
 		</span>
 		<span class="symbol"></span>
 		<span class="short">
-		 	<input type="text" tabindex="<?php $this->tab_index();?>" maxlength="10" size="10" value="<?php echo esc_attr($data[$field_type]['honors']); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>][honors]" id="">
+		 	<input type="text" tabindex="<?php $this->field_tab_index();?>" maxlength="10" size="10" value="<?php echo esc_attr($data[$field_type]['honors']); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>][honors]" id="">
 			<label for="">Honors</label>
 		</span>
 		</div>
@@ -412,7 +416,7 @@ switch($field_type) {
 	case "cct-textarea": ?>
 	
 		<div class="textarea">
-			<textarea onkeyup="" tabindex="<?php $this->tab_index();?>" cols="50" rows="10" spellcheck="true" class="field textarea large" name="profile_field[<?php echo $field_type; ?>]" id=""><?php echo ($data[$field_type]); ?></textarea>
+			<textarea onkeyup="" tabindex="<?php $this->field_tab_index();?>" cols="50" rows="10" spellcheck="true" class="field textarea large" name="profile_field[<?php echo $field_type; ?>]" id=""><?php echo ($data[$field_type]); ?></textarea>
 		</div>
 	
 		<?php
@@ -420,12 +424,12 @@ switch($field_type) {
 	case "cct-social":?>
 		<div class="social">
 			<span>
-			<select  tabindex="<?php $this->tab_index();?>"  class="field text" name="profile_field[<?php echo $field_type; ?>][type]" >
+			<select  tabindex="<?php $this->field_tab_index();?>"  class="field text" name="profile_field[<?php echo $field_type; ?>][type]" >
 				<?php foreach($this->social_fields() as $social_field): ?>
-					<option <?php echo $social_field['type']; ?> style="background:url('<?php echo plugins_url("profile-custom-content-type/img/").$social_field['type']; ?>.png') no-repeat 2px; padding:3px 0 3px 22px;"> <?php echo $social_field['label']; ?></option>
+					<option <?php echo $social_field['type']; ?> style="background:url('<?php echo plugins_url("profile-cct/img/").$social_field['type']; ?>.png') no-repeat 2px; padding:3px 0 3px 22px;"> <?php echo $social_field['label']; ?></option>
 				<?php endforeach; ?>
 			</select>
-			<input type="text" tabindex="<?php $this->tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>]" id="">
+			<input type="text" tabindex="<?php $this->field_tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>]" id="">
 			<label for="">http://</label>
 			</span>
 		</div>
@@ -436,7 +440,7 @@ switch($field_type) {
 
 		<div class="blog">
 			<span>
-			<input type="text" tabindex="<?php $this->tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text large" name="profile_field[<?php echo $field_type; ?>]" id="">
+			<input type="text" tabindex="<?php $this->field_tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text large" name="profile_field[<?php echo $field_type; ?>]" id="">
 			<label for="">http://</label>
 			</span>
 		</div>
@@ -446,42 +450,42 @@ switch($field_type) {
 	case "cct-twitter": ?>
 		<div class="twitter">
 		<span class="partof"><label for="">http://twitter.com/#/</label></span>
-		<span><input type="text"   tabindex="<?php $this->tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>]" id=""></span>
+		<span><input type="text"   tabindex="<?php $this->field_tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>]" id=""></span>
 		</div>
 	<?php
 	break;
 	case "cct-facebook": ?>
 		<div class="facebook">
 		<span class="partof"><label for="">http://facebook.com/</label></span>
-		<span><input type="text"    tabindex="<?php $this->tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>]" id=""></span>
+		<span><input type="text"    tabindex="<?php $this->field_tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>]" id=""></span>
 		</div>
 	<?php
 	break;
 	case "cct-linkedin": ?>
 		<div class="linkedin">
 		<span class="partof"><label for="">http://www.linkedin.com/in/</label></span>
-		<span><input type="text"    tabindex="<?php $this->tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>]" id=""></span>
+		<span><input type="text"    tabindex="<?php $this->field_tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>]" id=""></span>
 		</div>
 	<?php
 	break;
 	case "cct-delicious": ?>
 		<div class="delicious">
 		<span class="partof"><label for="">http://delicious.com/</label></span>
-		<span> <input type="text"    tabindex="<?php $this->tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>]" id=""></span>
+		<span> <input type="text"    tabindex="<?php $this->field_tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>]" id=""></span>
 		</div>
 	<?php
 	break;
 	case "cct-flickr": ?>
 		<div class="flickr">
 		<span class="partof"><label for="">http://flickr.com/photos/</label></span>
-		<span><input type="text"   tabindex="<?php $this->tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>]" id=""></span>
+		<span><input type="text"   tabindex="<?php $this->field_tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>]" id=""></span>
 		</div>
 	<?php
 	break;
 	case "cct-google-plus": ?>
 		<div class="google-plus">
 		<span class="partof"><label for="">http://plus.googe.com/</label></span>
-		<span><input type="text"   tabindex="<?php $this->tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>]" id=""></span>
+		<span><input type="text"   tabindex="<?php $this->field_tab_index();?>" maxlength="255" value="<?php echo esc_attr($data[$field_type]); ?>" class="field text" name="profile_field[<?php echo $field_type; ?>]" id=""></span>
 		</div>
 	<?php
 	break;	
