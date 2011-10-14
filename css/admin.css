@@ -1,0 +1,45 @@
+#col-left{
+	width:625px;
+}
+#col-right{
+	width:150px;
+	float: left;
+	margin-right: 10px;
+}
+#notify{
+	  height: 30px;
+	 
+}
+#notify span{
+	display: none;
+    background-color: #FDF5D9;
+    border:1px  #FCEEC1 solid;
+    border-radius: 4px;
+    color: #404040;
+    margin-bottom: 18px;
+    padding: 7px 15px;
+    position: relative;
+    top:5px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+ }
+#notify img{
+	top:3px;
+	position: relative;
+}
+/*
+<a class="close" href="#">x</a>
+.close{
+	 position: relative;
+    top:5px;
+    left: 5px;
+	color: #000000;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 13.5px;
+    opacity: 0.2;
+    text-shadow: 0 1px 0 #FFFFFF;
+    text-decoration: none;
+}
+.close:hover{
+	opacity: 0.8;
+}*/

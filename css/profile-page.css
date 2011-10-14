@@ -1,0 +1,142 @@
+.inside{ position: relative; overflow: hidden; }
+.hndle span{ text-transform: capitalize; }
+/* Name */
+.name span input {
+	font-size:22px;
+	padding:5px 2px 1px;
+}
+.name span{
+	float: left;
+}
+.name label{
+	display: block;
+	color:#888;
+	font-size: 11px;
+}
+/* Address */
+.name, .address, .fax , .telephone, .educaton{
+	position: relative;
+	overflow: hidden;
+}
+.address{
+	width: 430px;
+}
+.address .left, 
+.address .right{
+	margin:0 2px 5px;
+	width:200px;
+}
+.address .left {
+	margin-right: 0.5%;
+	float:left
+}
+.address .right {
+	float: right;
+}
+.address .full,
+.address  input.text {
+	width: 428px;
+	display: block;
+	margin-top: 5px;
+	clear: both;
+}
+.address .right  input.text,
+.address .left  input.text{
+	width: 200px;
+}
+.address select{
+	margin-top: 5px;
+	width: 200px;
+}
+.address label{
+	color: #888;
+	font-size: 11px;
+}
+input.large{
+	width: 100%;
+}
+.textarea textarea {
+	border:1px solid #DFDFDF;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	-khtml-border-radius:4px;
+	border-radius:4px;
+	background:#fff;
+	width: 100%;
+}
+/* telephone, fax and education */
+.telephone span,
+.fax span,
+.educaton span {
+	margin:0 .3em 2px 0;
+	padding:0;
+	float:left;
+	width: 50px;
+	display: block;
+	color: #888;
+	font-size: 11px;
+}
+.telephone .select-span,
+.telephone select{
+	width: 80px;
+}
+.educaton span {
+	width: 200px;
+}
+.educaton .short{
+	width: 50px;
+}
+span.symbol{
+	width:5px;
+	margin:5px 5px 0  -5px
+}
+/* add fields */
+
+.add-fields{
+	float: left;
+	margin: 10px 0 0;
+}
+.remove-fields{
+	float: left;
+}
+
+/* ----- Tabs ----- */
+.ui-tabs-nav{
+	border-bottom: 1px solid #CCCCCC;
+    padding-bottom: 0;
+    height: 30px;
+    margin-bottom: 10px;
+}
+
+.ui-tabs-nav li.ui-state-active,
+.ui-tabs-nav li a:hover{
+	border-color: #CCCCCC #CCCCCC #FFFFFF;
+}
+
+.ui-tabs-nav li{
+    border-color: #DFDFDF #DFDFDF #CCC;
+    border-radius: 3px 3px 0 0;
+    border-style: solid;
+    border-width: 1px;
+    color: #AAAAAA;
+    display: inline-block;
+    font-size: 17px;
+    line-height: 19px;
+    margin: 0 6px -1px 0;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+.ui-tabs-nav li a{
+	color: #AAAAAA;
+	text-decoration: none;
+	float: left;
+	padding: 4px 14px 6px 14px;
+}
+.ui-tabs-nav li.ui-state-active a{
+	color:#464646;
+	padding: 4px 14px 6px 14px;
+}
+.ui-statehover {
+	background: #EEE;
+}
+
