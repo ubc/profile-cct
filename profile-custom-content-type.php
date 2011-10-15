@@ -499,11 +499,11 @@ class Profile_CCT {
 			<a href="#edit-field" class="edit">Edit</a>
 			<div class="edit-shell" style="display:none;">
 				<?php 
-					$this->label_field();
+					$this->label_field( array('size'=>10, 'value'=>$label, 'name'=>'label','title'=>'label'));
 					if(isset($description))
 				 	$this->textarea_field();				
 					if(isset($show_fields))
-						$this->select_field('multiple',$show_fields,$show); 				
+						$this->select_field(array('type'=>'multiple','all_fields'=>$show_fields,'selected_fields'=>$show,'name'=>'show[]')); 				
 				$this->default_value(); ?>
 			</div>
 		<?php 	
@@ -518,23 +518,42 @@ class Profile_CCT {
 	 	echo "</li>";
 	 }
 	 
-	 function label_field(){
+	 function label_field( $options ){
 	 	
-	 
+	 	extract( $options );
+	 	
+	 	
+	 	$name = ( isset($name)? ' name="'.$name.'"': '');
+	 	$size = ( isset($size)? ' size="'.$size.'"': '');
+	 	$class = ( isset($class)? ' class="'.$class.'"': ' class="field text"');
+	 	?>
+	 	<span>
+			<input type="text" <?php echo $size.$class; ?> value="<?php echo esc_attr($value); ?>" id="">
+			<label for="" ><?php echo $title; ?></label>
+		</span>
+	 	<?php 
 	 }
 	 function input_field()
 	 {
 	 
 	 }
-	 function select_field($type,$all_fields,$selected_fields)
+	 function select_field($options)
 	 {
+	 	$name = ( isset($name)? ' name="'.$name.'"': '');
+	 	$title = ( isset($title)? ' <label for="" >'.$name.'</label>': '');
+	 	extract( $options );
 	 	switch($type){
 	 		case "multiple":
+	 				?><div class="">
+	 				<?php echo $title; ?>
+	 				<?php
 	 				foreach($all_fields as $field): ?>
-
-	 					<label><input type="checkbox" <?php checked( in_array($field,$selected_fields) ); ?> value="<?php echo $field; ?>" name="show[]" /> <?php echo $field; ?></label>
+	 					<label><input type="checkbox" <?php checked( in_array($field,$selected_fields) ); ?> value="<?php echo $field; ?>" /> <?php echo $field; ?></label>
 	 				<?php
 	 				endforeach;
+	 				?>
+	 				</div>
+	 				<?php 
 	 		break;
 	 	
 	 	
