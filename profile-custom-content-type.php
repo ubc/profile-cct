@@ -6,7 +6,7 @@
 * Domain Path: /languages
 * Description: Allows administrators to manage user profiles better in order to display them on their websites
 * Author: Enej Bajgoric, CTLT
-* Version: 0.0.1
+* Version: 0.0.1alpha
 * Licence: GPLv2
 * Author URI: http://ctlt.ubc.ca
 */
@@ -463,26 +463,18 @@ class Profile_CCT {
 	 	else:
 		 	return 	array(
 				 		array(
-					 		array( "type"=> "cct-address", 		"label"=> "address",),
-					 		array( "type"=> "cct-phone",		"label"=> "phone" ), 
-					 		array( "type"=> "cct-fax",			"label"=> "fax" ), 
-					 		array( "type"=> "cct-email",		"label"=> "email" ),
-					 		array( "type"=> "cct-website",		"label"=> "website")),
+					 		array( "type"=> "address", 		"label"=> "address",),
+					 		array( "type"=> "phone",		"label"=> "phone" ), 
+					 		array( "type"=> "email",		"label"=> "email" ),
+					 		array( "type"=> "website",		"label"=> "website"),
+					 		array( "type"=> "social",		"label"=> "social")),
 				 		array(
-				 			array( "type"=> "cct-position" ,	"label"=> "position" ), 
-					 		array( "type"=> "cct-bio",			"label"=> "bio" ), 
-					 		array( "type"=> "cct-education", 	"label"=> "education" ), 
-					 		array( "type"=> "cct-teaching",		"label"=> "teaching" ), 
-					 		array( "type"=> "cct-publications",	"label"=> "publications" ), 
-					 		array( "type"=> "cct-research",		"label"=> "research" )), 
-				 		array(
-					 		array( "type"=> "cct-twitter",		"label"=> "twitter" ),
-					 		array( "type"=> "cct-blog",			"label"=> "blog" ), 
-					 		array( "type"=> "cct-facebook",		"label"=> "facebook" ), 
-					 		array( "type"=> "cct-linkedin",		"label"=> "linkedin" ), 
-					 		array( "type"=> "cct-delicious",	"label"=> "delicious" ), 
-					 		array( "type"=> "cct-flickr",		"label"=> "flickr" ), 
-					 		array( "type"=> "cct-google-plus",	"label"=> "google-plus" ))
+				 			array( "type"=> "position" ,	"label"=> "position" ), 
+					 		array( "type"=> "bio",			"label"=> "bio" ), 
+					 		array( "type"=> "education", 	"label"=> "education" ), 
+					 		array( "type"=> "teaching",		"label"=> "teaching" ), 
+					 		array( "type"=> "publications",	"label"=> "publications" ), 
+					 		array( "type"=> "research",		"label"=> "research" ))
 				 	); 
 		 endif;
 
@@ -499,12 +491,13 @@ class Profile_CCT {
 			<a href="#edit-field" class="edit">Edit</a>
 			<div class="edit-shell" style="display:none;">
 				<?php 
-					$this->label_field( array('size'=>10, 'value'=>$label, 'name'=>'label','title'=>'label'));
+					$this->input_field( array('size'=>20, 'value'=>$label, 'name'=>'label','label'=>'label', 'type'=>'text', 'before_label'=>true ));
 					if(isset($description))
-				 	$this->textarea_field();				
+				 		$this->input_field( array('size'=>10, 'value'=>$description, 'name'=>'label','label'=>'description','type'=>'textarea' , 'before_label'=>true));			
 					if(isset($show_fields))
-						$this->select_field(array('type'=>'multiple','all_fields'=>$show_fields,'selected_fields'=>$show,'name'=>'show[]')); 				
-				$this->default_value(); ?>
+						$this->input_field(array('type'=>'multiple','all_fields'=>$show_fields,'selected_fields'=>$show,'name'=>'show[]', 'label'=>'show / hide input area','before_label'=>true));			
+					$this->textarea_field();
+					 ?>
 			</div>
 		<?php 	
 		endif;
@@ -529,13 +522,82 @@ class Profile_CCT {
 	 	?>
 	 	<span>
 			<input type="text" <?php echo $size.$class; ?> value="<?php echo esc_attr($value); ?>" id="">
-			<label for="" ><?php echo $title; ?></label>
+			<label for="" ><?php echo $label; ?></label>
 		</span>
 	 	<?php 
 	 }
-	 function input_field()
+	 function input_field( $options )
 	 {
-	 
+	 	extract( $options );
+	 	
+	 	$before_label = ( isset($before_label) && $before_label ? true:false);
+	 	
+	 	$name = ( isset($name)? ' name="'.$name.'"': '');
+	 	$size = ( isset($size)? ' size="'.$size.'"': '');
+	 	$row = ( isset($row)? ' row="'.$row.'"': '');
+	 	$cols = ( isset($cols)? ' cols="'.$cols.'"': '');
+	 	$class = ( isset($class)? ' class="'.$class.'"': ' class="field text"');
+	 	$id = ( isset($id)? ' id="'.$id.'"': ' ');
+	 	switch($type) {
+	 		case 'text':
+			 	?>
+			 	<span>
+			 		<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+					<input type="text" <?php echo $size.$class.$name; ?> value="<?php echo esc_attr($value); ?>" id="">
+					<?php if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+				</span>
+				<?php 
+			break;
+			
+			case 'multiple':
+	 				?><div class="">
+	 				<?php 
+	 				if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } 
+	 				
+	 				foreach($all_fields as $field): ?>
+	 					<label><input type="checkbox" <?php checked( in_array($field,$selected_fields) ); ?> value="<?php echo $field; ?>" /> <?php echo $field; ?></label>
+	 					<?php
+	 				endforeach;
+	 				
+	 				if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+	 				
+	 				</div>
+	 				<?php 
+	 		break;
+	 		
+	 		case 'select':
+	 				?><span>
+	 				<?php 
+	 				if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } 
+	 				?>
+	 				<select <?php echo $name; ?> >
+	 				<?php
+	 				foreach($all_fields as $field): ?>
+	 					<option  value="<?php echo $field; ?>" /> <?php echo $field; ?></option>
+	 					<?php
+	 				endforeach;
+	 				?>
+	 				</select>
+	 				<?php
+	 				if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+	 				
+	 				</span>
+	 				<?php 
+	 		break;
+	 		
+	 		case 'textarea':
+	 				?>
+	 				<span>
+	 				<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+					<textarea <?php echo $size.$class.$name.$row.$cols; ?> value="<?php echo esc_attr($value); ?>" id=""></textarea>
+					<?php if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+					</span>
+	 				<?php
+	 		break;
+	 		
+	 		
+		}
+		
 	 }
 	 function select_field($options)
 	 {
@@ -543,18 +605,7 @@ class Profile_CCT {
 	 	$title = ( isset($title)? ' <label for="" >'.$name.'</label>': '');
 	 	extract( $options );
 	 	switch($type){
-	 		case "multiple":
-	 				?><div class="">
-	 				<?php echo $title; ?>
-	 				<?php
-	 				foreach($all_fields as $field): ?>
-	 					<label><input type="checkbox" <?php checked( in_array($field,$selected_fields) ); ?> value="<?php echo $field; ?>" /> <?php echo $field; ?></label>
-	 				<?php
-	 				endforeach;
-	 				?>
-	 				</div>
-	 				<?php 
-	 		break;
+	 		
 	 	
 	 	
 	 	}
@@ -732,74 +783,6 @@ class Profile_CCT {
 		echo "</ul>";
 	}
 	
-	function social_fields(){
-		return array(
-					array( 	"type"=> "ubc-blog", 	
-							"label"=> "UBC Blog", 
-							"service_url" =>"http://blogs.ubc.ca/",	
-							"user_url"=> "http://blogs.ubc.ca/{value}"),
-					array( 	"type"=> "ubc-wiki", 	
-							"label"=> "UBC Wiki",
-							"service_url" =>"http://wiki.ubc.ca/",		
-							"user_url"=> "http://wiki.ubc.ca/User:{value}"),
-			 		array( 	"type"=> "twitter", 		
-			 				"label"=> "Twitter",
-			 				"service_url" =>"http://twitter.com",			
-			 				"user_url"=> "http://twitter.com/#!/{value}"),
-			 		array( 	"type"=> "facebook",		
-			 				"label"=> "Facebook",
-			 				"service_url" =>"http://www.facebook.com/",			
-			 				"user_url"=> "http://www.facebook.com/{value}" ),
-			 		array( 	"type"=> "google-plus", 	
-			 				"label"=> "Google Plus",
-			 				"service_url" =>"http://plus.google.com",		
-			 				"user_url"=> "http://plus.google.com/{value}"),
-			 		array( 	"type"=> "linked-in",	
-			 				"label"=> "Linked In",
-			 				"service_url" =>"http://www.linkedin.com/",			
-			 				"user_url"=> "http://www.linkedin.com/in/{value}" ), 
-			 		array( 	"type"=> "delicious",	
-			 				"label"=> "Delicious",
-			 				"service_url" =>"http://www.delicious.com",			
-			 				"user_url"=> "http://www.delicious.com/{value}" ),
-			 		array( 	"type"=> "picasa",		
-			 				"label"=> "Picasa",
-			 				"service_url" =>"http://picasaweb.google.com",
-			 				"user_url"=> "http://picasaweb.google.com/{value}"),
-			 		array(  "type"=> "flickr",		
-			 				"label"=> "Flickr",
-			 				"service_url" =>"",				
-			 				"user_url"=> "http://www.flickr.com/photos/{value}"),
-			 		array( 	"type"=> "tumblr",		
-			 				"label"=> "Tumblr",
-			 				"service_url" =>"http://tumblr.com",			
-			 				"user_url"=> "http://{value}.tumblr.com"), 
-			 		array( 	"type"=> "blogger",		
-			 				"label"=> "Blogger",
-			 				"service_url" =>"http://blogspot.com/",			
-			 				"user_url"=> "http://{value}.blogspot.com/"), 
-			 		array( 	"type"=> "posterous",	
-			 				"label"=> "Posterous",
-			 				"service_url" =>"http://posterous.com",	
-			 				"user_url"=> "http://{value}.posterous.com"),
-			 		array( 	"type"=> "wordpress-com",
-			 				"label"=> "WordPress.com",
-			 				"service_url" =>"http://wordpress.com",	
-			 				"user_url"=> "http://{value}.wordpress.com"),
-			 		array( 	"type"=> "youtube",		
-			 				"label"=> "YouTube",
-			 				"service_url" =>"http://youtube.com/",		
-			 				"user_url"=> "http://youtube.com/{value}"),
-			 		array( 	"type"=> "vimeo",		
-			 				"label"=> "Vimeo",
-			 				"service_url" =>"http://vimeo.com",			
-			 				"user_url"=> "http://vimeo.com/{value}"),
-			 		array( 	"type"=> "slideshare",		
-			 				"label"=> "SlideShare",
-			 				"service_url" =>"http://www.slideshare.net/",			
-			 				"user_url"=> "http://www.slideshare.net//{value}"),
-			 		);
-	}
 	function show_edit_field($type,$field_type,$options){
 		switch($type){
 			case "form":

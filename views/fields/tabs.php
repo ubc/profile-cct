@@ -65,6 +65,9 @@ function profile_cct_show_tabs($fields,$action) {
 				$i =0;
 				if(is_array($fields['fields']) && is_array($fields['fields'][$count-1])):
 					foreach( $fields['fields'][$count-1] as $field):
+						// var_dump($type,$field['type'], $field['label'],$field['options']);
+						call_user_func('profile_cct_'.$field['type'].'_field_shell',$action,$field);
+						
 					 	$profile->show_field($type, $field['type'], $field['label'],$field['options'], "edit", $i ); $i++;
 					endforeach;
 				endif;

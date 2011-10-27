@@ -16,13 +16,13 @@ switch($field_type) {
 	case "cct-name":
 	
 	$fields = array('title','first','middle','last','suffix');
+	
 	foreach($fields as $field):
 		
 		if( !isset($data[$field_type][$field]) )
 			$data[$field_type][$field] = '';
 	endforeach;
 	?>	<div class="show-boxes">
-			
 			<label><input type="checkbox" <?php checked($option['show_title']); ?> name="show_title" /> show title</label>
 			<label><input type="checkbox" <?php checked($option['show_middle_name']); ?> name="show_middle" />  show middle name </label>
 			<label><input type="checkbox" <?php checked($option['show_suffix']); ?> name="show_suffix" /> show suffix</label>
