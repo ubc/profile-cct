@@ -25,7 +25,7 @@
 
 <div id="col-container">
 	<div id="notify">
-		<span id="spinner" class="update"><img src="http://localhost.localdomain/t/wp-admin/images/wpspin_light.gif" alt="spinner" /> thinking...</span>
+		<span id="spinner" class="update"><img src="<?php echo admin_url(); ?>/images/wpspin_light.gif" alt="spinner" /> thinking...</span>
 		
 	</div>
 

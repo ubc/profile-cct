@@ -27,17 +27,17 @@ function profile_cct_address_field( $data, $options ){
 	$field = Profile_CCT::set();
 	
 	
-	$field->input_field( array( 'label'=>'Building Name', 'size'=>35, 'value'=>$data['building-address'], 'type'=>'text' ) );
-	$field->input_field( array( 'label'=>'Room Number', 'size'=>35, 'value'=>$data['room-number'], 'type'=>'text') );
+	$field->input_field( array( 'field_id'=>'building-address', 'label'=>'Building Name', 'size'=>35, 'value'=>$data['building-address'], 'type'=>'text', 'show' => in_array("building-address",$show) ) );
+	$field->input_field( array( 'field_id'=>'room-number','label'=>'Room Number', 'size'=>35, 'value'=>$data['room-number'], 'type'=>'text', 'show' => in_array("room-number",$show)) );
 	
-	$field->input_field( array( 'label'=>'Street Address', 'size'=>74, 'value'=>$data['street-1'], 'type'=>'text') );
-	$field->input_field( array( 'label'=>'Address Line 2', 'size'=>74, 'value'=>$data['street-2'], 'type'=>'text') );
+	$field->input_field( array( 'field_id'=>'street-1','label'=>'Street Address', 'size'=>74, 'value'=>$data['street-1'], 'type'=>'text', 'show' => in_array("street-1",$show)) );
+	$field->input_field( array( 'field_id'=>'street-2','label'=>'Address Line 2', 'size'=>74, 'value'=>$data['street-2'], 'type'=>'text', 'show' => in_array("street-2",$show)) );
 	
-	$field->input_field( array( 'label'=>'City', 'size'=>35, 'value'=>$data['city'], 'type'=>'text') );
-	$field->input_field( array( 'label'=>'Postal / Zip Code', 'size'=>35, 'value'=>$data['city'], 'type'=>'text') );
+	$field->input_field( array( 'field_id'=>'city','label'=>'City', 'size'=>35, 'value'=>$data['city'], 'type'=>'text', 'show' => in_array("city",$show)) );
+	$field->input_field( array( 'field_id'=>'postal','label'=>'Postal / Zip Code', 'size'=>35, 'value'=>$data['postal'], 'type'=>'text', 'show' => in_array("postal",$show)) );
 	
-	$field->input_field( array( 'label'=>'Province / State /  Region', 'size'=>35, 'value'=>$data['province'], 'type'=>'text') );
-	$field->input_field( array( 'label'=>'Country', 'size'=>35, 'value'=>$data['country'], 'all_fields'=>profile_cct_list_of_countries(), 'type'=>'select') );
+	$field->input_field( array( 'field_id'=>'province','label'=>'Province / State /  Region', 'size'=>35, 'value'=>$data['province'], 'type'=>'text', 'show' => in_array("province",$show)) );
+	$field->input_field( array( 'field_id'=>'country','label'=>'Country', 'size'=>35, 'value'=>$data['country'], 'all_fields'=>profile_cct_list_of_countries(), 'type'=>'select', 'show' => in_array("country",$show)) );
 
 }
 

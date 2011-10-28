@@ -29,17 +29,15 @@ function profile_cct_name_field( $data, $options ){
 	extract( $options );
 	$field = Profile_CCT::set();
 	
-	if(in_array("prefix",$show))
-		$field->input_field( array( 'label'=>'Title', 'size'=>2, 'value'=>$data['title'], 'type'=>'text', 'tabindex'=>1) );
+	$field->input_field( array( 'field_id'=>'prefix','label'=>'Title', 'size'=>2, 'value'=>$data['prefix'], 'type'=>'text', 'show' => in_array("prefix",$show)) );
+
+	$field->input_field( array( 'field_id'=>'first','label'=>'First', 'size'=>14, 'value'=>$data['first'], 'type'=>'text', ));
 	
-		$field->input_field( array( 'label'=>'First', 'size'=>14, 'value'=>$data['title'], 'type'=>'text', 'tabindex'=>2));
-	if(in_array("middle",$show))
-		$field->input_field( array( 'label'=>'Middle', 'size'=>3,'value'=>$data['middle'], 'type'=>'text', 'tabindex'=>3));
-	
-		$field->input_field( array( 'label'=>'Last', 'size'=>19, 'value'=>$data['last'], 'type'=>'text', 'tabindex'=>4));
-	
-	if(in_array("suffix",$show))
-		$field->input_field( array( 'label'=>'Sufix','size'=>3, 'value'=>$data['suffix'], 'type'=>'text', 'tabindex'=>5));
+	$field->input_field( array( 'field_id'=>'middle','label'=>'Middle', 'size'=>3,'value'=>$data['middle'], 'type'=>'text', 'show' => in_array("middle",$show) ));
+
+	$field->input_field( array( 'field_id'=>'last','label'=>'Last', 'size'=>19, 'value'=>$data['last'], 'type'=>'text', ));
+
+	$field->input_field( array( 'field_id'=>'suffix', 'label'=>'Suffix','size'=>3, 'value'=>$data['suffix'], 'type'=>'text',  'show' => in_array("suffix",$show)));
 	
 }
 

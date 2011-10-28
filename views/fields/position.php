@@ -9,6 +9,7 @@ function profile_cct_position_field_shell($action,$options) {
 		'type' => 'position',
 		'label'=>'position',
 		'description'=>'',
+		'multiple'=>true
 		);
 	$options = (is_array($options) ? array_merge($options,$default_options): $default_options );
 	
@@ -24,7 +25,7 @@ function profile_cct_position_field( $data, $options ){
 	extract( $options );
 	$field = Profile_CCT::set();
 
-	$field->input_field( array( 'label'=>'', 'size'=>25, 'value'=>$data['position'], 'type'=>'text') );
+	$field->input_field( array( 'field_id'=>'position','label'=>'', 'size'=>35, 'value'=>$data['position'], 'type'=>'text') );
 
 
 

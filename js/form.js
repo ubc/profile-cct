@@ -10,14 +10,15 @@ var Profile_CCT_FORM ={
 		form_sortable.sortable( {
 				placeholder: "ui-state-highlight",
 				forcePlaceholderSize: true,
-				handle:"label.desc", 
+				handle:"label.field-title", 
 				update:Profile_CCT_FORM.updateSort, 
 			});
 		
 		formB.find(".edit").live("click",Profile_CCT_FORM.editField);
 		formB.find(".remove").live("click",Profile_CCT_FORM.removeField);
 		formB.find(".field-label").live("keyup",Profile_CCT_FORM.updateLabel);
-		
+		formB.find(".field-description").live("keyup",Profile_CCT_FORM.updateDescription);
+		formB.find(".field-show").live("click",Profile_CCT_FORM.updateShow);
 		
 		// name field
 		jQuery(".edit","#form-name").click(Profile_CCT_FORM.editField);
@@ -68,7 +69,7 @@ var Profile_CCT_FORM ={
 		var label = new Array(); 
 		var type = new Array();
 		
-		jQuery('.desc',jQuery(this)).each(function(index, value){
+		jQuery('.field-title',jQuery(this)).each(function(index, value){
 			label[index] = jQuery(this).text();
 		});
 		jQuery('.field-item',jQuery(this)).each(function(index, value){
@@ -87,43 +88,43 @@ var Profile_CCT_FORM ={
 				Profile_CCT_TABS.hideSpinner();
 			});
 	 },
-	updateLabel :function(e){
+	updateLabel : function(e){
 		var el = jQuery(this);
 		var text_label = el.val();
 		
 		if(text_label.length > 0 ) {
-			el.parents().siblings(".desc").text(text_label);
+			el.parents().siblings(".field-title").text(text_label);
 		} else {
 			text_label = el.attr('title');
-			el.parents().siblings(".desc").text(el.attr('title'));
-		}
-		if(e.keyCode == 13) {
-			
-			var tab_index = jQuery( "li",Profile_CCT_TABS.$tabs ).index( Profile_CCT_TABS.selected_tab.parent() );
-			var first_parent = jQuery(this).parent();
-			var parent = first_parent.parent();
-			var field_index = jQuery( ".field-item", Profile_CCT_TABS.selected_tab.attr("href") ).index(  parent );
-			Profile_CCT_TABS.showSpinner();
-			var data = {
-					action: 'cct_update_fields',
-					method: 'update',
-					id: tab_index, 
-					index: field_index,
-					label: text_label
-				};
-				
-				jQuery.post(ajaxurl, data, function(response) {
-					
-					if(response == 'updated'){
-						
-						first_parent.toggle();
-						jQuery( ".edit", parent ).text('edit');
-						Profile_CCT_TABS.hideSpinner();
-					}
-				});
+			el.parents().siblings(".field-title").text(el.attr('title'));
 		}
 		// update the database
 	},
+	updateDescription : function(e){
+		var el = jQuery(this);
+		var text_label = el.val();
+		
+		if(text_label.length > 0 ) {
+			el.parents().siblings(".description").text(text_label);
+		} else {
+			text_label = el.attr('title');
+			el.parents().siblings(".description").text(el.attr('title'));
+		}
+
+	},
+	updateShow : function(e){
+		var el = jQuery(this);
+		var el_class = jQuery.trim(el.parent().text());
+		console.log('.'+el_class);
+		console.log(el.parent().parent().parent().parent());
+		if(el.attr('checked'))
+		{
+			jQuery('.'+el_class,el.parent().parent().parent().parent()).show();
+		}else{
+			jQuery('.'+el_class,el.parent().parent().parent().parent()).hide();
+		}
+		
+	}, 
 	editField : function(e) {
 		
 		e.preventDefault();

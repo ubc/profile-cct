@@ -9,6 +9,7 @@ function profile_cct_social_field_shell($action,$options) {
 		'type' => 'social',
 		'label'=>'social',
 		'description'=>'',
+		'multiple'=>true
 		);
 	$options = (is_array($options) ? array_merge($options,$default_options): $default_options );
 	
@@ -27,7 +28,7 @@ function profile_cct_social_field( $data, $options ){
 	foreach($social_array_options as $social_item):
 		$social_array[] =  $social_item['label'];
 	endforeach;
-	$field->input_field( array( 'label'=>'option',  'value'=>$data['option'], 'all_fields'=>$social_array, 'type'=>'select') );
+	$field->input_field( array( 'field_id'=>'option', 'label'=>'option',  'value'=>$data['option'], 'all_fields'=>$social_array, 'type'=>'select') );
 
 
 

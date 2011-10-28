@@ -7,8 +7,9 @@ function profile_cct_website_field_shell($action,$options) {
 	
 	$default_options = array(
 		'type' => 'website',
-		'label'=>'website',
-		'description'=>'',
+		'label'=> 'website',
+		'description'=> '',
+		'multiple'=> true
 		);
 	$options = (is_array($options) ? array_merge($options,$default_options): $default_options );
 	
@@ -25,7 +26,7 @@ function profile_cct_website_field( $data, $options ){
 	$field = Profile_CCT::set();
 
 	
-	$field->input_field( array( 'label'=>'http://', 'size'=>70, 'value'=>$data['website'], 'type'=>'text') );
+	$field->input_field( array( 'field_id'=>'website', 'label'=>'http://', 'size'=>70, 'value'=>$data['website'], 'type'=>'text') );
 
 
 

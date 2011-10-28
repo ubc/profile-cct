@@ -24,7 +24,7 @@ function profile_cct_bio_field( $data, $options ){
 	extract( $options );
 	$field = Profile_CCT::set();
 
-	$field->input_field( array( 'label'=>'', 'size'=>25, 'row'=>2, 'cols'=>20, 'value'=>$data['bio'], 'type'=>'textarea') );
+	$field->input_field( array( 'field_id'=>'bio','label'=>'', 'size'=>25, 'row'=>2, 'cols'=>20, 'value'=>$data['bio'], 'type'=>'textarea') );
 
 
 

@@ -75,7 +75,18 @@
 	width:150px;
 	text-align:right
 }
-
+.form-builder .description {
+	display: block;
+	clear:both;
+}
+.form-builder .spinner{
+	float: right;
+	margin-right: 460px;
+    margin-top: 16px;
+}
+.save-field-settings{
+	margin-top: 15px;
+}
 /* ----- Choices Field Structures ----- */
 .form-builder li div span {
 	margin:0 5px 0 0;
@@ -161,7 +172,7 @@
 	padding:0
 }
 
-.form-builder .desc {
+.form-builder .field-title {
 	font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
     font-size: 15px;
     font-weight: normal;
@@ -179,7 +190,7 @@
     background-color: #F1F1F1;
     background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
 }
-#form-name .desc{
+#form-name .field-title{
 	cursor: default;
 }
 .form-builder .text,
@@ -197,6 +208,18 @@
 	border:1px solid #DFDFDF;
 }
 
+#wpcontent .form-builder select{
+    font-size: 12px;
+    height: 21px;
+    margin-top: 0;
+    padding: 2px 4px;
+}
+.form-builder textarea{
+	height:300px;
+}
+.edit-shell textarea{
+	height: 100px;
+}
 .form-builder .text,
 .form-builder textarea {
 	border:1px solid #DFDFDF;

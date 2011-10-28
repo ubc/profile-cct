@@ -491,57 +491,53 @@ class Profile_CCT {
 			<a href="#edit-field" class="edit">Edit</a>
 			<div class="edit-shell" style="display:none;">
 				<?php 
-					$this->input_field( array('size'=>20, 'value'=>$label, 'name'=>'label','label'=>'label', 'type'=>'text', 'before_label'=>true ));
+					$this->input_field( array('size'=>20, 'value'=>$label, 'class'=>'field-label', 'name'=>'label','label'=>'label', 'type'=>'text', 'before_label'=>true ));
 					if(isset($description))
-				 		$this->input_field( array('size'=>10, 'value'=>$description, 'name'=>'label','label'=>'description','type'=>'textarea' , 'before_label'=>true));			
+				 		$this->input_field( array('size'=>10, 'value'=>$description, 'class'=>'field-description','name'=>'label','label'=>'description','type'=>'textarea' , 'before_label'=>true));			
 					if(isset($show_fields))
-						$this->input_field(array('type'=>'multiple','all_fields'=>$show_fields,'selected_fields'=>$show,'name'=>'show[]', 'label'=>'show / hide input area','before_label'=>true));			
-					$this->textarea_field();
+						$this->input_field(array('type'=>'multiple','all_fields'=>$show_fields, 'class'=>'field-show','selected_fields'=>$show,'name'=>'show[]', 'label'=>'show / hide input area','before_label'=>true));			
+					
+					if(isset($multiple) && $multiple)
+						$this->input_field(array('type'=>'checkbox','name'=>'multiple', 'field'=>'yes allow the user to create multiple', 'value'=>$multiple,'label'=>'allow for multiple entries','before_label'=>true));	
+						
 					 ?>
+					 <input type="button" value="Save" class="button save-field-settings" />
+					 <span class="spinner" style="display:none;"><img src="<?php echo admin_url(); ?>/images/wpspin_light.gif" alt="spinner" /> saving...</span>
 			</div>
 		<?php 	
 		endif;
 	 	?>
-	 	<label for="" id="" class="desc"><?php echo $label; ?></label>
+	 	<label for="" id="" class="field-title"><?php echo $label; ?></label>
 	 	<?php 
 	 }
 	
-	 function end_field()
+	 function end_field($options)
 	 {
-	 	echo "</li>";
-	 }
-	 
-	 function label_field( $options ){
-	 	
 	 	extract( $options );
 	 	
-	 	
-	 	$name = ( isset($name)? ' name="'.$name.'"': '');
-	 	$size = ( isset($size)? ' size="'.$size.'"': '');
-	 	$class = ( isset($class)? ' class="'.$class.'"': ' class="field text"');
-	 	?>
-	 	<span>
-			<input type="text" <?php echo $size.$class; ?> value="<?php echo esc_attr($value); ?>" id="">
-			<label for="" ><?php echo $label; ?></label>
-		</span>
+	 	?><p class="description"><?php echo $description; ?></p>
+	 	</li>
 	 	<?php 
 	 }
+	 
 	 function input_field( $options )
 	 {
 	 	extract( $options );
 	 	
 	 	$before_label = ( isset($before_label) && $before_label ? true:false);
-	 	
+	 	$field_id_class = ( isset($field_id)? ' class="'.$field_id.'"': '');
 	 	$name = ( isset($name)? ' name="'.$name.'"': '');
 	 	$size = ( isset($size)? ' size="'.$size.'"': '');
 	 	$row = ( isset($row)? ' row="'.$row.'"': '');
 	 	$cols = ( isset($cols)? ' cols="'.$cols.'"': '');
 	 	$class = ( isset($class)? ' class="'.$class.'"': ' class="field text"');
 	 	$id = ( isset($id)? ' id="'.$id.'"': ' ');
+	 	
+	 	$show = ( isset($show) && !$show ? ' style="display:none;"': '');
 	 	switch($type) {
 	 		case 'text':
 			 	?>
-			 	<span>
+			 	<span <?php echo $field_id_class.$show; ?>>
 			 		<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
 					<input type="text" <?php echo $size.$class.$name; ?> value="<?php echo esc_attr($value); ?>" id="">
 					<?php if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
@@ -550,12 +546,12 @@ class Profile_CCT {
 			break;
 			
 			case 'multiple':
-	 				?><div class="">
+	 				?><div <?php echo $field_id_class.$show;  ?>>
 	 				<?php 
 	 				if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } 
 	 				
 	 				foreach($all_fields as $field): ?>
-	 					<label><input type="checkbox" <?php checked( in_array($field,$selected_fields) ); ?> value="<?php echo $field; ?>" /> <?php echo $field; ?></label>
+	 					<label><input type="checkbox" <?php checked( in_array($field,$selected_fields) ); ?> value="<?php echo $field; ?>" <?php echo $class; ?> /> <?php echo $field; ?></label>
 	 					<?php
 	 				endforeach;
 	 				
@@ -564,9 +560,17 @@ class Profile_CCT {
 	 				</div>
 	 				<?php 
 	 		break;
+	 		case 'checkbox':
+	 				?><div <?php echo $field_id_class.$show;  ?>>
+	 				<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+	 					<label><input type="checkbox" <?php checked( $value ); ?> value="1" /> <?php echo $field; ?></label>
+	 				<?php if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+	 				</div>
+	 				<?php 
+	 		break;
 	 		
 	 		case 'select':
-	 				?><span>
+	 				?><span <?php echo $field_id_class.$show;  ?>>
 	 				<?php 
 	 				if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } 
 	 				?>
@@ -587,7 +591,7 @@ class Profile_CCT {
 	 		
 	 		case 'textarea':
 	 				?>
-	 				<span>
+	 				<span <?php echo $field_id_class; ?>>
 	 				<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
 					<textarea <?php echo $size.$class.$name.$row.$cols; ?> value="<?php echo esc_attr($value); ?>" id=""></textarea>
 					<?php if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
@@ -598,25 +602,6 @@ class Profile_CCT {
 	 		
 		}
 		
-	 }
-	 function select_field($options)
-	 {
-	 	$name = ( isset($name)? ' name="'.$name.'"': '');
-	 	$title = ( isset($title)? ' <label for="" >'.$name.'</label>': '');
-	 	extract( $options );
-	 	switch($type){
-	 		
-	 	
-	 	
-	 	}
-	 
-	 }
-	 function textarea_field(){
-	 
-	 }
-	 
-	 function default_value(){
-	 	
 	 }
 	 
 	/**
