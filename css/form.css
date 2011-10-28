@@ -78,6 +78,15 @@
 .form-builder .description {
 	display: block;
 	clear:both;
+	position: relative;
+    top: 5px;
+    padding: 10px 0;
+}
+
+.add-multiple{
+	clear: both;
+	position: relative;
+    top: 5px;
 }
 .form-builder .spinner{
 	float: right;

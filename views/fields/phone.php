@@ -2,31 +2,40 @@
 
 function profile_cct_phone_field_shell($action,$options) {
 	
-	$field = Profile_CCT::set(); // prints "Creating new instance."
-	
+	$field = Profile_CCT::get_object(); // prints "Creating new instance."
 	
 	$default_options = array(
 		'type' => 'phone',
 		'label'=>'phone',
 		'description'=>'',
 		'show'=>array('tel-1'),
-		'show_fields'=>array('tel-1','extension'),
-		'multiple'=>true
+		'multiple'=>true,
+		'show_multiple' =>true,
+		'show_fields'=>array('tel-1','extension')
 		);
-	$options = (is_array($options) ? array_merge($options,$default_options): $default_options );
+	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	
 	
 	$field->start_field('phone',$action,$options);
 	
-	profile_cct_phone_field($data,$options);
+	if( $field->is_data_array( $data ) ):
+		
+		foreach($data as $item_data):
+			profile_cct_phone_field($item_data,$options);
+		endforeach;
+		
+	else:
+		profile_cct_phone_field($item_data,$options);
+	endif;
 	
 	$field->end_field($options);
 	
 }
 function profile_cct_phone_field( $data, $options ){
 	extract( $options );
-	$field = Profile_CCT::set();
-
+	$field = Profile_CCT::get_object();
+	$show = (is_array($show) ? $show : array());
+	
 	$field->input_field( array( 'field_id'=>'option','label'=>'option',  'value'=>$data['option'], 'all_fields'=>profile_cct_phone_options(), 'type'=>'select') );
 	
 	$field->input_field( array( 'field_id'=>'tel-1','label'=>'###', 'size'=>3, 'value'=>$data['tel-1'], 'type'=>'text', 'show' => in_array("tel-1",$show)) );

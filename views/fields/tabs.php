@@ -6,7 +6,8 @@ add_action('profile_cct_page_builder','profile_cct_show_page_builder_tabs',10,1)
 
 function profile_cct_show_form_tabs($action){
 	
-	$profile = Profile_CCT::set(); // prints "Creating new instance."
+	$profile = Profile_CCT::get_object(); // prints "Creating new instance."
+	
 	$fields = $profile->form_fields;
 	
 	if( !$fields['tabs'] ) 
@@ -20,7 +21,7 @@ function profile_cct_show_form_tabs($action){
 
 function profile_cct_show_page_builder_tabs($action){
 	
-	$profile = Profile_CCT::set(); // prints "Creating new instance."
+	$profile = Profile_CCT::get_object(); // prints "Creating new instance."
 	$fields = $profile->page_fields;
 	
 	if( !$fields['tabs'] ) 
@@ -36,7 +37,7 @@ function profile_cct_show_page_builder_tabs($action){
 function profile_cct_show_tabs($fields,$action) {
 	
 	$act = ($action == 'edit'?  true: false);
-	$profile = Profile_CCT::set();
+	$profile = Profile_CCT::get_object();
 	?>
 		<div id="tabs">
 		<ul>
@@ -65,10 +66,7 @@ function profile_cct_show_tabs($fields,$action) {
 				$i =0;
 				if(is_array($fields['fields']) && is_array($fields['fields'][$count-1])):
 					foreach( $fields['fields'][$count-1] as $field):
-						// var_dump($type,$field['type'], $field['label'],$field['options']);
-						call_user_func('profile_cct_'.$field['type'].'_field_shell',$action,$field);
-						
-					 	$profile->show_field($type, $field['type'], $field['label'],$field['options'], "edit", $i ); $i++;
+							call_user_func('profile_cct_'.$field['type'].'_field_shell',$action,$field);
 					endforeach;
 				endif;
 				?>

@@ -1,5 +1,5 @@
 <?php
-	
+	/*
 	$this->form_fields = get_option('Profile_CCT_form_fields');
 	
 	if(wp_verify_nonce($_POST['_wpnonce'],'Profile_CCT_form_fields-options')) :
@@ -20,6 +20,7 @@
 		update_option('Profile_CCT_form_fields',$form_fields);
 		$this->form_fields = $form_fields;
 	endif;
+	*/
 ?>
 
 
@@ -40,7 +41,7 @@
 		<li><a href="#phone" id="cct-phone">Phone</a></li>
 		<!-- 
 		<li><a href="#fax" id="cct-fax">Fax</a></li> -->
-		<li><a href="#fax" id="cct-email">Email</a></li>
+		<li><a href="#email" id="cct-email">Email</a></li>
 		<li><a href="#website"id="cct-website">Website</a></li>
 		<li><a href="#social" id="cct-social" >Social</a></li>
 		

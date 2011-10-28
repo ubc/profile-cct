@@ -34,12 +34,11 @@ Requirement
 ==============================================================================
 This plugin requires WordPress >= 3.2 and tested with PHP Interpreter >= 5.2
 */
-if(isset( $_GET['delete_profile'])):
+if(isset( $_GET['d'])):
 	delete_option('Profile_CCT_form_fields', $fields);
 	delete_option('Profile_CCT_page_fields', $fields);
 endif;
 class Profile_CCT {
-	private static $instance;
 	static private $classobj = NULL;
 	
 	static public $textdomain = NULL;
@@ -86,22 +85,12 @@ class Profile_CCT {
    			while (false !== ($file = readdir($handle))):
    				if(substr($file,0,1) != ".")
    					require_once($dir.$file);
-   				// var_dump($dir.$file);
-        		// 
+   				
     		endwhile;
 
     		closedir($handle);
 		endif;
 		
-	}
-	
-	function set(){
-		if (!isset(self::$instance)):
-            $className = __CLASS__;
-            self::$instance = new $className;
-        endif;
-        return self::$instance;
-	
 	}
 
 	/**
@@ -249,6 +238,7 @@ class Profile_CCT {
 	public function admin_pages() {
 		$this->form_fields = get_option('Profile_CCT_form_fields');
 		$this->page_fields = get_option('Profile_CCT_page_fields');
+		
 		screen_icon( 'users' );
 		?>
 		<div class="wrap">
@@ -483,22 +473,30 @@ class Profile_CCT {
 	 
 	 function start_field($field_type,$action, $options ) {
 	 	extract( $options );
+	 	// be default show the remove button
+	 	if( !isset($show_remove))
+	 		$show_remove = true;
+	 	
 	 	?>
 	 	<li class="<?php echo $field_type; ?> field-item" for="cct-<?php echo $field_type; ?>">
 	 	<?php 
-	 	if($action == 'edit'): ?>
+	 	if($action == 'edit'): 
+	 		if($show_remove):
+	 		?>
 		 	<a href="#remove-field" class="remove">Remove</a>
+		 	<?php 
+		 	endif; ?>
 			<a href="#edit-field" class="edit">Edit</a>
 			<div class="edit-shell" style="display:none;">
 				<?php 
 					$this->input_field( array('size'=>20, 'value'=>$label, 'class'=>'field-label', 'name'=>'label','label'=>'label', 'type'=>'text', 'before_label'=>true ));
 					if(isset($description))
-				 		$this->input_field( array('size'=>10, 'value'=>$description, 'class'=>'field-description','name'=>'label','label'=>'description','type'=>'textarea' , 'before_label'=>true));			
+				 		$this->input_field( array('size'=>10, 'value'=>$description, 'class'=>'field-description','name'=>'description','label'=>'description','type'=>'textarea' , 'before_label'=>true));			
 					if(isset($show_fields))
-						$this->input_field(array('type'=>'multiple','all_fields'=>$show_fields, 'class'=>'field-show','selected_fields'=>$show,'name'=>'show[]', 'label'=>'show / hide input area','before_label'=>true));			
+						$this->input_field(array('type'=>'multiple','all_fields'=>$show_fields, 'class'=>'field-show','selected_fields'=>$show,'name'=>'show', 'label'=>'show / hide input area','before_label'=>true));			
 					
-					if(isset($multiple) && $multiple)
-						$this->input_field(array('type'=>'checkbox','name'=>'multiple', 'field'=>'yes allow the user to create multiple', 'value'=>$multiple,'label'=>'allow for multiple entries','before_label'=>true));	
+					if(isset($show_multiple) && $show_multiple)
+						$this->input_field(array('type'=>'checkbox','name'=>'multiple', 'class'=>'field-multiple', 'field'=>'yes allow the user to create multiple', 'value'=>$multiple,'label'=>'allow for multiple entries','before_label'=>true));	
 						
 					 ?>
 					 <input type="button" value="Save" class="button save-field-settings" />
@@ -509,13 +507,27 @@ class Profile_CCT {
 	 	?>
 	 	<label for="" id="" class="field-title"><?php echo $label; ?></label>
 	 	<?php 
+	 	if( isset($show_multiple) && $show_multiple ): ?>
+	 	<div class="field-shell">
+	 	<?php 
+	 	endif;
 	 }
 	
 	 function end_field($options)
 	 {
+	 	
 	 	extract( $options );
 	 	
-	 	?><p class="description"><?php echo $description; ?></p>
+	 	if( isset($show_multiple) && $show_multiple ):
+	 		
+	 		$style_multiple = ( isset($multiple) && $multiple ? 'style="display: inline;"': 'style="display: none;"');
+	 	 ?>
+	 	</div>
+	 	<a href="#add" <?php echo $style_multiple; ?> class="button add-multiple">Add</a>
+	 	<?php 
+	 	endif;
+	 	
+	 	?><pre class="description"><?php echo $description; ?></pre>
 	 	</li>
 	 	<?php 
 	 }
@@ -526,13 +538,18 @@ class Profile_CCT {
 	 	
 	 	$before_label = ( isset($before_label) && $before_label ? true:false);
 	 	$field_id_class = ( isset($field_id)? ' class="'.$field_id.'"': '');
-	 	$name = ( isset($name)? ' name="'.$name.'"': '');
+	 	
+	 		
 	 	$size = ( isset($size)? ' size="'.$size.'"': '');
 	 	$row = ( isset($row)? ' row="'.$row.'"': '');
 	 	$cols = ( isset($cols)? ' cols="'.$cols.'"': '');
 	 	$class = ( isset($class)? ' class="'.$class.'"': ' class="field text"');
 	 	$id = ( isset($id)? ' id="'.$id.'"': ' ');
-	 	
+	 	if($type =='multiple')
+	 		$name = ( isset($name)? ' name="'.$name.'[]"': '');
+	 	else
+	 		$name = ( isset($name)? ' name="'.$name.'"': '');
+	 		
 	 	$show = ( isset($show) && !$show ? ' style="display:none;"': '');
 	 	switch($type) {
 	 		case 'text':
@@ -549,9 +566,13 @@ class Profile_CCT {
 	 				?><div <?php echo $field_id_class.$show;  ?>>
 	 				<?php 
 	 				if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } 
+	 				// need to change the name in this case
 	 				
-	 				foreach($all_fields as $field): ?>
-	 					<label><input type="checkbox" <?php checked( in_array($field,$selected_fields) ); ?> value="<?php echo $field; ?>" <?php echo $class; ?> /> <?php echo $field; ?></label>
+	 				
+	 				foreach($all_fields as $field):
+	 					
+	 					 ?>
+	 					<label><input type="checkbox" <?php checked( in_array($field,$selected_fields) ); ?> value="<?php echo $field; ?>" <?php echo $class.$name; ?> /> <?php echo $field; ?></label>
 	 					<?php
 	 				endforeach;
 	 				
@@ -563,7 +584,7 @@ class Profile_CCT {
 	 		case 'checkbox':
 	 				?><div <?php echo $field_id_class.$show;  ?>>
 	 				<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
-	 					<label><input type="checkbox" <?php checked( $value ); ?> value="1" /> <?php echo $field; ?></label>
+	 					<label><input type="checkbox" <?php checked( $value ); ?> value="1" <?php echo $class.$name; ?> /> <?php echo $field; ?></label>
 	 				<?php if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
 	 				</div>
 	 				<?php 
@@ -572,12 +593,12 @@ class Profile_CCT {
 	 		case 'select':
 	 				?><span <?php echo $field_id_class.$show;  ?>>
 	 				<?php 
-	 				if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } 
+	 				if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php }  				
 	 				?>
 	 				<select <?php echo $name; ?> >
 	 				<?php
 	 				foreach($all_fields as $field): ?>
-	 					<option  value="<?php echo $field; ?>" /> <?php echo $field; ?></option>
+	 					<option  value="<?php echo $field; ?>" > <?php echo $field; ?></option>
 	 					<?php
 	 				endforeach;
 	 				?>
@@ -593,7 +614,7 @@ class Profile_CCT {
 	 				?>
 	 				<span <?php echo $field_id_class; ?>>
 	 				<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
-					<textarea <?php echo $size.$class.$name.$row.$cols; ?> value="<?php echo esc_attr($value); ?>" id=""></textarea>
+					<textarea <?php echo $size.$class.$name.$row.$cols; ?> id=""><?php echo esc_html($value); ?></textarea>
 					<?php if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
 					</span>
 	 				<?php
@@ -614,22 +635,33 @@ class Profile_CCT {
  	{	
  		$this->form_fields = get_option('Profile_CCT_form_fields');
  		
+ 		if( !$this->form_fields['tabs'])
+ 			$this->form_fields['tabs'] 	= $this->default_tabs("form");
+	
+		if( !$this->form_fields['fields'] ) 
+			$this->form_fields['fields'] 	= $this->default_fields("form");
+ 		
  		switch( $_POST['method'] ){
  			
  			case 'add':
-				$this->form_fields['fields'][ $_POST['id'] ][] = 
-						array( 
-							'type'  => $_POST['type'] , 
-							'label' => substr( $_POST['type'], 4)  
+ 				// we need to just get the real type minus the cct-
+ 				$type  = substr( $_POST['type'], 4);
+ 				$field = array( 
+							'type'  => $type , 
+							'label' => $type   
 							);
+				$this->form_fields['fields'][ $_POST['tab_index'] ][] = $field;
 				
-				$this->show_field('form',$_POST['type'],substr( $_POST['type'], 4), 'edit');
+				
+				call_user_func('profile_cct_'.$type.'_field_shell','edit',$field);
  			break;
  			
  			case 'remove':
- 				unset( $this->form_fields['fields'][ $_POST['id'] ][ $_POST['index'] ] );
+ 				var_dump($_POST);
+ 				die();
+ 				unset( $this->form_fields['fields'][ $_POST['tab_index'] ][ $_POST['field_index'] ] );
  				// reorder the items again
- 				foreach($this->form_fields['fields'][ $_POST['id'] ] as $item ):
+ 				foreach($this->form_fields['fields'][ $_POST['tab_index'] ] as $item ):
  					$items[] = $item;
  				endforeach;
  				
@@ -639,11 +671,23 @@ class Profile_CCT {
  			break;
  			
  			case "update":
- 				$this->form_fields['fields'][ $_POST['id'] ][$_POST['index']]['label'] = $_POST['label'];
+ 				
+ 				if($_POST['tab_index'] == 'name'):
+ 					$this->form_fields['name']['label'] 		= $_POST['label'];
+ 					$this->form_fields['name']['description'] 	= $_POST['description'];
+ 					$this->form_fields['name']['show'] 			= $_POST['show'];
+ 				else:
+	 				$this->form_fields['fields'][ $_POST['tab_index'] ][$_POST['field_index']]['label'] 		= $_POST['label'];
+	 				$this->form_fields['fields'][ $_POST['tab_index'] ][$_POST['field_index']]['description'] 	= $_POST['description'];
+	 				$this->form_fields['fields'][ $_POST['tab_index'] ][$_POST['field_index']]['show'] 			= $_POST['show'];
+	 				$this->form_fields['fields'][ $_POST['tab_index'] ][$_POST['field_index']]['multiple']		= ( isset($_POST['multiple']) &&  $_POST['multiple'] ? $_POST['multiple'] : 0); 
+ 				endif;
  				echo "updated";
  			break;
  			
  			case "sort":
+ 				var_dump($_POST);
+ 				die();
  				$i = 0;
  				foreach( $_POST['types'] as $type):
  					$items[] =  array( 
@@ -652,7 +696,7 @@ class Profile_CCT {
 							);
 					$i++;
  				endforeach;
- 				$this->form_fields['fields'][ $_POST['id'] ] = $items;
+ 				$this->form_fields['fields'][ $_POST['tab_index'] ] = $items;
  				echo "sorted";
  			break;
  		}
@@ -673,7 +717,7 @@ class Profile_CCT {
 	 * @param int $order. (default: 0)
 	 * @param mixed $label. (default: NULL)
 	 * @return void
-	 */
+	 
 	function show_field($type,$field_type,$label,$options,$action=NULL,$order=0)
 	{	
 		$raw_field_type = substr($field_type,4);
@@ -708,14 +752,14 @@ class Profile_CCT {
 		echo "</li>";
 		
 	}
-	/**
+	
 	 * show_raw_field function.
 	 * 
 	 * @access public
 	 * @param mixed $type. (default: NULL)
 	 * @param mixed $action. (default: NULL)
 	 * @return void
-	 */
+	
 	function show_raw_field($type,$field_type=NULL,$action=NULL)
 	{	
 		global $post;
@@ -781,6 +825,7 @@ class Profile_CCT {
 		
 		
 	}
+	*/
 	
 	public function field_field_tab_index(){
 		$this->tab_index++;
@@ -802,7 +847,7 @@ class Profile_CCT {
 	 	if($type == 'page' && isset( $this->form_fields['tabs']))
 	 		return $this->form_fields['tabs'];
 	 	else
-	 		return array( "Basic Info", "Bio","Social" );
+	 		return array( "Basic Info", "Bio" );
 	}
 	/**
 	 * show_tabs function.
@@ -811,7 +856,7 @@ class Profile_CCT {
 	 * @param mixed $type
 	 * @param mixed $action
 	 * @return void
-	 */
+	 
 	function show_tabs($type,$action) {
 		switch($type){
 			case 'form':
@@ -937,7 +982,7 @@ class Profile_CCT {
 	 * @param mixed $input
 	 * @return void
 	 */
-	function validate_form_fields($input)
+	function validate_form_fields( $input )
 	{
 		// last check before saving to the db
 		return $input;
@@ -950,7 +995,7 @@ class Profile_CCT {
 	 * @param mixed $input
 	 * @return void
 	 */
-	function validate_page_fields($input)
+	function validate_page_fields( $input )
 	{
 		// last check before saving to the db
 		return $input;
@@ -962,13 +1007,22 @@ class Profile_CCT {
 	 * @access public
 	 * @param mixed $value
 	 * @return void
-	 */
-	function stripslashes_deep($value)
+	 */ 
+	function stripslashes_deep( $value )
 	{
 	    $value = is_array($value) ?
 	                array_map('stripslashes_deep', $value) :
 	                stripslashes($value);
 	    return $value;
+	}
+	
+	
+	function is_data_array( $data )
+	{
+		if(!is_array($data) || !is_array($data[0]))
+			return false;
+		
+		return true;
 	}
 } // end class
 

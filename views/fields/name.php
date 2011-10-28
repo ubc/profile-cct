@@ -5,18 +5,18 @@ add_action('profile_cct_form','profile_cct_name_field_shell',10,2);
 
 function profile_cct_name_field_shell($action) {
 	
-	$field = Profile_CCT::set(); // prints "Creating new instance."
+	$field = Profile_CCT::get_object(); // prints "Creating new instance."
 	
 	$options = $field->form_fields['name']; // stuff that is comming from the db
-	
 	$default_options = array(
-		'label'=>'name',
-		'description'=>'just enter your name',
-		'show'=>array('prefix','middle','suffix'),
-		'show_fields'=>array('prefix','middle','suffix')
+		'label'=>'name',	
+		'description'=>'',
+		'show'=>array('title','middle','suffix'),
+		'show_fields'=>array('title','middle','suffix'),
+		'show_remove'=> false
 		);
 		
-	$options = (is_array($options) ? array_merge($options,$default_options): $default_options );
+	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	echo "<ul class='form-builder'>";
 	$field->start_field('name',$action,$options);
 	
@@ -27,9 +27,10 @@ function profile_cct_name_field_shell($action) {
 }
 function profile_cct_name_field( $data, $options ){
 	extract( $options );
-	$field = Profile_CCT::set();
 	
-	$field->input_field( array( 'field_id'=>'prefix','label'=>'Title', 'size'=>2, 'value'=>$data['prefix'], 'type'=>'text', 'show' => in_array("prefix",$show)) );
+	$field = Profile_CCT::get_object();
+	$show = (is_array($show) ? $show : array());
+	$field->input_field( array( 'field_id'=>'title','label'=>'Title', 'size'=>2, 'value'=>$data['title'], 'type'=>'text', 'show' => in_array("title",$show)) );
 
 	$field->input_field( array( 'field_id'=>'first','label'=>'First', 'size'=>14, 'value'=>$data['first'], 'type'=>'text', ));
 	
