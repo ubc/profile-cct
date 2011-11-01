@@ -1,6 +1,13 @@
 <?php 
 
-function profile_cct_phone_field_shell($action,$options) {
+function profile_cct_phone_field_shell( $action, $options ) {
+	
+	if( is_object($action) ):
+		$post = $action;
+		$action = "display";
+		$options = $options['args']['options'];
+		$data = $options['args']['data'];
+	endif;
 	
 	$field = Profile_CCT::get_object(); // prints "Creating new instance."
 	
@@ -32,6 +39,7 @@ function profile_cct_phone_field_shell($action,$options) {
 	
 }
 function profile_cct_phone_field( $data, $options ){
+
 	extract( $options );
 	$field = Profile_CCT::get_object();
 	$show = (is_array($show) ? $show : array());

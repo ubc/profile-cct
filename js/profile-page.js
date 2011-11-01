@@ -8,7 +8,7 @@ var Profile_CCT_PAGE = {
 		
 		jQuery('.hide-if-js',tabs_shell).removeClass('hide-if-js'); // this helps with showing the meta boxes 
 		
-		jQuery('.add-fields').click(Profile_CCT_PAGE.addFields)
+		jQuery('.add-multiple').click(Profile_CCT_PAGE.addFields)
 		jQuery('.remove-fields').live('click',Profile_CCT_PAGE.removeFields)
 	},
 	addFields : function(e){

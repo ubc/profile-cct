@@ -1,7 +1,14 @@
 <?php 
 
-function profile_cct_publications_field_shell($action,$options) {
+function profile_cct_publications_field_shell($action, $options ) {
 	
+	if( is_object($action) ):
+		$post = $action;
+		$action = "display";
+		$options = $options['args']['options'];
+		$data = $options['args']['data'];
+	endif;
+
 	$field = Profile_CCT::get_object(); // prints "Creating new instance."
 	
 	
@@ -26,5 +33,4 @@ function profile_cct_publications_field( $data, $options ){
 	$field = Profile_CCT::get_object();
 
 	$field->input_field( array( 'label'=>'', 'size'=>25, 'row'=>2, 'cols'=>20, 'value'=>$data['publications'], 'type'=>'textarea') );
-
 }

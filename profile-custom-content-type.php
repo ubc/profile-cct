@@ -61,10 +61,13 @@ class Profile_CCT {
 	public function __construct () {
 	
 		add_action( 'admin_menu', array( $this, 'add_menu_page' ) );
+		/* saving the post meta info */
 		add_action( 'edit_form_advanced', array($this, 'edit_form_advanced'));
 		add_action( 'add_meta_boxes_profile_cct', array($this, 'edit_post')); // add meta boxes 
 		add_action( 'init',  array( $this,'register_cpt_profile_cct') );
 		add_action( 'wp_insert_post_data', array( $this,'save_post_data'),10,2);
+		
+		
 		
 		add_action( 'wp_ajax_cct_update_fields', array( $this,'update_fields'));
 		add_action( 'wp_ajax_cct_update_tabs', array( $this,'update_tabs'));
@@ -377,7 +380,8 @@ class Profile_CCT {
 	 */
 	function edit_post()
 	{
-				
+		global $post;
+			
 		$this->form_fields = get_option('Profile_CCT_form_fields');
 		
 		$tab_count = 0;
@@ -387,14 +391,14 @@ class Profile_CCT {
 				foreach( $this->form_fields['fields'][$tab_count] as $field):
 					
 					// add_meta_box( $id, $title, $callback, $page, $context, $priority, $callback_args );
-					add_meta_box( $field['type']."-".$tab_count."-".$i.'-'.rand(), $field['label'], array($this,'show_page_field'), 'profile_cct', 'tabbed-'.$tab_count,'high', $field);
+					add_meta_box( $field['type']."-".$tab_count."-".$i.'-'.rand(), $field['label'], 'profile_cct_'.$field['type'].'_field_shell', 'profile_cct', 'tabbed-'.$tab_count,'high', array('options'=>$field,'data'=>''));
 					$i++;
 				endforeach;
 			endif;
 			$tab_count++;
 		endforeach;
 			
-		add_meta_box( "name-0", "Name", array($this,'show_page_field'), 'profile_cct', 'normal','high',array( "type"=>'cct-name',"label"=>"name") ); 
+		add_meta_box( "name-0", $this->form_fields['name']['label'], 'profile_cct_name_field_shell', 'profile_cct', 'normal','high', array('options'=>$this->form_fields['name'],'data'=>$data['name']) ); 
 	}
 	
 	function show_page_field($post,$field) {
@@ -405,8 +409,8 @@ class Profile_CCT {
 	function save_post_data($data,$postarr)
 	{
 		global $post;
-		//var_dump($data,$postarr,$post);
-		// die();
+		var_dump($data,$postarr,$post, $_POST);
+		die();
 		
 		
 		if($data['post_type'] != 'profile_cct')
@@ -414,7 +418,7 @@ class Profile_CCT {
 			
 			// save the name of the person as the title 
 		if( is_array( $_POST["profile_field"]["cct-name"]) ):
-			$data['post_title'] = $_POST["profile_field"]["cct-name"]['title']." ".$_POST["profile_field"]["cct-name"]['first']." ".$_POST["profile_field"]["cct-name"]['last']." ".$_POST["profile_field"]["cct-name"]['prefix'];
+			$data['post_title'] = $_POST["profile_field"]["name"]['title']." ".$_POST["profile_field"]["name"]['first']." ".$_POST["profile_field"]["name"]['last']." ".$_POST["profile_field"]["cct-name"]['prefix'];
 			else:
 				$userdata = get_userdata($data['post_author']);
 				$data['post_title'] =$userdata->user_nicename;
@@ -465,7 +469,7 @@ class Profile_CCT {
 					 		array( "type"=> "teaching",		"label"=> "teaching" ), 
 					 		array( "type"=> "publications",	"label"=> "publications" ), 
 					 		array( "type"=> "research",		"label"=> "research" ))
-				 	); 
+				 	);
 		 endif;
 
 	 }
@@ -478,7 +482,9 @@ class Profile_CCT {
 	 		$show_remove = true;
 	 	
 	 	?>
-	 	<li class="<?php echo $field_type; ?> field-item" for="cct-<?php echo $field_type; ?>">
+	 	<div class="<?php echo esc_attr( $field_type); ?> field-item" for="cct-<?php echo esc_attr( $field_type); ?>" 
+	 	data-type="<?php echo esc_attr( $field_type ); ?>"
+	 	data-options="<?php echo esc_attr( $this->serialize($options)); ?>" >
 	 	<?php 
 	 	if($action == 'edit'): 
 	 		if($show_remove):
@@ -488,6 +494,7 @@ class Profile_CCT {
 		 	endif; ?>
 			<a href="#edit-field" class="edit">Edit</a>
 			<div class="edit-shell" style="display:none;">
+					<input type="hidden" name="type" value="<?php echo esc_attr( $field_type ); ?>" />
 				<?php 
 					$this->input_field( array('size'=>20, 'value'=>$label, 'class'=>'field-label', 'name'=>'label','label'=>'label', 'type'=>'text', 'before_label'=>true ));
 					if(isset($description))
@@ -496,17 +503,14 @@ class Profile_CCT {
 						$this->input_field(array('type'=>'multiple','all_fields'=>$show_fields, 'class'=>'field-show','selected_fields'=>$show,'name'=>'show', 'label'=>'show / hide input area','before_label'=>true));			
 					
 					if(isset($show_multiple) && $show_multiple)
-						$this->input_field(array('type'=>'checkbox','name'=>'multiple', 'class'=>'field-multiple', 'field'=>'yes allow the user to create multiple', 'value'=>$multiple,'label'=>'allow for multiple entries','before_label'=>true));	
-						
+						$this->input_field(array('type'=>'checkbox','name'=>'multiple', 'class'=>'field-multiple', 'field'=>'yes allow the user to create multiple', 'value'=>$multiple,'label'=>'allow for multiple entries','before_label'=>true));
 					 ?>
 					 <input type="button" value="Save" class="button save-field-settings" />
 					 <span class="spinner" style="display:none;"><img src="<?php echo admin_url(); ?>/images/wpspin_light.gif" alt="spinner" /> saving...</span>
 			</div>
-		<?php 	
-		endif;
-	 	?>
-	 	<label for="" id="" class="field-title"><?php echo $label; ?></label>
-	 	<?php 
+		 	<label for="" id="" class="field-title"><?php echo $label; ?></label>
+		 	<?php 
+	 	endif;
 	 	if( isset($show_multiple) && $show_multiple ): ?>
 	 	<div class="field-shell">
 	 	<?php 
@@ -528,7 +532,7 @@ class Profile_CCT {
 	 	endif;
 	 	
 	 	?><pre class="description"><?php echo $description; ?></pre>
-	 	</li>
+	 	</div>
 	 	<?php 
 	 }
 	 
@@ -539,7 +543,7 @@ class Profile_CCT {
 	 	$before_label = ( isset($before_label) && $before_label ? true:false);
 	 	$field_id_class = ( isset($field_id)? ' class="'.$field_id.'"': '');
 	 	
-	 		
+	 	$name = ""
 	 	$size = ( isset($size)? ' size="'.$size.'"': '');
 	 	$row = ( isset($row)? ' row="'.$row.'"': '');
 	 	$cols = ( isset($cols)? ' cols="'.$cols.'"': '');
@@ -657,15 +661,13 @@ class Profile_CCT {
  			break;
  			
  			case 'remove':
- 				var_dump($_POST);
- 				die();
  				unset( $this->form_fields['fields'][ $_POST['tab_index'] ][ $_POST['field_index'] ] );
  				// reorder the items again
  				foreach($this->form_fields['fields'][ $_POST['tab_index'] ] as $item ):
  					$items[] = $item;
  				endforeach;
  				
- 				$this->form_fields['fields'][ $_POST['id'] ] = $items;
+ 				$this->form_fields['fields'][ $_POST['tab_index'] ] = $items;
 
  				echo "removed";
  			break;
@@ -686,18 +688,11 @@ class Profile_CCT {
  			break;
  			
  			case "sort":
- 				var_dump($_POST);
- 				die();
- 				$i = 0;
- 				foreach( $_POST['types'] as $type):
- 					$items[] =  array( 
-							'type'  => $type , 
-							'label' => $_POST['labels'][$i]  
-							);
-					$i++;
+ 				unset($this->form_fields['fields'][ $_POST['tab_index'] ]);
+ 				 				foreach($_POST['data'] as $data):
+ 					$this->form_fields['fields'][ $_POST['tab_index'] ][] = wp_parse_args($data);
  				endforeach;
- 				$this->form_fields['fields'][ $_POST['tab_index'] ] = $items;
- 				echo "sorted";
+  				echo "sorted";
  			break;
  		}
  		
@@ -1023,6 +1018,25 @@ class Profile_CCT {
 			return false;
 		
 		return true;
+	}
+	
+	function serialize( $data )
+	{
+		
+		foreach($data as $key => $value):
+			if( in_array($key,array("show_fields","show_multiple")))
+				continue;
+			if(is_array($value)):
+				foreach($value as $value_data):
+					$str[] = urlencode($key."[]")."=".urlencode($value_data);
+				endforeach;
+				
+			else:
+				$str[] = urlencode($key)."=".urlencode($value);
+			endif;
+		endforeach;
+		
+		return implode("&",$str);
 	}
 } // end class
 

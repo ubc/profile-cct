@@ -1,6 +1,13 @@
 <?php 
 
-function profile_cct_email_field_shell($action,$options) {
+function profile_cct_email_field_shell( $action, $options ) {
+	
+	if( is_object($action) ):
+		$post = $action;
+		$action = "display";
+		$options = $options['args']['options'];
+		$data = $options['args']['data'];
+	endif;
 	
 	$field = Profile_CCT::get_object(); // prints "Creating new instance."
 	
@@ -28,10 +35,8 @@ function profile_cct_email_field_shell($action,$options) {
 	
 }
 function profile_cct_email_field( $data, $options ){
+	
 	extract( $options );
 	$field = Profile_CCT::get_object();
 	$field->input_field( array( 'field_id'=>'email', 'label'=>'', 'size'=>35, 'value'=>$data['email'], 'type'=>'text') );
-
-
-
 }

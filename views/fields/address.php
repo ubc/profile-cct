@@ -1,9 +1,15 @@
 <?php 
 
-function profile_cct_address_field_shell($action,$options) {
+function profile_cct_address_field_shell( $action, $options ) {
+	
+	if( is_object($action) ):
+		$post = $action;
+		$action = "display";
+		$options = $options['args']['options'];
+		$data = $options['args']['data'];
+	endif;
 	
 	$field = Profile_CCT::get_object(); // prints "Creating new instance."
-	
 	
 	$default_options = array(
 		'type' => 'address',
@@ -15,7 +21,6 @@ function profile_cct_address_field_shell($action,$options) {
 	
 	$options = (is_array($options) ? array_merge($default_options,$options): $default_options );
 	
-	
 	$field->start_field('address',$action,$options);
 	
 	profile_cct_address_field($data,$options);
@@ -24,10 +29,10 @@ function profile_cct_address_field_shell($action,$options) {
 
 }
 function profile_cct_address_field( $data, $options ){
+
 	extract( $options );
 	$show = (is_array($show) ? $show : array());
 	$field = Profile_CCT::get_object();
-	
 	
 	$field->input_field( array( 'field_id'=>'building-address', 'label'=>'Building Name', 'size'=>35, 'value'=>$data['building-address'], 'type'=>'text', 'show' => in_array("building-address",$show) ) );
 	$field->input_field( array( 'field_id'=>'room-number','label'=>'Room Number', 'size'=>35, 'value'=>$data['room-number'], 'type'=>'text', 'show' => in_array("room-number",$show)) );
