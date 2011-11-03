@@ -401,15 +401,16 @@ class Profile_CCT {
 		global $post;
 			
 		$this->form_fields = get_option('Profile_CCT_form_fields');
+		
+		$contexts = $this->get_contexts();
  		
- 		if( !is_array( $this->form_fields ) )
- 			$this->form_fields = $this->default_options();
-		
-		
-		if(is_array($this->form_fields['fields']) && is_array($this->form_fields['fields'])):
-			$i = 0;
-			foreach( $this->form_fields['fields'] as $context =>$fields):
+ 		if( is_array( $contexts ) ):
+ 		
+ 			
+	
+			foreach( $contexts as $context ):
 				
+				$fields = $this->get_option('form','fields',$context);
 				foreach($fields as $field):
 					// add_meta_box( $id, $title, $callback, $page, $context, $priority, $callback_args );
 					add_meta_box( $field['type']."-".$i.'-'.rand(0,99), $field['label'], 'profile_cct_'.$field['type'].'_field_shell', 'profile_cct', $context,'low', array('options'=>$field,'data'=>''));
@@ -463,11 +464,7 @@ class Profile_CCT {
 	 
 
 	 
-	 function default_shells($type = 'form')
-	 {
-		 return array( 'normal','side','tabs');
 	 
-	 }
 	 
 	 function profile_cct_form_field_shell($action){
 	 	
@@ -864,7 +861,33 @@ class Profile_CCT {
 		
 		return implode("&",$str);
 	}
-	
+	function default_shells($type = 'form')
+	{
+		return array( 'normal','side','tabs');
+	 
+	}
+	 
+	function get_contexts($type = 'form'){
+		
+		$contexts = $this->default_shells();
+		$id = array_search('tabs',$contexts);
+		
+		if(is_numeric($id)):
+	 		$tabs = $this->get_option($type,'tabs');
+	 	
+	 		if(is_array($tabs)):
+		 		$count = 1;
+		 		foreach($tabs as $tab):
+		 			$contexts[] = "tabbed-".$count;
+		 			$count++;
+		 		endforeach;
+	 		endif;
+	 		
+	 		unset($contexts[$id]);
+	 		$contexts = array_values($contexts);
+	 	endif;
+	 	return $contexts;
+	}
 	
 	function get_option($type='form',$fields_or_tabs='fields',$context='normal'){
 		$option = get_option('Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context);
