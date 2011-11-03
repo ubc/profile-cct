@@ -5,11 +5,11 @@
 	font-size:22px;
 	padding:5px 2px 1px;
 }
-.inside span{
+#post-body-content .inside span{
 	float: left;
 	margin-top: 5px;
 }
-.inside label{
+#post-body-content .inside label{
 	display: block;
 	color:#888;
 	font-size: 11px;

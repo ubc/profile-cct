@@ -1,13 +1,10 @@
 
-.form-builder {
-	width:640px
-}
+
 
 /* ----- Field Structure ----- */
 .form-builder {
-	margin:10px 0 0;
-	padding:0;
 	list-style-type:none
+	width:640px;
 }
 
 * html .form-builder {
@@ -15,11 +12,39 @@
 	width:99%;
 	zoom:1
 }
-
+.sort li{
+	margin:0 0 10px;
+	padding:0 0 0 20px;
+	clear:both;
+	position:relative;
+	border:1px solid #DFDFDF;
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 1px 0 #FFFFFF inset;
+	background-color: #F5F5F5;
+    background-image: -moz-linear-gradient(center top , #F9F9F9, #F5F5F5);
+}
+.sort .field-title {
+	font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
+    font-size: 15px;
+    font-weight: normal;
+    line-height: 1;
+    margin: 0 -20px 10px;
+    padding: 7px 10px;
+	color: #464646;
+	text-transform: capitalize;
+	cursor:move;
+	width:100%;
+	display:block;
+	border-bottom-color: #DFDFDF;
+    box-shadow: 0 1px 0 #FFFFFF;
+    text-shadow: 0 1px 0 #FFFFFF;
+    background-color: #F1F1F1;
+    background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
+}
 .form-builder li {
 	margin:0 0 10px;
 	padding:0 20px 9px;
-	width:580px;
+	width:596px;
 	clear:both;
 	position:relative;
 	border:1px solid #DFDFDF;
@@ -100,24 +125,9 @@
 .form-builder li div span {
 	margin:0 5px 0 0;
 	display:block;
-	float:left;
-	
+	float:left;	
 }
 
-.twoColumns div span {
-	width:48%;
-	margin:0 5px 0 0
-}
-
-.threeColumns div span {
-	width:30%;
-	margin:0 5px 0 0
-}
-
-.notStacked div span {
-	width:auto;
-	margin:0 7px 0 0
-}
 
 /* ----- Name Field Structuure ----- */
 .form-builder .name span input {
@@ -199,9 +209,7 @@
     background-color: #F1F1F1;
     background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
 }
-#form-name .field-title{
-	cursor: default;
-}
+
 .form-builder .text,
 .form-builder textarea,
 .form-builder .select {
@@ -282,24 +290,10 @@
 	float:right;
 	padding:5px 10px;
 	font-size:10px;
-	margin:0;
+	margin:0 -15px 0 0;
 }
 
-.form-builder li .remove {
-	margin:6px 0 0;
-	padding:1px 2px 0;
-	line-height:11px;
-	text-decoration:none;
-	border-bottom:1px solid red;
-	color:red;
-	float:right;
-	font-size:10px
-}
 
-.form-builder li .remove:hover {
-	background:red;
-	color:#FFF
-}
 
 .form-builder li .edit-shell {
 	background:#EAF2FA;
@@ -308,17 +302,19 @@
 }
 
 /* ----- Sorting ----- */
-.form-builder .ui-state-highlight {
-	background:#CCC;
-	border:1px solid #AAA
+.ui-state-highlight {
+	background:#EEE;
+	height: 20px;
+	border:1px dashed #AAA
+	
 }
 
-.form-builder .ui-sortable-helper {
+li.ui-sortable-helper {
 	border:0;
 	-moz-box-shadow:0 0 5px #888;
 	-webkit-box-shadow:0 0 5px#888;
-	box-shadow:0 0 5px #888
-	
+	box-shadow:0 0 5px #888;
+	opacity: .8; /* to do add opacity */
 }
 
 /* ----- Tabs ----- */
@@ -394,7 +390,11 @@
 #add-tab-shell {
 	border: 0;
 }
-
+.sort{
+	padding: 5px 0 0 5px;
+	border: 1px dashed #EEE;
+	margin-bottom: 5px;
+}
 .remove-tab { 
 	float: right; 
 	margin: 4px 4px 0 4px; 
@@ -404,6 +404,21 @@
 	background: url(img/222222_256x240_icons_icons.png) no-repeat -80px -128px;
     overflow: hidden;
     text-indent: -99999px;
+}
+
+.ui-sortable-helper .field-shell,
+.ui-sortable-helper .remove,
+.ui-sortable-helper .edit,
+.ui-sortable-helper .add-multiple,
+.ui-sortable-helper .description,
+#banch li .field-shell,
+#banch li .remove,
+#banch li .edit,
+#banch li .add-multiple,
+#banch li .description
+{
+	display: none !important;
+	height: 0;
 }
 
 /* add fields */

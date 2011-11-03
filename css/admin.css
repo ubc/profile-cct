@@ -1,10 +1,38 @@
 #col-left{
 	width:625px;
+	margin: 0;
+    overflow: hidden;
+    padding: 0;
+    float: left;
 }
 #col-right{
 	width:150px;
 	float: left;
 	margin-right: 10px;
+	margin: 0;
+	
+}
+#col-middle{
+	width: 960px;
+	margin: 0;
+    padding: 0;
+    float: left;
+}
+#col-middle #normal-shell,
+#col-middle #tabs{
+	width: 649px;
+	float: left;
+	margin-left: 6px;
+}
+#col-middle #side-shell{
+	width: 300px;
+	float: right;
+}
+#side-shell .form-builder{
+	width: 322px;
+}
+#side-shell .form-builder li{
+	width: 280px;
 }
 #notify{
 	  height: 30px;

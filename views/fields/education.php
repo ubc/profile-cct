@@ -22,7 +22,7 @@ function profile_cct_education_field_shell( $action, $options ) {
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	
-	$field->start_field('education',$action,$options);
+	$field->start_field($action,$options);
 	if( $field->is_data_array( $data ) ):
 		
 		foreach($data as $item_data):
@@ -33,7 +33,7 @@ function profile_cct_education_field_shell( $action, $options ) {
 		profile_cct_education_field($item_data,$options);
 	endif;
 	
-	$field->end_field($options);
+	$field->end_field( $action, $options );
 }
 function profile_cct_education_field( $data, $options ){
 

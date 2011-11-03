@@ -35,8 +35,16 @@ Requirement
 This plugin requires WordPress >= 3.2 and tested with PHP Interpreter >= 5.2
 */
 if(isset( $_GET['d'])):
-	delete_option('Profile_CCT_form_fields', $fields);
-	delete_option('Profile_CCT_page_fields', $fields);
+	delete_option('Profile_CCT_form_fields_tabbed-1');
+	delete_option('Profile_CCT_form_fields_tabbed-2');
+	delete_option('Profile_CCT_form_fields_normal');
+	delete_option('Profile_CCT_form_fields_side');
+	delete_option('Profile_CCT_form_fields_banch');
+	
+	delete_option('Profile_CCT_form_tabs_normal');
+	
+	delete_option('Profile_CCT_page_fields');
+	echo "hey";
 endif;
 class Profile_CCT {
 	static private $classobj = NULL;
@@ -93,6 +101,9 @@ class Profile_CCT {
 
     		closedir($handle);
 		endif;
+		
+		add_action('profile_cct_form', array( $this,'profile_cct_form_field_shell'),10,1);
+	
 		
 	}
 
@@ -240,7 +251,10 @@ class Profile_CCT {
 	 */
 	public function admin_pages() {
 		$this->form_fields = get_option('Profile_CCT_form_fields');
-		$this->page_fields = get_option('Profile_CCT_page_fields');
+ 		
+ 		if( !is_array( $this->form_fields ) )
+ 			$this->form_fields = $this->default_options();
+		
 		
 		screen_icon( 'users' );
 		?>
@@ -265,6 +279,10 @@ class Profile_CCT {
 				require_once("views/form.php");
 			break;
 			case "page":
+				
+				$this->page_fields = get_option('Profile_CCT_page_fields');
+				if( !is_array($this->page_fields) )
+					$this->page_fields = $this->default_fields('page');
 				require_once("views/page.php");
 			break;
 			case "list":
@@ -350,7 +368,7 @@ class Profile_CCT {
 		<div id="tabs">
 			<ul>
 				<?php 
-				$count = 0;
+				$count = 1;
 				foreach( $this->form_fields['tabs'] as $tab) : ?>
 					<li><a href="#tabs-<?php echo $count; ?>" class="tab-link"><?php echo $tab; ?></a></li>
 				<?php 
@@ -358,7 +376,7 @@ class Profile_CCT {
 				endforeach; ?>
 			</ul>
 			<?php 
-			$count = 0;
+			$count = 1;
 			foreach( $this->form_fields['tabs'] as $tab) :
 			?>
 				<div id="tabs-<?php echo $count?>">
@@ -383,22 +401,21 @@ class Profile_CCT {
 		global $post;
 			
 		$this->form_fields = get_option('Profile_CCT_form_fields');
+ 		
+ 		if( !is_array( $this->form_fields ) )
+ 			$this->form_fields = $this->default_options();
 		
-		$tab_count = 0;
-		foreach($this->form_fields['tabs'] as $tab):
-			if(is_array($this->form_fields['fields']) && is_array($this->form_fields['fields'][$tab_count])):
-				$i = 0;
-				foreach( $this->form_fields['fields'][$tab_count] as $field):
-					
+		
+		if(is_array($this->form_fields['fields']) && is_array($this->form_fields['fields'])):
+			$i = 0;
+			foreach( $this->form_fields['fields'] as $context =>$fields):
+				
+				foreach($fields as $field):
 					// add_meta_box( $id, $title, $callback, $page, $context, $priority, $callback_args );
-					add_meta_box( $field['type']."-".$tab_count."-".$i.'-'.rand(), $field['label'], 'profile_cct_'.$field['type'].'_field_shell', 'profile_cct', 'tabbed-'.$tab_count,'high', array('options'=>$field,'data'=>''));
-					$i++;
+					add_meta_box( $field['type']."-".$i.'-'.rand(0,99), $field['label'], 'profile_cct_'.$field['type'].'_field_shell', 'profile_cct', $context,'low', array('options'=>$field,'data'=>''));
 				endforeach;
-			endif;
-			$tab_count++;
-		endforeach;
-			
-		add_meta_box( "name-0", $this->form_fields['name']['label'], 'profile_cct_name_field_shell', 'profile_cct', 'normal','high', array('options'=>$this->form_fields['name'],'data'=>$data['name']) ); 
+			endforeach;
+		endif;
 	}
 	
 	function show_page_field($post,$field) {
@@ -409,8 +426,8 @@ class Profile_CCT {
 	function save_post_data($data,$postarr)
 	{
 		global $post;
-		var_dump($data,$postarr,$post, $_POST);
-		die();
+		//var_dump($data,$postarr,$post, $_POST);
+		// die();
 		
 		
 		if($data['post_type'] != 'profile_cct')
@@ -444,57 +461,62 @@ class Profile_CCT {
 	 	return array("name", "address","phone","fax","email","website","position","bio","education","publications","research","teaching","blog","twitter","facebook","linkedin","delicious","flickr","google-plus","text","textarea","social");
 	 }
 	 
-	 /**
-	  * default_fields function.
-	  * the fields that are displayed when there is no more 
-	  * @access public
-	  * @return void
-	  */
-	 function default_fields($type = 'form')
-	 {
-	 	if($type == 'page' && isset( $this->form_fields['fields'])):
-	 		return $this->form_fields['fields'];
-	 	else:
-		 	return 	array(
-				 		array(
-					 		array( "type"=> "address", 		"label"=> "address",),
-					 		array( "type"=> "phone",		"label"=> "phone" ), 
-					 		array( "type"=> "email",		"label"=> "email" ),
-					 		array( "type"=> "website",		"label"=> "website"),
-					 		array( "type"=> "social",		"label"=> "social")),
-				 		array(
-				 			array( "type"=> "position" ,	"label"=> "position" ), 
-					 		array( "type"=> "bio",			"label"=> "bio" ), 
-					 		array( "type"=> "education", 	"label"=> "education" ), 
-					 		array( "type"=> "teaching",		"label"=> "teaching" ), 
-					 		array( "type"=> "publications",	"label"=> "publications" ), 
-					 		array( "type"=> "research",		"label"=> "research" ))
-				 	);
-		 endif;
 
+	 
+	 function default_shells($type = 'form')
+	 {
+		 return array( 'normal','side','tabs');
+	 
 	 }
 	 
+	 function profile_cct_form_field_shell($action){
+	 	
+	 	
+	 	$contexts = $this->default_shells();
+	 	
+	 	foreach($contexts as $context):
+		 	if(function_exists('profile_cct_form_shell_'.$context)):
+		 		call_user_func('profile_cct_form_shell_'.$context,$action);
+		 	else: 
+		 		
+		 		?>
+		 		<div id="<?php echo $context; ?>-shell">
+		 			<ul class="form-builder sort" id="<?php echo $context; ?>">
+		 		<?php 
+		 			$fields = $this->get_option('form','fields',$context);
+		 				
+			 		if( is_array( $fields  ) ):
+				 		foreach($fields  as $field):
+				 			call_user_func('profile_cct_'.$field['type'].'_field_shell',$action,$field);
+				 		endforeach;
+			 		endif;
+		 		?></ul>
+		 		</div>
+		 		<?php 
+		 		
+		 	endif;
+	 	endforeach;
+	 }
 	 
-	 function start_field($field_type,$action, $options ) {
+	 function start_field($action, $options ) {
 	 	extract( $options );
 	 	// be default show the remove button
 	 	if( !isset($show_remove))
 	 		$show_remove = true;
+	 		
+	 	$shell = 'div';
+	 	if($action == 'edit')
+	 		$shell = 'li';
 	 	
 	 	?>
-	 	<div class="<?php echo esc_attr( $field_type); ?> field-item" for="cct-<?php echo esc_attr( $field_type); ?>" 
-	 	data-type="<?php echo esc_attr( $field_type ); ?>"
+	 	<<?php echo $shell; ?> class="<?php echo esc_attr( $type); ?> field-item" for="cct-<?php echo esc_attr( $field_type); ?>" 
 	 	data-options="<?php echo esc_attr( $this->serialize($options)); ?>" >
 	 	<?php 
 	 	if($action == 'edit'): 
-	 		if($show_remove):
 	 		?>
-		 	<a href="#remove-field" class="remove">Remove</a>
-		 	<?php 
-		 	endif; ?>
 			<a href="#edit-field" class="edit">Edit</a>
 			<div class="edit-shell" style="display:none;">
-					<input type="hidden" name="type" value="<?php echo esc_attr( $field_type ); ?>" />
+					<input type="hidden" name="type" value="<?php echo esc_attr( $type ); ?>" />
 				<?php 
 					$this->input_field( array('size'=>20, 'value'=>$label, 'class'=>'field-label', 'name'=>'label','label'=>'label', 'type'=>'text', 'before_label'=>true ));
 					if(isset($description))
@@ -511,39 +533,49 @@ class Profile_CCT {
 		 	<label for="" id="" class="field-title"><?php echo $label; ?></label>
 		 	<?php 
 	 	endif;
-	 	if( isset($show_multiple) && $show_multiple ): ?>
+	 	if($action == 'display'):
+	 		
+	 	endif;
+	 	?>
 	 	<div class="field-shell">
+	 	<?php 
+	 	if( isset($show_multiple) && $show_multiple ): ?>
+	 	
 	 	<?php 
 	 	endif;
 	 }
 	
-	 function end_field($options)
+	 function end_field( $action, $options )
 	 {
-	 	
+	 	$shell = 'div';
+	 	if($action == 'edit')
+	 		$shell = 'li';
 	 	extract( $options );
-	 	
+	 	?>
+	 	</div>
+	 	<?php 
 	 	if( isset($show_multiple) && $show_multiple ):
 	 		
 	 		$style_multiple = ( isset($multiple) && $multiple ? 'style="display: inline;"': 'style="display: none;"');
 	 	 ?>
-	 	</div>
 	 	<a href="#add" <?php echo $style_multiple; ?> class="button add-multiple">Add</a>
 	 	<?php 
 	 	endif;
 	 	
 	 	?><pre class="description"><?php echo $description; ?></pre>
-	 	</div>
+	 	</<?php echo $shell; ?>>
 	 	<?php 
 	 }
 	 
 	 function input_field( $options )
 	 {
+	 	$name = "";
 	 	extract( $options );
 	 	
 	 	$before_label = ( isset($before_label) && $before_label ? true:false);
 	 	$field_id_class = ( isset($field_id)? ' class="'.$field_id.'"': '');
 	 	
-	 	$name = ""
+	 	
 	 	$size = ( isset($size)? ' size="'.$size.'"': '');
 	 	$row = ( isset($row)? ' row="'.$row.'"': '');
 	 	$cols = ( isset($cols)? ' cols="'.$cols.'"': '');
@@ -629,6 +661,8 @@ class Profile_CCT {
 		
 	 }
 	 
+	
+	 
 	/**
 	 * add_field function.
 	 * function return by ajax to be displayed
@@ -637,190 +671,43 @@ class Profile_CCT {
 	 */
 	function update_fields()
  	{	
- 		$this->form_fields = get_option('Profile_CCT_form_fields');
  		
- 		if( !$this->form_fields['tabs'])
- 			$this->form_fields['tabs'] 	= $this->default_tabs("form");
-	
-		if( !$this->form_fields['fields'] ) 
-			$this->form_fields['fields'] 	= $this->default_fields("form");
- 		
+ 		$context = $_POST['context'];
+		$options = $this->get_option('form','fields',$context);
+		
  		switch( $_POST['method'] ){
- 			
- 			case 'add':
- 				// we need to just get the real type minus the cct-
- 				$type  = substr( $_POST['type'], 4);
- 				$field = array( 
-							'type'  => $type , 
-							'label' => $type   
-							);
-				$this->form_fields['fields'][ $_POST['tab_index'] ][] = $field;
-				
-				
-				call_user_func('profile_cct_'.$type.'_field_shell','edit',$field);
- 			break;
- 			
- 			case 'remove':
- 				unset( $this->form_fields['fields'][ $_POST['tab_index'] ][ $_POST['field_index'] ] );
- 				// reorder the items again
- 				foreach($this->form_fields['fields'][ $_POST['tab_index'] ] as $item ):
- 					$items[] = $item;
- 				endforeach;
- 				
- 				$this->form_fields['fields'][ $_POST['tab_index'] ] = $items;
-
- 				echo "removed";
- 			break;
- 			
+ 
  			case "update":
- 				
- 				if($_POST['tab_index'] == 'name'):
- 					$this->form_fields['name']['label'] 		= $_POST['label'];
- 					$this->form_fields['name']['description'] 	= $_POST['description'];
- 					$this->form_fields['name']['show'] 			= $_POST['show'];
- 				else:
-	 				$this->form_fields['fields'][ $_POST['tab_index'] ][$_POST['field_index']]['label'] 		= $_POST['label'];
-	 				$this->form_fields['fields'][ $_POST['tab_index'] ][$_POST['field_index']]['description'] 	= $_POST['description'];
-	 				$this->form_fields['fields'][ $_POST['tab_index'] ][$_POST['field_index']]['show'] 			= $_POST['show'];
-	 				$this->form_fields['fields'][ $_POST['tab_index'] ][$_POST['field_index']]['multiple']		= ( isset($_POST['multiple']) &&  $_POST['multiple'] ? $_POST['multiple'] : 0); 
+ 				if(is_numeric($_POST['field_index'])):
+					$options[$_POST['field_index']]['label'] 		= $_POST['label'];
+	 				$options[$_POST['field_index']]['description'] 	= $_POST['description'];
+	 				$options[$_POST['field_index']]['show'] 		= $_POST['show'];
+	 				$options[$_POST['field_index']]['multiple']		= ( isset($_POST['multiple']) &&  $_POST['multiple'] ? $_POST['multiple'] : 0); 
+	 				
+	 				echo "updated";
  				endif;
- 				echo "updated";
  			break;
  			
  			case "sort":
- 				unset($this->form_fields['fields'][ $_POST['tab_index'] ]);
- 				 				foreach($_POST['data'] as $data):
- 					$this->form_fields['fields'][ $_POST['tab_index'] ][] = wp_parse_args($data);
- 				endforeach;
+ 				
+ 				if(!empty($_POST['data'])):
+ 					unset($options);
+	 				foreach($_POST['data'] as $data):
+	 					$options[] = wp_parse_args($data);
+	 				endforeach;
+	 			else:
+	 				$options = array();
+ 				endif;
   				echo "sorted";
  			break;
  		}
  		
  		// save the opions
-		update_option('Profile_CCT_form_fields', $this->form_fields);
-		
+ 		$this->update_option('form','fields',$context,$options);
+ 		
 		die();
 		
 	}
-	/**
-	 * show_field function.
-	 * 
-	 * @access public
-	 * @param mixed $type
-	 * @param mixed $field_type
-	 * @param mixed $action. (default: NULL)
-	 * @param int $order. (default: 0)
-	 * @param mixed $label. (default: NULL)
-	 * @return void
-	 
-	function show_field($type,$field_type,$label,$options,$action=NULL,$order=0)
-	{	
-		$raw_field_type = substr($field_type,4);
-		
-		if(!in_array($raw_field_type,$this->fields())) // for security 
-			return false;
-		
-		?>
-		<li class="<?php echo $raw_field_type; ?> field-item" for="<?php echo $field_type; ?>">
-		
-		<?php
-		if($action=="edit"):
-			if( $label =="" || $label == NULL)
-				$label = $raw_type;
-		?>
-			
-			<a href="#remove-field" class="remove">Remove</a>
-			<a href="#edit-field" class="edit">Edit</a>
-			<div class="edit-shell" style="display:none;">
-			
-				
-				
-				<?php $this->show_edit_field($type,$field_type,$label,$raw_field_type, $options); ?>
-			</div>
-		<?php 
-		endif;
-		echo '<label for="" id="" class="desc">'.$label.'</label>';
-		
-		// big switch statment
-		$this->show_raw_field($type,$field_type,$action);
-		
-		echo "</li>";
-		
-	}
-	
-	 * show_raw_field function.
-	 * 
-	 * @access public
-	 * @param mixed $type. (default: NULL)
-	 * @param mixed $action. (default: NULL)
-	 * @return void
-	
-	function show_raw_field($type,$field_type=NULL,$action=NULL)
-	{	
-		global $post;
-		
-		$post_form = false;
-		if(is_object($field_type)): // we need to do this when we are passing in the value from 
-			$type = "cct-".$action["args"];
-			$post_form = true;
-			
-			echo "<div class='{$action["args"]}'>";
-		endif;
-		switch($type){
-			case "form":
-				require('views/form-fields.php');
-			break;
-			case "page":
-				require('views/page-fields.php');
-			break;
-		
-		}
-		if($post_form)
-			echo "</div>";
-	}
-	function show_name_field($action){
-		$type="form";
-		$label="name";
-		$field_type = "cct-name";
-		echo "<ul class='form-builder' id='form-name' >";
-			?>
-		<li class="<?php echo $raw_field_type; ?> field-item" for="<?php echo $field_type; ?>">
-		
-		<?php
-		if($action=="edit"): 
-			if( $label =="" || $label == NULL)
-				$label = $raw_type;
-		?>
-			<a href="#edit-field" class="edit">Edit</a>
-			<div class="edit-shell" style="display:none;">
-				<?php $this->show_edit_field($type,$field_type,$options); ?>
-				
-			</div>
-		<?php 
-		endif;
-		echo '<label for="" id="" class="desc">'.$label.'</label>';
-		
-		// big switch statment
-		$this->show_raw_field($type,$field_type,$action);
-		
-		echo "</li>";
-		echo "</ul>";
-	}
-	
-	function show_edit_field($type,$field_type,$options){
-		switch($type){
-			case "form":
-				require('views/form-edit-fields.php');
-			break;
-			case "page":
-				require('views/page-edit-fields.php');
-			break;
-		
-		}
-		
-		
-	}
-	*/
 	
 	public function field_field_tab_index(){
 		$this->tab_index++;
@@ -843,67 +730,6 @@ class Profile_CCT {
 	 		return $this->form_fields['tabs'];
 	 	else
 	 		return array( "Basic Info", "Bio" );
-	}
-	/**
-	 * show_tabs function.
-	 * 
-	 * @access public
-	 * @param mixed $type
-	 * @param mixed $action
-	 * @return void
-	 
-	function show_tabs($type,$action) {
-		switch($type){
-			case 'form':
-				$fields = $this->form_fields;
-			break;
-			case 'page':
-				$fields = $this->page_fields;
-			break;
-		}
-		if( !$fields['tabs'] ) 
-			$fields['tabs'] = $this->default_tabs($type);
-			
-		if( !$fields['fields'] ) 
-			$fields['fields'] = $this->default_fields($type);
-			
-		
-		?>
-		<div id="tabs">
-		<ul>
-			<?php 
-			$count = 1;
-			foreach( $fields['tabs'] as $tab) : ?>
-				<li><a href="#tabs-<?php echo $count; ?>" class="tab-link"><?php echo $tab; ?></a>  <span class="remove-tab">Remove Tab</span> <span class="edit-tab">Edit</span><input type="text" class="edit-tab-input" value="<?php echo esc_attr($tab); ?>" /></li>
-			<?php 
-				$count++;
-			endforeach; ?>
-			<li id="add-tab-shell"><a href="#add-tabshell" id="add-tab" title="Add Tab">Add Tab</a></li>
-		</ul>
-		<?php 
-		$count = 1;
-		foreach( $fields['tabs'] as $tab) :
-		?>
-			<div id="tabs-<?php echo $count?>">
-				<input type="hidden" name="form_field[tabs][]" value="<?php echo esc_attr($tab); ?>" />
-				<ul class="connectedSortable sortable ui-helper-reset form-builder sort dropzone ">
-				<?php 
-				$i =0;
-				if(is_array($fields['fields']) && is_array($fields['fields'][$count-1])):
-					foreach( $fields['fields'][$count-1] as $field):
-					 	$this->show_field($type, $field['type'], $field['label'],$field['options'], "edit", $i ); $i++;
-					endforeach;
-				endif;
-				?>
-				</ul>
-			</div>
-			<?php 
-			$count++;
-		endforeach; ?>
-		<div id="add-tabshell"></div>
-		</div>
-		
-		<?php 
 	}
 	
 	/**
@@ -1038,6 +864,63 @@ class Profile_CCT {
 		
 		return implode("&",$str);
 	}
+	
+	
+	function get_option($type='form',$fields_or_tabs='fields',$context='normal'){
+		$option = get_option('Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context);
+		
+		if(!is_array($option)):
+			$default = $this->default_options($type);
+	
+			if($fields_or_tabs == 'fields')
+				return $default[$fields_or_tabs][$context];
+			else
+				return $default[$fields_or_tabs]; 
+			
+		else:
+			
+			return $option;
+		endif; 
+	}
+	
+	function update_option($type='form',$fields_or_tabs='fields',$context='normal',$update){
+		
+		return update_option('Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context, $update);
+	}
+	
+	function default_options($type = 'form')
+	 {
+			return apply_filters('profile_cct_default_options', array(
+		 				'fields'=> array(
+				 				'tabbed-1' => array(
+								 		array( "type"=> "address", 		"label"=> "address",),
+								 		array( "type"=> "phone",		"label"=> "phone" ), 
+								 		array( "type"=> "email",		"label"=> "email" ),
+								 		array( "type"=> "website",		"label"=> "website"),
+								 		array( "type"=> "social",		"label"=> "social")
+							 		),
+						 		 'tabbed-2' =>array(
+							 			array( "type"=> "position" ,	"label"=> "position" ), 
+								 		array( "type"=> "bio",			"label"=> "bio" )
+								 		
+							 		),
+							 	 'normal'=> array( 
+							 			array("type"=> "name" ,	"label"=> "name" )
+							 			),
+								 'side'=> array( 
+										array( "type"=>"picture", "label"=>"picture" )			 	
+							 			),
+							 	'banch' =>array(
+							 			array( "type"=> "education", 	"label"=> "education" ), 
+								 		array( "type"=> "teaching",		"label"=> "teaching" ), 
+								 		array( "type"=> "publications",	"label"=> "publications" ), 
+								 		array( "type"=> "research",		"label"=> "research" )
+							 	)),
+					   'tabs' => array("Basic Info", "Bio")
+				 	));
+		
+
+	 }
 } // end class
 
 if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT' ) )

@@ -1,9 +1,9 @@
-		<div id="poststuff" class="metabox-holder has-right-sidebar">
-		<div id="side-info-column" class="inner-sidebar">
+		<div id="poststuff" class="metabox-holder has-right-side">
+		<div id="side-info-column" class="inner-side">
 		<div class="meta-box-sortables">
 		<div id="about" class="postbox ">
 		<div class="handlediv" title="<?php _e('Click to toggle'); ?>"><br/></div>
-		<h3 class="hndle" id="about-sidebar"><?php _e('About the plugin', $this -> get_textdomain() ) ?></h3>
+		<h3 class="hndle" id="about-side"><?php _e('About the plugin', $this -> get_textdomain() ) ?></h3>
 		<div class="inside">
 		<p><?php _e('Please read more about this small plugin on github.', $this -> get_textdomain() ); ?></p>
 		<p>&copy; Copyright 2008 - <?php echo date('Y'); ?> <a href="http://bueltge.de">Frank B&uuml;ltge</a></p>
@@ -11,8 +11,8 @@
 		</div>
 		</div>
 		</div>
-		<div id="post-body" class="has-sidebar">
-		<div id="post-body-content" class="has-sidebar-content">
+		<div id="post-body" class="has-side">
+		<div id="post-body-content" class="has-side-content">
 		<div id="normal-sortables" class="meta-box-sortables">
 		<div id="about" class="postbox ">
 		<div class="handlediv" title="<?php _e('Click to toggle'); ?>"><br/></div>

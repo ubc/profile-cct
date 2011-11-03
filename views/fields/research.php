@@ -18,11 +18,11 @@ function profile_cct_research_field_shell( $action, $options ) {
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	
-	$field->start_field('research',$action,$options);
+	$field->start_field($action,$options);
 	
 	profile_cct_research_field($data,$options);
 	
-	$field->end_field($options);
+	$field->end_field( $action, $options );
 	
 }
 function profile_cct_research_field( $data, $options ){

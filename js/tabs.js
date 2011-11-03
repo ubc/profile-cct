@@ -36,7 +36,7 @@ var Profile_CCT_TABS ={
 				jQuery.post(ajaxurl, data, function(response) {
 					
 					if(response == "added"){
-						Profile_CCT_TABS.$tabs.append('<div id="tabs-'+Profile_CCT_TABS.tab_counter+'"><ul class="connectedSortable sortable ui-helper-reset form-builder"></ul></div>');
+						Profile_CCT_TABS.$tabs.append('<div id="tabs-'+Profile_CCT_TABS.tab_counter+'"><ul class=" sortable ui-helper-reset form-builder"></ul></div>');
 						// add tab to form
 						Profile_CCT_TABS.$tabs.tabs( "add" , '#tabs-'+Profile_CCT_TABS.tab_counter , tab_title , index );
 						Profile_CCT_TABS.$tabs.tabs('select',index);

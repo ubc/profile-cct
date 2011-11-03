@@ -1,7 +1,7 @@
 <?php 
 
 
-add_action('profile_cct_form','profile_cct_name_field_shell',10,2);
+// add_action('profile_cct_form','profile_cct_name_field_shell',10,2);
 
 function profile_cct_name_field_shell( $action, $options=null ) {
 	
@@ -13,26 +13,23 @@ function profile_cct_name_field_shell( $action, $options=null ) {
 	endif;
 	
 	$field = Profile_CCT::get_object(); // prints "Creating new instance."
-	if( !is_array($options) )
-		$options = $field->form_fields['name']; // stuff that is comming from the db
-	
+
 	$default_options = array(
-		'type'=> ''
+		'type'=>'name',
 		'label'=>'name',	
 		'description'=>'',
 		'show'=>array('title','middle','suffix'),
-		'show_fields'=>array('title','middle','suffix'),
-		'show_remove'=> false
+		'show_fields'=>array('title','middle','suffix')
 		);
 		
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
-	echo "<ul class='form-builder'>";
-	$field->start_field('name',$action,$options);
+	
+	$field->start_field($action,$options);
 	
 	profile_cct_name_field($data,$options);
 	
-	$field->end_field($options);
-	echo "</ul>";
+	$field->end_field( $action, $options );
+	
 }
 function profile_cct_name_field( $data, $options ){
 	
@@ -41,11 +38,11 @@ function profile_cct_name_field( $data, $options ){
 	$field = Profile_CCT::get_object();
 	
 	$show = (is_array($show) ? $show : array());
-	$field->input_field( array( 'field_id'=>'title','label'=>'Title', 'size'=>2, 'value'=>$data['title'], 'type'=>'text', 'show' => in_array("title",$show)) );
-	$field->input_field( array( 'field_id'=>'first','label'=>'First', 'size'=>14, 'value'=>$data['first'], 'type'=>'text', ));
+	$field->input_field( array( 'field_id'=>'title','label'=>'Title', 'size'=>2, 'value'=>$data['title'], 	'type'=>'text', 'show' => in_array("title",$show)) );
+	$field->input_field( array( 'field_id'=>'first','label'=>'First', 'size'=>14, 'value'=>$data['first'], 	'type'=>'text', ));
 	$field->input_field( array( 'field_id'=>'middle','label'=>'Middle', 'size'=>3,'value'=>$data['middle'], 'type'=>'text', 'show' => in_array("middle",$show) ));
-	$field->input_field( array( 'field_id'=>'last','label'=>'Last', 'size'=>19, 'value'=>$data['last'], 'type'=>'text', ));
-	$field->input_field( array( 'field_id'=>'suffix', 'label'=>'Suffix','size'=>3, 'value'=>$data['suffix'], 'type'=>'text',  'show' => in_array("suffix",$show)));
+	$field->input_field( array( 'field_id'=>'last','label'=>'Last', 'size'=>19, 'value'=>$data['last'], 	'type'=>'text', ));
+	$field->input_field( array( 'field_id'=>'suffix', 'label'=>'Suffix','size'=>3, 'value'=>$data['suffix'],'type'=>'text',  'show' => in_array("suffix",$show)));
 	
 }
 
