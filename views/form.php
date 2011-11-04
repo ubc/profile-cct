@@ -11,7 +11,7 @@
 <div id="col-right">
 	<div class="col-wrap">
 	
-	<h3>Form fields to add</h3>
+	<h3>Fields on the banch</h3>
 	<ul id="banch" class="sort">
 		<?php 
 		$action = 'edit';
@@ -23,6 +23,7 @@
  		endif;
 		?>
 	</ul>
+	<p><em>drag and drop the fields that you want to be displayed in the form</em></p>
 		
 	</div>
 </div><!-- /col-right -->

@@ -54,6 +54,12 @@
 	top:3px;
 	position: relative;
 }
+#col-right p{
+	background: #EAF2FA;
+	padding: 5px;
+	border-radius: 4px;
+	font-size: 11px;
+}
 /*
 <a class="close" href="#">x</a>
 .close{

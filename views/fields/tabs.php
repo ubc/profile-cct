@@ -1,27 +1,15 @@
 <?php 
 
-// add_action('profile_cct_form','profile_cct_show_form_tabs',10,1);
-add_action('profile_cct_page_builder','profile_cct_show_page_builder_tabs',10,1);
+
 
 
 function profile_cct_form_shell_tabs($action){
-	
-
 	
 	profile_cct_show_tabs($action,'form');
 }
 
 function profile_cct_show_page_builder_tabs($action){
-	
-	$profile = Profile_CCT::get_object(); // prints "Creating new instance."
-	$fields = $profile->page_fields;
-	
-	if( !$fields['tabs'] ) 
-		$fields['tabs'] 	= $profile->default_tabs("page");
-	
-	if( !$fields['fields'] ) 
-		$fields['fields'] 	= $profile->default_fields("page");
-	
+
 	profile_cct_show_tabs($action,'page');
 }
 

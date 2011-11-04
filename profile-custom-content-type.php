@@ -37,6 +37,10 @@ This plugin requires WordPress >= 3.2 and tested with PHP Interpreter >= 5.2
 if(isset( $_GET['d'])):
 	delete_option('Profile_CCT_form_fields_tabbed-1');
 	delete_option('Profile_CCT_form_fields_tabbed-2');
+	delete_option('Profile_CCT_form_fields_tabbed-3');
+	delete_option('Profile_CCT_form_fields_tabbed-4');
+	delete_option('Profile_CCT_form_fields_tabbed-5');
+	delete_option('Profile_CCT_form_fields_tabbed-6');
 	delete_option('Profile_CCT_form_fields_normal');
 	delete_option('Profile_CCT_form_fields_side');
 	delete_option('Profile_CCT_form_fields_banch');
@@ -44,7 +48,7 @@ if(isset( $_GET['d'])):
 	delete_option('Profile_CCT_form_tabs_normal');
 	
 	delete_option('Profile_CCT_page_fields');
-	echo "hey";
+	
 endif;
 class Profile_CCT {
 	static private $classobj = NULL;
@@ -52,12 +56,11 @@ class Profile_CCT {
 	static public $textdomain = NULL;
 	
 	static private $settings_options = NULL;
-	static public $form_fields = NULL;
-	static public $page_fields = NULL;
+	static public  $form_fields = NULL;
+	static public  $page_fields = NULL;
 	static private $field = NULL;
 	static private $form_field_counter = 0;
 	
-	public $tab_index = 5; // name should always be first
 	/**
 	* construct
 	*
@@ -122,11 +125,21 @@ class Profile_CCT {
 		return self :: $classobj;
 	}
 	
-	
+	/**
+	 * get_textdomain function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	public function get_textdomain() {
 		return $this -> get_plugin_data( 'TextDomain' );
 	}
-	
+	/**
+	 * add_style_edit function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function add_style_edit() {
 		global $current_screen;
 		if($current_screen->id == 'profile_cct'):
@@ -221,14 +234,18 @@ class Profile_CCT {
 	  				'type' => 'form'
 				));
 			break;
-				case "page":
+			case "page":
 				wp_enqueue_script( 'profile-cct-tabs', WP_PLUGIN_URL . '/profile-cct/js/tabs.js',array('jquery','jquery-ui-tabs') );
+				wp_enqueue_script( 'profile-cct-page', WP_PLUGIN_URL . '/profile-cct/js/page-list.js', array('jquery','jquery-ui-sortable','jquery-ui-tabs','jquery-ui-droppable') );
 				wp_localize_script( 'profile-cct-tabs', 'ProfileCCT', array(
 	  				'type' => 'page'
 				));
-				case "list":
+			break;
+			case "list":
 				wp_enqueue_script( 'profile-cct-page', WP_PLUGIN_URL . '/profile-cct/js/page-list.js', array('jquery','jquery-ui-sortable','jquery-ui-tabs','jquery-ui-droppable') );
-			
+				wp_localize_script( 'profile-cct-tabs', 'ProfileCCT', array(
+	  				'type' => 'list'
+				));
 			break;
 			/*case "helper":
 				wp_register_style( 'profile-cct-helper', WP_PLUGIN_URL . '/profile-cct/stylesheet.css' );
@@ -244,18 +261,12 @@ class Profile_CCT {
 		wp_enqueue_style( 'profile-cct-general', WP_PLUGIN_URL . '/profile-cct/js/general.js' );	
 	}
 	/**
-	 * get_style_examples function.
+	 * admin_pages function.
 	 * 
 	 * @access public
 	 * @return void
 	 */
 	public function admin_pages() {
-		$this->form_fields = get_option('Profile_CCT_form_fields');
- 		
- 		if( !is_array( $this->form_fields ) )
- 			$this->form_fields = $this->default_options();
-		
-		
 		screen_icon( 'users' );
 		?>
 		<div class="wrap">
@@ -278,11 +289,7 @@ class Profile_CCT {
 			case "form":
 				require_once("views/form.php");
 			break;
-			case "page":
-				
-				$this->page_fields = get_option('Profile_CCT_page_fields');
-				if( !is_array($this->page_fields) )
-					$this->page_fields = $this->default_fields('page');
+			case "page":				
 				require_once("views/page.php");
 			break;
 			case "list":
@@ -361,15 +368,14 @@ class Profile_CCT {
 		global $post;
 		
 		if($post->post_type == "profile_cct"):
-		if( !$this->form_fields['tabs'] ) 
-			$this->form_fields['tabs'] = $this->default_tabs('form');
+		$tabs = $this->get_option('form','tabs');
 	
 		?>
 		<div id="tabs">
 			<ul>
 				<?php 
 				$count = 1;
-				foreach( $this->form_fields['tabs'] as $tab) : ?>
+				foreach( $tabs as $tab) : ?>
 					<li><a href="#tabs-<?php echo $count; ?>" class="tab-link"><?php echo $tab; ?></a></li>
 				<?php 
 					$count++;
@@ -377,7 +383,7 @@ class Profile_CCT {
 			</ul>
 			<?php 
 			$count = 1;
-			foreach( $this->form_fields['tabs'] as $tab) :
+			foreach(  $tabs  as $tab) :
 			?>
 				<div id="tabs-<?php echo $count?>">
 					<?php do_meta_boxes('profile_cct', 'tabbed-'.$count, $post);	 ?>			
@@ -427,9 +433,6 @@ class Profile_CCT {
 	function save_post_data($data,$postarr)
 	{
 		global $post;
-		//var_dump($data,$postarr,$post, $_POST);
-		// die();
-		
 		
 		if($data['post_type'] != 'profile_cct')
 			return $data;
@@ -450,23 +453,15 @@ class Profile_CCT {
 		*/
 	
 	}
-	
-	 /**
-	  * fields function.
-	  * 
-	  * @access public
-	  * @return void
-	  */
-	 function fields()
-	 {
-	 	return array("name", "address","phone","fax","email","website","position","bio","education","publications","research","teaching","blog","twitter","facebook","linkedin","delicious","flickr","google-plus","text","textarea","social");
-	 }
-	 
-
-	 
-	 
-	 
-	 function profile_cct_form_field_shell($action){
+	/* ============== FIELDS =============================================== */
+	/**
+	 * profile_cct_form_field_shell function.
+	 * 
+	 * @access public
+	 * @param mixed $action
+	 * @return void
+	 */
+	function profile_cct_form_field_shell($action){
 	 	
 	 	
 	 	$contexts = $this->default_shells();
@@ -494,7 +489,14 @@ class Profile_CCT {
 		 	endif;
 	 	endforeach;
 	 }
-	 
+	 /**
+	  * start_field function.
+	  * 
+	  * @access public
+	  * @param mixed $action
+	  * @param mixed $options
+	  * @return void
+	  */
 	 function start_field($action, $options ) {
 	 	extract( $options );
 	 	// be default show the remove button
@@ -541,7 +543,14 @@ class Profile_CCT {
 	 	<?php 
 	 	endif;
 	 }
-	
+	 /**
+	  * end_field function.
+	  * 
+	  * @access public
+	  * @param mixed $action
+	  * @param mixed $options
+	  * @return void
+	  */
 	 function end_field( $action, $options )
 	 {
 	 	$shell = 'div';
@@ -563,7 +572,13 @@ class Profile_CCT {
 	 	</<?php echo $shell; ?>>
 	 	<?php 
 	 }
-	 
+	 /**
+	  * input_field function.
+	  * 
+	  * @access public
+	  * @param mixed $options
+	  * @return void
+	  */
 	 function input_field( $options )
 	 {
 	 	$name = "";
@@ -672,6 +687,11 @@ class Profile_CCT {
  		$context = $_POST['context'];
 		$options = $this->get_option('form','fields',$context);
 		
+		if(in_array($_POST['type'], array('page','form','list')))
+			$type = $_POST['type'];
+		else
+			$type = 'form';
+ 		
  		switch( $_POST['method'] ){
  
  			case "update":
@@ -700,12 +720,17 @@ class Profile_CCT {
  		}
  		
  		// save the opions
- 		$this->update_option('form','fields',$context,$options);
+ 		$this->update_option($type,'fields',$context,$options);
  		
 		die();
 		
 	}
-	
+	/**
+	 * field_field_tab_index function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	public function field_field_tab_index(){
 		$this->tab_index++;
 		echo $this->tab_index;
@@ -723,10 +748,7 @@ class Profile_CCT {
 	 */
 	function default_tabs($type = 'form')
 	{
-	 	if($type == 'page' && isset( $this->form_fields['tabs']))
-	 		return $this->form_fields['tabs'];
-	 	else
-	 		return array( "Basic Info", "Bio" );
+	 	return array( "Basic Info", "Bio" );
 	}
 	
 	/**
@@ -742,53 +764,67 @@ class Profile_CCT {
 		else
 			$type = 'form';
 		
-		$fields = get_option('Profile_CCT_'.$type.'_fields');
+		$tabs = $this->get_option($type,'tabs');
 		
-		if( empty($fields['tabs']) ){
-			$fields['tabs'] = $this->default_tabs($type);
-		}
-	
 		switch($_POST['method']) {
 			
 			case "update":
-				$fields['tabs'][$_POST['i']] = $_POST['title'];
+				$tabs[$_POST['index']] = $_POST['title'];
 				echo "updated";
 			break;
 			
 			case "remove":
-				unset( $fields['tabs'][ $_POST['i'] ] );
-				unset( $fields['fields'][ $_POST['i'] ] );
-				foreach($fields['tabs'] as $tab):
-					$tabs[] = $tab; // reset the pointer
-				endforeach;
+			
+				// we need to set the proper item to fields to zero as well. 
+				// and move them to the banch
+				$index = $_POST['index'];
 				
-				foreach( $fields['fields'] as $item):
-					$fields[] = $item; // reset the pointer
-				endforeach;
-				$fields['tabs'] = $tabs;
-				$fields['fields'] = $fields;
+				$tabs_count = count($tabs);
+				
+				unset( $tabs[ $index ] );
+				
+			
+				$count = $index+1;
+				$fields = $this->get_option($type,'fields','tabbed-'.$count);
+				$this->delete_option($type,'fields','tabbed-'.$count);
+				//var_dump($index, $count, $fields, $tabs_count, $count < $tabs_count);
+				if(is_array($fields)): // array was empty so nothing to move
+					$banch  = $this->get_option($type,'fields','banch');
+					// and move them to the banch
+					$banch  = array_merge($banch , $fields);
+					
+					$banch = $this->update_option($type,'fields','banch', $banch);
+					
+				endif;
+				
+				//var_dump("deleted - tabbed-".$count);
+				
+				while($count < $tabs_count):
+					$count++;
+					$fields = $this->get_option($type,'fields','tabbed-'.$count);
+					
+					
+					
+					$minus = $count - 1;
+					
+					//var_dump("moved - tabbed-".$count. " to tabbed-".$minus);
+					$this->update_option($type,'fields','tabbed-'.$minus, $fields);
+					
+					//var_dump("delete - tabbed-".$count);
+					$fields = $this->delete_option($type,'fields','tabbed-'.$count);
+					
+				endwhile;
+				
 				echo "removed";
 			break;
 			
 			case "add":
-				
-				$fields['tabs'][] = $_POST['title'];
+				$tabs[] = $_POST['title'];
 				echo "added";
 			break;
 		}
-		
-		switch($type){
-			case 'page': 
-				$this->page_fields = $fields;
-			break;
-			case 'form':
-				$this->form_fields = $fields;
-			break;
-		
-		
-		}
-		
-		update_option('Profile_CCT_'.$type.'_fields', $fields);
+				
+		$this->update_option($type,'tabs','normal', $tabs);
 		die();
 	}
 	
@@ -909,6 +945,10 @@ class Profile_CCT {
 	function update_option($type='form',$fields_or_tabs='fields',$context='normal',$update){
 		
 		return update_option('Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context, $update);
+	}
+	function delete_option($type='form',$fields_or_tabs='fields',$context='normal'){
+		
+		return delete_option('Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context);
 	}
 	
 	function default_options($type = 'form')

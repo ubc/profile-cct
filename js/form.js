@@ -2,7 +2,7 @@ var Profile_CCT_FORM ={
 	onReady :function() {
 		var tab_shell = jQuery( "#tabs" );
 		// add fields 
-		jQuery( "#cct-fields").find("a").click(Profile_CCT_FORM.addField);
+		
 		
 		var formB = jQuery(".form-builder");
 		
@@ -41,7 +41,8 @@ var Profile_CCT_FORM ={
 					action: 'cct_update_fields',
 					method: 'sort',
 					context: context, 
-					data: data
+					data: data,
+					type: ProfileCCT.type
 				};
 		
 		jQuery.post(ajaxurl, data_set, function(response) {
@@ -116,7 +117,7 @@ var Profile_CCT_FORM ={
 		 
 		 var field_index = jQuery( ".field-item", parent.parent().parent() ).index( parent.parent() );
 		 console.log(serialize);
-		 var data = 'action=cct_update_fields&method=update&'+serialize+'&context='+context+'&field_index='+field_index;
+		 var data = 'action=cct_update_fields&method=update&'+serialize+'&context='+context+'&field_index='+field_index+'&type='+ProfileCCT.type;
 		 el.siblings('.spinner').show();		
      	 
      	 parent.parent().data('options', serialize); // update the serealized data 

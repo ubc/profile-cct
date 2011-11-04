@@ -13,7 +13,6 @@
 	zoom:1
 }
 .sort li{
-	margin:0 0 10px;
 	padding:0 0 0 20px;
 	clear:both;
 	position:relative;
@@ -28,7 +27,7 @@
     font-size: 15px;
     font-weight: normal;
     line-height: 1;
-    margin: 0 -20px 10px;
+    margin: 0 0 0 -20px;
     padding: 7px 10px;
 	color: #464646;
 	text-transform: capitalize;
@@ -225,6 +224,12 @@
 	border:1px solid #DFDFDF;
 }
 
+#side-shell .form-builder .text,
+#side-shell .form-builder textarea,
+#side-shell .form-builder .select{
+	max-width: 275px;
+}
+
 #wpcontent .form-builder select{
     font-size: 12px;
     height: 21px;
@@ -282,7 +287,7 @@
 
 .form-builder textarea, .form-builder .large,
 .form-builder .large {
-	width:580px
+	width:595px
 }
 
 /* ----- Action ----- */
@@ -303,7 +308,7 @@
 
 /* ----- Sorting ----- */
 .ui-state-highlight {
-	background:#EEE;
+	background:#CCC;
 	height: 20px;
 	border:1px dashed #AAA
 	
@@ -322,6 +327,7 @@ li.ui-sortable-helper {
 	border-bottom: 1px solid #CCCCCC;
     padding-bottom: 0;
     height: 27px;
+    margin-bottom: 5px;
 }
 
 .ui-tabs-nav li.ui-state-active,
@@ -405,7 +411,14 @@ li.ui-sortable-helper {
     overflow: hidden;
     text-indent: -99999px;
 }
-
+#banch li{
+	width: 117px;
+}
+#banch{
+	background: #CCC;
+	border: 0;
+	padding:5px 5px 2px;
+}
 .ui-sortable-helper .field-shell,
 .ui-sortable-helper .remove,
 .ui-sortable-helper .edit,
@@ -422,10 +435,3 @@ li.ui-sortable-helper {
 }
 
 /* add fields */
-#cct-fields strong{
-	display: block;
-	text-transform: uppercase;
-	padding-top: 10px;
-	border-bottom: 1px solid #DFDFDF;
-	width: 120px;
-}

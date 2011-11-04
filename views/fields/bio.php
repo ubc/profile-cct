@@ -11,7 +11,6 @@ function profile_cct_bio_field_shell( $action, $options ) {
 	
 	$field = Profile_CCT::get_object(); // prints "Creating new instance."
 	
-	
 	$default_options = array(
 		'type' => 'bio',
 		'label'=>'bio',
@@ -32,6 +31,5 @@ function profile_cct_bio_field( $data, $options ){
 
 	$field->input_field( array( 'field_id'=>'bio','label'=>'', 'size'=>25, 'row'=>2, 'cols'=>20, 'value'=>$data['bio'], 'type'=>'textarea') );
 
-
-
 }
+

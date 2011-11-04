@@ -15,6 +15,8 @@ function profile_cct_position_field_shell($action, $options ) {
 		'type' => 'position',
 		'label'=>'position',
 		'description'=>'',
+		'show'=>array(),
+		'show_fields'=>array('organization'),
 		'multiple'=>true,
 		'show_multiple' =>true
 		);
@@ -40,5 +42,6 @@ function profile_cct_position_field( $data, $options ){
 	extract( $options );
 	$field = Profile_CCT::get_object();
 	
-	$field->input_field( array( 'field_id'=>'position','label'=>'', 'size'=>35, 'value'=>$data['position'], 'type'=>'text') );
+	$field->input_field( array( 'field_id'=>'position','label'=>'title', 'size'=>35, 'value'=>$data['position'], 'type'=>'text') ); 
+	$field->input_field( array( 'field_id'=>'organization','label'=>'organization', 'size'=>35, 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array("organization",$show)) );
 }

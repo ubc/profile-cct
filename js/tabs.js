@@ -7,7 +7,7 @@ var Profile_CCT_TABS ={
 		// tabs
 		jQuery( "#add-tab" ).click( Profile_CCT_TABS.addTab );
 		var tab_shell = jQuery( "#tabs" );
-		Profile_CCT_TABS.$tabs = tab_shell.tabs({ tabTemplate: '<li><a href="#{href}" class="tab-link">#{label}</a>  <span class="remove-tab">Remove Tab</span> <span class="edit-tab">Edit</span><input type="text" class="edit-tab-input" value="#{label}" /></li>'});
+		Profile_CCT_TABS.$tabs = tab_shell.tabs({ tabTemplate: '<li><a href="#{href}" class="tab-link">#{label}</a>  <span class="remove-tab">Remove Tab</span> <span class="edit-tab">Edit</span><input type="text" class="edit-tab-input" value="#{label}" /></li>'})
 		
 		Profile_CCT_TABS.selected_tab = jQuery(".tab-link:first",Profile_CCT_TABS.$tabs); 
 		Profile_CCT_TABS.$tabs.bind( "tabsselect", Profile_CCT_TABS.selectTab);
@@ -31,24 +31,25 @@ var Profile_CCT_TABS ={
 						action: 'cct_update_tabs',
 						method: 'add',
 						title: tab_title,
-						i:  index
+						index:  index
 					};
 				jQuery.post(ajaxurl, data, function(response) {
 					
 					if(response == "added"){
-						Profile_CCT_TABS.$tabs.append('<div id="tabs-'+Profile_CCT_TABS.tab_counter+'"><ul class=" sortable ui-helper-reset form-builder"></ul></div>');
+						Profile_CCT_TABS.$tabs.append('<div id="tabs-'+Profile_CCT_TABS.tab_counter+'"><ul id="tabbed-'+Profile_CCT_TABS.tab_counter+'"class="sort form-builder"></ul></div>');
 						// add tab to form
 						Profile_CCT_TABS.$tabs.tabs( "add" , '#tabs-'+Profile_CCT_TABS.tab_counter , tab_title , index );
 						Profile_CCT_TABS.$tabs.tabs('select',index);
 						Profile_CCT_TABS.tab_counter++;
 						
 						// make sure that the newly added ul will be sortable
-						jQuery('.sortable', Profile_CCT_TABS.$tabs)
-						.sortable({
-							placeholder: "ui-state-highlight",
-							forcePlaceholderSize: true,
-							handle:"label.desc", 
-							update:Profile_CCT_TABS.updateSort, 
+						jQuery( ".sort" ).sortable({
+								placeholder: "ui-state-highlight",
+								forcePlaceholderSize: true,
+								handle: "label.field-title", 
+								update: Profile_CCT_FORM.updateSort,
+								connectWith: '.sort',
+								tolerance: 'pointer'
 						});
 						Profile_CCT_TABS.hideSpinner();
 						
@@ -77,7 +78,7 @@ var Profile_CCT_TABS ={
 					action: 'cct_update_tabs',
 					method: 'update',
 					title:  tab_title,
-					i:      index
+					index:      index
 				};
 			// don't submit the vall 
 			jQuery( "#form-builder").submit(function(e){ e.preventDefault(); });
@@ -110,18 +111,18 @@ var Profile_CCT_TABS ={
 					type:   ProfileCCT.type,
 					action: 'cct_update_tabs',
 					method: 'remove',
-					i:  index
+					index:  index
 				};
 			
 			jQuery.post(ajaxurl, data, function(response) {
 				if(response == "removed")
 					Profile_CCT_TABS.$tabs.tabs( "remove", index );
 					Profile_CCT_TABS.hideSpinner();
+					window.location.reload();
 			});
 	},
 	selectTab : function(e, ui) {
 		Profile_CCT_TABS.selected_tab = jQuery(ui.tab);
-		// Profile_CCT_TABS.selected_tab = (this);
 	},
 	showSpinner: function(){
 		jQuery('#spinner').show();

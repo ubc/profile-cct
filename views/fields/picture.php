@@ -1,8 +1,14 @@
 <?php 
 
 
-// add_action('profile_cct_form','profile_cct_picture_field_shell',10,2);
-
+/**
+ * profile_cct_picture_field_shell function.
+ * 
+ * @access public
+ * @param mixed $action
+ * @param mixed $options. (default: null)
+ * @return void
+ */
 function profile_cct_picture_field_shell( $action, $options=null ) {
 	
 	if( is_object($action) ):
@@ -29,6 +35,14 @@ function profile_cct_picture_field_shell( $action, $options=null ) {
 	
 	$field->end_field( $action, $options );
 }
+/**
+ * profile_cct_picture_field function.
+ * 
+ * @access public
+ * @param mixed $data
+ * @param mixed $options
+ * @return void
+ */
 function profile_cct_picture_field( $data, $options ){
 	
 	extract( $options );
