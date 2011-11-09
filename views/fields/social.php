@@ -5,8 +5,8 @@ function profile_cct_social_field_shell( $action, $options ) {
 	if( is_object($action) ):
 		$post = $action;
 		$action = "display";
-		$options = $options['args']['options'];
 		$data = $options['args']['data'];
+		$options = $options['args']['options'];
 	endif;
 	
 	$field = Profile_CCT::get_object(); // prints "Creating new instance."
@@ -41,10 +41,52 @@ function profile_cct_social_field( $data, $options ){
 	foreach($social_array_options as $social_item):
 		$social_array[] =  $social_item['label'];
 	endforeach;
-	$field->input_field( array( 'field_id'=>'option', 'label'=>'option',  'value'=>$data['option'], 'all_fields'=>$social_array, 'type'=>'select') );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'option', 'label'=>'option',  'value'=>$data['option'], 'all_fields'=>$social_array, 'type'=>'select') );
 
 
 
+}
+
+function profile_cct_social_display_shell( $action, $options ) {
+	
+	if( is_object($action) ):
+		$post = $action;
+		$action = "display";
+		$data = $options['args']['data'];
+		$options = $options['args']['options'];
+	endif;
+	
+	$field = Profile_CCT::get_object(); // prints "Creating new instance."
+	
+	$default_options = array(
+		'type' => 'social',
+		'label'=>'social',
+		'description'=>'',
+		);
+	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
+	
+	$field->start_field($action,$options);
+	
+	if( $field->is_data_array( $data ) ):
+		foreach($data as $item_data):
+			profile_cct_social_display($item_data,$options);
+		endforeach;
+	else:
+		profile_cct_social_display($data,$options);
+	endif;
+	
+	$field->end_field( $action, $options );
+}
+function profile_cct_social_display( $data, $options ){
+
+	extract( $options );
+	
+	$field = Profile_CCT::get_object();
+	$social_array_options = profile_cct_social_options();
+	foreach($social_array_options as $social_item):
+		$social_array[] =  $social_item['label'];
+	endforeach;
+	
 }
 
 function profile_cct_social_options(){

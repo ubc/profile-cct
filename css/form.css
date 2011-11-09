@@ -3,8 +3,8 @@
 
 /* ----- Field Structure ----- */
 .form-builder {
-	list-style-type:none
-	width:640px;
+	list-style-type:none;
+	width:645px;
 }
 
 * html .form-builder {
@@ -119,12 +119,17 @@
 }
 .save-field-settings{
 	margin-top: 15px;
+	clear: both;
+	float: left;
 }
 /* ----- Choices Field Structures ----- */
 .form-builder li div span {
 	margin:0 5px 0 0;
 	display:block;
 	float:left;	
+}
+.form-builder li div span.comma{
+	margin: 0 5px 0 -5px;
 }
 
 
@@ -144,9 +149,7 @@
 	padding-bottom:12px
 }
 
-.form-builder .address div .full {
-	margin:0
-}
+
 
 .form-builder .address div .left,
 .form-builder .address div .right {
@@ -154,8 +157,7 @@
 	width:48%
 }
 
-.form-builder .address div .full input,
-.form-builder .address div .full select,
+
 .form-builder .address div .left input,
 .form-builder .address div .right input,
 .form-builder .address div .left select,
@@ -265,16 +267,27 @@
 }
 
 /* ----- SIZES ----- */
-.form-builder .third {
-	width:32%!important
+.form-builder .half,
+.form-builder .one-third,
+.form-builder .two-third{
+	float: left!important;
+	clear: none!important;
 }
-
+.form-builder .one-third textarea,
+.form-builder .one-third {
+	width:170px!important;
+}
+.form-builder .two-third textarea,
+.form-builder .two-third {
+	width:380px!important;
+}
+.form-builder .half textarea,
 .form-builder .half {
-	width:48%!important
+	width:275px!important;
 }
 
 .form-builder .full {
-	width:100%!important
+	width:595px !important;
 }
 
 .form-builder input.small,.form-builder select.small {
@@ -285,8 +298,7 @@
 	width:50%
 }
 
-.form-builder textarea, .form-builder .large,
-.form-builder .large {
+.form-builder textarea {
 	width:595px
 }
 
@@ -307,11 +319,11 @@
 }
 
 /* ----- Sorting ----- */
+#page-shell .form-builder .ui-state-highlight,
 .ui-state-highlight {
-	background:#CCC;
+	background:#DFDFDF;
 	height: 20px;
-	border:1px dashed #AAA
-	
+	border:1px solid #AAA	
 }
 
 li.ui-sortable-helper {
@@ -400,6 +412,8 @@ li.ui-sortable-helper {
 	padding: 5px 0 0 5px;
 	border: 1px dashed #EEE;
 	margin-bottom: 5px;
+	overflow: hidden;
+	width: 100%;
 }
 .remove-tab { 
 	float: right; 
@@ -434,4 +448,31 @@ li.ui-sortable-helper {
 	height: 0;
 }
 
-/* add fields */
+/* Page Fields */
+#page-shell .form-builder li,
+#page-shell .form-builder .field-title{
+	background: #FFF;
+}
+#page-shell .form-builder li{
+	border: 1px solid #FFF;
+}
+#page-shell .form-builder .ui-state-highlight,
+#page-shell .form-builder li:hover .field-title,
+#page-shell .form-builder li.hover-expanded .field-title{
+	background-color: #F1F1F1;
+    background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
+}
+#page-shell .form-builder li.hover-expanded,
+#page-shell .form-builder li:hover{
+	border: 1px solid #CCC;
+}
+#page-shell .field-title,
+#page-shell .edit {
+	display: none;
+}
+#page-shell .hover-expanded .field-title,
+#page-shell .hover-expanded .edit,
+#page-shell .hover .field-title,
+#page-shell .hover .edit{
+	display: inherit;
+}

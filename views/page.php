@@ -15,7 +15,7 @@
 		$fields = $this->get_option('page','fields','banch');		 				
  		if( is_array( $fields  ) ):
 	 		foreach($fields  as $field):
-	 			call_user_func('profile_cct_'.$field['type'].'_field_shell',$action,$field);
+	 			call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field);
 	 		endforeach;
  		endif;
 		?>
@@ -27,7 +27,7 @@
 
 <div id="col-middle">
 	<div class="col-wrap">
-	<h3>Preview</h3>
+	<h3>Page Content</h3>
 	<?php
 		do_action('profile_cct_page',$action);
 	?>

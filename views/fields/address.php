@@ -5,8 +5,8 @@ function profile_cct_address_field_shell( $action, $options ) {
 	if( is_object($action) ):
 		$post = $action;
 		$action = "display";
-		$options = $options['args']['options'];
 		$data = $options['args']['data'];
+		$options = $options['args']['options'];
 	endif;
 	
 	$field = Profile_CCT::get_object(); // prints "Creating new instance."
@@ -34,20 +34,69 @@ function profile_cct_address_field( $data, $options ){
 	$show = (is_array($show) ? $show : array());
 	$field = Profile_CCT::get_object();
 	
-	$field->input_field( array( 'field_id'=>'building-address', 'label'=>'Building Name', 'size'=>35, 'value'=>$data['building-address'], 'type'=>'text', 'show' => in_array("building-address",$show) ) );
-	$field->input_field( array( 'field_id'=>'room-number','label'=>'Room Number', 'size'=>35, 'value'=>$data['room-number'], 'type'=>'text', 'show' => in_array("room-number",$show)) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'building-address', 'label'=>'Building Name', 'size'=>35, 'value'=>$data['building-address'], 'type'=>'text', 'show' => in_array("building-address",$show) ) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'room-number','label'=>'Room Number', 'size'=>35, 'value'=>$data['room-number'], 'type'=>'text', 'show' => in_array("room-number",$show)) );
 	
-	$field->input_field( array( 'field_id'=>'street-1','label'=>'Street Address', 'size'=>74, 'value'=>$data['street-1'], 'type'=>'text', 'show' => in_array("street-1",$show)) );
-	$field->input_field( array( 'field_id'=>'street-2','label'=>'Address Line 2', 'size'=>74, 'value'=>$data['street-2'], 'type'=>'text', 'show' => in_array("street-2",$show)) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'street-1','label'=>'Street Address', 'size'=>74, 'value'=>$data['street-1'], 'type'=>'text', 'show' => in_array("street-1",$show)) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'street-2','label'=>'Address Line 2', 'size'=>74, 'value'=>$data['street-2'], 'type'=>'text', 'show' => in_array("street-2",$show)) );
 	
-	$field->input_field( array( 'field_id'=>'city','label'=>'City', 'size'=>35, 'value'=>$data['city'], 'type'=>'text', 'show' => in_array("city",$show)) );
-	$field->input_field( array( 'field_id'=>'postal','label'=>'Postal / Zip Code', 'size'=>35, 'value'=>$data['postal'], 'type'=>'text', 'show' => in_array("postal",$show)) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'city','label'=>'City', 'size'=>35, 'value'=>$data['city'], 'type'=>'text', 'show' => in_array("city",$show)) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'postal','label'=>'Postal / Zip Code', 'size'=>35, 'value'=>$data['postal'], 'type'=>'text', 'show' => in_array("postal",$show)) );
 	
-	$field->input_field( array( 'field_id'=>'province','label'=>'Province / State /  Region', 'size'=>35, 'value'=>$data['province'], 'type'=>'text', 'show' => in_array("province",$show)) );
-	$field->input_field( array( 'field_id'=>'country','label'=>'Country', 'size'=>35, 'value'=>$data['country'], 'all_fields'=>profile_cct_list_of_countries(), 'type'=>'select', 'show' => in_array("country",$show)) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'province','label'=>'Province / State /  Region', 'size'=>35, 'value'=>$data['province'], 'type'=>'text', 'show' => in_array("province",$show)) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'country','label'=>'Country', 'size'=>35, 'value'=>$data['country'], 'all_fields'=>profile_cct_list_of_countries(), 'type'=>'select', 'show' => in_array("country",$show)) );
 
 }
 
+
+function profile_cct_address_display_shell( $action, $options ) {
+	
+	if( is_object($action) ):
+		$post = $action;
+		$action = "display";
+		$data = $options['args']['data'];
+		$options = $options['args']['options'];
+	endif;
+	
+	$field = Profile_CCT::get_object(); // prints "Creating new instance."
+	
+	$default_options = array(
+		'type' => 'address',
+		'width' =>'full',
+		'hide_label'=>true,
+		'before'=>'',
+		'after' =>'',
+		'show'=>array('building-address','room-number','street-1','street-2','city','postal','province','country'),
+		'show_fields'=>array('building-address','room-number','street-1','street-2','city','postal','province','country')
+		);
+	
+	$options = (is_array($options) ? array_merge($default_options,$options): $default_options );
+	
+	$field->start_field($action,$options);
+	
+	profile_cct_address_display($data,$options);
+	
+	$field->end_field( $action, $options );
+
+}
+function profile_cct_address_display( $data, $options ){
+
+	extract( $options );
+	$show = (is_array($show) ? $show : array());
+	$field = Profile_CCT::get_object();
+	
+?>
+	<div class="address adr">
+		<span class="type">Work</span>:
+		<div class="street-address">169 University Avenue</div>
+		<span class="locality">Palo Alto</span>,  
+		<abbr class="region" title="California">CA</abbr>&nbsp;&nbsp;
+		<span class="postal-code">94301</span>
+		<div class="country-name">USA</div>
+	</div>
+<?php
+
+}
 
 function profile_cct_list_of_countries() {
 

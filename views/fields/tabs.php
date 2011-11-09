@@ -8,7 +8,7 @@ function profile_cct_form_shell_tabs($action){
 	profile_cct_show_tabs($action,'form');
 }
 
-function profile_cct_show_page_builder_tabs($action){
+function profile_cct_page_shell_tabs($action){
 
 	profile_cct_show_tabs($action,'page');
 }
@@ -23,6 +23,7 @@ function profile_cct_show_tabs($action,$type) {
 	
 	?>
 		<div id="tabs">
+			<span class="description-shell">tabs</span>
 		<ul>
 			<?php 
 			$count = 1;
@@ -51,7 +52,10 @@ function profile_cct_show_tabs($action,$type) {
 				$i =0;
 				if(is_array($fields)):
 					foreach( $fields as $field):
-							call_user_func('profile_cct_'.$field['type'].'_field_shell',$action,$field);
+							if($type == 'page')
+								call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field);
+							else
+								call_user_func('profile_cct_'.$field['type'].'_field_shell',$action,$field);
 					endforeach;
 				endif;
 				?>

@@ -13,19 +13,21 @@
 	display: block;
 	color:#888;
 	font-size: 11px;
+	margin-left: 2px;
 }
 .address{
 	width: 530px;
 }
 
-#tabs  select{
+#post-body-content  select{
     font-size: 12px;
     height: 21px;
     margin-top: 0;
     padding: 2px 4px;
 }
-#tabs textarea{
+#post-body-content textarea{
 	width: 600px;
+	display: block;
 	height: 300px;
 }
 /* Address 

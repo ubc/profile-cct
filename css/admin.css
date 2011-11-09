@@ -60,6 +60,13 @@
 	border-radius: 4px;
 	font-size: 11px;
 }
+
+.shell{
+	 float: left;
+    margin-left: 6px;
+    width: 649px;
+    clear: both;
+}
 /*
 <a class="close" href="#">x</a>
 .close{
