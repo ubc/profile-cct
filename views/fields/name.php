@@ -48,7 +48,7 @@ function profile_cct_name_field_shell( $action, $options=null ) {
 function profile_cct_name_field( $data, $options ){
 	
 	extract( $options );
-	
+	$show = (is_array($show) ? $show : array());
 	$field = Profile_CCT::get_object();
 	
 	$show = (is_array($show) ? $show : array());

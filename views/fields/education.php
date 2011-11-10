@@ -24,9 +24,10 @@ function profile_cct_education_field_shell( $action, $options ) {
 	
 	$field->start_field($action,$options);
 	if( $field->is_data_array( $data ) ):
-		
+		$count = 0;
 		foreach($data as $item_data):
-			profile_cct_education_field($item_data,$options);
+			profile_cct_education_field($item_data,$options,$count);
+			$count++;
 		endforeach;
 		
 	else:
@@ -35,7 +36,7 @@ function profile_cct_education_field_shell( $action, $options ) {
 	
 	$field->end_field( $action, $options );
 }
-function profile_cct_education_field( $data, $options ){
+function profile_cct_education_field( $data, $options, $count = 0 ){
 
 	extract( $options );
 	
@@ -44,12 +45,15 @@ function profile_cct_education_field( $data, $options ){
     $year_built_max = date("Y")+5;
 	$year_array = range($year_built_max, $year_built_min);
 	$show = (is_array($show) ? $show : array());
-
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'school', 'label'=>'school name', 'size'=>35,  'value'=>$data['school'], 'type'=>'text') );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'year', 'label'=>'year', 'size'=>25,  'value'=>$data['year'], 'all_fields'=>$year_array,  'type'=>'select', 'show'=> in_array('year',$show)) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'degree','label'=>'degree', 'size'=>5,  'value'=>$data['degree'], 'type'=>'text') );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'honours','label'=>'honours', 'size'=>15,  'value'=>$data['honours'], 'type'=>'text') );
-
+	
+	echo "<div data-count='".$count."'>";
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'school', 'label'=>'school name', 'size'=>35,  'value'=>$data['school'], 'type'=>'text','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'year', 'label'=>'year', 'size'=>25,  'value'=>$data['year'], 'all_fields'=>$year_array,  'type'=>'select', 'show'=> in_array('year',$show),'count'=>$count));
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'degree','label'=>'degree', 'size'=>5,  'value'=>$data['degree'], 'type'=>'text','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'honours','label'=>'honours', 'size'=>15,  'value'=>$data['honours'], 'type'=>'text','count'=>$count) );
+	if($count)
+	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
+	echo "</div>";
 }
 
 

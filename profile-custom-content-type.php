@@ -87,7 +87,7 @@ class Profile_CCT {
 		add_action( 'edit_form_advanced', array($this, 'edit_form_advanced'));
 		add_action( 'add_meta_boxes_profile_cct', array($this, 'edit_post')); // add meta boxes 
 		add_action( 'init',  array( $this,'register_cpt_profile_cct') );
-		add_action( 'wp_insert_post_data', array( $this,'save_post_data'),999,2);
+		add_action( 'wp_insert_post_data', array( $this,'save_post_data'),10,2);
 		
 		
 		
@@ -346,7 +346,7 @@ class Profile_CCT {
 	        'labels' => $labels,
 	        'hierarchical' => false,
 	        
-	        'supports' => array('thumbnail', 'revisions' ),
+	        'supports' => array( 'revisions' ),
 	        'taxonomies' => array( 'new tax' ),
 	        'public' => true,
 	        'show_ui' => true,
@@ -392,7 +392,7 @@ class Profile_CCT {
 			
 		$this->form_fields = get_option('Profile_CCT_form_fields');
 		
-		$user_data = unserialize( get_post_meta($post->ID, 'profile_cct', true));
+		$user_data = get_post_meta($post->ID, 'profile_cct', true );
 		// $user_data = unserialize( $post->post_content_filtered );
 		// var_dump($user_data['name']);
 		$contexts = $this->get_contexts();
@@ -468,13 +468,14 @@ class Profile_CCT {
 				$data['post_title'] = $userdata->user_nicename;
 			endif;
 			if(isset($_POST["profile_cct"])):
+			
 			// var_dump($data,$postarr['ID'],"----+++++",serialize($_POST["profile_cct"]));
 			// die();
 			endif;
 		
 		
 		if(is_array($_POST["profile_cct"]))
-			update_post_meta($postarr['ID'], 'profile_cct', serialize($_POST["profile_cct"]));
+			update_post_meta($postarr['ID'], 'profile_cct', $_POST["profile_cct"]);
 		return $data;
 		/*
 		die();
@@ -503,7 +504,6 @@ class Profile_CCT {
 				 			call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field);
 				 		endforeach;
 			 		endif;
-			 		
 		 		?>
 		 		</ul>
 		 		</div>
@@ -636,16 +636,17 @@ class Profile_CCT {
 	 	if($action == 'edit')
 	 		$shell = 'li';
 	 	extract( $options );
-	 	?>
-	 	</div>
-	 	<?php 
+	 
 	 	if( isset($show_multiple) && $show_multiple ):
 	 		
 	 		$style_multiple = ( isset($multiple) && $multiple ? 'style="display: inline;"': 'style="display: none;"');
 	 	 ?>
 	 	<a href="#add" <?php echo $style_multiple; ?> class="button add-multiple">Add</a>
 	 	<?php 
-	 	endif;
+	 	endif; 
+	 	?>
+	 	</div>
+	 	<?php 
 	 	if(isset($description)):
 	 	?><pre class="description"><?php echo $description; ?></pre>
 	 	<?php 
@@ -680,7 +681,7 @@ class Profile_CCT {
 	 	if($type =='multiple')
 	 		$name = ( isset($name)? ' name="'.$name.'[]"':  ' name="profile_cct['.$field_type.']['.$field_id.'][]"');
 	 	elseif($multiple)
-	 		$name = ( isset($name)? ' name="'.$name.'[]"':  ' name="profile_cct['.$field_type.'][]['.$field_id.']"');
+	 		$name = ( isset($name)? ' name="'.$name.'[]"':  ' name="profile_cct['.$field_type.']['.$count.']['.$field_id.']"');
 	 	else
 	 		$name = ( isset($name)? ' name="'.$name.'"': ' name="profile_cct['.$field_type.']['.$field_id.']"');
 	 		
@@ -701,8 +702,8 @@ class Profile_CCT {
 	 				<?php 
 	 				if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } 
 	 				// need to change the name in this case
-	 				
-	 				
+					$selected_fields = (is_array($selected_fields) ? $selected_fields : array());
+					
 	 				foreach($all_fields as $field):
 	 					
 	 					 ?>
@@ -732,7 +733,7 @@ class Profile_CCT {
 	 				<select <?php echo $name; ?> >
 	 				<?php
 	 				foreach($all_fields as $field): ?>
-	 					<option  value="<?php echo $field; ?>" > <?php echo $field; ?></option>
+	 					<option  value="<?php echo $field; ?>" <?php selected($value,$field); ?> > <?php echo $field; ?></option>
 	 					<?php
 	 				endforeach;
 	 				?>
@@ -761,7 +762,38 @@ class Profile_CCT {
 	 
 	function display_text($options)
 	{
-		
+		extract( $options );
+	 	
+	 	$field_id_class = ( isset($field_id)? ' class="'.$field_id.'"': '');
+	 	
+	 	
+	 	$size = ( isset($size)? ' size="'.$size.'"': '');
+	 	$row = ( isset($row)? ' row="'.$row.'"': '');
+	 	$cols = ( isset($cols)? ' cols="'.$cols.'"': '');
+	 	$class = ( isset($class)? ' class="'.$class.'"': ' class="field text"');
+	 	$id = ( isset($id)? ' id="'.$id.'"': ' ');
+	 	
+	 	
+	 	if($type =='multiple')
+	 		$name = ( isset($name)? ' name="'.$name.'[]"':  ' name="profile_cct['.$field_type.']['.$field_id.'][]"');
+	 	elseif($multiple)
+	 		$name = ( isset($name)? ' name="'.$name.'[]"':  ' name="profile_cct['.$field_type.']['.$count.']['.$field_id.']"');
+	 	else
+	 		$name = ( isset($name)? ' name="'.$name.'"': ' name="profile_cct['.$field_type.']['.$field_id.']"');
+	 		
+	 	$show = ( isset($show) && !$show ? ' style="display:none;"': '');
+	 	switch($type) {
+	 		case 'text':
+			 	?>
+			 	<span <?php echo $field_id_class.$show; ?>>
+			 		<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+					<input type="text" <?php echo $size.$class.$name; ?> value="<?php echo esc_attr($value); ?>" id="">
+					<?php if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+				</span>
+				<?php 
+			break;
+	 		
+		}
 	}
 	 
 	/**
@@ -963,7 +995,7 @@ class Profile_CCT {
 	
 	function is_data_array( $data )
 	{
-		// var_dump(is_array($data));
+		// var_dump(is_array($data), is_array($data[0]), $data);
 		if(!is_array($data) || !is_array($data[0]))
 			return false;
 		
@@ -1114,6 +1146,4 @@ class Profile_CCT {
 
 if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT' ) )
 add_action( 'plugins_loaded', array( 'Profile_CCT', 'get_object' ) );
-
-
 

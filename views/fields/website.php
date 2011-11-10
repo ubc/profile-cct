@@ -24,8 +24,10 @@ function profile_cct_website_field_shell($action,$options) {
 
 	$field->start_field($action,$options);
 	if( $field->is_data_array( $data ) ):
+		$count = 0;
 		foreach($data as $item_data):
-			profile_cct_website_field($item_data,$options);
+			profile_cct_website_field($item_data,$options,$count);
+			$count++;
 		endforeach;
 	else:
 		profile_cct_website_field($data,$options);
@@ -34,13 +36,18 @@ function profile_cct_website_field_shell($action,$options) {
 	$field->end_field( $action, $options );
 	
 }
-function profile_cct_website_field( $data, $options ){
+function profile_cct_website_field( $data, $options, $count = 0 ){
 
 	extract( $options );
 	$field = Profile_CCT::get_object();
-
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'website', 'label'=>'url - http://', 'size'=>35, 'value'=>$data['website'], 'type'=>'text') );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'site-title', 'label'=>'site title', 'size'=>35, 'value'=>$data['website'], 'type'=>'text', 'show'=>in_array('site-title', $show)) );
+	$show = (is_array($show) ? $show : array());
+	
+	echo "<div data-count='".$count."'>";
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'website', 'label'=>'url - http://', 'size'=>35, 'value'=>$data['website'], 'type'=>'text','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'site-title', 'label'=>'site title', 'size'=>35, 'value'=>$data['website'], 'type'=>'text', 'show'=>in_array('site-title', $show),'count'=>$count) );
+	if($count)
+	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
+	echo "</div>";
 }
 
 function profile_cct_website_display_shell($action,$options) {

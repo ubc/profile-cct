@@ -51,7 +51,11 @@ function profile_cct_picture_field( $data, $options ){
 	
 	$show = (is_array($show) ? $show : array());
 	
-	
+	global $post;
+	if(is_object($post)):
+	$thumbnail_id = get_post_meta( $post->ID, '_thumbnail_id', true );
+	echo _wp_post_thumbnail_html( $thumbnail_id );
+	endif;
 }
 
 

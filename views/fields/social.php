@@ -24,7 +24,9 @@ function profile_cct_social_field_shell( $action, $options ) {
 	
 	if( $field->is_data_array( $data ) ):
 		foreach($data as $item_data):
-			profile_cct_social_field($item_data,$options);
+			$count = 0;
+			profile_cct_social_field($item_data,$options,$count);
+			$count++;
 		endforeach;
 	else:
 		profile_cct_social_field($data,$options);
@@ -32,7 +34,7 @@ function profile_cct_social_field_shell( $action, $options ) {
 	
 	$field->end_field( $action, $options );
 }
-function profile_cct_social_field( $data, $options ){
+function profile_cct_social_field( $data, $options, $count = 0 ){
 
 	extract( $options );
 	
@@ -41,8 +43,12 @@ function profile_cct_social_field( $data, $options ){
 	foreach($social_array_options as $social_item):
 		$social_array[] =  $social_item['label'];
 	endforeach;
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'option', 'label'=>'option',  'value'=>$data['option'], 'all_fields'=>$social_array, 'type'=>'select') );
-
+	
+	echo "<div data-count='".$count."'>";
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'option', 'label'=>'option',  'value'=>$data['option'], 'all_fields'=>$social_array, 'type'=>'select','count'=>$count) );
+	if($count)
+	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
+	echo "</div>";
 
 
 }

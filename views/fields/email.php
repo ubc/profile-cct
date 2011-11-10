@@ -22,30 +22,30 @@ function profile_cct_email_field_shell( $action, $options ) {
 	
 	
 	
-	var_dump($field->is_data_array( $data ));
+	$field->start_field($action,$options);
 	if( $field->is_data_array( $data ) ):
-		
+		$count = 0;
 		foreach($data as $item_data):
-			$field->start_field($action,$options);
-			profile_cct_email_field($item_data,$options);
-			$field->end_field( $action, $options );
+			profile_cct_email_field($item_data,$options,$count);
+			$count++;
 		endforeach;
 		
 	else:
-		
-		$field->start_field($action,$options);
 		profile_cct_email_field($item_data,$options);
-		$field->end_field( $action, $options );
 	endif;
-	
+	$field->end_field( $action, $options );
 	
 	
 }
-function profile_cct_email_field( $data, $options ){
+function profile_cct_email_field( $data, $options, $count = 0 ){
 	
 	extract( $options );
 	$field = Profile_CCT::get_object();
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'email', 'label'=>'', 'size'=>35, 'value'=>$data['email'], 'type'=>'text',) );
+	echo "<div data-count='".$count."'>";
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'email', 'label'=>'', 'size'=>35, 'value'=>$data['email'], 'type'=>'text','count'=>$count) );
+	if($count)
+	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
+	echo "</div>";
 }
 
 
