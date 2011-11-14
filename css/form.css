@@ -88,6 +88,11 @@
 	color:#444
 }
 
+.form-builder li .field-shell div{
+	display: block;
+	clear: both;
+}
+
 .form-builder li span {
 	margin:0 .3em 0 0;
 	padding:0;

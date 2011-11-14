@@ -15,8 +15,8 @@ function profile_cct_address_field_shell( $action, $options ) {
 		'type' => 'address',
 		'label'=>'address',
 		'description'=>'',
-		'show'=>array('building-address','room-number','street-1','street-2','city','postal','province','country'),
-		'show_fields'=>array('building-address','room-number','street-1','street-2','city','postal','province','country')
+		'show'=>array('building-name','room-number','street-1','street-2','city','postal','province','country'),
+		'show_fields'=>array('building-name','room-number','street-1','street-2','city','postal','province','country')
 		);
 	
 	$options = (is_array($options) ? array_merge($default_options,$options): $default_options );
@@ -34,7 +34,7 @@ function profile_cct_address_field( $data, $options ){
 	$show = (is_array($show) ? $show : array());
 	$field = Profile_CCT::get_object();
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'building-address', 'label'=>'Building Name', 'size'=>35, 'value'=>$data['building-address'], 'type'=>'text', 'show' => in_array("building-address",$show) ) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'building-name', 'label'=>'Building Name', 'size'=>35, 'value'=>$data['building-name'], 'type'=>'text', 'show' => in_array("building-name",$show) ) );
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'room-number','label'=>'Room Number', 'size'=>35, 'value'=>$data['room-number'], 'type'=>'text', 'show' => in_array("room-number",$show)) );
 	
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'street-1','label'=>'Street Address', 'size'=>74, 'value'=>$data['street-1'], 'type'=>'text', 'show' => in_array("street-1",$show)) );
@@ -66,8 +66,8 @@ function profile_cct_address_display_shell( $action, $options ) {
 		'hide_label'=>true,
 		'before'=>'',
 		'after' =>'',
-		'show'=>array('building-address','room-number','street-1','street-2','city','postal','province','country'),
-		'show_fields'=>array('building-address','room-number','street-1','street-2','city','postal','province','country')
+		'show'=>array('building-name','room-number','street-1','street-2','city','postal','province','country'),
+		'show_fields'=>array('building-name','room-number','street-1','street-2','city','postal','province','country')
 		);
 	
 	$options = (is_array($options) ? array_merge($default_options,$options): $default_options );
@@ -85,16 +85,25 @@ function profile_cct_address_display( $data, $options ){
 	$show = (is_array($show) ? $show : array());
 	$field = Profile_CCT::get_object();
 	
-?>
-	<div class="address adr">
-		<span class="type">Work</span>:
-		<div class="street-address">169 University Avenue</div>
-		<span class="locality">Palo Alto</span>,  
-		<abbr class="region" title="California">CA</abbr>&nbsp;&nbsp;
-		<span class="postal-code">94301</span>
-		<div class="country-name">USA</div>
-	</div>
-<?php
+	
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'address adr', 'type'=>'shell','tag'=>'div') );
+	
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'honorific-prefix','default_text'=>'Chem Building', 'value'=>$data['building-name'], 'type'=>'text', 'show' => in_array("building-name",$show) ) );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'honorific-prefix','default_text'=>'101', 'value'=>$data['room-number'], 'type'=>'text', 'show' => in_array("room-number",$show)) );
+	
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'street-address','default_text'=>'169 University Avenue', 'value'=>$data['street-1'], 'type'=>'text', 'show' => in_array("street-1",$show),'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'extended-address','default_text'=>'', 'value'=>$data['street-2'], 'type'=>'text', 'show' => in_array("street-2",$show),'tag'=>'div') );
+	
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'locality','default_text'=>'Vancouver', 'value'=>$data['city'], 'type'=>'text', 'show' => in_array("city",$show)) );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'honorific-prefix','default_text'=>'V1Z 2X0', 'value'=>$data['postal'], 'type'=>'text', 'show' => in_array("postal",$show)) );
+	
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'region','default_text'=>'British Columbia', 'value'=>$data['province'], 'type'=>'text', 'show' => in_array("province",$show)) );
+	
+	$field->display_text( 
+	array( 'field_type'=>$type, 'class'=>'country-name','default_text'=>'Canada', 'value'=>$data['country'], 'all_fields'=>profile_cct_list_of_countries(), 'type'=>'text', 'show' => in_array("country",$show) ,'tag'=>'div') );
+	
+	
+	$field->display_text( array( 'field_type'=>$type, 'type'=>'shell_end','tag'=>'div') );
 
 }
 

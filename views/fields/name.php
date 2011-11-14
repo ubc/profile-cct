@@ -91,14 +91,21 @@ function profile_cct_name_display_shell( $action, $options=null ) {
 
 }
 function profile_cct_name_display( $data, $options ){
-	?>
-	<span class="fn n">
-		<span class="honorific-prefix">Title</span>
- 		<span class="given-name">Eric</span>
- 		<span class="family-name">Meyer</span>
- 		<span class="honorific-suffix">Suffix</span>
-	</span>
-	<?php
+	
+	
+	extract( $options );
+	$show = (is_array($show) ? $show : array());
+	$field = Profile_CCT::get_object();
+	
+	$show = (is_array($show) ? $show : array());
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'fn n', 'type'=>'shell') );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'honorific-prefix','default_text'=>'Mr', 'value'=>$data['title'], 'type'=>'text') );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'given-name','default_text'=>'Eric', 'value'=>$data['first'], 	'type'=>'text', ));
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'additional-name','default_text'=>'Middle', 'value'=>$data['middle'], 'type'=>'text', 'show' => in_array("middle",$show) ));
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'family-name','default_text'=>'Meyer', 'value'=>$data['last'], 	'type'=>'text', ));
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'honorific-suffix','default_text'=>'P.Eng', 'value'=>$data['suffix'],'type'=>'text',  'show' => in_array("suffix",$show)));
+	$field->display_text( array( 'field_type'=>$type, 'type'=>'shell_end') );
+	
 }
 
 

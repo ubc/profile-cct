@@ -89,8 +89,6 @@ class Profile_CCT {
 		add_action( 'init',  array( $this,'register_cpt_profile_cct') );
 		add_action( 'wp_insert_post_data', array( $this,'save_post_data'),10,2);
 		
-		
-		
 		add_action( 'wp_ajax_cct_update_fields', array( $this,'update_fields'));
 		add_action( 'wp_ajax_cct_update_tabs', array( $this,'update_tabs'));
 		
@@ -157,7 +155,9 @@ class Profile_CCT {
 		global $current_screen;
 		if($current_screen->id == 'profile_cct'):
 			wp_enqueue_style( 'profile-cct-edit-post', WP_PLUGIN_URL . '/profile-cct/css/profile-page.css' );
-			wp_enqueue_script( 'profile-cct-edit-post', WP_PLUGIN_URL . '/profile-cct/js/profile-page.js',array('jquery-ui-tabs') );
+			wp_enqueue_script("thickbox");
+			wp_enqueue_style("thickbox");
+			wp_enqueue_script( 'profile-cct-edit-post', WP_PLUGIN_URL . '/profile-cct/js/profile-page.js',array('jquery-ui-tabs' ) );
 		endif;
 		
 	}
@@ -764,33 +764,39 @@ class Profile_CCT {
 	{
 		extract( $options );
 	 	
-	 	$field_id_class = ( isset($field_id)? ' class="'.$field_id.'"': '');
-	 	
-	 	
-	 	$size = ( isset($size)? ' size="'.$size.'"': '');
-	 	$row = ( isset($row)? ' row="'.$row.'"': '');
-	 	$cols = ( isset($cols)? ' cols="'.$cols.'"': '');
-	 	$class = ( isset($class)? ' class="'.$class.'"': ' class="field text"');
+	 	$class = ( isset($class)? ' class="'.$class.'"': ' class=""');
 	 	$id = ( isset($id)? ' id="'.$id.'"': ' ');
 	 	
-	 	
-	 	if($type =='multiple')
-	 		$name = ( isset($name)? ' name="'.$name.'[]"':  ' name="profile_cct['.$field_type.']['.$field_id.'][]"');
-	 	elseif($multiple)
-	 		$name = ( isset($name)? ' name="'.$name.'[]"':  ' name="profile_cct['.$field_type.']['.$count.']['.$field_id.']"');
-	 	else
-	 		$name = ( isset($name)? ' name="'.$name.'"': ' name="profile_cct['.$field_type.']['.$field_id.']"');
 	 		
 	 	$show = ( isset($show) && !$show ? ' style="display:none;"': '');
+	 	
+	 	$tag = (isset($tag) ? $tag :"span");
+	 	
+	 	switch( $default_text ){
+	 		case 'lorem ipsum':
+	 			
+	 		$default_text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc in velit ac sem dapibus cursus. Donec faucibus adipiscing ipsum ut auctor. Integer quis metus iaculis lacus vulputate facilisis. Fusce malesuada volutpat sapien eu commodo. Integer sed magna orci, quis commodo elit. In convallis fringilla mollis. Pellentesque dapibus mi quis nunc pulvinar lobortis. Sed ut purus auctor ligula aliquam egestas eu at sem. Sed eget nisl urna. Etiam vitae leo id erat porttitor iaculis et et lorem. Curabitur condimentum libero eget sapien dictum congue. In hac habitasse platea dictumst. In in nulla et elit vehicula tempor. Donec sem arcu, viverra quis dignissim ac, adipiscing sed nunc.</p>
+
+<p>Quisque malesuada tellus vitae massa semper non faucibus leo sollicitudin. In sit amet feugiat ligula. Ut id ultrices magna. Proin ut imperdiet tellus. Nulla interdum eleifend massa egestas malesuada. Suspendisse potenti. Nulla suscipit imperdiet velit sit amet pretium. In sit amet lectus felis, commodo varius eros. Duis sapien diam, sagittis faucibus elementum vulputate, faucibus a mi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec viverra, quam in pretium volutpat, elit sapien tempor neque, quis adipiscing magna quam vitae velit.</p>";
+			break;
+	 	}
+	 	
+	 	$display = ( $value ? $value :$default_text);
+	 	
+	 	
 	 	switch($type) {
 	 		case 'text':
-			 	?>
-			 	<span <?php echo $field_id_class.$show; ?>>
-			 		<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
-					<input type="text" <?php echo $size.$class.$name; ?> value="<?php echo esc_attr($value); ?>" id="">
-					<?php if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
-				</span>
-				<?php 
+			 	echo "<".$tag." ".$id.$class.">";
+			 	echo $display; 
+				echo "</".$tag.">";
+			break;
+			
+			case 'shell':
+				echo "<".$tag." ".$id.$class.">";
+			break;
+			
+			case 'end_shell';
+				echo "</".$tag.">";
 			break;
 	 		
 		}

@@ -1,6 +1,5 @@
 <form method="post" action="">
    <?php settings_fields('Profile_CCT_settings'); ?>
-
 <table class="form-table">
 	<tbody><tr valign="top">
 	<th scope="row">...</th>
@@ -19,7 +18,6 @@
 	</fieldset></td>
 	</tr>
 </tbody></table>
-	
 </form>
 
 <h3>Export</h3>

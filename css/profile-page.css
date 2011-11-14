@@ -5,19 +5,17 @@
 	font-size:22px;
 	padding:5px 2px 1px;
 }
-#post-body-content .inside span{
+.field-item span{
 	float: left;
 	margin-top: 5px;
 }
-#post-body-content .inside label{
+.field-item label{
 	display: block;
 	color:#888;
 	font-size: 11px;
 	margin-left: 2px;
 }
-.address{
-	width: 530px;
-}
+
 
 #post-body-content  select{
     font-size: 12px;
@@ -29,6 +27,21 @@
 	width: 600px;
 	display: block;
 	height: 300px;
+}
+/* Address */
+.address{
+	width: 533px;
+}
+#side-info-column .address div{
+	width:253px;
+}
+#side-info-column .address input{
+	width:253px;
+}
+#side-info-column .field-item textarea{
+	width:253px;
+	height: 300px;
+	display: block;
 }
 /* Address 
 .name, .address, .fax , .telephone, .educaton{
@@ -156,5 +169,14 @@ span.symbol{
 }
 .ui-statehover {
 	background: #EEE;
+}
+
+.picture img.attachment-thumbnail{
+	padding: 2px;
+	background: none repeat scroll 0 0 #FFFFFF;
+    border-bottom: 1px solid #D7D7D7;
+    border-left: 1px solid #F2F2F2;
+    border-right: 1px solid #F2F2F2;
+	margin-bottom: 10px;
 }
 
