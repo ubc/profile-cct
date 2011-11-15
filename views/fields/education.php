@@ -1,6 +1,6 @@
 <?php 
 
-function profile_cct_education_field_shell( $action, $options ) {
+function profile_cct_education_field_shell(  $action, $options, $data ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -98,26 +98,21 @@ function profile_cct_education_display( $data, $options ){
 	extract( $options );
 	
 	$field = Profile_CCT::get_object();
-	$year_built_min = date("Y")-50;
-    $year_built_max = date("Y")+5;
-	$year_array = range($year_built_max, $year_built_min);
+
 	$show = (is_array($show) ? $show : array());
-
-?> <div class="educaton">
-			<span class="school">
-				University of British Columbia
-			</span><span class="comma">,</span>
-			<span class="year">
-				2009
-			</span><span class="comma">,</span>
-			<span class="degree">
-			 	Mechanical Engineering
-			</span><span class="comma">,</span>
-			<span class="honors">
-			 	BAS
-			</span>
-		</div>
-
-<?php
+	
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'educaton', 'type'=>'shell', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'school','default_text'=>'University of British Columbia', 'value'=>$data['school'], 'type'=>'text','count'=>$count) );
+	
+	$field->display_text( array( 'class'=>'comma', 'value'=>",", 'type'=>'text' ));
+	$field->display_text( array( 'class'=>'year','default_text'=>'2011', 'value'=>$data['year'], 'type'=>'text', 'show'=> in_array('year',$show),'count'=>$count));
+	
+	$field->display_text( array( 'class'=>'comma', 'value'=>",", 'type'=>'text' ));
+	
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'textarea bio','default_text'=>'Physics', 'value'=>$data['degree'], 'type'=>'text','count'=>$count) );
+	
+	$field->display_text( array( 'class'=>'comma', 'value'=>",", 'type'=>'text' ));
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'honors','default_text'=>'BS', 'value'=>$data['honours'], 'type'=>'text','count'=>$count) );
+	$field->display_text( array( 'field_type'=>$type, 'type'=>'shell_end', 'tag'=>'div') );
 
 }

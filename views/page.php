@@ -29,7 +29,8 @@
 	<div class="col-wrap">
 	<h3>Page Content</h3>
 	<?php
-		do_action('profile_cct_page',$action);
+		$data = array();
+		do_action('profile_cct_page',$action,$data);
 	?>
 	</div>
 </div><!-- /col-left -->

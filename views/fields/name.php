@@ -59,7 +59,7 @@ function profile_cct_name_field( $data, $options ){
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'suffix', 'label'=>'Suffix','size'=>3, 'value'=>$data['suffix'],'type'=>'text',  'show' => in_array("suffix",$show)));
 	
 }
-function profile_cct_name_display_shell( $action, $options=null ) {
+function profile_cct_name_display_shell( $action, $options=null, $data ) {
 
 	if( is_object($action) ):
 		$post = $action;
@@ -94,7 +94,7 @@ function profile_cct_name_display( $data, $options ){
 	
 	
 	extract( $options );
-	$show = (is_array($show) ? $show : array());
+	
 	$field = Profile_CCT::get_object();
 	
 	$show = (is_array($show) ? $show : array());

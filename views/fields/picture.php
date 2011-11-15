@@ -13,7 +13,7 @@ if ( !defined( 'PROFILE_CCT_FULL_HEIGHT' ) )
  * @param mixed $options. (default: null)
  * @return void
  */
-function profile_cct_picture_field_shell( $action, $options=null ) {
+function profile_cct_picture_field_shell( $action, $options=null, $data ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -102,7 +102,7 @@ function profile_cct_picture_display_shell( $action, $options=null ) {
  * @param mixed $options
  * @return void
  */
-function profile_cct_picture_display( $data, $options ){
+function profile_cct_picture_display(  $action, $options, $data  ){
 	
 	extract( $options );
 	

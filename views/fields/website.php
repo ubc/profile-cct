@@ -44,13 +44,13 @@ function profile_cct_website_field( $data, $options, $count = 0 ){
 	
 	echo "<div data-count='".$count."'>";
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'website', 'label'=>'url - http://', 'size'=>35, 'value'=>$data['website'], 'type'=>'text','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'site-title', 'label'=>'site title', 'size'=>35, 'value'=>$data['website'], 'type'=>'text', 'show'=>in_array('site-title', $show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'site-title', 'label'=>'site title', 'size'=>35, 'value'=>$data['site-title'], 'type'=>'text', 'show'=>in_array('site-title', $show),'count'=>$count) );
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
 	echo "</div>";
 }
 
-function profile_cct_website_display_shell($action,$options) {
+function profile_cct_website_display_shell( $action, $options, $data ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -88,9 +88,11 @@ function profile_cct_website_display( $data, $options ){
 
 	extract( $options );
 	$field = Profile_CCT::get_object();
-	?>
-	<div class=""><a href="">http://google.com</a></div>
-	<?php
-
+	$name = (isset($data['site-title']) ? $data['site-title'] : $data['website'] );
+	
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'website', 'type'=>'shell', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'default_text'=>'http://google.com', 'value'=>$name, 'type'=>'text', 'tag'=>'a', 'href'=>$data['website']) );
+	$field->display_text( array( 'field_type'=>$type, 'type'=>'shell_end', 'tag'=>'div') );
+	
 }
 

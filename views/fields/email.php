@@ -42,6 +42,7 @@ function profile_cct_email_field( $data, $options, $count = 0 ){
 	extract( $options );
 	$field = Profile_CCT::get_object();
 	echo "<div data-count='".$count."'>";
+	
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'email', 'label'=>'', 'size'=>35, 'value'=>$data['email'], 'type'=>'text','count'=>$count) );
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
@@ -51,7 +52,7 @@ function profile_cct_email_field( $data, $options, $count = 0 ){
 
 
 
-function profile_cct_email_display_shell( $action, $options ) {
+function profile_cct_email_display_shell(  $action, $options, $data ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -88,9 +89,12 @@ function profile_cct_email_display_shell( $action, $options ) {
 function profile_cct_email_display( $data, $options ){
 	
 	extract( $options );
+	$show = (is_array($show) ? $show : array());
 	$field = Profile_CCT::get_object();
-	?>
-	<a href="mailto:jo@ubc.ca">jo@ubc.ca</a>
-	<?php
+	
+
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'email', 'type'=>'shell', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'default_text'=>'jo@ubc.ca', 'value'=>$data['email'], 'type'=>'text', 'tag'=>'a', 'href'=>'mailto:'.$data['email']) );
+	$field->display_text( array( 'field_type'=>$type, 'type'=>'shell_end', 'tag'=>'div') );
 	
 }

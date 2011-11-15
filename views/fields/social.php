@@ -53,7 +53,7 @@ function profile_cct_social_field( $data, $options, $count = 0 ){
 
 }
 
-function profile_cct_social_display_shell( $action, $options ) {
+function profile_cct_social_display_shell(  $action, $options, $data  ) {
 	
 	if( is_object($action) ):
 		$post = $action;

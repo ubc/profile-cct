@@ -116,7 +116,7 @@ class Profile_CCT {
 		
 		add_action('profile_cct_form', array( $this,'profile_cct_form_field_shell'),10,1);
 		
-		add_action('profile_cct_page', array( $this,'profile_cct_page_field_shell'),10,1);
+		add_action('profile_cct_page', array( $this,'profile_cct_page_field_shell'),10,2);
 		
 		
 	}
@@ -469,8 +469,12 @@ class Profile_CCT {
 			endif;
 			if(isset($_POST["profile_cct"])):
 			
-			// var_dump($data,$postarr['ID'],"----+++++",serialize($_POST["profile_cct"]));
-			// die();
+				ob_start();
+				do_action('profile_cct_page','display', $_POST["profile_cct"]);
+				$content = ob_get_contents();
+				ob_end_clean();
+				
+				$data['post_content'] = $content;
 			endif;
 		
 		
@@ -483,7 +487,7 @@ class Profile_CCT {
 	
 	}
 	/* ============== FIELDS =============================================== */
-	function profile_cct_page_field_shell($action){
+	function profile_cct_page_field_shell($action,$user_data){
 		$contexts = $this->default_shells('page'); ?>
 	 	<div id="page-shell">
 	 	<?php 
@@ -501,7 +505,7 @@ class Profile_CCT {
 		 				
 			 		if( is_array( $fields  ) ):
 				 		foreach($fields  as $field):
-				 			call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field);
+				 			call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field,$user_data[ $field['type']]);
 				 		endforeach;
 			 		endif;
 		 		?>
@@ -571,13 +575,12 @@ class Profile_CCT {
 	 	if($action == 'edit')
 	 		$shell = 'li';
 	 	
-	 	?>
-	 	<<?php echo $shell; ?> class="<?php echo esc_attr( $type); ?> field-item <?php echo $width; ?>" for="cct-<?php echo esc_attr( $field_type); ?>" 
-	 	data-options="<?php echo esc_attr( $this->serialize($options)); ?>" >
-	 	<?php 
+	
 	 	if($action == 'edit'): 
 	 	
 	 		?>
+	 		<<?php echo $shell; ?> class="<?php echo esc_attr( $type); ?> field-item <?php echo $width; ?>" for="cct-<?php echo esc_attr( $field_type); ?>" data-options="<?php echo esc_attr( $this->serialize($options)); ?>" >
+
 			<a href="#edit-field" class="edit">Edit</a>
 			<div class="edit-shell" style="display:none;">
 					<input type="hidden" name="type" value="<?php echo esc_attr( $type ); ?>" />
@@ -611,8 +614,9 @@ class Profile_CCT {
 		 	<label for="" id="" class="field-title"><?php echo $label; ?></label>
 		 	<?php 
 	 	endif;
-	 	if($action == 'display'):
-	 		
+	 	if($action == 'display'): ?>
+	 		<<?php echo $shell; ?> class="<?php echo esc_attr( $type); ?> field-item <?php echo $width; ?>">
+	 	<?php 
 	 	endif;
 	 	?>
 	 	<div class="field-shell">
@@ -767,6 +771,8 @@ class Profile_CCT {
 	 	$class = ( isset($class)? ' class="'.$class.'"': ' class=""');
 	 	$id = ( isset($id)? ' id="'.$id.'"': ' ');
 	 	
+	 	$href = ( isset($href)? ' href="'.$href.'"': ' ');
+	 	
 	 		
 	 	$show = ( isset($show) && !$show ? ' style="display:none;"': '');
 	 	
@@ -775,7 +781,7 @@ class Profile_CCT {
 	 	switch( $default_text ){
 	 		case 'lorem ipsum':
 	 			
-	 		$default_text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc in velit ac sem dapibus cursus. Donec faucibus adipiscing ipsum ut auctor. Integer quis metus iaculis lacus vulputate facilisis. Fusce malesuada volutpat sapien eu commodo. Integer sed magna orci, quis commodo elit. In convallis fringilla mollis. Pellentesque dapibus mi quis nunc pulvinar lobortis. Sed ut purus auctor ligula aliquam egestas eu at sem. Sed eget nisl urna. Etiam vitae leo id erat porttitor iaculis et et lorem. Curabitur condimentum libero eget sapien dictum congue. In hac habitasse platea dictumst. In in nulla et elit vehicula tempor. Donec sem arcu, viverra quis dignissim ac, adipiscing sed nunc.</p>
+	 		$default_text = "<p><strong>".$field_type."</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc in velit ac sem dapibus cursus. Donec faucibus adipiscing ipsum ut auctor. Integer quis metus iaculis lacus vulputate facilisis. Fusce malesuada volutpat sapien eu commodo. Integer sed magna orci, quis commodo elit. In convallis fringilla mollis. Pellentesque dapibus mi quis nunc pulvinar lobortis. Sed ut purus auctor ligula aliquam egestas eu at sem. Sed eget nisl urna. Etiam vitae leo id erat porttitor iaculis et et lorem. Curabitur condimentum libero eget sapien dictum congue. In hac habitasse platea dictumst. In in nulla et elit vehicula tempor. Donec sem arcu, viverra quis dignissim ac, adipiscing sed nunc.</p>
 
 <p>Quisque malesuada tellus vitae massa semper non faucibus leo sollicitudin. In sit amet feugiat ligula. Ut id ultrices magna. Proin ut imperdiet tellus. Nulla interdum eleifend massa egestas malesuada. Suspendisse potenti. Nulla suscipit imperdiet velit sit amet pretium. In sit amet lectus felis, commodo varius eros. Duis sapien diam, sagittis faucibus elementum vulputate, faucibus a mi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec viverra, quam in pretium volutpat, elit sapien tempor neque, quis adipiscing magna quam vitae velit.</p>";
 			break;
@@ -786,7 +792,7 @@ class Profile_CCT {
 	 	
 	 	switch($type) {
 	 		case 'text':
-			 	echo "<".$tag." ".$id.$class.">";
+			 	echo "<".$tag." ".$id.$class.$href.">";
 			 	echo $display; 
 				echo "</".$tag.">";
 			break;

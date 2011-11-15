@@ -62,7 +62,7 @@ function profile_cct_phone_field( $data, $options, $count = 0 ){
 
 
 
-function profile_cct_phone_display_shell( $action, $options ) {
+function profile_cct_phone_display_shell(  $action, $options, $data ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -88,7 +88,7 @@ function profile_cct_phone_display_shell( $action, $options ) {
 	if( $field->is_data_array( $data ) ):
 		
 		foreach($data as $item_data):
-			profile_cct_phone_fdisplay($item_data,$options);
+			profile_cct_phone_display($item_data,$options);
 		endforeach;
 		
 	else:

@@ -34,7 +34,7 @@ function profile_cct_bio_field( $data, $options ){
 
 }
 
-function profile_cct_bio_display_shell( $action, $options ) {
+function profile_cct_bio_display_shell(  $action, $options, $data  ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -65,6 +65,6 @@ function profile_cct_bio_display( $data, $options ){
 	extract( $options );
 	$field = Profile_CCT::get_object();
 	
-	$field->display_text( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'bio','label'=>'', 'value'=>$data['bio'], 'shell'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'textarea bio','default_text'=>'lorem ipsum', 'value'=>$data['bio'], 'tag'=>'div', 'type'=>'text') );
 
 }

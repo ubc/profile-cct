@@ -49,7 +49,7 @@ function profile_cct_address_field( $data, $options ){
 }
 
 
-function profile_cct_address_display_shell( $action, $options ) {
+function profile_cct_address_display_shell( $action, $options, $data ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -84,7 +84,6 @@ function profile_cct_address_display( $data, $options ){
 	extract( $options );
 	$show = (is_array($show) ? $show : array());
 	$field = Profile_CCT::get_object();
-	
 	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'address adr', 'type'=>'shell','tag'=>'div') );
 	
