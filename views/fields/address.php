@@ -49,7 +49,7 @@ function profile_cct_address_field( $data, $options ){
 }
 
 
-function profile_cct_address_display_shell( $action, $options, $data ) {
+function profile_cct_address_display_shell( $action, $options, $data=null ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -102,7 +102,7 @@ function profile_cct_address_display( $data, $options ){
 	array( 'field_type'=>$type, 'class'=>'country-name','default_text'=>'Canada', 'value'=>$data['country'], 'all_fields'=>profile_cct_list_of_countries(), 'type'=>'text', 'show' => in_array("country",$show) ,'tag'=>'div') );
 	
 	
-	$field->display_text( array( 'field_type'=>$type, 'type'=>'shell_end','tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell','tag'=>'div') );
 
 }
 

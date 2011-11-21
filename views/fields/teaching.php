@@ -36,7 +36,7 @@ function profile_cct_teaching_field( $data, $options ){
 
 }
 
-function profile_cct_teaching_display_shell( $action, $options, $data  ) {
+function profile_cct_teaching_display_shell( $action, $options, $data=null  ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -51,7 +51,9 @@ function profile_cct_teaching_display_shell( $action, $options, $data  ) {
 	$default_options = array(
 		'type' => 'teaching',
 		'label'=> 'teaching',
-		'description'=> '',
+		'hide_label'=>true,
+		'before'=>'',
+		'after'=>''
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	

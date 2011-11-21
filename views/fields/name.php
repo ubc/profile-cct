@@ -27,7 +27,7 @@ function profile_cct_name_field_shell( $action, $options=null ) {
 		'show'=>array('title','middle','suffix'),
 		'show_fields'=>array('title','middle','suffix')
 		);
-		
+	
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	
 	$field->start_field($action,$options);
@@ -98,13 +98,13 @@ function profile_cct_name_display( $data, $options ){
 	$field = Profile_CCT::get_object();
 	
 	$show = (is_array($show) ? $show : array());
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'fn n', 'type'=>'shell') );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'fn n', 'type'=>'shell', 'tag'=>'h2') );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'honorific-prefix','default_text'=>'Mr', 'value'=>$data['title'], 'type'=>'text') );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'given-name','default_text'=>'Eric', 'value'=>$data['first'], 	'type'=>'text', ));
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'additional-name','default_text'=>'Middle', 'value'=>$data['middle'], 'type'=>'text', 'show' => in_array("middle",$show) ));
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'additional-name','default_text'=>'B.', 'value'=>$data['middle'], 'type'=>'text', 'show' => in_array("middle",$show) ));
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'family-name','default_text'=>'Meyer', 'value'=>$data['last'], 	'type'=>'text', ));
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'honorific-suffix','default_text'=>'P.Eng', 'value'=>$data['suffix'],'type'=>'text',  'show' => in_array("suffix",$show)));
-	$field->display_text( array( 'field_type'=>$type, 'type'=>'shell_end') );
+	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'h2') );
 	
 }
 

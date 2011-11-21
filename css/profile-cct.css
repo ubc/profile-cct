@@ -1,0 +1,17 @@
+.half,
+.one-third,
+.two-third{
+	float: left;
+	clear: none;
+}
+
+.one-third {
+	width:33.3%;
+}
+
+.two-third {
+	width:66.6%;
+}
+.half {
+	width:50%;
+}

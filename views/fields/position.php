@@ -53,7 +53,7 @@ function profile_cct_position_field( $data, $options, $count = 0 ){
 }
 
 
-function profile_cct_position_display_shell( $action, $options, $data ) {
+function profile_cct_position_display_shell( $action, $options, $data=null ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -96,15 +96,14 @@ function profile_cct_position_display( $data, $options ){
 
 	extract( $options );
 	$field = Profile_CCT::get_object();
+	$show = (is_array($show) ? $show : array());
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'position', 'type'=>'shell') );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'position', 'type'=>'shell', 'tag'=>'div') );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'role','default_text'=>'Professor', 'value'=>$data['position'], 'type'=>'text','count'=>$count, ) );
-	$field->display_text( array( 'class'=>'comma', 'value'=>",", 'type'=>'text', 'show'=>in_array("organization",$show) ));
+	$field->display_text( array( 'class'=>'comma', 'value'=>",", 'type'=>'text', 'show'=>in_array("organization",$show)));
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'org','default_text'=>'University of British Columbia', 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array("organization",$show),'count'=>$count) );
 	
-	$field->display_text( array( 'field_type'=>$type, 'type'=>'shell_end') );
-?>
-	<div class="position">Web Developer</div>
-<?php 
+	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
+
 }
 

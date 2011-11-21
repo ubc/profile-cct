@@ -87,6 +87,7 @@ class Profile_CCT {
 		add_action( 'edit_form_advanced', array($this, 'edit_form_advanced'));
 		add_action( 'add_meta_boxes_profile_cct', array($this, 'edit_post')); // add meta boxes 
 		add_action( 'init',  array( $this,'register_cpt_profile_cct') );
+		add_action( 'init',  array( $this,'load_scripts_cpt_profile_cct') );
 		add_action( 'wp_insert_post_data', array( $this,'save_post_data'),10,2);
 		
 		add_action( 'wp_ajax_cct_update_fields', array( $this,'update_fields'));
@@ -380,6 +381,18 @@ class Profile_CCT {
 	    
 	}
 	
+	
+	function load_scripts_cpt_profile_cct()
+	{
+		wp_enqueue_script('jquery-ui-tabs');
+		wp_enqueue_style( 'profile-cct', WP_PLUGIN_URL . '/profile-cct/css/profile-cct.css' );
+	
+		//add_filter('template_include', array( $this, 'help' ));
+	}
+	function help($test){
+		var_dump($test); 
+		return $test;
+	}
 	/**
 	 * edit_post function.
 	 * 
@@ -402,6 +415,7 @@ class Profile_CCT {
 			foreach( $contexts as $context ):
 				
 				$fields = $this->get_option('form','fields',$context);
+				
 				foreach($fields as $field):
 					// add_meta_box( $id, $title, $callback, $page, $context, $priority, $callback_args );
 					
@@ -474,6 +488,7 @@ class Profile_CCT {
 				$content = ob_get_contents();
 				ob_end_clean();
 				
+				
 				$data['post_content'] = $content;
 			endif;
 		
@@ -488,19 +503,19 @@ class Profile_CCT {
 	}
 	/* ============== FIELDS =============================================== */
 	function profile_cct_page_field_shell($action,$user_data){
-		$contexts = $this->default_shells('page'); ?>
-	 	<div id="page-shell">
-	 	<?php 
+		$contexts = $this->default_shells('page'); ?><div id="page-shell"><?php 
 	 	foreach($contexts as $context):
+	 		
 		 	if(function_exists('profile_cct_page_shell_'.$context)):
-		 		call_user_func('profile_cct_page_shell_'.$context,$action);
+		 		call_user_func('profile_cct_page_shell_'.$context,$action,$user_data);
 		 	else: 
 		 		
-		 		?>
-		 		<div id="<?php echo $context; ?>-shell" class="shell">
+		 		?><div id="<?php echo $context; ?>-shell" class="shell"><?php 
+		 			if($action == 'edit'): ?>
 		 			<span class="description-shell"><?php echo $context; ?></span>
 		 			<ul class="form-builder sort" id="<?php echo $context; ?>">
-		 		<?php 
+		 			<?php endif; 
+		 			 
 		 			$fields = $this->get_option('page','fields',$context);
 		 				
 			 		if( is_array( $fields  ) ):
@@ -508,17 +523,15 @@ class Profile_CCT {
 				 			call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field,$user_data[ $field['type']]);
 				 		endforeach;
 			 		endif;
-		 		?>
-		 		</ul>
-		 		</div>
-		 		<?php 
+			 		
+			 		if($action == 'edit'): ?>
+		 			</ul> 
+		 			<?php endif; ?></div><?php 
 		 		
 		 	endif;
 	 	endforeach;
 	 	
-	 	?>
-	 	</div>
-	 	<?php
+	 	?></div> <!-- end of page shell --><?php
 	}
 	
 	/**
@@ -535,7 +548,7 @@ class Profile_CCT {
 	 	
 	 	foreach($contexts as $context):
 		 	if(function_exists('profile_cct_form_shell_'.$context)):
-		 		call_user_func('profile_cct_form_shell_'.$context,$action);
+		 		call_user_func('profile_cct_form_shell_'.$context,$action,$user_data);
 		 	else: 
 		 		
 		 		?>
@@ -652,12 +665,9 @@ class Profile_CCT {
 	 	</div>
 	 	<?php 
 	 	if(isset($description)):
-	 	?><pre class="description"><?php echo $description; ?></pre>
-	 	<?php 
+	 	?><pre class="description"><?php echo $description; ?></pre><?php 
 	 	endif;
-	 	?>
-	 	</<?php echo $shell; ?>>
-	 	<?php 
+	 	?></<?php echo $shell; ?>><?php 
 	 }
 	 /**
 	  * input_field function.
@@ -794,7 +804,7 @@ class Profile_CCT {
 	 		case 'text':
 			 	echo "<".$tag." ".$id.$class.$href.">";
 			 	echo $display; 
-				echo "</".$tag.">";
+				echo " </".$tag.">";
 			break;
 			
 			case 'shell':
@@ -1065,7 +1075,7 @@ class Profile_CCT {
 	
 	function get_option($type='form',$fields_or_tabs='fields',$context='normal'){
 		$option = get_option('Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context);
-		
+		var_dump($option);
 		if(!is_array($option)):
 			$default = $this->default_options($type);
 	
@@ -1122,6 +1132,7 @@ class Profile_CCT {
 					   'tabs' => array("Basic Info", "Bio")
 				 	));
 	 		elseif($type == 'form'):
+	 			
 				return apply_filters('profile_cct_default_options', array(
 		 				'fields'=> array(
 				 				'tabbed-1' => array(

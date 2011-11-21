@@ -50,7 +50,7 @@ function profile_cct_website_field( $data, $options, $count = 0 ){
 	echo "</div>";
 }
 
-function profile_cct_website_display_shell( $action, $options, $data ) {
+function profile_cct_website_display_shell( $action, $options, $data=null ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -92,7 +92,7 @@ function profile_cct_website_display( $data, $options ){
 	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'website', 'type'=>'shell', 'tag'=>'div') );
 	$field->display_text( array( 'field_type'=>$type, 'default_text'=>'http://google.com', 'value'=>$name, 'type'=>'text', 'tag'=>'a', 'href'=>$data['website']) );
-	$field->display_text( array( 'field_type'=>$type, 'type'=>'shell_end', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 	
 }
 

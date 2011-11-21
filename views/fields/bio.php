@@ -34,7 +34,7 @@ function profile_cct_bio_field( $data, $options ){
 
 }
 
-function profile_cct_bio_display_shell(  $action, $options, $data  ) {
+function profile_cct_bio_display_shell(  $action, $options, $data = null ) {
 	
 	if( is_object($action) ):
 		$post = $action;

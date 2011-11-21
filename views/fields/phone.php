@@ -62,7 +62,7 @@ function profile_cct_phone_field( $data, $options, $count = 0 ){
 
 
 
-function profile_cct_phone_display_shell(  $action, $options, $data ) {
+function profile_cct_phone_display_shell(  $action, $options, $data=null ) {
 	
 	if( is_object($action) ):
 		$post = $action;

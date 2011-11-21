@@ -13,7 +13,7 @@ if ( !defined( 'PROFILE_CCT_FULL_HEIGHT' ) )
  * @param mixed $options. (default: null)
  * @return void
  */
-function profile_cct_picture_field_shell( $action, $options=null, $data ) {
+function profile_cct_picture_field_shell( $action, $options=null ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -61,11 +61,14 @@ function profile_cct_picture_field( $data, $options ){
 	
 	
 	profile_cct_picture_form($thumbnail_id);
+	else:
+	profile_cct_picture_display(  $data, $options  );
 	endif;
+	
 }
 
 
-function profile_cct_picture_display_shell( $action, $options=null ) {
+function profile_cct_picture_display_shell( $action, $options=null, $data=null ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -102,15 +105,23 @@ function profile_cct_picture_display_shell( $action, $options=null ) {
  * @param mixed $options
  * @return void
  */
-function profile_cct_picture_display(  $action, $options, $data  ){
-	
+function profile_cct_picture_display(  $data, $options  ){
+	global $post;
 	extract( $options );
 	
 	$field = Profile_CCT::get_object();
 	
 	$show = (is_array($show) ? $show : array());
-	
-	echo get_avatar(get_the_author_id());
+	if(isset($post)){
+		echo get_the_post_thumbnail($post_id, 'thumbnail');
+
+	}else{
+		global $current_user;
+      	get_currentuserinfo();
+		echo get_avatar($current_user->user_email, 150);
+	}
+		
+		
 }
 
 

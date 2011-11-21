@@ -1,6 +1,6 @@
 <?php 
 
-function profile_cct_education_field_shell(  $action, $options, $data ) {
+function profile_cct_education_field_shell(  $action, $options) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -57,7 +57,7 @@ function profile_cct_education_field( $data, $options, $count = 0 ){
 }
 
 
-function profile_cct_education_display_shell( $action, $options ) {
+function profile_cct_education_display_shell( $action, $options, $data=null  ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -113,6 +113,6 @@ function profile_cct_education_display( $data, $options ){
 	
 	$field->display_text( array( 'class'=>'comma', 'value'=>",", 'type'=>'text' ));
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'honors','default_text'=>'BS', 'value'=>$data['honours'], 'type'=>'text','count'=>$count) );
-	$field->display_text( array( 'field_type'=>$type, 'type'=>'shell_end', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 
 }

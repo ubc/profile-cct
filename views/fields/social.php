@@ -53,7 +53,7 @@ function profile_cct_social_field( $data, $options, $count = 0 ){
 
 }
 
-function profile_cct_social_display_shell(  $action, $options, $data  ) {
+function profile_cct_social_display_shell(  $action, $options, $data=null  ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -88,6 +88,7 @@ function profile_cct_social_display( $data, $options ){
 	extract( $options );
 	
 	$field = Profile_CCT::get_object();
+	
 	$social_array_options = profile_cct_social_options();
 	foreach($social_array_options as $social_item):
 		$social_array[] =  $social_item['label'];

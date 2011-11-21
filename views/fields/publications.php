@@ -35,7 +35,7 @@ function profile_cct_publications_field( $data, $options ){
 
 
 
-function profile_cct_publications_display_shell( $action, $options, $data  ) {
+function profile_cct_publications_display_shell( $action, $options, $data=null  ) {
 	
 	if( is_object($action) ):
 		$post = $action;
