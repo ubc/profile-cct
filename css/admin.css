@@ -1,5 +1,8 @@
+#col-container{
+	
+}
 #col-left{
-	width:625px;
+	/* width:625px; */
 	margin: 0;
     overflow: hidden;
     padding: 0;
@@ -8,35 +11,36 @@
 #col-right{
 	width:150px;
 	float: left;
-	margin-right: 10px;
-	margin: 0;
+	margin:0 10px 0 0;
 	
 }
 #col-middle{
-	width: 960px;
+	max-width: 960px;
+	width: 77%;
 	margin: 0;
     padding: 0;
     float: left;
+ 
 }
 #col-middle #normal-shell,
 #col-middle #tabs{
-	width: 643px;
+	max-width: 655px;
+    width: 68%;
 	float: left;
-	margin-left: 6px;
 }
 #col-middle #side-shell{
-	width: 300px;
+	max-width: 300px;
+	width: 31%;
 	float: right;
 }
 #side-shell .form-builder{
-	width: 322px;
+	/* width: 322px; */
 }
 #side-shell .form-builder li{
-	width: 280px;
+	/* width: 280px; */
 }
 #notify{
 	  height: 30px;
-	 
 }
 #notify span{
 	display: none;
@@ -62,9 +66,9 @@
 }
 
 .shell{
-	 float: left;
-    margin-left: 6px;
-    width: 649px;
+	float: left;
+    max-width: 649px;
+    width: 98%;
     clear: both;
 }
 /*

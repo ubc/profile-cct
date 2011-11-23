@@ -1,7 +1,6 @@
 .sort { 
 	list-style-type: none; 
 	margin: 0; 
-	padding:6px 2px;
 	background: #DDDDDD;
 	border-radius: 3px;
     -moz-border-radius:3px;
@@ -55,36 +54,23 @@ a.edit {
 	color: #21759B;
 	border-bottom-color: #21759B;
 	margin:0 10px;
+	padding:1px 2px 0;
+	line-height:11px;
+	text-decoration:none;
+	float:right;
+	font-size:10px
 }
 a.edit:hover{
 	color: #D54E21;
 	border-bottom-color: #D54E21;
 }
-.edit,
-.remove {
-	margin:0;
-	padding:1px 2px 0;
-	line-height:11px;
-	text-decoration:none;
-	border-bottom:1px solid red;
-	color:red;
-	float:right;
-	font-size:10px
-}
-
-.remove:hover {
-	background:red;
-	color:#FFF
-}
 
 li .edit-shell {
 	background:#EAF2FA;
-	margin:0 -20px;
-	padding:10px 20px
+	margin: 0 0 0 -20px;
+    padding: 10px 0 10px 20px;
 }
-#profile-fields .edit,
-#profile-fields .remove,
-{}
+
 /* ----- Tabs ----- */
 .ui-tabs-nav{
 	border-bottom: 1px solid #CCCCCC;

@@ -11,7 +11,7 @@
 <div id="col-right">
 	<div class="col-wrap">
 	
-	<h3>Fields on the banch</h3>
+	<h3>Inactive Fields</h3>
 	<ul id="banch" class="sort">
 		<?php 
 		$action = 'edit';

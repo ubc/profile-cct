@@ -19,7 +19,7 @@ var Profile_CCT_FORM ={
 		formB.find(".edit").live("click", Profile_CCT_FORM.editField);
 
 		formB.find(".field-label").live("keyup", Profile_CCT_FORM.updateLabel);
-		formB.find(".field-description").live("keypress", Profile_CCT_FORM.updateDescription);
+		formB.find(".field-description").live("keypress", Profile_CCT_FORM.updateDescription );
 		formB.find(".field-show").live("click", Profile_CCT_FORM.updateShow);
 		formB.find(".field-multiple").live("click", Profile_CCT_FORM.multipleShow);
 		formB.find(".save-field-settings").live("click", Profile_CCT_FORM.updateField);
@@ -51,32 +51,30 @@ var Profile_CCT_FORM ={
 	 },
 	updateLabel : function(e){
 		var el = jQuery(this);
-		var text_label = el.val();
+		
 		
 		setTimeout( function(){
-			
+		var text_label = el.val();
 		if(text_label.length+1 > 0 ) {
 			el.parents().siblings(".field-title").text(text_label);
 		} else {
 			text_label = el.attr('title');
 			el.parents().siblings(".field-title").text(el.attr('title'));
 		}
-		},75);
+		},10);
 	},
 	updateDescription : function(e){
 		var el = jQuery(this);
-		var text_label = el.val();
-		
-		setTimeout( 
-		function () {
-		
+
+		setTimeout( function () {		
+			var text_label = el.val();
 			if(text_label.length+1 > 0 ) {
 				el.parents().siblings(".description").text(text_label);
 			} else {
 				text_label = el.attr('title');
 				el.parents().siblings(".description").text(el.attr('title'));
 			}
-		},75);
+		},10);
 
 	},
 	updateShow : function(e){

@@ -4,13 +4,19 @@
 /* ----- Field Structure ----- */
 .form-builder {
 	list-style-type:none;
-	width:645px;
+	/* width:645px; */
 }
 
 * html .form-builder {
 /* IE6 Margin Percent Bug for Halves/Thirds */
 	width:99%;
-	zoom:1
+	zoom:1;
+}
+.sort{
+	padding: 5px 0 0 0;
+	border: 1px dashed #EEE;
+	margin-bottom: 5px;
+	overflow: hidden;
 }
 .sort li{
 	padding:0 0 0 20px;
@@ -41,9 +47,10 @@
     background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
 }
 .form-builder li {
-	margin:0 0 10px;
-	padding:0 20px 9px;
-	width:596px;
+	margin:0 5px 5px;
+	padding:0 0 15px 20px;
+	/* max-width:629px; */
+	
 	clear:both;
 	position:relative;
 	border:1px solid #DFDFDF;
@@ -99,23 +106,24 @@
 	float:left;
 	color:#444
 }
-
-.form-builder li .partof {
-	width:150px;
-	text-align:right
+.form-builder li .textarea-shell{
+	width: 96%;
 }
+
 .form-builder .description {
 	display: block;
 	clear:both;
 	position: relative;
-    top: 5px;
-    padding: 10px 0;
+    top: 10px;
+    padding:0;
+    font-family: sans-serif;
+    color: #AAA;
 }
 
 .add-multiple{
 	clear: both;
 	position: relative;
-    top: 5px;
+    top: 3px;
 }
 .form-builder .spinner{
 	float: right;
@@ -131,7 +139,7 @@
 .form-builder li div span {
 	margin:0 5px 0 0;
 	display:block;
-	float:left;	
+	float:left;
 }
 .form-builder li div span.comma{
 	margin: 0 5px 0 -5px;
@@ -144,31 +152,8 @@
 }
 
 /* ----- Location Field Structures ----- */
-.form-builder .address {
-	padding-bottom:0
-}
-
-.form-builder .complex div span {
-	width:auto;
-	margin:0 .3em 0 0;
-	padding-bottom:12px
-}
 
 
-
-.form-builder .address div .left,
-.form-builder .address div .right {
-	margin:0;
-	width:48%
-}
-
-
-.form-builder .address div .left input,
-.form-builder .address div .right input,
-.form-builder .address div .left select,
-.form-builder .address div .right select {
-	width:100%
-}
 
 .form-builder .left {
 	float:left
@@ -202,8 +187,8 @@
     font-size: 15px;
     font-weight: normal;
     line-height: 1;
-    margin: 0 -20px 10px;
-    padding: 7px 20px;
+    margin: 0 0 10px -20px;
+    padding: 7px 0 7px 20px;
 	color: #464646;
 	text-transform: capitalize;
 	cursor:move;
@@ -229,6 +214,7 @@
 	-khtml-border-radius:3px;
 	border-radius:3px;
 	border:1px solid #DFDFDF;
+	width: 100%;
 }
 
 #side-shell .form-builder .text,
@@ -289,12 +275,14 @@
 .form-builder .half textarea,
 .form-builder .half {
 	width:275px!important;
+	
 }
 
-.form-builder .full {
-	width:595px !important;
+/*.form-builder .full {
+	/* width:595px !important; 
+	width: 100%;
 }
-
+*/
 .form-builder input.small,.form-builder select.small {
 	width:25%
 }
@@ -304,7 +292,8 @@
 }
 
 .form-builder textarea {
-	width:595px
+	/* width:595px */
+	width: 100%;
 }
 
 /* ----- Action ----- */
@@ -312,15 +301,18 @@
 	float:right;
 	padding:5px 10px;
 	font-size:10px;
-	margin:0 -15px 0 0;
+	margin:0;
 }
 
 
 
 .form-builder li .edit-shell {
 	background:#EAF2FA;
-	margin:0 -20px;
-	padding:10px 20px
+	margin:0 0 0 -20px;
+	padding:10px 0 10px 20px;
+}
+.edit-shell span{
+	width:96%;
 }
 
 /* ----- Sorting ----- */
@@ -413,13 +405,7 @@ li.ui-sortable-helper {
 #add-tab-shell {
 	border: 0;
 }
-.sort{
-	padding: 5px 0 0 5px;
-	border: 1px dashed #EEE;
-	margin-bottom: 5px;
-	overflow: hidden;
-	width: 100%;
-}
+
 .remove-tab { 
 	float: right; 
 	margin: 4px 4px 0 4px; 

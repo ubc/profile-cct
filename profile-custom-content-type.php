@@ -390,7 +390,7 @@ class Profile_CCT {
 		//add_filter('template_include', array( $this, 'help' ));
 	}
 	function help($test){
-		var_dump($test); 
+		// var_dump($test); 
 		return $test;
 	}
 	/**
@@ -682,7 +682,7 @@ class Profile_CCT {
 	 	extract( $options );
 	 	
 	 	$before_label = ( isset($before_label) && $before_label ? true:false);
-	 	$field_id_class = ( isset($field_id)? ' class="'.$field_id.'"': '');
+	 	$field_id_class = ( isset($field_id)? ' class="'.$field_id.' '.$type.'-shell"': '');
 	 	
 	 	
 	 	$size = ( isset($size)? ' size="'.$size.'"': '');
@@ -1075,7 +1075,7 @@ class Profile_CCT {
 	
 	function get_option($type='form',$fields_or_tabs='fields',$context='normal'){
 		$option = get_option('Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context);
-		var_dump($option);
+		// var_dump($option);
 		if(!is_array($option)):
 			$default = $this->default_options($type);
 	
