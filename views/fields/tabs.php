@@ -30,9 +30,8 @@ function profile_cct_show_tabs($action,$type, $user_data = null) {
 		
 			$count++;
 		endforeach;
+		
 	endif;
-	
-	
 	
 	if($display_tabs):
 	

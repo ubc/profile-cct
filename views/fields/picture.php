@@ -41,7 +41,7 @@ function profile_cct_picture_field_shell( $action, $options=null ) {
 }
 /**
  * profile_cct_picture_field function.
- * enejme
+ * 
  * @access public
  * @param mixed $data
  * @param mixed $options

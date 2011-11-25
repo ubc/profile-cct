@@ -44,6 +44,7 @@ if(isset( $_GET['d'])):
 	delete_option('Profile_CCT_form_fields_normal');
 	delete_option('Profile_CCT_form_fields_side');
 	delete_option('Profile_CCT_form_fields_banch');
+	delete_option('Profile_CCT_form_tabs_normal');
 	
 	
 	delete_option('Profile_CCT_page_fields_tabbed-1');
@@ -61,12 +62,15 @@ if(isset( $_GET['d'])):
 	delete_option('Profile_CCT_page_fields');
 	
 endif;
+
+require_once('profile-taxonomies.php');
+
 class Profile_CCT {
 	static private $classobj = NULL;
 	
-	static public $textdomain = NULL;
+	static public  $textdomain = NULL;
 	
-	static private $settings_options = NULL;
+	static public  $settings_options = NULL;
 	static public  $form_fields = NULL;
 	static public  $page_fields = NULL;
 	static private $field = NULL;
@@ -86,8 +90,10 @@ class Profile_CCT {
 		/* saving the post meta info */
 		add_action( 'edit_form_advanced', array($this, 'edit_form_advanced'));
 		add_action( 'add_meta_boxes_profile_cct', array($this, 'edit_post')); // add meta boxes 
-		add_action( 'init',  array( $this,'register_cpt_profile_cct') );
-		add_action( 'init',  array( $this,'load_scripts_cpt_profile_cct') );
+		
+		add_action( 'init',  array( $this,'profiles_cct_init')) ; 
+		
+		add_action( 'template_redirect',  array( $this,'check_freshness')); 
 		add_action( 'wp_insert_post_data', array( $this,'save_post_data'),10,2);
 		
 		add_action( 'wp_ajax_cct_update_fields', array( $this,'update_fields'));
@@ -101,6 +107,9 @@ class Profile_CCT {
 		register_setting( 'Profile_CCT_page_fields', 'Profile_CCT_page_fields', array($this,'validate_page_fields'));
 		register_setting( 'Profile_CCT_list_page', 'Profile_CCT_list_page'  );
 		register_setting( 'Profile_CCT_settings', 'Profile_CCT_settings' );
+		register_setting( 'Profile_CCT_taxonomy', 'Profile_CCT_taxonomy' );
+		
+		$this->settings_options = get_option('Profile_CCT_settings');
 		$dir    = plugin_dir_path(__FILE__).'views/fields/';
 		
 		// include all files in the fields folder
@@ -268,7 +277,7 @@ class Profile_CCT {
 			break;
 			*/
 			default:
-				wp_enqueue_script( 'profile-cct-settings', WP_PLUGIN_URL . '/profile-cct/js/settings.js' );
+				// wp_enqueue_script( 'profile-cct-settings', WP_PLUGIN_URL . '/profile-cct/js/settings.js' );
 			break;
 			
 			
@@ -291,12 +300,15 @@ class Profile_CCT {
 		
 		<a class="nav-tab <?php if( !isset($_GET['view']) ) { echo "nav-tab-active"; } ?>" 
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php">Settings</a>
+		<span>Builder:</span>
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='form' ) { echo "nav-tab-active"; } ?>" 
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=form">Form Builder</a>
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=form">Form</a>
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='page' ) { echo "nav-tab-active"; } ?>" 
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=page">Page Builder</a>
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=page">Page</a>
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='list' ) { echo "nav-tab-active"; } ?>" 
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list">List Builder</a>
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list">List</a>
+		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='taxonomy' ) { echo "nav-tab-active"; } ?>" 
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=taxonomy">Taxonomy</a>
 		<a class="nav-tab <?php if( isset($_GET['view']) && $_GET['view'] =='helper' ) { echo "nav-tab-active"; } ?>" 
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=helper">HELPER</a>
 		</h3>
@@ -305,7 +317,7 @@ class Profile_CCT {
 			case "form":
 				require_once("views/form.php");
 			break;
-			case "page":				
+			case "page":			
 				require_once("views/page.php");
 			break;
 			case "list":
@@ -314,11 +326,20 @@ class Profile_CCT {
 			case "helper":
 				require_once("views/helper.php");
 			break;
+			case "taxonomy":
+				require_once("views/taxonomy.php");
+			break;
 			default:
 				require_once("views/settings.php");
 			break;
 		
 		}	
+	}
+	
+	function profiles_cct_init(){
+		
+		$this->register_cpt_profile_cct();
+		$this->load_scripts_cpt_profile_cct();
 	}
 	
 	/**
@@ -384,10 +405,41 @@ class Profile_CCT {
 	
 	function load_scripts_cpt_profile_cct()
 	{
+		if(!is_admin()):
 		wp_enqueue_script('jquery-ui-tabs');
 		wp_enqueue_style( 'profile-cct', WP_PLUGIN_URL . '/profile-cct/css/profile-cct.css' );
-	
+		endif;
 		//add_filter('template_include', array( $this, 'help' ));
+	}
+	
+	function check_freshness(){
+		
+		
+		if(is_post_type_archive( 'profile_cct' )):
+			global $post;
+			
+			
+		endif;
+		// 
+		if(is_singular( 'profile_cct' )):
+			global $post;
+			
+			if( $this->settings_options["page_updated"] > strtotime($post->post_modified_gmt )):
+				
+				$data = get_post_meta($post->ID, 'profile_cct');
+				ob_start();
+				do_action('profile_cct_page','display', $data);
+				$content = ob_get_contents();
+				ob_end_clean();
+				
+				
+				$post->post_content = $content;
+				$post->post_modified = current_time( 'mysql' );
+				$post->post_modified_gmt = current_time( 'mysql', 1);
+				wp_update_post( $post );
+			endif;
+		
+		endif;
 	}
 	function help($test){
 		// var_dump($test); 
@@ -439,6 +491,8 @@ class Profile_CCT {
 		
 		if($post->post_type == "profile_cct"):
 		$tabs = $this->get_option('form','tabs');
+		
+		// here we need to find if there are even any fields in the tabs
 	
 		?>
 		<div id="tabs">
@@ -1075,7 +1129,7 @@ class Profile_CCT {
 	
 	function get_option($type='form',$fields_or_tabs='fields',$context='normal'){
 		$option = get_option('Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context);
-		// var_dump($option);
+		
 		if(!is_array($option)):
 			$default = $this->default_options($type);
 	
@@ -1091,8 +1145,16 @@ class Profile_CCT {
 	}
 	
 	function update_option($type='form',$fields_or_tabs='fields',$context='normal',$update){
+		$settings = get_option('Profile_CCT_settings');
+		if(!is_array($settings))
+			$settings = array();
 		
-		return update_option('Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context, $update);
+		$settings[$type.'_updated'] = time();
+		
+		// update the settings
+		update_option( 'Profile_CCT_settings', $settings );
+		
+		return update_option( 'Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context, $update);
 	}
 	function delete_option($type='form',$fields_or_tabs='fields',$context='normal'){
 		

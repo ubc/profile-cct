@@ -1,33 +1,38 @@
-
 <div id="col-container">
-	<div><span id="notify">notify spinner here when updating the form</span></div>
-	
-	<div id="col-right">
-		<div class="col-wrap">
-		<p><strong>Fields currently in the form</strong></p>
-		<ul id="profile-fields" class="sort connectedSortable">
-			<li id="cct-name">Name</li>
-			<li id="cct-picture">Picture</li>
-			<?php 
-			foreach($this->form_fields["fields"] as $tab):
-				
-				foreach($tab as $field): ?>
-					<li id="<?php echo $field['type']; ?>"><?php echo $field['label']; ?></li>
-				<?php
-				endforeach;
-			endforeach; ?>
-			
-		</ul>
-			
-		</div>
-	</div><!-- /col-right -->
-	<div id="col-left">
-		<div class="col-wrap">
-		<h3>Preview</h3>
-		<strong>list</strong>
-		<ul id="static-fields" class="sort connectedSortable dropzone"><li>hey</li></ul>
-		</div><!-- /col-left -->
-	
-	
+	<div id="notify">
+		<span id="spinner" class="update"><img src="<?php echo admin_url(); ?>/images/wpspin_light.gif" alt="spinner" /> thinking...</span>
+		
 	</div>
+
+
+<div id="col-right">
+	<div class="col-wrap">
+	
+	<h3>Inactive Fields</h3>
+	<ul id="banch" class="sort">
+		<?php 
+		$action = 'edit';
+		$fields = $this->get_option('list','fields','banch');		 				
+ 		if( is_array( $fields  ) ):
+	 		foreach($fields  as $field):
+	 			call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field);
+	 		endforeach;
+ 		endif;
+		?>
+	</ul>
+	<p><em>drag and drop the fields that you want to be displayed in the page</em></p>
+		
+	</div>
+</div><!-- /col-right -->
+
+<div id="col-middle">
+	<div class="col-wrap">
+	<h3>List Content</h3>
+	<?php
+		$data = array();
+		do_action('profile_cct_list',$action,$data);
+	?>
+	</div>
+</div><!-- /col-left -->
+
 </div>
