@@ -68,8 +68,8 @@ require_once('profile-taxonomies.php');
 class Profile_CCT {
 	static private $classobj = NULL;
 	
-	static public  $textdomain = NULL;
-	
+	static public  $textdomain  = NULL;
+	static public  $action 		= NULL;
 	static public  $settings_options = NULL;
 	static public  $form_fields = NULL;
 	static public  $page_fields = NULL;
@@ -127,6 +127,8 @@ class Profile_CCT {
 		add_action('profile_cct_form', array( $this,'profile_cct_form_field_shell'),10,1);
 		
 		add_action('profile_cct_page', array( $this,'profile_cct_page_field_shell'),10,2);
+		
+		add_action('profile_cct_list', array( $this,'profile_cct_list_field_shell'),10,2);
 		
 		
 	}
@@ -217,21 +219,15 @@ class Profile_CCT {
 	 * @return void
 	 */
 	public function admin_styles(){
+	
+	// todo: this could be done with one css file 
 		wp_enqueue_style( 'profile-cct-admin', WP_PLUGIN_URL . '/profile-cct/css/admin.css' );
 		switch( $_GET['view'] ) {
 			case "form":
-				
-				wp_enqueue_style( 'profile-cct-form', WP_PLUGIN_URL . '/profile-cct/css/form.css' );
-			break;
 			case "page":
-			case "list":
+			case "list":			
 				wp_enqueue_style( 'profile-cct-form', WP_PLUGIN_URL . '/profile-cct/css/form.css' );
-				// wp_enqueue_style( 'profile-cct-page', WP_PLUGIN_URL . '/profile-cct/css/page-list.css' );
 			break;
-			/*case "helper":
-				wp_register_style( 'profile-cct-helper', WP_PLUGIN_URL . '/profile-cct/stylesheet.css' );
-			break;
-			*/
 			default:
 				wp_enqueue_style( 'profile-cct-settings', WP_PLUGIN_URL . '/profile-cct/css/settings.css' );
 			break;
@@ -249,12 +245,9 @@ class Profile_CCT {
 	
 		switch( $_GET['view'] ) {
 			case "form":
-				wp_enqueue_script('jquery-ui-droppable');
-				wp_enqueue_script('jquery-ui-sortable');
-				wp_enqueue_script('jquery-ui-tabs');
 				wp_enqueue_script( 'profile-cct-form', WP_PLUGIN_URL . '/profile-cct/js/form.js',array('jquery','jquery-ui-sortable') );
 				wp_enqueue_script( 'profile-cct-tabs', WP_PLUGIN_URL . '/profile-cct/js/tabs.js',array('jquery','jquery-ui-tabs') );
-				wp_localize_script( 'profile-cct-tabs', 'ProfileCCT', array(
+				wp_localize_script( 'profile-cct-form', 'ProfileCCT', array(
 	  				'type' => 'form'
 				));
 			break;
@@ -262,13 +255,14 @@ class Profile_CCT {
 				wp_enqueue_script( 'profile-cct-tabs', WP_PLUGIN_URL . '/profile-cct/js/tabs.js',array('jquery','jquery-ui-tabs') );
 				wp_enqueue_script( 'profile-cct-form', WP_PLUGIN_URL . '/profile-cct/js/form.js',array('jquery','jquery-ui-sortable') );
 				wp_enqueue_script( 'profile-cct-profile', WP_PLUGIN_URL . '/profile-cct/js/profile.js',array('jquery') );
-				wp_localize_script( 'profile-cct-tabs', 'ProfileCCT', array(
+				wp_localize_script( 'profile-cct-form', 'ProfileCCT', array(
 	  				'type' => 'page'
 				));
 			break;
 			case "list":
-				wp_enqueue_script( 'profile-cct-page', WP_PLUGIN_URL . '/profile-cct/js/page-list.js', array('jquery','jquery-ui-sortable','jquery-ui-tabs','jquery-ui-droppable') );
-				wp_localize_script( 'profile-cct-tabs', 'ProfileCCT', array(
+				wp_enqueue_script( 'profile-cct-form', WP_PLUGIN_URL . '/profile-cct/js/form.js',array('jquery','jquery-ui-sortable') );
+				wp_enqueue_script( 'profile-cct-profile', WP_PLUGIN_URL . '/profile-cct/js/profile.js',array('jquery') );
+				wp_localize_script( 'profile-cct-form', 'ProfileCCT', array(
 	  				'type' => 'list'
 				));
 			break;
@@ -415,9 +409,35 @@ class Profile_CCT {
 	function check_freshness(){
 		
 		
-		if(is_post_type_archive( 'profile_cct' )):
-			global $post;
+		if(is_post_type_archive( 'profile_cct' ) && is_tax()):
+		
+			if ( have_posts() ) : while ( have_posts() ) : the_post();
+				
+				global $post;
+				var_dump($post);
+				if( $this->settings_options["list_updated"] > strtotime($post->post_modified_gmt )):
+					
+					$data = get_post_meta($post->ID, 'profile_cct', true);
+					ob_start();
+					do_action('profile_cct_page','display', $data);
+					$content = ob_get_contents();
+					ob_end_clean();
+				
+					ob_start();
+					do_action('profile_cct_list','display', $data);
+					$excerpt = ob_get_contents();
+					ob_end_clean();
+				    
+					$post->post_excerpt = $excerpt;
+					$post->post_content = $content;
+					$post->post_modified = current_time( 'mysql' );
+					$post->post_modified_gmt = current_time( 'mysql', 1);
+				endif;
+			endwhile;
 			
+			endif;
+			
+			rewind_posts();
 			
 		endif;
 		// 
@@ -426,13 +446,18 @@ class Profile_CCT {
 			
 			if( $this->settings_options["page_updated"] > strtotime($post->post_modified_gmt )):
 				
-				$data = get_post_meta($post->ID, 'profile_cct');
+				$data = get_post_meta($post->ID, 'profile_cct', true);
 				ob_start();
 				do_action('profile_cct_page','display', $data);
 				$content = ob_get_contents();
 				ob_end_clean();
 				
+				ob_start();
+				do_action('profile_cct_list','display', $data);
+				$excerpt = ob_get_contents();
+				ob_end_clean();
 				
+				$post->post_excerpt = $excerpt;
 				$post->post_content = $content;
 				$post->post_modified = current_time( 'mysql' );
 				$post->post_modified_gmt = current_time( 'mysql', 1);
@@ -441,10 +466,7 @@ class Profile_CCT {
 		
 		endif;
 	}
-	function help($test){
-		// var_dump($test); 
-		return $test;
-	}
+	
 	/**
 	 * edit_post function.
 	 * 
@@ -530,22 +552,29 @@ class Profile_CCT {
 		
 			// save the name of the person as the title 
 		if( is_array( $_POST["profile_cct"]["name"]) ):
-			$data['post_title'] = $_POST["profile_cct"]["name"]['title']." ".$_POST["profile_cct"]["name"]['first']." ".$_POST["profile_cct"]["name"]['last']." ".$_POST["profile_cct"]["cct-name"]['prefix'];
-			else:
-				$userdata = get_userdata($data['post_author']);
-				$data['post_title'] = $userdata->user_nicename;
-			endif;
-			if(isset($_POST["profile_cct"])):
-			
-				ob_start();
-				do_action('profile_cct_page','display', $_POST["profile_cct"]);
-				$content = ob_get_contents();
-				ob_end_clean();
-				
-				
-				$data['post_content'] = $content;
-			endif;
+			$data['post_title'] = $_POST["profile_cct"]["name"]['first']." ".$_POST["profile_cct"]["name"]['last'];
+		else:
+			$userdata = get_userdata($data['post_author']);
+			$data['post_title'] = $userdata->user_nicename;
+		endif;
+		if(isset($_POST["profile_cct"])):
 		
+			ob_start();
+			do_action('profile_cct_page','display', $_POST["profile_cct"]);
+			$content = ob_get_contents();
+			ob_end_clean();
+			
+			
+			ob_start();
+			do_action('profile_cct_list','display', $_POST["profile_cct"]);
+			$excerpt = ob_get_contents();
+			ob_end_clean();
+			
+			$data['post_excerpt'] = $excerpt;
+			$data['post_content'] = $content;
+		
+		endif;
+
 		
 		if(is_array($_POST["profile_cct"]))
 			update_post_meta($postarr['ID'], 'profile_cct', $_POST["profile_cct"]);
@@ -556,37 +585,7 @@ class Profile_CCT {
 	
 	}
 	/* ============== FIELDS =============================================== */
-	function profile_cct_page_field_shell($action,$user_data){
-		$contexts = $this->default_shells('page'); ?><div id="page-shell"><?php 
-	 	foreach($contexts as $context):
-	 		
-		 	if(function_exists('profile_cct_page_shell_'.$context)):
-		 		call_user_func('profile_cct_page_shell_'.$context,$action,$user_data);
-		 	else: 
-		 		
-		 		?><div id="<?php echo $context; ?>-shell" class="shell"><?php 
-		 			if($action == 'edit'): ?>
-		 			<span class="description-shell"><?php echo $context; ?></span>
-		 			<ul class="form-builder sort" id="<?php echo $context; ?>">
-		 			<?php endif; 
-		 			 
-		 			$fields = $this->get_option('page','fields',$context);
-		 				
-			 		if( is_array( $fields  ) ):
-				 		foreach($fields  as $field):
-				 			call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field,$user_data[ $field['type']]);
-				 		endforeach;
-			 		endif;
-			 		
-			 		if($action == 'edit'): ?>
-		 			</ul> 
-		 			<?php endif; ?></div><?php 
-		 		
-		 	endif;
-	 	endforeach;
-	 	
-	 	?></div> <!-- end of page shell --><?php
-	}
+	
 	
 	/**
 	 * profile_cct_form_field_shell function.
@@ -624,6 +623,82 @@ class Profile_CCT {
 		 	endif;
 	 	endforeach;
 	 }
+	 
+	 function profile_cct_page_field_shell($action,$user_data){
+		$this->action = $action;
+		$contexts = $this->default_shells('page'); ?><div id="page-shell"><?php 
+	 	foreach($contexts as $context):
+	 		
+		 	if(function_exists('profile_cct_page_shell_'.$context)):
+		 		call_user_func('profile_cct_page_shell_'.$context,$action,$user_data);
+		 	else: 
+		 		
+		 		?><div id="<?php echo $context; ?>-shell" class="shell"><?php 
+		 			if($action == 'edit'): ?>
+		 			<span class="description-shell"><?php echo $context; ?></span>
+		 			<ul class="form-builder sort" id="<?php echo $context; ?>">
+		 			<?php endif; 
+		 			 
+		 			$fields = $this->get_option('page','fields',$context);
+		 				
+			 		if( is_array( $fields  ) ):
+				 		foreach($fields  as $field):
+				 			call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field,$user_data[ $field['type']]);
+				 		endforeach;
+			 		endif;
+			 		
+			 		if($action == 'edit'): ?>
+		 			</ul> 
+		 			<?php endif; ?></div><?php 
+		 		
+		 	endif;
+	 	endforeach;
+	 	
+	 	?></div> <!-- end of page shell --><?php
+	}
+	
+	
+	 function profile_cct_list_field_shell($action,$user_data){
+	 	
+		$this->action = $action;
+		if($acttion == "edit")
+			$shell_id = 'id="'.$context.'-shell"';
+		
+		
+		$contexts = $this->default_shells('list'); ?><div id="page-shell"><?php 
+	 	foreach($contexts as $context):
+	 		
+		 	if(function_exists('profile_cct_list_shell_'.$context)):
+		 		call_user_func('profile_cct_list_shell_'.$context,$action,$user_data);
+		 	else: 
+		 		
+		 		?><div <?php echo $shell_id; ?>class="shell"><?php 
+		 			if($action == 'edit'): ?>
+		 			<span class="description-shell"><?php echo $context; ?></span>
+		 			<ul class="form-builder sort" id="<?php echo $context; ?>">
+		 			<?php endif; 
+		 			 
+		 			$fields = $this->get_option('list','fields',$context);
+		 				
+			 		if( is_array( $fields  ) ):
+			 			
+				
+				 		foreach($fields  as $field):
+				 			call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field,$user_data[ $field['type']]);
+				 		endforeach;
+			 		endif;			 		
+			 		
+			 		if($action == 'edit'): ?>
+		 			</ul> 
+		 			<?php endif; ?></div><?php 
+		 		
+		 	endif;
+	 	endforeach;
+	 	
+	 	?></div> <!-- end of page shell --><?php
+	}
+	
+	
 	 /**
 	  * start_field function.
 	  * 
@@ -661,7 +736,7 @@ class Profile_CCT {
 				 		$this->input_field( array('size'=>10, 'value'=>$description, 'class'=>'field-description','name'=>'description','label'=>'description','type'=>'textarea' , 'before_label'=>true));
 				 	
 				 	if(isset($width))
-						$this->input_field(array('type'=>'select','all_fields'=>array('full','half','one-third','two-third'), 'class'=>'field-width','selected_fields'=>$width,'name'=>'width', 'label'=>'select width','before_label'=>true));
+						$this->input_field(array('type'=>'select','all_fields'=>array('full','half','one-third','two-third'), 'class'=>'field-width','value'=>$width,'name'=>'width', 'label'=>'select width','before_label'=>true));
 				 		
 				 	if(isset($before))
 				 		$this->input_field( array('size'=>10, 'value'=>$before, 'class'=>'field-before','name'=>'before','label'=>'before html','type'=>'textarea' , 'before_label'=>true));
@@ -681,8 +756,9 @@ class Profile_CCT {
 		 	<label for="" id="" class="field-title"><?php echo $label; ?></label>
 		 	<?php 
 	 	endif;
-	 	if($action == 'display'): ?>
-	 		<<?php echo $shell; ?> class="<?php echo esc_attr( $type); ?> field-item <?php echo $width; ?>">
+	 	if($action == 'display'):
+	 		echo $before;
+	 		 ?><<?php echo $shell; ?> class="<?php echo esc_attr( $type); ?> field-item <?php echo $width; ?>">
 	 	<?php 
 	 	endif;
 	 	?>
@@ -712,16 +788,17 @@ class Profile_CCT {
 	 		
 	 		$style_multiple = ( isset($multiple) && $multiple ? 'style="display: inline;"': 'style="display: none;"');
 	 	 ?>
-	 	<a href="#add" <?php echo $style_multiple; ?> class="button add-multiple">Add</a>
+	 	<a href="#add" <?php echo $style_multiple; ?> class="button add-multiple">Add another</a>
 	 	<?php 
 	 	endif; 
 	 	?>
-	 	</div>
-	 	<?php 
+	 	</div><?php 
 	 	if(isset($description)):
 	 	?><pre class="description"><?php echo $description; ?></pre><?php 
 	 	endif;
 	 	?></<?php echo $shell; ?>><?php 
+	 	if($action == "display")
+	 		echo $after;
 	 }
 	 /**
 	  * input_field function.
@@ -831,6 +908,9 @@ class Profile_CCT {
 	function display_text($options)
 	{
 		extract( $options );
+		
+		if($this->action == 'display' && empty($value) && !in_array($type, array('end_shell','shell') )) 
+		return true;
 	 	
 	 	$class = ( isset($class)? ' class="'.$class.'"': ' class=""');
 	 	$id = ( isset($id)? ' id="'.$id.'"': ' ');
@@ -884,7 +964,7 @@ class Profile_CCT {
  		$context = $_POST['context'];
 		
 		
-		if(in_array($_POST['type'], array('page','form','list')))
+		if(in_array($_POST['type'], array('form','page','list')))
 			$type = $_POST['type'];
 		else
 			$type = 'form';
@@ -900,17 +980,25 @@ class Profile_CCT {
  
  			case "update":
  				if(is_numeric($_POST['field_index'])):
-					$options[$_POST['field_index']]['label'] 		= $_POST['label'];
-	 				$options[$_POST['field_index']]['description'] 	= $_POST['description'];
-	 				$options[$_POST['field_index']]['before'] 	= $_POST['before'];
-	 				$options[$_POST['field_index']]['after'] 	= $_POST['after'];
-	 				$options[$_POST['field_index']]['show'] 		= $_POST['show'];
-	 				
-	 				$options[$_POST['field_index']]['width'] 		= $width;
-	 				
-	 				$options[$_POST['field_index']]['multiple']		= ( isset($_POST['multiple']) &&  $_POST['multiple'] ? $_POST['multiple'] : 0); 
-	 				
-	 				echo "updated";
+ 					switch($type){
+ 						case "form":
+ 							$options[$_POST['field_index']]['label'] 		= $_POST['label'];
+	 						$options[$_POST['field_index']]['description'] 	= $_POST['description'];
+	 						$options[$_POST['field_index']]['show'] 		= $_POST['show'];
+	 						$options[$_POST['field_index']]['multiple']		= ( isset($_POST['multiple']) &&  $_POST['multiple'] ? $_POST['multiple'] : 0); 
+ 							
+ 						break;
+ 						case "page":
+ 						case "list":
+ 							$options[$_POST['field_index']]['width'] 		= $width;
+ 							$options[$_POST['field_index']]['before'] 		= $_POST['before'];
+	 						$options[$_POST['field_index']]['after'] 		= $_POST['after'];
+	 						
+	 						$options[$_POST['field_index']]['show'] 		= $_POST['show'];
+ 						break;
+ 					
+ 					}
+					echo "updated";
  				endif;
  			break;
  			
@@ -985,7 +1073,8 @@ class Profile_CCT {
 				$count = $index+1;
 				$fields = $this->get_option($type,'fields','tabbed-'.$count);
 				$this->delete_option($type,'fields','tabbed-'.$count);
-				//var_dump($index, $count, $fields, $tabs_count, $count < $tabs_count);
+				
+				
 				if(is_array($fields)): // array was empty so nothing to move
 					$banch  = $this->get_option($type,'fields','banch');
 					// and move them to the banch
@@ -1000,8 +1089,6 @@ class Profile_CCT {
 				while($count < $tabs_count):
 					$count++;
 					$fields = $this->get_option($type,'fields','tabbed-'.$count);
-					
-					
 					
 					$minus = $count - 1;
 					
@@ -1098,11 +1185,20 @@ class Profile_CCT {
 	}
 	function default_shells($type = 'form')
 	{
-		if($type == 'page')
-			return array( 'header', 'tabs', 'bottom');
-		else
-			return array( 'normal','side','tabs');
-	 
+		switch($type){
+			case 'form':
+				return array( 'normal','side','tabs');
+			break;
+			
+			case 'page':
+				return array( 'header', 'tabs', 'bottom');
+			break;
+			
+			case 'list':
+				return array( 'normal');
+			break;
+		
+		}
 	}
 	 
 	function get_contexts($type = 'form'){
@@ -1163,8 +1259,40 @@ class Profile_CCT {
 	
 	function default_options($type = 'form')
 	 {
-	 		if($type == 'page'):
-	 			return apply_filters('profile_cct_default_options', array(
+	 		switch($type) {
+	 			case 'form':
+	 				return apply_filters('profile_cct_default_options', array(
+		 				'fields'=> array(
+				 				'tabbed-1' => array(
+								 		array( "type"=> "address", 		"label"=> "address",),
+								 		array( "type"=> "phone",		"label"=> "phone" ), 
+								 		array( "type"=> "email",		"label"=> "email" ),
+								 		array( "type"=> "website",		"label"=> "website"),
+								 		array( "type"=> "social",		"label"=> "social")
+							 		),
+						 		 'tabbed-2' =>array(
+							 			array( "type"=> "position" ,	"label"=> "position" ), 
+								 		array( "type"=> "bio",			"label"=> "bio" )
+								 		
+							 		),
+							 	 'normal'=> array( 
+							 			array("type"=> "name" ,	"label"=> "name" )
+							 			),
+								 'side'=> array( 
+										array( "type"=>"picture", "label"=>"picture" )			 	
+							 			),
+							 	'banch' =>array(
+							 			array( "type"=> "education", 	"label"=> "education" ), 
+								 		array( "type"=> "teaching",		"label"=> "teaching" ), 
+								 		array( "type"=> "publications",	"label"=> "publications" ), 
+								 		array( "type"=> "research",		"label"=> "research" )
+							 	)),
+					   'tabs' => array("Basic Info", "Bio")
+				 	));
+	 			break;
+	 			
+	 			case 'page':
+	 				return apply_filters('profile_cct_default_options', array(
 		 				'fields'=> array(
 				 				'tabbed-1' => array(
 								 		array( "type"=> "address", 		"label"=> "address",),
@@ -1193,39 +1321,34 @@ class Profile_CCT {
 							 	)),
 					   'tabs' => array("Basic Info", "Bio")
 				 	));
-	 		elseif($type == 'form'):
+	 			break;
 	 			
-				return apply_filters('profile_cct_default_options', array(
+	 			case 'list':
+	 				return apply_filters('profile_cct_default_options', array(
 		 				'fields'=> array(
-				 				'tabbed-1' => array(
-								 		array( "type"=> "address", 		"label"=> "address",),
-								 		array( "type"=> "phone",		"label"=> "phone" ), 
-								 		array( "type"=> "email",		"label"=> "email" ),
-								 		array( "type"=> "website",		"label"=> "website"),
-								 		array( "type"=> "social",		"label"=> "social")
-							 		),
-						 		 'tabbed-2' =>array(
-							 			array( "type"=> "position" ,	"label"=> "position" ), 
-								 		array( "type"=> "bio",			"label"=> "bio" )
-								 		
-							 		),
-							 	 'normal'=> array( 
-							 			array("type"=> "name" ,	"label"=> "name" )
-							 			),
-								 'side'=> array( 
-										array( "type"=>"picture", "label"=>"picture" )			 	
+							 	 'normal'=> array(
+							 	 		array( "type"=>"picture", "label"=>"picture" ),
+							 			array("type"=> "name" ,	"label"=> "name" ),
+							 			array( "type"=> "phone",		"label"=> "phone" ),
+							 			array( "type"=> "email",		"label"=> "email" )
 							 			),
 							 	'banch' =>array(
+							 			array( "type"=> "address", 		"label"=> "address"),
+							 			array( "type"=> "website",		"label"=> "website"),
+								 		array( "type"=> "social",		"label"=> "social"),
+							 			array( "type"=> "position" ,	"label"=> "position" ), 
+								 		array( "type"=> "bio",			"label"=> "bio" ),
 							 			array( "type"=> "education", 	"label"=> "education" ), 
 								 		array( "type"=> "teaching",		"label"=> "teaching" ), 
 								 		array( "type"=> "publications",	"label"=> "publications" ), 
 								 		array( "type"=> "research",		"label"=> "research" )
-							 	)),
-					   'tabs' => array("Basic Info", "Bio")
-				 	));
-			endif;
-		
-
+							 			)
+							 	)
+				 		));				 	
+				 break;
+	 		
+	 		
+	 		} 
 	 }
 } // end class
 

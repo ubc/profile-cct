@@ -126,9 +126,10 @@
     top: 3px;
 }
 .form-builder .spinner{
-	float: right;
-	margin-right: 460px;
-    margin-top: 16px;
+	float: left;
+    margin-left: 3px;
+    margin-top: 18px;
+    width: auto;
 }
 .save-field-settings{
 	margin-top: 15px;
@@ -390,6 +391,7 @@ li.ui-sortable-helper {
 .editing .edit-tab,
 .editing .tab-link,
 .edit-tab-input,
+.edit-tab-save,
 .edit-tab,
 .remove-tab{
 	display: none;
@@ -398,6 +400,16 @@ li.ui-sortable-helper {
 	width: 120px;
 	margin: 4px 4px 0;
 	display: block;
+	float: left;
+}
+.editing .edit-tab-save{
+	display: block;
+	float: left;
+	margin: 2px 2px 0 0;
+}
+.editing {
+	position: relative;
+	overflow: hidden;
 }
 #add-tab-shell a{
 	padding: 4px 14px 6px 14px;

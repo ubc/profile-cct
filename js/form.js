@@ -18,7 +18,7 @@ var Profile_CCT_FORM ={
 			
 		formB.find(".edit").live("click", Profile_CCT_FORM.editField);
 
-		formB.find(".field-label").live("keyup", Profile_CCT_FORM.updateLabel);
+		formB.find(".field-label").live("keypress", Profile_CCT_FORM.updateLabel);
 		formB.find(".field-description").live("keypress", Profile_CCT_FORM.updateDescription );
 		formB.find(".field-show").live("click", Profile_CCT_FORM.updateShow);
 		formB.find(".field-multiple").live("click", Profile_CCT_FORM.multipleShow);
@@ -27,7 +27,7 @@ var Profile_CCT_FORM ={
 		jQuery(".edit","#form-name").click(Profile_CCT_FORM.editField);
 	},
 	updateSort: function(event, ui) { 
-		Profile_CCT_TABS.showSpinner();
+		Profile_CCT_FORM.showSpinner();
 		
 		var data = new Array();
 		jQuery('.field-item',jQuery(this)).each(function(index, value){
@@ -46,12 +46,13 @@ var Profile_CCT_FORM ={
 				};
 		
 		jQuery.post(ajaxurl, data_set, function(response) {
-				Profile_CCT_TABS.hideSpinner();
+				Profile_CCT_FORM.hideSpinner();
 		});
 	 },
 	updateLabel : function(e){
 		var el = jQuery(this);
-		
+				
+		el.parent().parent().addClass('changed');
 		
 		setTimeout( function(){
 		var text_label = el.val();
@@ -65,7 +66,8 @@ var Profile_CCT_FORM ={
 	},
 	updateDescription : function(e){
 		var el = jQuery(this);
-
+		
+		el.parent().parent().addClass('changed');
 		setTimeout( function () {		
 			var text_label = el.val();
 			if(text_label.length+1 > 0 ) {
@@ -80,6 +82,8 @@ var Profile_CCT_FORM ={
 	updateShow : function(e){
 		
 		var el = jQuery(this);
+		el.parent().parent().parent().addClass('changed');
+		
 		var el_class = jQuery.trim(el.parent().text());
 		if(el.attr('checked'))
 		{
@@ -92,6 +96,8 @@ var Profile_CCT_FORM ={
 	multipleShow : function(e){
 		
 		var el = jQuery(this);
+		el.parent().parent().addClass('changed');
+		
 		var el_class = jQuery.trim(el.parent().text());
 		if(el.attr('checked'))
 		{
@@ -121,7 +127,7 @@ var Profile_CCT_FORM ={
      	 parent.parent().data('options', serialize); // update the serealized data 
      	 // ajax updating of the field options
      	 jQuery.post(ajaxurl, data, function(response) {
-			 
+			 parent.removeClass('changed');
 			 if(response == 'updated'){
 			 	 el.siblings('.spinner').hide();
 			 }
@@ -137,11 +143,24 @@ var Profile_CCT_FORM ={
 		if( el.text()	== 'Edit') {
 			el.text('Close'); 
 		} else {
+			if(el.siblings('div.edit-shell').hasClass('changed'))
+			if( confirm("There are some un Saved chages \n Would you like to save them?") ){
+				el.siblings("div.edit-shell").find('.save-field-settings').trigger('click');
+				
+			}
+			
 			
 			el.text('Edit'); 
 		}
 		
 		el.siblings("div.edit-shell").toggle();	
+	},
+	showSpinner: function(){
+		jQuery('#spinner').show();
+	
+	},
+	hideSpinner: function(){
+		jQuery('#spinner').hide();
 	}
 };
 

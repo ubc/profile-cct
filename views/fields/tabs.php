@@ -18,7 +18,7 @@ function profile_cct_show_tabs($action,$type, $user_data = null) {
 	
 	$act = ($action == 'edit'?  true: false);
 	$profile = Profile_CCT::get_object();
-	
+	$profile->action = $action;
 	$tabs = $profile->get_option($type,'tabs');
 	
 	// check if we even want to display the tabs. 
@@ -49,7 +49,7 @@ function profile_cct_show_tabs($action,$type, $user_data = null) {
 				foreach( $tabs as $tab) : 
 					?><li><a href="#tabs-<?php echo $count; ?>" class="tab-link"><?php echo $tab; ?></a><?php 
 				if($act): ?>
-					<span class="remove-tab">Remove Tab</span> <span class="edit-tab">Edit</span><input type="text" class="edit-tab-input" value="<?php echo esc_attr($tab); ?>" />
+					<span class="remove-tab">Remove Tab</span> <span class="edit-tab">Edit</span><input type="text" class="edit-tab-input" value="<?php echo esc_attr($tab); ?>" /><input type="button" class="edit-tab-save button" value="Save" />
 				<?php endif;
 					?></li><?php
 					$count++;

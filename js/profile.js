@@ -3,14 +3,10 @@ var Profile_CCT_PROFILE ={
 
 	
 	jQuery('.field-item').mouseenter(function(){
-
 		jQuery(this).addClass('hover');
 		
-		
 	}).mouseleave(function(){
-		
 		jQuery(this).removeClass('hover');
-	
 	});
 	jQuery('.edit').click(function(){
 		jQuery(this).parent().toggleClass('hover-expanded');

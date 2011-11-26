@@ -49,7 +49,6 @@ function profile_cct_research_display_shell( $action, $options, $data=null ) {
 	$default_options = array(
 		'type' => 'research',
 		'label'=>'research',
-		'description'=>'',
 		'hide_label'=>true,
 		'before'=>'',
 		'after'=>''

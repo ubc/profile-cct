@@ -15,3 +15,11 @@
 .half {
 	width:50%;
 }
+
+.profile_cct{
+	position: relative;
+	overflow: hidden;
+}
+#page-shell .ui-tabs{
+	clear: both;
+}

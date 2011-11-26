@@ -104,11 +104,18 @@ function profile_cct_phone_display( $data, $options ){
 	$field = Profile_CCT::get_object();
 	$show = (is_array($show) ? $show : array());
 	
-	?>
-	<div class="telephone tel">
-			<span class="type">Work</span> <span class="value">+1-650-289-4041</span>
-		</div>
-	<?php
+	
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'telephone tel', 'type'=>'shell', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type,  'class'=>'type', 'default_text'=>'Work', 'value'=>$data['option'], 'type'=>'text', 'tag'=>'span') );
+	
+	$number = (!empty($data['tel-1']) ? $data['tel-1']."-": "");
+	$number .= (!empty($data['tel-1']) ? $data['tel-2']."-": "");
+	$number .= (!empty($data['tel-1']) ? $data['tel-3']: "");
+	$number .= (!empty($data['extension']) ? " extension:".$data['extension']: "");
+	
+	$field->display_text( array( 'field_type'=>$type,  'class'=>'type', 'default_text'=>'650-289-4041', 'value'=>$number, 'type'=>'text', 'tag'=>'span') );
+	
+	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 }
 
 
