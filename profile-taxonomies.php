@@ -7,9 +7,11 @@ function profile_cct_init_taxonomies()
 {
 
 	$taxonomys = get_option( 'Profile_CCT_taxonomy');
-	foreach($taxonomys as $taxonomy):
-		profile_cct_register_taxonomy($taxonomy);
-	endforeach;
+	if( is_array($taxonomys) ):
+		foreach($taxonomys as $taxonomy):
+			profile_cct_register_taxonomy($taxonomy);
+		endforeach;
+	endif;
 }
 
 

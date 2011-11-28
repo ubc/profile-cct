@@ -102,12 +102,7 @@ class Profile_CCT {
 		add_action( 'admin_print_styles-post-new.php', array( $this,'add_style_edit'));
 		add_action( 'admin_print_styles-post.php',array( $this,'add_style_edit'));
 		
-		/* Register Settings */
-		register_setting( 'Profile_CCT_form_fields', 'Profile_CCT_form_fields',  array($this,'validate_form_fields'));
-		register_setting( 'Profile_CCT_page_fields', 'Profile_CCT_page_fields', array($this,'validate_page_fields'));
-		register_setting( 'Profile_CCT_list_page', 'Profile_CCT_list_page'  );
-		register_setting( 'Profile_CCT_settings', 'Profile_CCT_settings' );
-		register_setting( 'Profile_CCT_taxonomy', 'Profile_CCT_taxonomy' );
+		add_action( 'admin_init',array($this,'admin_init'));
 		
 		$this->settings_options = get_option('Profile_CCT_settings');
 		$dir    = plugin_dir_path(__FILE__).'views/fields/';
@@ -155,7 +150,7 @@ class Profile_CCT {
 	 * @return void
 	 */
 	public function get_textdomain() {
-		return $this -> get_plugin_data( 'TextDomain' );
+		return $this ->get_plugin_data( 'TextDomain' );
 	}
 	/**
 	 * add_style_edit function.
@@ -190,7 +185,20 @@ class Profile_CCT {
 		
 		return $plugin_value;
 	}
-	
+	/**
+	 * admin_init function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	function admin_init(){
+		/* Register Settings */
+		register_setting( 'Profile_CCT_form_fields', 'Profile_CCT_form_fields',  array($this,'validate_form_fields'));
+		register_setting( 'Profile_CCT_page_fields', 'Profile_CCT_page_fields', array($this,'validate_page_fields'));
+		register_setting( 'Profile_CCT_list_page', 'Profile_CCT_list_page'  );
+		register_setting( 'Profile_CCT_settings', 'Profile_CCT_settings' );
+		register_setting( 'Profile_CCT_taxonomy', 'Profile_CCT_taxonomy' );
+	}
 	/**
 	 * add_menu_page function.
 	 * 
