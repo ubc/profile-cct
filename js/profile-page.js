@@ -20,8 +20,7 @@ var Profile_CCT_PAGE = {
 		var count = link.prev().data('count');
 		link.prev().clone().insertBefore( link );
 		
-		// console.log(link.prev().data('count'));
-		
+				
 		// add the remove link unless there is non
 		if( !link.prev().children('a.remove-fields').length ){
 			
@@ -32,7 +31,6 @@ var Profile_CCT_PAGE = {
 		link.prev().find('input,select,textarea').each(function(index, value){
 			var new_count = jQuery(this).parent().parent().data('count');
 			
-			// console.log(jQuery(this).parent().parent().data('count'),count);
 			var name = jQuery(this).attr('name');
 		
 			var new_name = name.replace(count, new_count);

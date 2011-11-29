@@ -1,14 +1,18 @@
 <?php
 
-add_action( 'init', 'profile_cct_init_taxonomies', 0 );
+add_action( 'init', 'profile_cct_init_taxonomies', 10 );
 
 //create two taxonomies, genres and writers for the post type "book"
 function profile_cct_init_taxonomies() 
 {
 
-	$taxonomys = get_option( 'Profile_CCT_taxonomy');
-	if( is_array($taxonomys) ):
-		foreach($taxonomys as $taxonomy):
+	
+	$field = Profile_CCT::get_object();
+	
+	$taxonomies = $field->taxonomies;
+	
+	if( is_array($taxonomies) ):
+		foreach($taxonomies as $taxonomy):
 			profile_cct_register_taxonomy($taxonomy);
 		endforeach;
 	endif;

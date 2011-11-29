@@ -75,6 +75,7 @@ class Profile_CCT {
 	static public  $page_fields = NULL;
 	static private $field = NULL;
 	static private $form_field_counter = 0;
+	static public  $taxonomies = NULL;
 	
 	/**
 	* construct
@@ -91,7 +92,7 @@ class Profile_CCT {
 		add_action( 'edit_form_advanced', array($this, 'edit_form_advanced'));
 		add_action( 'add_meta_boxes_profile_cct', array($this, 'edit_post')); // add meta boxes 
 		
-		add_action( 'init',  array( $this,'profiles_cct_init')) ; 
+		add_action( 'init',  array( $this,'profiles_cct_init'),0) ; 
 		
 		add_action( 'template_redirect',  array( $this,'check_freshness')); 
 		add_action( 'wp_insert_post_data', array( $this,'save_post_data'),10,2);
@@ -105,6 +106,7 @@ class Profile_CCT {
 		add_action( 'admin_init',array($this,'admin_init'));
 		
 		$this->settings_options = get_option('Profile_CCT_settings');
+		
 		$dir    = plugin_dir_path(__FILE__).'views/fields/';
 		
 		// include all files in the fields folder
@@ -339,6 +341,7 @@ class Profile_CCT {
 	}
 	
 	function profiles_cct_init(){
+		$this->taxonomies = get_option( 'Profile_CCT_taxonomy');
 		
 		$this->register_cpt_profile_cct();
 		$this->load_scripts_cpt_profile_cct();
@@ -415,14 +418,19 @@ class Profile_CCT {
 	}
 	
 	function check_freshness(){
+		$tax = array();
+		if( is_array($this->taxonomies) ):
+			foreach($this->taxonomies as $taxonomy):
+				$tax[] = 'profile_cct_'.sanitize_title($taxonomy['single']);
+			endforeach;
+		endif;
 		
-		
-		if(is_post_type_archive( 'profile_cct' ) && is_tax()):
-		
+		if(is_post_type_archive( 'profile_cct' ) || is_tax($tax)):
+			
 			if ( have_posts() ) : while ( have_posts() ) : the_post();
 				
 				global $post;
-				var_dump($post);
+				// var_dump($post);
 				if( $this->settings_options["list_updated"] > strtotime($post->post_modified_gmt )):
 					
 					$data = get_post_meta($post->ID, 'profile_cct', true);
@@ -450,6 +458,7 @@ class Profile_CCT {
 		endif;
 		// 
 		if(is_singular( 'profile_cct' )):
+			if ( have_posts() ) : while ( have_posts() ) : the_post();
 			global $post;
 			
 			if( $this->settings_options["page_updated"] > strtotime($post->post_modified_gmt )):
@@ -471,6 +480,12 @@ class Profile_CCT {
 				$post->post_modified_gmt = current_time( 'mysql', 1);
 				wp_update_post( $post );
 			endif;
+			
+			endwhile;
+			
+			endif;
+			
+			rewind_posts();
 		
 		endif;
 	}
@@ -756,7 +771,7 @@ class Profile_CCT {
 						$this->input_field(array('type'=>'multiple','all_fields'=>$show_fields, 'class'=>'field-show','selected_fields'=>$show,'name'=>'show', 'label'=>'show / hide input area','before_label'=>true));			
 					
 					if(isset($show_multiple) && $show_multiple)
-						$this->input_field(array('type'=>'checkbox','name'=>'multiple', 'class'=>'field-multiple', 'field'=>'yes allow the user to create multiple', 'value'=>$multiple,'label'=>'allow for multiple entries','before_label'=>true));
+						$this->input_field(array('type'=>'checkbox','name'=>'multiple', 'class'=>'field-multiple', 'field'=>'yes, allow the user to create multiple fields', 'value'=>$multiple,'label'=>'multiple','before_label'=>true));
 					 ?>
 					 <input type="button" value="Save" class="button save-field-settings" />
 					 <span class="spinner" style="display:none;"><img src="<?php echo admin_url(); ?>/images/wpspin_light.gif" alt="spinner" /> saving...</span>
@@ -916,8 +931,11 @@ class Profile_CCT {
 	function display_text($options)
 	{
 		extract( $options );
+		//var_dump($show,'passed in');
+		$show = ( isset($show) && !$show ? false: true);
 		
-		if($this->action == 'display' && empty($value) && !in_array($type, array('end_shell','shell') )) 
+		// var_dump($show, "converted to", $this->action == 'display' && $show && empty($value) && !in_array($type, array('end_shell','shell')) );
+		if($this->action == 'display' && $show && empty($value) && !in_array($type, array('end_shell','shell') )) 
 		return true;
 	 	
 	 	$class = ( isset($class)? ' class="'.$class.'"': ' class=""');
@@ -925,8 +943,8 @@ class Profile_CCT {
 	 	
 	 	$href = ( isset($href)? ' href="'.$href.'"': ' ');
 	 	
-	 		
-	 	$show = ( isset($show) && !$show ? ' style="display:none;"': '');
+	 	
+	 	$show = ( isset($show) && !$show ? false: true);
 	 	
 	 	$tag = (isset($tag) ? $tag :"span");
 	 	

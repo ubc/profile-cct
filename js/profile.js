@@ -14,7 +14,7 @@ var Profile_CCT_PROFILE ={
 	jQuery('select[name="width"]').change(function(){
 		var el = jQuery(this);
 		var value = el.val();
-		
+		jQuery(this).parent().parent().addClass('changed');
 		jQuery(this).parent().parent().parent().removeClass("full half one-third two-third").addClass(value);
 	
 	})

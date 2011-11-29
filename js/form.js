@@ -23,6 +23,8 @@ var Profile_CCT_FORM ={
 		formB.find(".field-show").live("click", Profile_CCT_FORM.updateShow);
 		formB.find(".field-multiple").live("click", Profile_CCT_FORM.multipleShow);
 		formB.find(".save-field-settings").live("click", Profile_CCT_FORM.updateField);
+		formB.find(".field-before").live('keypress', Profile_CCT_FORM.updateTextarea);
+		formB.find(".field-after").live('keypress', Profile_CCT_FORM.updateTextarea);
 		// name field
 		jQuery(".edit","#form-name").click(Profile_CCT_FORM.editField);
 	},
@@ -79,6 +81,9 @@ var Profile_CCT_FORM ={
 		},10);
 
 	},
+	updateTextarea :function(e){
+		jQuery(this).parent().parent().addClass('changed');
+	},
 	updateShow : function(e){
 		
 		var el = jQuery(this);
@@ -120,7 +125,7 @@ var Profile_CCT_FORM ={
 		 var context = parent.parent().parent().attr('id');
 		 
 		 var field_index = jQuery( ".field-item", parent.parent().parent() ).index( parent.parent() );
-		 console.log(serialize);
+		
 		 var data = 'action=cct_update_fields&method=update&'+serialize+'&context='+context+'&field_index='+field_index+'&type='+ProfileCCT.type;
 		 el.siblings('.spinner').show();		
      	 
@@ -144,7 +149,7 @@ var Profile_CCT_FORM ={
 			el.text('Close'); 
 		} else {
 			if(el.siblings('div.edit-shell').hasClass('changed'))
-			if( confirm("There are some un Saved chages \n Would you like to save them?") ){
+			if( confirm("There are some unsaved chages \n Would you like to save them?") ){
 				el.siblings("div.edit-shell").find('.save-field-settings').trigger('click');
 				
 			}
