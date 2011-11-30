@@ -73,7 +73,8 @@ function profile_cct_name_display_shell( $action, $options=null, $data ) {
 	$default_options = array(
 		'type'=>'name',
 		'label'=>'name',
-		'width'=>'full',
+		'width' => 'full',
+		'link-to'=>true,
 		'hide_label'=>true,
 		'before'=>'',
 		'after'=>'',
@@ -100,11 +101,11 @@ function profile_cct_name_display( $data, $options ){
 	$show = (is_array($show) ? $show : array());
 	// var_dump($show);
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'fn n', 'type'=>'shell', 'tag'=>'h2' ) );
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'honorific-prefix','default_text'=>'Mr', 'value'=>$data['title'], 'type'=>'text' , 'show' => in_array("title",$show)) );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'honorific-prefix title','default_text'=>'Mr', 'value'=>$data['title'], 'type'=>'text' , 'show' => in_array("title",$show)) );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'given-name','default_text'=>'Eric', 'value'=>$data['first'], 	'type'=>'text', ));
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'additional-name','default_text'=>'B.', 'value'=>$data['middle'], 'type'=>'text', 'show' => in_array("middle",$show) ));
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'additional-name middle','default_text'=>'B.', 'value'=>$data['middle'], 'type'=>'text', 'show' => in_array("middle",$show) ));
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'family-name','default_text'=>'Meyer', 'value'=>$data['last'], 	'type'=>'text', ));
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'honorific-suffix','default_text'=>'P.Eng', 'value'=>$data['suffix'],'type'=>'text',  'show' => in_array("suffix",$show)));
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'honorific-suffix suffix','default_text'=>'P.Eng', 'value'=>$data['suffix'],'type'=>'text',  'show' => in_array("suffix",$show)));
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'h2') );
 	
 }

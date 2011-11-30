@@ -30,7 +30,7 @@
 	<h3>List Content</h3>
 	<?php
 		$data = array();
-		do_action('profile_cct_list',$action,$data);
+		do_action('profile_cct_list',$action,$data,"list");
 	?>
 	</div>
 </div><!-- /col-left -->

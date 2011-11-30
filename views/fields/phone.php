@@ -78,7 +78,9 @@ function profile_cct_phone_display_shell(  $action, $options, $data=null ) {
 		'label_hide'=>true,
 		'before'=>'',
 		'after'=>'',
-		'width'=>'full',
+		'width' => 'full',
+		'show'=>array('type','tel-1'),
+		'show_fields'=>array('type','tel-1','extension')
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	

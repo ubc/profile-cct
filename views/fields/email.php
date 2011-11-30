@@ -65,7 +65,7 @@ function profile_cct_email_display_shell(  $action, $options, $data=null ) {
 	
 	$default_options = array(
 		'type' => 'email',
-		'width' =>'full',
+		'width' => 'full',
 		'before'=>'',
 		'after' =>'',
 		'hide_label'=>true

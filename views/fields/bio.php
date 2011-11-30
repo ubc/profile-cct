@@ -14,7 +14,6 @@ function profile_cct_bio_field_shell( $action, $options ) {
 	$default_options = array(
 		'type' => 'bio',
 		'label'=>'bio',
-		'width'=>'full',
 		'description'=>'',
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );

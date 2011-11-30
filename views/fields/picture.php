@@ -87,6 +87,7 @@ function profile_cct_picture_display_shell( $action, $options=null, $data=null )
 		'hide_label'=>true,
 		'before'=>'',
 		'width' => 'full',
+		'link-to'=> true,
 		'after'=>'',
 		);
 		

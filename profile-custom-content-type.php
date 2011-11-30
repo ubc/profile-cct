@@ -123,9 +123,9 @@ class Profile_CCT {
 		
 		add_action('profile_cct_form', array( $this,'profile_cct_form_field_shell'),10,1);
 		
-		add_action('profile_cct_page', array( $this,'profile_cct_page_field_shell'),10,2);
+		add_action('profile_cct_page', array( $this,'profile_cct_page_field_shell'),10,3);
 		
-		add_action('profile_cct_list', array( $this,'profile_cct_list_field_shell'),10,2);
+		add_action('profile_cct_list', array( $this,'profile_cct_page_field_shell'),10,3);
 		
 		
 	}
@@ -374,12 +374,10 @@ class Profile_CCT {
 	        'hierarchical' => false,
 	        
 	        'supports' => array( 'revisions' ),
-	        'taxonomies' => array( 'new tax' ),
 	        'public' => true,
 	        'show_ui' => true,
 	        'show_in_menu' => true,
 	        'menu_position' => 20,
-	        
 	        'show_in_nav_menus' => true,
 	        'publicly_queryable' => true,
 	        'exclude_from_search' => false,
@@ -404,7 +402,11 @@ class Profile_CCT {
 	    );
 	
 	    register_post_type( 'profile_cct', $args );
-	    
+	    /*
+	    $role = get_role('administrator');
+
+		$role->add_cap('edit_profile_cct');
+	    */
 	}
 	
 	
@@ -435,13 +437,13 @@ class Profile_CCT {
 					
 					$data = get_post_meta($post->ID, 'profile_cct', true);
 					ob_start();
-					do_action('profile_cct_page','display', $data);
-					$content = ob_get_contents();
+						do_action('profile_cct_page','display', $data, 'page');
+						$content = ob_get_contents();
 					ob_end_clean();
 				
 					ob_start();
-					do_action('profile_cct_list','display', $data);
-					$excerpt = ob_get_contents();
+						do_action('profile_cct_list','display', $data,'list');
+						$excerpt = ob_get_contents();
 					ob_end_clean();
 				    
 					$post->post_excerpt = $excerpt;
@@ -465,13 +467,13 @@ class Profile_CCT {
 				
 				$data = get_post_meta($post->ID, 'profile_cct', true);
 				ob_start();
-				do_action('profile_cct_page','display', $data);
-				$content = ob_get_contents();
+					do_action('profile_cct_page','display', $data, 'page');
+					$content = ob_get_contents();
 				ob_end_clean();
-				
+			
 				ob_start();
-				do_action('profile_cct_list','display', $data);
-				$excerpt = ob_get_contents();
+					do_action('profile_cct_list','display', $data,'list');
+					$excerpt = ob_get_contents();
 				ob_end_clean();
 				
 				$post->post_excerpt = $excerpt;
@@ -531,46 +533,58 @@ class Profile_CCT {
 			endforeach;
 		endif;
 	}
+	
+	/**
+	 * edit_form_advanced function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function edit_form_advanced(){
 		global $post;
 		
 		if($post->post_type == "profile_cct"):
-		$tabs = $this->get_option('form','tabs');
-		
-		// here we need to find if there are even any fields in the tabs
-	
-		?>
-		<div id="tabs">
-			<ul>
+			$tabs = $this->get_option('form','tabs');
+			// here we need to find if there are even any fields in the tabs
+			?>
+			<div id="tabs">
+				<ul>
+					<?php 
+					$count = 1;
+					foreach( $tabs as $tab) : ?>
+						<li><a href="#tabs-<?php echo $count; ?>" class="tab-link"><?php echo $tab; ?></a></li>
+					<?php 
+						$count++;
+					endforeach; ?>
+				</ul>
 				<?php 
 				$count = 1;
-				foreach( $tabs as $tab) : ?>
-					<li><a href="#tabs-<?php echo $count; ?>" class="tab-link"><?php echo $tab; ?></a></li>
-				<?php 
+				foreach(  $tabs  as $tab) :
+				?>
+					<div id="tabs-<?php echo $count?>">
+						<?php do_meta_boxes('profile_cct', 'tabbed-'.$count, $post);	 ?>			
+					</div>
+					<?php 
 					$count++;
 				endforeach; ?>
-			</ul>
-			<?php 
-			$count = 1;
-			foreach(  $tabs  as $tab) :
-			?>
-				<div id="tabs-<?php echo $count?>">
-					<?php do_meta_boxes('profile_cct', 'tabbed-'.$count, $post);	 ?>			
-				</div>
-				<?php 
-				$count++;
-			endforeach; ?>
-		</div>
-		<?php
+			</div>
+			<?php
 			
 		endif;
 	}
-		
+	/**
+	 * save_post_data function.
+	 * 
+	 * @access public
+	 * @param mixed $data
+	 * @param mixed $postarr
+	 * @return void
+	 */
 	function save_post_data($data,$postarr)
 	{
 		global $post;
 		
-		if($data['post_type'] != 'profile_cct')
+		if($data['post_type'] != 'profile_cct' && !isset( $_POST["profile_cct"] ))
 			return $data;
 		
 			// save the name of the person as the title 
@@ -580,31 +594,27 @@ class Profile_CCT {
 			$userdata = get_userdata($data['post_author']);
 			$data['post_title'] = $userdata->user_nicename;
 		endif;
-		if(isset($_POST["profile_cct"])):
 		
-			ob_start();
-			do_action('profile_cct_page','display', $_POST["profile_cct"]);
+		ob_start();
+			do_action('profile_cct_page','display', $data, 'page');
 			$content = ob_get_contents();
-			ob_end_clean();
-			
-			
-			ob_start();
-			do_action('profile_cct_list','display', $_POST["profile_cct"]);
+		ob_end_clean();
+	
+		ob_start();
+			do_action('profile_cct_list','display', $data,'list');
 			$excerpt = ob_get_contents();
-			ob_end_clean();
-			
-			$data['post_excerpt'] = $excerpt;
-			$data['post_content'] = $content;
+		ob_end_clean();
 		
-		endif;
-
+		$data['post_excerpt'] = $excerpt;
+		$data['post_content'] = $content;
 		
 		if(is_array($_POST["profile_cct"]))
 			update_post_meta($postarr['ID'], 'profile_cct', $_POST["profile_cct"]);
+			
+			
+			
+			
 		return $data;
-		/*
-		die();
-		*/
 	
 	}
 	/* ============== FIELDS =============================================== */
@@ -647,9 +657,9 @@ class Profile_CCT {
 	 	endforeach;
 	 }
 	 
-	 function profile_cct_page_field_shell($action,$user_data){
+	 function profile_cct_page_field_shell($action,$user_data,$where){
 		$this->action = $action;
-		$contexts = $this->default_shells('page'); ?><div id="page-shell"><?php 
+		$contexts = $this->default_shells($where); ?><div id="page-shell"><?php 
 	 	foreach($contexts as $context):
 	 		
 		 	if(function_exists('profile_cct_page_shell_'.$context)):
@@ -662,7 +672,7 @@ class Profile_CCT {
 		 			<ul class="form-builder sort" id="<?php echo $context; ?>">
 		 			<?php endif; 
 		 			 
-		 			$fields = $this->get_option('page','fields',$context);
+		 			$fields = $this->get_option($where,'fields',$context);
 		 				
 			 		if( is_array( $fields  ) ):
 				 		foreach($fields  as $field):
@@ -681,14 +691,14 @@ class Profile_CCT {
 	}
 	
 	
-	 function profile_cct_list_field_shell($action,$user_data){
+	 function profile_cct_list_field_shell($action,$user_data,$where){
 	 	
 		$this->action = $action;
 		if($acttion == "edit")
 			$shell_id = 'id="'.$context.'-shell"';
 		
 		
-		$contexts = $this->default_shells('list'); ?><div id="page-shell"><?php 
+		$contexts = $this->default_shells($where); ?><div id="page-shell"><?php 
 	 	foreach($contexts as $context):
 	 		
 		 	if(function_exists('profile_cct_list_shell_'.$context)):
@@ -705,7 +715,6 @@ class Profile_CCT {
 		 				
 			 		if( is_array( $fields  ) ):
 			 			
-				
 				 		foreach($fields  as $field):
 				 			call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field,$user_data[ $field['type']]);
 				 		endforeach;
@@ -751,30 +760,32 @@ class Profile_CCT {
 					<input type="hidden" name="type" value="<?php echo esc_attr( $type ); ?>" />
 				<?php 
 				
-				if(empty($hide_label) && !$hide_label)
+				if(empty($hide_label) && !$hide_label):
 					$this->input_field( array('size'=>20, 'value'=>$label, 'class'=>'field-label', 'name'=>'label','label'=>'label', 'type'=>'text', 'before_label'=>true ));
-				else
+				else:
 				?>	<input type="hidden" name="label" value="<?php echo esc_attr( $label ); ?>" /> <?php
-					if(isset($description))
-				 		$this->input_field( array('size'=>10, 'value'=>$description, 'class'=>'field-description','name'=>'description','label'=>'description','type'=>'textarea' , 'before_label'=>true));
-				 	
-				 	if(isset($width))
-						$this->input_field(array('type'=>'select','all_fields'=>array('full','half','one-third','two-third'), 'class'=>'field-width','value'=>$width,'name'=>'width', 'label'=>'select width','before_label'=>true));
-				 		
-				 	if(isset($before))
-				 		$this->input_field( array('size'=>10, 'value'=>$before, 'class'=>'field-before','name'=>'before','label'=>'before html','type'=>'textarea' , 'before_label'=>true));
-				 		
-				 	if(isset($after))
-				 		$this->input_field( array('size'=>10, 'value'=>$after, 'class'=>'field-after','name'=>'after','label'=>'after html','type'=>'textarea' , 'before_label'=>true));	
-				 					
-					if(isset($show_fields))
-						$this->input_field(array('type'=>'multiple','all_fields'=>$show_fields, 'class'=>'field-show','selected_fields'=>$show,'name'=>'show', 'label'=>'show / hide input area','before_label'=>true));			
-					
-					if(isset($show_multiple) && $show_multiple)
-						$this->input_field(array('type'=>'checkbox','name'=>'multiple', 'class'=>'field-multiple', 'field'=>'yes, allow the user to create multiple fields', 'value'=>$multiple,'label'=>'multiple','before_label'=>true));
+				endif;
+				
+				if(isset($description))
+			 		$this->input_field( array('size'=>10, 'value'=>$description, 'class'=>'field-description','name'=>'description','label'=>'description','type'=>'textarea' , 'before_label'=>true));
+			 	
+			 	if(isset($width))
+					$this->input_field(array('type'=>'select','all_fields'=>array('full','half','one-third','two-third'), 'class'=>'field-width','value'=>$width,'name'=>'width', 'label'=>'select width','before_label'=>true));
+			 		
+			 	if(isset($before))
+			 		$this->input_field( array('size'=>10, 'value'=>$before, 'class'=>'field-before','name'=>'before','label'=>'before html','type'=>'textarea' , 'before_label'=>true));
+			 		
+			 	if(isset($after))
+			 		$this->input_field( array('size'=>10, 'value'=>$after, 'class'=>'field-after','name'=>'after','label'=>'after html','type'=>'textarea' , 'before_label'=>true));	
+			 					
+				if(isset($show_fields))
+					$this->input_field(array('type'=>'multiple','all_fields'=>$show_fields, 'class'=>'field-show','selected_fields'=>$show,'name'=>'show', 'label'=>'show / hide input area','before_label'=>true));			
+				
+				if(isset($show_multiple) && $show_multiple)
+					$this->input_field(array('type'=>'checkbox','name'=>'multiple', 'class'=>'field-multiple', 'field'=>'yes, allow the user to create multiple fields', 'value'=>$multiple,'label'=>'multiple','before_label'=>true));
 					 ?>
-					 <input type="button" value="Save" class="button save-field-settings" />
-					 <span class="spinner" style="display:none;"><img src="<?php echo admin_url(); ?>/images/wpspin_light.gif" alt="spinner" /> saving...</span>
+				<input type="button" value="Save" class="button save-field-settings" />
+				<span class="spinner" style="display:none;"><img src="<?php echo admin_url(); ?>/images/wpspin_light.gif" alt="spinner" /> saving...</span>
 			</div>
 		 	<label for="" id="" class="field-title"><?php echo $label; ?></label>
 		 	<?php 
@@ -932,11 +943,15 @@ class Profile_CCT {
 	{
 		extract( $options );
 		//var_dump($show,'passed in');
-		$show = ( isset($show) && !$show ? false: true);
+		$hide = ( isset($show) && !$show ? ' style="display:none;"': '');
 		
+		
+		// var_dump($this->action == 'display' , empty($value) , !in_array($type, array('end_shell','shell') ) , empty($hide), "-end of test.$value");
 		// var_dump($show, "converted to", $this->action == 'display' && $show && empty($value) && !in_array($type, array('end_shell','shell')) );
-		if($this->action == 'display' && $show && empty($value) && !in_array($type, array('end_shell','shell') )) 
-		return true;
+		if($this->action == 'display' && empty($value) && !in_array($type, array('end_shell','shell') ) && empty($hide) ):
+			echo "";
+		endif;
+		
 	 	
 	 	$class = ( isset($class)? ' class="'.$class.'"': ' class=""');
 	 	$id = ( isset($id)? ' id="'.$id.'"': ' ');
@@ -962,7 +977,7 @@ class Profile_CCT {
 	 	
 	 	switch($type) {
 	 		case 'text':
-			 	echo "<".$tag." ".$id.$class.$href.">";
+			 	echo "<".$tag." ".$id.$class.$href.$hide.">";
 			 	echo $display; 
 				echo " </".$tag.">";
 			break;
@@ -1019,10 +1034,10 @@ class Profile_CCT {
  							$options[$_POST['field_index']]['width'] 		= $width;
  							$options[$_POST['field_index']]['before'] 		= $_POST['before'];
 	 						$options[$_POST['field_index']]['after'] 		= $_POST['after'];
-	 						
 	 						$options[$_POST['field_index']]['show'] 		= $_POST['show'];
+	 						$options[$_POST['field_index']]['link-to'] 		= $_POST['link-to'];
+	 						$options[$_POST['field_index']]['clear'] 		= $_POST['clear'];
  						break;
- 					
  					}
 					echo "updated";
  				endif;
@@ -1226,7 +1241,7 @@ class Profile_CCT {
 		
 		}
 	}
-	 
+	
 	function get_contexts($type = 'form'){
 		
 		$contexts = $this->default_shells();

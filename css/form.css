@@ -428,14 +428,18 @@ li.ui-sortable-helper {
     overflow: hidden;
     text-indent: -99999px;
 }
-#banch li{
-	width: 117px;
-}
 #banch{
 	background: #CCC;
 	border: 0;
 	padding:5px 5px 2px;
+	min-height: 400px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
 }
+#banch li{
+	width: 117px;
+}
+
 .ui-sortable-helper .field-shell,
 .ui-sortable-helper .remove,
 .ui-sortable-helper .edit,
