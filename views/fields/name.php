@@ -99,7 +99,7 @@ function profile_cct_name_display( $data, $options ){
 	$field = Profile_CCT::get_object();
 	
 	$show = (is_array($show) ? $show : array());
-	// var_dump($show);
+	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'fn n', 'type'=>'shell', 'tag'=>'h2' ) );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'honorific-prefix title','default_text'=>'Mr', 'value'=>$data['title'], 'type'=>'text' , 'show' => in_array("title",$show)) );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'given-name','default_text'=>'Eric', 'value'=>$data['first'], 	'type'=>'text', ));

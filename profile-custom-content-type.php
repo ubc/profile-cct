@@ -421,6 +421,7 @@ class Profile_CCT {
 	
 	function check_freshness(){
 		$tax = array();
+		
 		if( is_array($this->taxonomies) ):
 			foreach($this->taxonomies as $taxonomy):
 				$tax[] = 'profile_cct_'.sanitize_title($taxonomy['single']);
@@ -432,7 +433,7 @@ class Profile_CCT {
 			if ( have_posts() ) : while ( have_posts() ) : the_post();
 				
 				global $post;
-				// var_dump($post);
+				
 				if( $this->settings_options["list_updated"] > strtotime($post->post_modified_gmt )):
 					
 					$data = get_post_meta($post->ID, 'profile_cct', true);
@@ -448,8 +449,8 @@ class Profile_CCT {
 				    
 					$post->post_excerpt = $excerpt;
 					$post->post_content = $content;
-					$post->post_modified = current_time( 'mysql' );
-					$post->post_modified_gmt = current_time( 'mysql', 1);
+
+					$this->update_profile( $post );
 				endif;
 			endwhile;
 			
@@ -460,38 +461,55 @@ class Profile_CCT {
 		endif;
 		// 
 		if(is_singular( 'profile_cct' )):
-			if ( have_posts() ) : while ( have_posts() ) : the_post();
 			global $post;
 			
-			if( $this->settings_options["page_updated"] > strtotime($post->post_modified_gmt )):
-				
-				$data = get_post_meta($post->ID, 'profile_cct', true);
-				ob_start();
-					do_action('profile_cct_page','display', $data, 'page');
-					$content = ob_get_contents();
-				ob_end_clean();
 			
-				ob_start();
-					do_action('profile_cct_list','display', $data,'list');
-					$excerpt = ob_get_contents();
-				ob_end_clean();
+			
+			if ( have_posts() ) : while ( have_posts() ) : the_post();
+				global $post;
 				
-				$post->post_excerpt = $excerpt;
-				$post->post_content = $content;
-				$post->post_modified = current_time( 'mysql' );
-				$post->post_modified_gmt = current_time( 'mysql', 1);
-				wp_update_post( $post );
-			endif;
+				if( $this->settings_options["page_updated"] > strtotime($post->post_modified_gmt )):
+					
+					$data = get_post_meta($post->ID, 'profile_cct', true);
+					ob_start();
+						do_action('profile_cct_page','display', $data, 'page');
+						$content = ob_get_contents();
+					ob_end_clean();
+				
+					ob_start();
+						do_action('profile_cct_list','display', $data,'list');
+						$excerpt = ob_get_contents();
+					ob_end_clean();
+					
+					
+					$post->post_excerpt = $excerpt;
+					$post->post_content = $content;
+
+					$this->update_profile( $post );
+				endif;
 			
 			endwhile;
 			
-			endif;
-			
-			rewind_posts();
+		endif;
+		rewind_posts();	
 		
+		
+		
+		
+			
 		endif;
 	}
 	
+	function update_profile($post){
+		
+		$mypost['ID'] = $post->ID;
+		
+		$mypost['post_content'] = $post->post_content;
+		$mypost['post_excerpt'] = $post->post_excerpt;
+		
+		wp_update_post( $mypost );
+		
+	}
 	/**
 	 * edit_post function.
 	 * 
@@ -584,11 +602,14 @@ class Profile_CCT {
 	{
 		global $post;
 		
-		if($data['post_type'] != 'profile_cct' && !isset( $_POST["profile_cct"] ))
+		// var_dump(isset( $_POST["profile_cct"] ),"1");
+		
+		if(!isset( $_POST["profile_cct"] ))
 			return $data;
 		
+		// var_dump("got this far","1");
 			// save the name of the person as the title 
-		if( is_array( $_POST["profile_cct"]["name"]) ):
+		if( is_array( $_POST["profile_cct"]["name"]) || !empty($_POST["profile_cct"]["name"])):
 			$data['post_title'] = $_POST["profile_cct"]["name"]['first']." ".$_POST["profile_cct"]["name"]['last'];
 		else:
 			$userdata = get_userdata($data['post_author']);
