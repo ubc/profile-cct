@@ -142,6 +142,7 @@
 	display:block;
 	float:left;
 }
+/* .form-builder li div span.separator, */
 .form-builder li div span.comma{
 	margin: 0 5px 0 -5px;
 }

@@ -93,9 +93,11 @@ function profile_cct_show_tabs($action,$type, $user_data = null) {
 				<div id="add-tabshell"></div>
 			<?php else: ?>
 				<script type="text/javascript">
-					jQuery(document).ready(function($) {
-					$("#<?php echo "tab-id-".$profile_cct_tabs; ?>").tabs();
-				});
+					/* <![CDATA[ */
+					jQuery(document).ready(function() {
+						jQuery("#<?php echo "tab-id-".$profile_cct_tabs; ?>").tabs();
+					});
+					/* ]]> */
 				</script>
 			<?php endif; ?></div><?php 
 		

@@ -104,15 +104,14 @@ function profile_cct_education_display( $data, $options ){
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'educaton', 'type'=>'shell', 'tag'=>'div') );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'school','default_text'=>'University of British Columbia', 'value'=>$data['school'], 'type'=>'text','count'=>$count) );
 	
-	$field->display_text( array( 'class'=>'comma', 'value'=>",", 'type'=>'text' ));
-	$field->display_text( array( 'class'=>'year','default_text'=>'2011', 'value'=>$data['year'], 'type'=>'text', 'show'=> in_array('year',$show),'count'=>$count));
+
+	$field->display_text( array( 'class'=>'year','default_text'=>'2011', 'separator'=>',', 'value'=>$data['year'], 'type'=>'text', 'show'=> in_array('year',$show),'count'=>$count));
+
 	
-	$field->display_text( array( 'class'=>'comma', 'value'=>",", 'type'=>'text' ));
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'textarea bio','default_text'=>'Physics', 'separator'=>',',  'value'=>$data['degree'], 'type'=>'text','count'=>$count) );
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'textarea bio','default_text'=>'Physics', 'value'=>$data['degree'], 'type'=>'text','count'=>$count) );
 	
-	$field->display_text( array( 'class'=>'comma', 'value'=>",", 'type'=>'text' ));
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'honors','default_text'=>'BS', 'value'=>$data['honours'], 'type'=>'text','count'=>$count) );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'honors','default_text'=>'BS', 'separator'=>',',  'value'=>$data['honours'], 'type'=>'text','count'=>$count) );
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 
 }

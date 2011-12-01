@@ -87,7 +87,8 @@ function profile_cct_picture_display_shell( $action, $options=null, $data=null )
 		'hide_label'=>true,
 		'before'=>'',
 		'width' => 'full',
-		'link-to'=> true,
+		'link_to'=>true,
+		'show_link_to' =>true,
 		'after'=>'',
 		);
 		
@@ -113,8 +114,13 @@ function profile_cct_picture_display(  $data, $options  ){
 	$field = Profile_CCT::get_object();
 	
 	$show = (is_array($show) ? $show : array());
+	
+	$href = ( isset($post) ? get_permalink() : "#" );
+	
 	if(isset($post)){
-		echo get_the_post_thumbnail($post_id, 'thumbnail');
+		$field->display_text( array( 'field_type'=>$type, 'class'=>'', 'type'=>'shell', 'tag'=>'a','link_to'=>$link_to, 'href'=>$href ) );
+		echo get_the_post_thumbnail($post->ID, 'thumbnail');
+		$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'a','link_to'=>$link_to) );
 
 	}else{
 		global $current_user;
@@ -140,7 +146,7 @@ function profile_cct_picture_form($thumbnail_id)
 		<a id="user-avatar-link" class="button thickbox" href="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=1&post_id=<?php echo $post->ID; ?>&TB_iframe=true&width=720&height=450" ><?php _e('Update Picture','user-avatar'); ?></a> 
 	<?php
 		// Remove the User-Avatar button if there is no uploaded image
-		$remove_url = admin_url('profile.php')."?delete_avatar=true&_nononce=". wp_create_nonce('profile_cct_picture')."&u=".$profile->ID;
+		$remove_url = admin_url('post.php')."?post=".$post->ID."&action=edit&delete_avatar=true&_nononce=". wp_create_nonce('profile_cct_picture');
 		?>
 			<a id="user-avatar-remove" class="submitdelete deleteaction" href="<?php echo esc_url_raw($remove_url); ?>" title="<?php _e('Remove User Avatar Image','user-avatar'); ?>" ><?php _e('Remove','user-avatar'); ?></a>
 		<?php
@@ -152,14 +158,16 @@ function profile_cct_picture_form($thumbnail_id)
 	endif;
 	?>
 	<script type="text/javascript">
+	//<![CDATA[
 	function profile_cct_picture_refresh_image(img){
-	 jQuery('#user-avatar-display-image').html(img);
+	 	jQuery('#user-avatar-display-image').html(img);
 	}
-	function add_remove_avatar_link(){
-		if(!jQuery("#user-avatar-remove").is('a')){
+	function profile_cct_add_remove_avatar_link(){
+		if(!jQuery("#user-avatar-remove")){
 			jQuery('#user-avatar-link').after(" <a href='<?php echo $remove_url; ?>' class='submitdelete'  id='user-avatar-remove' ><?php _e('Remove','user-avatar'); ?></a>")
 		}
 	}
+	//]]>
 	</script>
 	<?php
 } 
@@ -192,7 +200,10 @@ function profile_cct_picture_init(){
 }
 
 
+function profile_cct_picture_add_photo() {
 
+echo "hello";
+}
 
 
 /**
@@ -202,7 +213,7 @@ function profile_cct_picture_init(){
  * @access public
  * @return void
  */
-function profile_cct_picture_add_photo() {
+function profile_cct_picture_add_photo_real() {
 	global $current_user;
 	
 	
@@ -254,7 +265,11 @@ var userSettings = {
 		
 	do_action('admin_print_footer_scripts');
 ?>
-<script type="text/javascript">if(typeof wpOnload=='function')wpOnload();</script>
+<script type="text/javascript">
+	    //<![CDATA[
+		if(typeof wpOnload=='function')wpOnload();
+		//]]>
+	</script>
 </body>
 </html>
 <?php
@@ -370,7 +385,7 @@ function profile_cct_picture_add_photo_step2($post_id)
 		</form>
 		
 		<script type="text/javascript">
-
+	//<![CDATA[
 	function onEndCrop( coords ) {
 		jQuery( '#x1' ).val(coords.x);
 		jQuery( '#y1' ).val(coords.y);
@@ -432,6 +447,7 @@ function profile_cct_picture_add_photo_step2($post_id)
 			}
 		});
 	});
+	//]]>
 </script>
 		<?php
 }
@@ -490,8 +506,10 @@ function profile_cct_picture_add_photo_step3($post_id)
 		wp_die( __( 'Image could not be processed.  Please go back and try again.' ), __( 'Image Processing Error' ) );		
 	?>
 	<script type="text/javascript">
+	    //<![CDATA[
 		self.parent.profile_cct_picture_refresh_image('<?php echo get_the_post_thumbnail($post_id, 'thumbnail'); ?>');
-		self.parent.add_remove_avatar_link();
+		self.parent.profile_cct_add_remove_avatar_link();
+		//]]>
 	</script>
 	<div id="user-avatar-step3">
 		<h3><?php _e("Here's your new profile picture...",'user-avatar'); ?></h3>

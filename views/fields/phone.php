@@ -108,14 +108,13 @@ function profile_cct_phone_display( $data, $options ){
 	
 	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'telephone tel', 'type'=>'shell', 'tag'=>'div') );
-	$field->display_text( array( 'field_type'=>$type,  'class'=>'type', 'default_text'=>'Work', 'value'=>$data['option'], 'type'=>'text', 'tag'=>'span') );
+	$field->display_text( array( 'field_type'=>$type,  'class'=>'type', 'default_text'=>'Work', 'separator'=>':','value'=>$data['option'], 'type'=>'text', 'tag'=>'span') );
 	
-	$number = (!empty($data['tel-1']) ? $data['tel-1']."-": "");
-	$number .= (!empty($data['tel-1']) ? $data['tel-2']."-": "");
-	$number .= (!empty($data['tel-1']) ? $data['tel-3']: "");
-	$number .= (!empty($data['extension']) ? " extension:".$data['extension']: "");
 	
-	$field->display_text( array( 'field_type'=>$type,  'class'=>'type', 'default_text'=>'650-289-4041', 'value'=>$number, 'type'=>'text', 'tag'=>'span') );
+	$field->display_text( array( 'field_type'=>$type,  'class'=>'tel-1', 'default_text'=>'650', 'value'=>$data['tel-1'], 'type'=>'text', 'tag'=>'span') );
+	$field->display_text( array( 'field_type'=>$type,  'class'=>'tel-2', 'default_text'=>'999', 'separator'=>'-', 'value'=>$data['tel-2'], 'type'=>'text', 'tag'=>'span') );
+	$field->display_text( array( 'field_type'=>$type,  'class'=>'tel-3', 'default_text'=>'5555',  'separator'=>'-','value'=>$data['tel-3'], 'type'=>'text', 'tag'=>'span') );
+	$field->display_text( array( 'field_type'=>$type,  'class'=>'extension', 'default_text'=>'5', 'separator'=>' ext:','value'=>$data['extension'], 'type'=>'text', 'tag'=>'span') );
 	
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 }

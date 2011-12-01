@@ -130,18 +130,17 @@ endif;
 		<input class="button-primary" type="submit" name="Example" value="<?php _e( 'Add Profile Taxonomy' ); ?>" />
 	
 	<script type="text/javascript">
+		//<![CDATA[
 	jQuery('document').ready(function($){
 		$('#single-name').keypress(function(){
 			// 
 			var name = $(this);
 			setTimeout( function(){
-			console.log('hey');
+			
 			$('#plural-name').val(name.val()+'s');
 			}, 10);
-			
-			
-		
 		});
 	});
+	//]]>
 	</script> 
 </form>

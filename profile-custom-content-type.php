@@ -787,6 +787,7 @@ class Profile_CCT {
 				?>	<input type="hidden" name="label" value="<?php echo esc_attr( $label ); ?>" /> <?php
 				endif;
 				
+				
 				if(isset($description))
 			 		$this->input_field( array('size'=>10, 'value'=>$description, 'class'=>'field-description','name'=>'description','label'=>'description','type'=>'textarea' , 'before_label'=>true));
 			 	
@@ -804,6 +805,9 @@ class Profile_CCT {
 				
 				if(isset($show_multiple) && $show_multiple)
 					$this->input_field(array('type'=>'checkbox','name'=>'multiple', 'class'=>'field-multiple', 'field'=>'yes, allow the user to create multiple fields', 'value'=>$multiple,'label'=>'multiple','before_label'=>true));
+					
+				if(isset($show_link_to))
+					$this->input_field(array('type'=>'checkbox','name'=>'link_to', 'class'=>'field-multiple', 'field'=>'wrap the field with a link to the profile page', 'value'=>$link_to,'label'=>'link to profile','before_label'=>true));
 					 ?>
 				<input type="button" value="Save" class="button save-field-settings" />
 				<span class="spinner" style="display:none;"><img src="<?php echo admin_url(); ?>/images/wpspin_light.gif" alt="spinner" /> saving...</span>
@@ -995,20 +999,46 @@ class Profile_CCT {
 	 	
 	 	$display = ( $value ? $value :$default_text);
 	 	
+	 	$separator = (isset($separator) ? '<span class="separator">'.$separator.'</span>': "");
 	 	
+	
 	 	switch($type) {
 	 		case 'text':
 			 	echo "<".$tag." ".$id.$class.$href.$hide.">";
-			 	echo $display; 
+			 	
+			 	echo $separator.$display;
 				echo " </".$tag.">";
 			break;
 			
 			case 'shell':
-				echo "<".$tag." ".$id.$class.">";
+				if($tag == 'a'):
+					if($link_to):
+						echo "<".$tag." ".$id.$class.$href.">";
+					else:
+						echo "<span ".$id.$class.">";
+					endif;
+				else:
+					echo "<".$tag." ".$id.$class.">";
+					if($link_to):
+						echo '<a '.$href.'>';
+					endif;
+				endif;
+				
 			break;
 			
 			case 'end_shell';
-				echo "</".$tag.">";
+				if($tag == 'a'):
+					if($link_to):
+						echo "</".$tag.">";
+					else:
+						echo "</span>";
+					endif;
+				else:
+					if($link_to):
+						echo '</a>';
+					endif;
+					echo "</".$tag.">";
+				endif;
 			break;
 	 		
 		}
@@ -1056,7 +1086,7 @@ class Profile_CCT {
  							$options[$_POST['field_index']]['before'] 		= $_POST['before'];
 	 						$options[$_POST['field_index']]['after'] 		= $_POST['after'];
 	 						$options[$_POST['field_index']]['show'] 		= $_POST['show'];
-	 						$options[$_POST['field_index']]['link-to'] 		= $_POST['link-to'];
+	 						$options[$_POST['field_index']]['link_to'] 		= $_POST['link_to'];
 	 						$options[$_POST['field_index']]['clear'] 		= $_POST['clear'];
  						break;
  					}
