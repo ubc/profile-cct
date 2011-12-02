@@ -17,7 +17,7 @@ var Profile_CCT_FORM ={
 		
 			
 		formB.find(".edit").live("click", Profile_CCT_FORM.editField);
-
+		
 		formB.find(".field-label").live("keypress", Profile_CCT_FORM.updateLabel);
 		formB.find(".field-description").live("keypress", Profile_CCT_FORM.updateDescription );
 		formB.find(".field-show").live("click", Profile_CCT_FORM.updateShow);
@@ -62,7 +62,7 @@ var Profile_CCT_FORM ={
 		if(text_label.length+1 > 0 ) {
 			el.parents().siblings(".field-title").text(text_label);
 		} else {
-			text_label = el.attr('title');
+			
 			el.parents().siblings(".field-title").text(el.attr('title'));
 		}
 		},10);
@@ -76,7 +76,7 @@ var Profile_CCT_FORM ={
 			if(text_label.length+1 > 0 ) {
 				el.parents().siblings(".description").text(text_label);
 			} else {
-				text_label = el.attr('title');
+				
 				el.parents().siblings(".description").text(el.attr('title'));
 			}
 		},10);
@@ -87,16 +87,16 @@ var Profile_CCT_FORM ={
 		
 	},
 	updateText :function(e){
-	
 		var el = jQuery(this);
 		el.parent().parent().addClass('changed');
 		setTimeout( function () {		
 			var text_label = el.val();
+			
 			if(text_label.length+1 > 0 ) {
-				el.parents().siblings(".text").text(text_label);
+				jQuery(".text-input", el.parent().parent().parent() ).text(text_label);
 			} else {
-				text_label = el.attr('title');
-				el.parents().siblings(".text").text(el.attr('title'));
+				
+				jQuery(".text-input", el.parent().parent().parent()).text(el.attr('title'));
 			}
 		},10);
 	},
@@ -115,9 +115,9 @@ var Profile_CCT_FORM ={
 		
 	},
 	multipleShow : function(e){
-		
+		console.log('hey');
 		var el = jQuery(this);
-		el.parent().parent().addClass('changed');
+		el.parent().parent().parent().addClass('changed');
 		
 		var el_class = jQuery.trim(el.parent().text());
 		if(el.attr('checked'))

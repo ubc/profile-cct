@@ -4,7 +4,10 @@
 	float: left;
 	clear: none;
 }
-
+.auto{
+	width: auto;
+	display: inline;
+}
 .one-third {
 	width:33.3%;
 }

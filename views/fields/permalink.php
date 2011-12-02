@@ -46,7 +46,7 @@ function profile_cct_permalink_display( $data, $options ){
 	$href = ( isset($post) ? get_permalink() : "#" );
 
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'permalink', 'type'=>'shell', 'tag'=>'div') );
-	$field->display_text( array( 'field_type'=>$type, 'default_text'=>'jo@ubc.ca', 'value'=>$text, $href, 'type'=>'text', 'tag'=>'a', 'href'=>$href, 'class'=>'text-input') );
+	$field->display_text( array( 'field_type'=>$type, 'default_text'=>'more info', 'value'=>$text, 'type'=>'text', 'tag'=>'a', 'href'=>$href, 'class'=>'text-input', 'title'=>'more info') );
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 	
 }

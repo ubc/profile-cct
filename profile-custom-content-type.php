@@ -780,7 +780,7 @@ class Profile_CCT {
 	 	if($action == 'edit'): 
 	 	
 	 		?>
-	 		<<?php echo $shell; ?> class="<?php echo esc_attr( $type); ?> field-item <?php echo $width; ?>" for="cct-<?php echo esc_attr( $field_type); ?>" data-options="<?php echo esc_attr( $this->serialize($options)); ?>" >
+	 		<<?php echo $shell; ?> class="<?php echo esc_attr( $type); ?> field-item <?php echo $width; ?>" for="cct-<?php echo esc_attr( $type); ?>" data-options="<?php echo esc_attr( $this->serialize($options)); ?>" >
 
 			<a href="#edit-field" class="edit">Edit</a>
 			<div class="edit-shell" style="display:none;">
@@ -798,7 +798,7 @@ class Profile_CCT {
 			 		$this->input_field( array('size'=>10, 'value'=>$description, 'class'=>'field-description','name'=>'description','label'=>'description','type'=>'textarea' , 'before_label'=>true));
 			 	
 			 	if(isset($width))
-					$this->input_field(array('type'=>'select','all_fields'=>array('full','half','one-third','two-third'), 'class'=>'field-width','value'=>$width,'name'=>'width', 'label'=>'select width','before_label'=>true));
+					$this->input_field(array('type'=>'select','all_fields'=>array('full','half','one-third','two-third','auto'), 'class'=>'field-width','value'=>$width,'name'=>'width', 'label'=>'select width','before_label'=>true));
 			 	
 			 	if(isset($text))
 			 		$this->input_field( array('size'=>30, 'value'=>$text, 'class'=>'field-text','name'=>'text','label'=>'text input','type'=>'text' , 'before_label'=>true));
@@ -1097,6 +1097,7 @@ class Profile_CCT {
 	 						$options[$_POST['field_index']]['show'] 		= $_POST['show'];
 	 						$options[$_POST['field_index']]['link_to'] 		= $_POST['link_to'];
 	 						$options[$_POST['field_index']]['clear'] 		= $_POST['clear'];
+	 						$options[$_POST['field_index']]['text'] 		= $_POST['text'];
  						break;
  					}
 					echo "updated";
@@ -1416,11 +1417,12 @@ class Profile_CCT {
 													 	
 							 			),
 							 	'banch' =>array(
-							 			array( "type"=> "permalink", 	"label"=> "permalink"),
+							 			
 							 			array( "type"=> "education", 	"label"=> "education" ), 
 								 		array( "type"=> "teaching",		"label"=> "teaching" ), 
 								 		array( "type"=> "publications",	"label"=> "publications" ), 
-								 		array( "type"=> "research",		"label"=> "research" )
+								 		array( "type"=> "research",		"label"=> "research" ),
+								 		array( "type"=> "permalink", 	"label"=> "permalink")
 							 	)),
 					   'tabs' => array("Basic Info", "Bio")
 				 	));
@@ -1437,7 +1439,6 @@ class Profile_CCT {
 							 			),
 							 	'banch' =>array(
 							 			array( "type"=> "address", 		"label"=> "address"),
-							 			array( "type"=> "permalink", 	"label"=> "more"),
 							 			array( "type"=> "website",		"label"=> "website"),
 								 		array( "type"=> "social",		"label"=> "social"),
 							 			array( "type"=> "position" ,	"label"=> "position" ), 
@@ -1445,7 +1446,8 @@ class Profile_CCT {
 							 			array( "type"=> "education", 	"label"=> "education" ), 
 								 		array( "type"=> "teaching",		"label"=> "teaching" ), 
 								 		array( "type"=> "publications",	"label"=> "publications" ), 
-								 		array( "type"=> "research",		"label"=> "research" )
+								 		array( "type"=> "research",		"label"=> "research" ),
+								 		array( "type"=> "permalink", 	"label"=> "permalink")
 							 			)
 							 	)
 				 		));				 	

@@ -279,6 +279,10 @@
 	width:275px!important;
 	
 }
+.form-builder .auto .field-shell{
+	width: auto;
+	display: inline;
+}
 
 /*.form-builder .full {
 	/* width:595px !important; 
