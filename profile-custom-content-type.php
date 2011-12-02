@@ -1384,10 +1384,11 @@ class Profile_CCT {
 										array( "type"=>"picture", "label"=>"picture" )			 	
 							 			),
 							 	'bench' =>array(
+							 			array( "type"=> "department",	"label"=> "department"),
 							 			array( "type"=> "education", 	"label"=> "education" ), 
 								 		array( "type"=> "teaching",		"label"=> "teaching" ), 
 								 		array( "type"=> "publications",	"label"=> "publications" ), 
-								 		array( "type"=> "research",		"label"=> "research" ),
+								 		array( "type"=> "research",		"label"=> "research" )
 								 		
 							 	)),
 					   'tabs' => array("Basic Info", "Bio")
@@ -1417,12 +1418,13 @@ class Profile_CCT {
 													 	
 							 			),
 							 	'bench' =>array(
-							 			
+							 			array( "type"=> "department",	"label"=> "department"),
 							 			array( "type"=> "education", 	"label"=> "education" ), 
 								 		array( "type"=> "teaching",		"label"=> "teaching" ), 
 								 		array( "type"=> "publications",	"label"=> "publications" ), 
 								 		array( "type"=> "research",		"label"=> "research" ),
 								 		array( "type"=> "permalink", 	"label"=> "permalink")
+
 							 	)),
 					   'tabs' => array("Basic Info", "Bio")
 				 	));
@@ -1441,7 +1443,8 @@ class Profile_CCT {
 							 			array( "type"=> "address", 		"label"=> "address"),
 							 			array( "type"=> "website",		"label"=> "website"),
 								 		array( "type"=> "social",		"label"=> "social"),
-							 			array( "type"=> "position" ,	"label"=> "position" ), 
+							 			array( "type"=> "position" ,	"label"=> "position" ),
+							 			array( "type"=> "department",	"label"=> "department" ),
 								 		array( "type"=> "bio",			"label"=> "bio" ),
 							 			array( "type"=> "education", 	"label"=> "education" ), 
 								 		array( "type"=> "teaching",		"label"=> "teaching" ), 
@@ -1460,4 +1463,3 @@ class Profile_CCT {
 
 if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT' ) )
 add_action( 'plugins_loaded', array( 'Profile_CCT', 'get_object' ) );
-
