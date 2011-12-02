@@ -1384,11 +1384,12 @@ class Profile_CCT {
 										array( "type"=>"picture", "label"=>"picture" )			 	
 							 			),
 							 	'bench' =>array(
-							 			array( "type"=> "department",	"label"=> "department"),
-							 			array( "type"=> "education", 	"label"=> "education" ), 
-								 		array( "type"=> "teaching",		"label"=> "teaching" ), 
-								 		array( "type"=> "publications",	"label"=> "publications" ), 
-								 		array( "type"=> "research",		"label"=> "research" )
+							 			array( "type"=> "department",		"label"=> "department"),
+							 			array( "type"=> "education", 		"label"=> "education" ),
+							 			array( "type"=> "specialization",	"label"=> "specialization" ),
+								 		array( "type"=> "teaching",			"label"=> "teaching" ), 
+								 		array( "type"=> "publications",		"label"=> "publications" ), 
+								 		array( "type"=> "research",			"label"=> "research" )
 								 		
 							 	)),
 					   'tabs' => array("Basic Info", "Bio")
@@ -1399,11 +1400,11 @@ class Profile_CCT {
 	 				return apply_filters('profile_cct_default_options', array(
 		 				'fields'=> array(
 				 				'tabbed-1' => array(
-								 		array( "type"=> "address", 		"label"=> "address",),
-								 		array( "type"=> "phone",		"label"=> "phone" ), 
-								 		array( "type"=> "email",		"label"=> "email" ),
-								 		array( "type"=> "website",		"label"=> "website"),
-								 		array( "type"=> "social",		"label"=> "social")
+								 		array( "type"=> "address", 	"label"=> "address",),
+								 		array( "type"=> "phone",	"label"=> "phone" ), 
+								 		array( "type"=> "email",	"label"=> "email" ),
+								 		array( "type"=> "website",	"label"=> "website"),
+								 		array( "type"=> "social",	"label"=> "social")
 							 		),
 						 		 'tabbed-2' =>array(
 							 			array( "type"=> "position" ,	"label"=> "position" ), 
@@ -1411,19 +1412,20 @@ class Profile_CCT {
 								 		
 							 		),
 							 	 'header'=> array( 
-							 	 		array( "type"=>"picture", "label"=>"picture" ),
-							 			array("type"=> "name" ,	"label"=> "name" )
+							 	 		array( "type"=>"picture",	"label"=>"picture" ),
+							 			array("type"=> "name" ,		"label"=> "name" )
 							 			),
 								 'bottom'=> array( 
 													 	
 							 			),
 							 	'bench' =>array(
-							 			array( "type"=> "department",	"label"=> "department"),
-							 			array( "type"=> "education", 	"label"=> "education" ), 
-								 		array( "type"=> "teaching",		"label"=> "teaching" ), 
-								 		array( "type"=> "publications",	"label"=> "publications" ), 
-								 		array( "type"=> "research",		"label"=> "research" ),
-								 		array( "type"=> "permalink", 	"label"=> "permalink")
+							 			array( "type"=> "department",		"label"=> "department"),
+							 			array( "type"=> "education", 		"label"=> "education" ),
+							 			array( "type"=> "specialization",	"label"=> "specialization" ),
+								 		array( "type"=> "teaching",			"label"=> "teaching" ), 
+								 		array( "type"=> "publications",		"label"=> "publications" ), 
+								 		array( "type"=> "research",			"label"=> "research" ),
+								 		array( "type"=> "permalink", 		"label"=> "permalink")
 
 							 	)),
 					   'tabs' => array("Basic Info", "Bio")
@@ -1434,23 +1436,24 @@ class Profile_CCT {
 	 				return apply_filters('profile_cct_default_options', array(
 		 				'fields'=> array(
 							 	 'normal'=> array(
-							 	 		array( "type"=>"picture", "label"=>"picture" ),
-							 			array("type"=> "name" ,	"label"=> "name" ),
-							 			array( "type"=> "phone",		"label"=> "phone" ),
-							 			array( "type"=> "email",		"label"=> "email" )
+							 	 		array( "type"=>"picture", 	"label"=>"picture" ),
+							 			array( "type"=> "name" ,	"label"=> "name" ),
+							 			array( "type"=> "phone",	"label"=> "phone" ),
+							 			array( "type"=> "email",	"label"=> "email" )
 							 			),
 							 	'bench' =>array(
-							 			array( "type"=> "address", 		"label"=> "address"),
-							 			array( "type"=> "website",		"label"=> "website"),
-								 		array( "type"=> "social",		"label"=> "social"),
-							 			array( "type"=> "position" ,	"label"=> "position" ),
-							 			array( "type"=> "department",	"label"=> "department" ),
-								 		array( "type"=> "bio",			"label"=> "bio" ),
-							 			array( "type"=> "education", 	"label"=> "education" ), 
-								 		array( "type"=> "teaching",		"label"=> "teaching" ), 
-								 		array( "type"=> "publications",	"label"=> "publications" ), 
-								 		array( "type"=> "research",		"label"=> "research" ),
-								 		array( "type"=> "permalink", 	"label"=> "permalink")
+							 			array( "type"=> "address", 			"label"=> "address"),
+							 			array( "type"=> "website",			"label"=> "website"),
+								 		array( "type"=> "social",			"label"=> "social"),
+							 			array( "type"=> "position" ,		"label"=> "position" ),
+							 			array( "type"=> "department",		"label"=> "department" ),
+								 		array( "type"=> "bio",				"label"=> "bio" ),
+							 			array( "type"=> "education", 		"label"=> "education" ),
+							 			array( "type"=> "specialization",	"label"=> "specialization" ),
+								 		array( "type"=> "teaching",			"label"=> "teaching" ), 
+								 		array( "type"=> "publications",		"label"=> "publications" ), 
+								 		array( "type"=> "research",			"label"=> "research" ),
+								 		array( "type"=> "permalink", 		"label"=> "permalink")
 							 			)
 							 	)
 				 		));				 	
