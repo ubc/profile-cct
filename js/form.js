@@ -25,6 +25,7 @@ var Profile_CCT_FORM ={
 		formB.find(".save-field-settings").live("click", Profile_CCT_FORM.updateField);
 		formB.find(".field-before").live('keypress', Profile_CCT_FORM.updateTextarea);
 		formB.find(".field-after").live('keypress', Profile_CCT_FORM.updateTextarea);
+		formB.find(".field-text").live('keypress', Profile_CCT_FORM.updateText);
 		// name field
 		jQuery(".edit","#form-name").click(Profile_CCT_FORM.editField);
 	},
@@ -83,6 +84,21 @@ var Profile_CCT_FORM ={
 	},
 	updateTextarea :function(e){
 		jQuery(this).parent().parent().addClass('changed');
+		
+	},
+	updateText :function(e){
+	
+		var el = jQuery(this);
+		el.parent().parent().addClass('changed');
+		setTimeout( function () {		
+			var text_label = el.val();
+			if(text_label.length+1 > 0 ) {
+				el.parents().siblings(".text").text(text_label);
+			} else {
+				text_label = el.attr('title');
+				el.parents().siblings(".text").text(el.attr('title'));
+			}
+		},10);
 	},
 	updateShow : function(e){
 		

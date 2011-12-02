@@ -58,6 +58,12 @@ if(isset( $_GET['d'])):
 	delete_option('Profile_CCT_page_fields_bottom');
 	delete_option('Profile_CCT_page_fields_banch');
 	delete_option('Profile_CCT_page_tabs_normal');
+	delete_option('Profile_CCT_page_fields');
+	
+
+
+	delete_option('Profile_CCT_list_fields_normal');
+	delete_option('Profile_CCT_list_fields_banch');
 	
 	delete_option('Profile_CCT_page_fields');
 	
@@ -782,7 +788,7 @@ class Profile_CCT {
 				<?php 
 				
 				if(empty($hide_label) && !$hide_label):
-					$this->input_field( array('size'=>20, 'value'=>$label, 'class'=>'field-label', 'name'=>'label','label'=>'label', 'type'=>'text', 'before_label'=>true ));
+					$this->input_field( array('size'=>30, 'value'=>$label, 'class'=>'field-label', 'name'=>'label','label'=>'label', 'type'=>'text', 'before_label'=>true ));
 				else:
 				?>	<input type="hidden" name="label" value="<?php echo esc_attr( $label ); ?>" /> <?php
 				endif;
@@ -793,7 +799,10 @@ class Profile_CCT {
 			 	
 			 	if(isset($width))
 					$this->input_field(array('type'=>'select','all_fields'=>array('full','half','one-third','two-third'), 'class'=>'field-width','value'=>$width,'name'=>'width', 'label'=>'select width','before_label'=>true));
-			 		
+			 	
+			 	if(isset($text))
+			 		$this->input_field( array('size'=>30, 'value'=>$text, 'class'=>'field-text','name'=>'text','label'=>'text input','type'=>'text' , 'before_label'=>true));
+			 	
 			 	if(isset($before))
 			 		$this->input_field( array('size'=>10, 'value'=>$before, 'class'=>'field-before','name'=>'before','label'=>'before html','type'=>'textarea' , 'before_label'=>true));
 			 		
@@ -1377,7 +1386,8 @@ class Profile_CCT {
 							 			array( "type"=> "education", 	"label"=> "education" ), 
 								 		array( "type"=> "teaching",		"label"=> "teaching" ), 
 								 		array( "type"=> "publications",	"label"=> "publications" ), 
-								 		array( "type"=> "research",		"label"=> "research" )
+								 		array( "type"=> "research",		"label"=> "research" ),
+								 		
 							 	)),
 					   'tabs' => array("Basic Info", "Bio")
 				 	));
@@ -1406,6 +1416,7 @@ class Profile_CCT {
 													 	
 							 			),
 							 	'banch' =>array(
+							 			array( "type"=> "permalink", 	"label"=> "permalink"),
 							 			array( "type"=> "education", 	"label"=> "education" ), 
 								 		array( "type"=> "teaching",		"label"=> "teaching" ), 
 								 		array( "type"=> "publications",	"label"=> "publications" ), 
@@ -1426,6 +1437,7 @@ class Profile_CCT {
 							 			),
 							 	'banch' =>array(
 							 			array( "type"=> "address", 		"label"=> "address"),
+							 			array( "type"=> "permalink", 	"label"=> "more"),
 							 			array( "type"=> "website",		"label"=> "website"),
 								 		array( "type"=> "social",		"label"=> "social"),
 							 			array( "type"=> "position" ,	"label"=> "position" ), 
