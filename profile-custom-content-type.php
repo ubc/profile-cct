@@ -43,7 +43,7 @@ if(isset( $_GET['d'])):
 	delete_option('Profile_CCT_form_fields_tabbed-6');
 	delete_option('Profile_CCT_form_fields_normal');
 	delete_option('Profile_CCT_form_fields_side');
-	delete_option('Profile_CCT_form_fields_banch');
+	delete_option('Profile_CCT_form_fields_bench');
 	delete_option('Profile_CCT_form_tabs_normal');
 	
 	
@@ -56,14 +56,14 @@ if(isset( $_GET['d'])):
 	delete_option('Profile_CCT_page_fields_header');
 	delete_option('Profile_CCT_page_fields_side');
 	delete_option('Profile_CCT_page_fields_bottom');
-	delete_option('Profile_CCT_page_fields_banch');
+	delete_option('Profile_CCT_page_fields_bench');
 	delete_option('Profile_CCT_page_tabs_normal');
 	delete_option('Profile_CCT_page_fields');
 	
 
 
 	delete_option('Profile_CCT_list_fields_normal');
-	delete_option('Profile_CCT_list_fields_banch');
+	delete_option('Profile_CCT_list_fields_bench');
 	
 	delete_option('Profile_CCT_page_fields');
 	
@@ -798,7 +798,7 @@ class Profile_CCT {
 			 		$this->input_field( array('size'=>10, 'value'=>$description, 'class'=>'field-description','name'=>'description','label'=>'description','type'=>'textarea' , 'before_label'=>true));
 			 	
 			 	if(isset($width))
-					$this->input_field(array('type'=>'select','all_fields'=>array('full','half','one-third','two-third','auto'), 'class'=>'field-width','value'=>$width,'name'=>'width', 'label'=>'select width','before_label'=>true));
+					$this->input_field(array('type'=>'select','all_fields'=>array('full','half','one-third','two-third'), 'class'=>'field-width','value'=>$width,'name'=>'width', 'label'=>'select width','before_label'=>true));
 			 	
 			 	if(isset($text))
 			 		$this->input_field( array('size'=>30, 'value'=>$text, 'class'=>'field-text','name'=>'text','label'=>'text input','type'=>'text' , 'before_label'=>true));
@@ -1164,7 +1164,7 @@ class Profile_CCT {
 			case "remove":
 			
 				// we need to set the proper item to fields to zero as well. 
-				// and move them to the banch
+				// and move them to the bench
 				$index = $_POST['index'];
 				
 				$tabs_count = count($tabs);
@@ -1178,11 +1178,11 @@ class Profile_CCT {
 				
 				
 				if(is_array($fields)): // array was empty so nothing to move
-					$banch  = $this->get_option($type,'fields','banch');
-					// and move them to the banch
-					$banch  = array_merge($banch , $fields);
+					$bench  = $this->get_option($type,'fields','bench');
+					// and move them to the bench
+					$bench  = array_merge($bench , $fields);
 					
-					$banch = $this->update_option($type,'fields','banch', $banch);
+					$bench = $this->update_option($type,'fields','bench', $bench);
 					
 				endif;
 				
@@ -1383,7 +1383,7 @@ class Profile_CCT {
 								 'side'=> array( 
 										array( "type"=>"picture", "label"=>"picture" )			 	
 							 			),
-							 	'banch' =>array(
+							 	'bench' =>array(
 							 			array( "type"=> "education", 	"label"=> "education" ), 
 								 		array( "type"=> "teaching",		"label"=> "teaching" ), 
 								 		array( "type"=> "publications",	"label"=> "publications" ), 
@@ -1416,7 +1416,7 @@ class Profile_CCT {
 								 'bottom'=> array( 
 													 	
 							 			),
-							 	'banch' =>array(
+							 	'bench' =>array(
 							 			
 							 			array( "type"=> "education", 	"label"=> "education" ), 
 								 		array( "type"=> "teaching",		"label"=> "teaching" ), 
@@ -1437,7 +1437,7 @@ class Profile_CCT {
 							 			array( "type"=> "phone",		"label"=> "phone" ),
 							 			array( "type"=> "email",		"label"=> "email" )
 							 			),
-							 	'banch' =>array(
+							 	'bench' =>array(
 							 			array( "type"=> "address", 		"label"=> "address"),
 							 			array( "type"=> "website",		"label"=> "website"),
 								 		array( "type"=> "social",		"label"=> "social"),

@@ -152,7 +152,7 @@ var Profile_CCT_TABS ={
 					
 					var html_list = jQuery("#tabs div.ui-tabs-panel").eq( index ).find('ul').html();
 					
-					jQuery("#banch").append(html_list);
+					jQuery("#bench").append(html_list);
 					
 					Profile_CCT_TABS.$tabs.tabs( "remove", index );
 					

@@ -9,10 +9,10 @@
 	<div class="col-wrap">
 	
 	<h3>Inactive Fields</h3>
-	<ul id="banch" class="sort">
+	<ul id="bench" class="sort">
 		<?php 
 		$action = 'edit';
-		$fields = $this->get_option('page','fields','banch');		 				
+		$fields = $this->get_option('page','fields','bench');		 				
  		if( is_array( $fields  ) ):
 	 		foreach($fields  as $field):
 	 			call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field);

@@ -279,7 +279,7 @@
 	width:275px!important;
 	
 }
-.form-builder .auto .field-shell{
+.form-builder .inline .field-shell{
 	width: auto;
 	display: inline;
 }
@@ -433,7 +433,7 @@ li.ui-sortable-helper {
     overflow: hidden;
     text-indent: -99999px;
 }
-#banch{
+#bench{
 	background: #CCC;
 	border: 0;
 	padding:5px 5px 2px;
@@ -441,7 +441,7 @@ li.ui-sortable-helper {
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
-#banch li{
+#bench li{
 	width: 117px;
 }
 
@@ -450,11 +450,11 @@ li.ui-sortable-helper {
 .ui-sortable-helper .edit,
 .ui-sortable-helper .add-multiple,
 .ui-sortable-helper .description,
-#banch li .field-shell,
-#banch li .remove,
-#banch li .edit,
-#banch li .add-multiple,
-#banch li .description
+#bench li .field-shell,
+#bench li .remove,
+#bench li .edit,
+#bench li .add-multiple,
+#bench li .description
 {
 	display: none !important;
 	height: 0;

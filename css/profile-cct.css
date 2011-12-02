@@ -4,7 +4,8 @@
 	float: left;
 	clear: none;
 }
-.auto{
+.inline,
+.inline div{
 	width: auto;
 	display: inline;
 }
