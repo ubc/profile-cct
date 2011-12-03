@@ -94,7 +94,7 @@ function profile_cct_email_display( $data, $options ){
 	
 
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'email', 'type'=>'shell', 'tag'=>'div') );
-	$field->display_text( array( 'field_type'=>$type, 'default_text'=>'jo@ubc.ca', 'value'=>$data['email'], 'type'=>'text', 'tag'=>'a', 'href'=>'mailto:'.$data['email']) );
+	$field->display_text( array( 'field_type'=>$type, 'default_text'=>'bruce.wayne@wayneenterprises.com', 'value'=>$data['email'], 'type'=>'text', 'tag'=>'a', 'href'=>'mailto:'.$data['email']) );
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 	
 }

@@ -1004,6 +1004,13 @@ class Profile_CCT {
 
 <p>Quisque malesuada tellus vitae massa semper non faucibus leo sollicitudin. In sit amet feugiat ligula. Ut id ultrices magna. Proin ut imperdiet tellus. Nulla interdum eleifend massa egestas malesuada. Suspendisse potenti. Nulla suscipit imperdiet velit sit amet pretium. In sit amet lectus felis, commodo varius eros. Duis sapien diam, sagittis faucibus elementum vulputate, faucibus a mi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec viverra, quam in pretium volutpat, elit sapien tempor neque, quis adipiscing magna quam vitae velit.</p>";
 			break;
+			
+			case 'bruce bio':
+	 			
+	 		$default_text = "<p><strong>".$field_type."</strong> A wealthy businessman who lives in Gotham City, born to Dr. Thomas Wayne and his wife Martha, two very wealthy and charitable Gotham City socialites.</p>
+
+<p>Known for his contributions to charity, notably through his Wayne Foundation, a charity devoted to helping the victims of crime and preventing people from becoming criminals.</p>";
+			break;
 	 	}
 	 	
 	 	$display = ( $value ? $value :$default_text);

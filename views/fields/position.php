@@ -99,9 +99,9 @@ function profile_cct_position_display( $data, $options ){
 	$show = (is_array($show) ? $show : array());
 	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'position', 'type'=>'shell', 'tag'=>'div') );
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'role','default_text'=>'Professor', 'value'=>$data['position'], 'type'=>'text','count'=>$count, ) );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'role','default_text'=>'CEO', 'value'=>$data['position'], 'type'=>'text','count'=>$count, ) );
 
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'org','separator'=>',','default_text'=>'University of British Columbia', 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array("organization",$show),'count'=>$count) );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'org','separator'=>',','default_text'=>'Wayne Enterprises', 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array("organization",$show),'count'=>$count) );
 	
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 

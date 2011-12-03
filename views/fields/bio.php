@@ -64,6 +64,6 @@ function profile_cct_bio_display( $data, $options ){
 	extract( $options );
 	$field = Profile_CCT::get_object();
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'textarea bio','default_text'=>'lorem ipsum', 'value'=>$data['bio'], 'tag'=>'div', 'type'=>'text') );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'textarea bio','default_text'=>'bruce bio', 'value'=>$data['bio'], 'tag'=>'div', 'type'=>'text') );
 
 }
