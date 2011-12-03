@@ -82,6 +82,8 @@ class Profile_CCT {
 	static private $field = NULL;
 	static private $form_field_counter = 0;
 	static public  $taxonomies = NULL;
+	static public  $field_options = NULL;
+	static public  $option 		  = NULL;
 	
 	/**
 	* construct
@@ -206,6 +208,7 @@ class Profile_CCT {
 		register_setting( 'Profile_CCT_list_page', 'Profile_CCT_list_page'  );
 		register_setting( 'Profile_CCT_settings', 'Profile_CCT_settings' );
 		register_setting( 'Profile_CCT_taxonomy', 'Profile_CCT_taxonomy' );
+		
 	}
 	/**
 	 * add_menu_page function.
@@ -302,6 +305,25 @@ class Profile_CCT {
 	 * @return void
 	 */
 	public function admin_pages() {
+		
+		$type_of = (in_array($_GET['view'], array('form','page','list'))? $_GET['view']: NULL );
+		
+		if($type_of):
+			if(!is_array($this->field_options[$type_of]))
+				$this->field_options[$type_of] = array();
+					
+			foreach ($this->get_contexts($type_of) as $context)
+				array_push($this->field_options[$type_of], $this->get_option($type_of, 'fields',$context));
+			
+			unset($context);
+			
+			
+			
+			var_dump($this->field_options[$type_of]);
+			var_dump($this->option[$type_of][])
+		endif;
+		
+		
 		screen_icon( 'users' );
 		?>
 		<div class="wrap">
@@ -1326,20 +1348,27 @@ class Profile_CCT {
 	}
 	
 	function get_option($type='form',$fields_or_tabs='fields',$context='normal'){
-		$option = get_option('Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context);
 		
-		if(!is_array($option)):
-			$default = $this->default_options($type);
-	
-			if($fields_or_tabs == 'fields')
-				return $default[$fields_or_tabs][$context];
-			else
-				return $default[$fields_or_tabs]; 
-			
+		// return the options from the array stored 
+		if(is_array($this->option[$type][$fields_or_tabs][$context])):
+			return $this->option[$type][$fields_or_tabs][$context];
 		else:
+			// get the 
+			$option = get_option('Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context);
 			
-			return $option;
-		endif; 
+			if(!is_array($option)):
+				$default = $this->default_options($type);
+		
+				if($fields_or_tabs == 'fields')
+					$option = $default[$fields_or_tabs][$context];
+				else
+					$option = $default[$fields_or_tabs]; 
+			endif;
+		endif;
+		
+		$this->option[$type][$fields_or_tabs][$context] = $option;
+		return $option;
+		
 	}
 	
 	function update_option($type='form',$fields_or_tabs='fields',$context='normal',$update){
@@ -1349,13 +1378,14 @@ class Profile_CCT {
 		
 		$settings[$type.'_updated'] = time();
 		
+		$this->option[$type][$fields_or_tabs][$context] = $update;
 		// update the settings
 		update_option( 'Profile_CCT_settings', $settings );
 		
 		return update_option( 'Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context, $update);
 	}
 	function delete_option($type='form',$fields_or_tabs='fields',$context='normal'){
-		
+			unset($this->option[$type][$fields_or_tabs][$context]); 
 		return delete_option('Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context);
 	}
 	
