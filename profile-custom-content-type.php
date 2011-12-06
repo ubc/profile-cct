@@ -1118,6 +1118,13 @@ class Profile_CCT {
 
 <p>Quisque malesuada tellus vitae massa semper non faucibus leo sollicitudin. In sit amet feugiat ligula. Ut id ultrices magna. Proin ut imperdiet tellus. Nulla interdum eleifend massa egestas malesuada. Suspendisse potenti. Nulla suscipit imperdiet velit sit amet pretium. In sit amet lectus felis, commodo varius eros. Duis sapien diam, sagittis faucibus elementum vulputate, faucibus a mi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec viverra, quam in pretium volutpat, elit sapien tempor neque, quis adipiscing magna quam vitae velit.</p>";
 			break;
+			
+			case 'bruce bio':
+	 			
+	 		$default_text = "<p><strong>".$field_type."</strong> A wealthy businessman who lives in Gotham City, born to Dr. Thomas Wayne and his wife Martha, two very wealthy and charitable Gotham City socialites.</p>
+
+<p>Known for his contributions to charity, notably through his Wayne Foundation, a charity devoted to helping the victims of crime and preventing people from becoming criminals.</p>";
+			break;
 	 	}
 	 	
 	 	$display = ( $value ? $value :$default_text);
@@ -1554,11 +1561,12 @@ class Profile_CCT {
 										array( "type"=>"picture", "label"=>"picture" )			 	
 							 			),
 							 	'bench' =>array(
-							 			array( "type"=> "department",	"label"=> "department"),
-							 			array( "type"=> "education", 	"label"=> "education" ), 
-								 		array( "type"=> "teaching",		"label"=> "teaching" ), 
-								 		array( "type"=> "publications",	"label"=> "publications" ), 
-								 		array( "type"=> "research",		"label"=> "research" )
+							 			array( "type"=> "department",		"label"=> "department"),
+							 			array( "type"=> "education", 		"label"=> "education" ),
+							 			array( "type"=> "specialization",	"label"=> "specialization" ),
+								 		array( "type"=> "teaching",			"label"=> "teaching" ), 
+								 		array( "type"=> "publications",		"label"=> "publications" ), 
+								 		array( "type"=> "research",			"label"=> "research" )
 								 		
 							 	)),
 					   'tabs' => array("Basic Info", "Bio")
@@ -1569,11 +1577,11 @@ class Profile_CCT {
 	 				return apply_filters( 'profile_cct_default_options', array(
 		 				'fields'=> array(
 				 				'tabbed-1' => array(
-								 		array( "type"=> "address", 		"label"=> "address",),
-								 		array( "type"=> "phone",		"label"=> "phone" ), 
-								 		array( "type"=> "email",		"label"=> "email" ),
-								 		array( "type"=> "website",		"label"=> "website"),
-								 		array( "type"=> "social",		"label"=> "social")
+								 		array( "type"=> "address", 	"label"=> "address",),
+								 		array( "type"=> "phone",	"label"=> "phone" ), 
+								 		array( "type"=> "email",	"label"=> "email" ),
+								 		array( "type"=> "website",	"label"=> "website"),
+								 		array( "type"=> "social",	"label"=> "social")
 							 		),
 						 		 'tabbed-2' =>array(
 							 			array( "type"=> "position" ,	"label"=> "position" ), 
@@ -1581,19 +1589,20 @@ class Profile_CCT {
 								 		
 							 		),
 							 	 'header'=> array( 
-							 	 		array( "type"=>"picture", "label"=>"picture" ),
-							 			array("type"=> "name" ,	"label"=> "name" )
+							 	 		array( "type"=>"picture",	"label"=>"picture" ),
+							 			array("type"=> "name" ,		"label"=> "name" )
 							 			),
 								 'bottom'=> array( 
 													 	
 							 			),
 							 	'bench' =>array(
-							 			array( "type"=> "department",	"label"=> "department"),
-							 			array( "type"=> "education", 	"label"=> "education" ), 
-								 		array( "type"=> "teaching",		"label"=> "teaching" ), 
-								 		array( "type"=> "publications",	"label"=> "publications" ), 
-								 		array( "type"=> "research",		"label"=> "research" ),
-								 		array( "type"=> "permalink", 	"label"=> "permalink")
+							 			array( "type"=> "department",		"label"=> "department"),
+							 			array( "type"=> "education", 		"label"=> "education" ),
+							 			array( "type"=> "specialization",	"label"=> "specialization" ),
+								 		array( "type"=> "teaching",			"label"=> "teaching" ), 
+								 		array( "type"=> "publications",		"label"=> "publications" ), 
+								 		array( "type"=> "research",			"label"=> "research" ),
+								 		array( "type"=> "permalink", 		"label"=> "permalink")
 
 							 	)),
 					   'tabs' => array("Basic Info", "Bio")
@@ -1604,23 +1613,24 @@ class Profile_CCT {
 	 				return apply_filters( 'profile_cct_default_options', array(
 		 				'fields'=> array(
 							 	 'normal'=> array(
-							 	 		array( "type"=>"picture", "label"=>"picture" ),
-							 			array("type"=> "name" ,	"label"=> "name" ),
-							 			array( "type"=> "phone",		"label"=> "phone" ),
-							 			array( "type"=> "email",		"label"=> "email" )
+							 	 		array( "type"=>"picture", 	"label"=>"picture" ),
+							 			array( "type"=> "name" ,	"label"=> "name" ),
+							 			array( "type"=> "phone",	"label"=> "phone" ),
+							 			array( "type"=> "email",	"label"=> "email" )
 							 			),
 							 	'bench' =>array(
-							 			array( "type"=> "address", 		"label"=> "address"),
-							 			array( "type"=> "website",		"label"=> "website"),
-								 		array( "type"=> "social",		"label"=> "social"),
-							 			array( "type"=> "position" ,	"label"=> "position" ),
-							 			array( "type"=> "department",	"label"=> "department" ),
-								 		array( "type"=> "bio",			"label"=> "bio" ),
-							 			array( "type"=> "education", 	"label"=> "education" ), 
-								 		array( "type"=> "teaching",		"label"=> "teaching" ), 
-								 		array( "type"=> "publications",	"label"=> "publications" ), 
-								 		array( "type"=> "research",		"label"=> "research" ),
-								 		array( "type"=> "permalink", 	"label"=> "permalink")
+							 			array( "type"=> "address", 			"label"=> "address"),
+							 			array( "type"=> "website",			"label"=> "website"),
+								 		array( "type"=> "social",			"label"=> "social"),
+							 			array( "type"=> "position" ,		"label"=> "position" ),
+							 			array( "type"=> "department",		"label"=> "department" ),
+								 		array( "type"=> "bio",				"label"=> "bio" ),
+							 			array( "type"=> "education", 		"label"=> "education" ),
+							 			array( "type"=> "specialization",	"label"=> "specialization" ),
+								 		array( "type"=> "teaching",			"label"=> "teaching" ), 
+								 		array( "type"=> "publications",		"label"=> "publications" ), 
+								 		array( "type"=> "research",			"label"=> "research" ),
+								 		array( "type"=> "permalink", 		"label"=> "permalink")
 							 			)
 							 	)
 				 		) , $type );				 	

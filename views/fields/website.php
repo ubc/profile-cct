@@ -91,8 +91,7 @@ function profile_cct_website_display( $data, $options ){
 	$name = (isset($data['site-title']) ? $data['site-title'] : $data['website'] );
 	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'website', 'type'=>'shell', 'tag'=>'div') );
-	$field->display_text( array( 'field_type'=>$type, 'default_text'=>'http://google.com', 'value'=>$name, 'type'=>'text', 'tag'=>'a', 'href'=>$data['website']) );
+	$field->display_text( array( 'field_type'=>$type, 'default_text'=>'http://wayneenterprises.biz', 'value'=>$name, 'type'=>'text', 'tag'=>'a', 'href'=>$data['website']) );
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 	
 }
-

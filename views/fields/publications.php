@@ -70,4 +70,3 @@ function profile_cct_publications_display( $data, $options ){
 	extract( $options );
 	$field = Profile_CCT::get_object();
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'textarea publication','default_text'=>'lorem ipsum', 'value'=>$data['publication'], 'tag'=>'div', 'type'=>'text') );}
-
