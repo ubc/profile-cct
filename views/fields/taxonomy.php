@@ -55,7 +55,7 @@ function profile_cct_taxonomy_display_shell(  $action, $options, $data=null ) {
 		'width' => 'full',
 		'before'=>'',
 		'after' =>'',
-		'text'	=>'more info',
+		'text'	=>$options['label'].":",
 		'hide_label'=>true
 		);
 	
@@ -83,6 +83,7 @@ function profile_cct_taxonomy_display( $data, $options ){
 	
 	$taxonomy = $type;
 	$field->display_text( array( 'field_type'=>$taxonomy, 'class'=>'taxonomy', 'type'=>'shell', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'default_text'=>$label, 'value'=>$text, 'type'=>'text', 'tag'=>'span', 'class'=>'text-input', 'title'=>$label.":") );
 	if( is_object( $post ) ):
 		
 		$terms =  get_the_terms( $post->ID, $taxonomy );
@@ -99,7 +100,12 @@ function profile_cct_taxonomy_display( $data, $options ){
 			echo join( ", ", $term_links );	
 	   	endif;
 	else:
-		echo "tag 1, tag 2, tag 3";
+		$single = str_replace("profile_cct_","",$type);	
+		
+		$field->display_text( array( 'field_type'=>$type,  'class'=>'tag',  'href'=>'#', 'default_text'=>$single.' 1', 'value'=>'', 'type'=>'text', 'tag'=>'a') );
+		$field->display_text( array( 'field_type'=>$type,  'class'=>'tag', 'separator'=>', ', 'href'=>'#', 'default_text'=>$single.' 2', 'value'=>'', 'type'=>'text', 'tag'=>'a') );
+		$field->display_text( array( 'field_type'=>$type,  'class'=>'tag', 'separator'=>', ', 'href'=>'#', 'default_text'=>$single.' 3', 'value'=>'', 'type'=>'text', 'tag'=>'a') );
+		
 	endif;
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 

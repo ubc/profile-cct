@@ -142,7 +142,12 @@
 	display:block;
 	float:left;
 }
-/* .form-builder li div span.separator, */
+.form-builder li .field-shell span,
+.form-builder li div span.separator{
+	float: none;
+	display: inline;
+}
+/* , */
 .form-builder li div span.comma{
 	margin: 0 5px 0 -5px;
 }

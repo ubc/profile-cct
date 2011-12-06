@@ -11,6 +11,7 @@
 * Author URI: http://ctlt.ubc.ca
 */
 
+
 /**
 License:
 ==============================================================================
@@ -34,6 +35,12 @@ Requirement
 ==============================================================================
 This plugin requires WordPress >= 3.2 and tested with PHP Interpreter >= 5.2
 */
+
+// don't load directly
+if ( !defined('ABSPATH') )
+	die('-1');
+	
+	
 if(isset( $_GET['d'])):
 	delete_option('Profile_CCT_form_fields_tabbed-1');
 	delete_option('Profile_CCT_form_fields_tabbed-2');
@@ -132,6 +139,19 @@ class Profile_CCT {
 		// function to be executed on page and list admin pages
 		add_action('profile_cct_page', array( $this,'profile_cct_page_field_shell'),10,3);
 		
+		
+		
+		// for permisions
+		// add_filter( 'views_edit-profile_cct', array( $this,'admin_views_filter'),10,3);
+		
+		
+		
+	}
+	function admin_views_filter($views){
+		
+		// here we remove some unwanted things 
+		// for people that can't display things 
+		return $views;
 	}
 
 	/**
@@ -168,10 +188,10 @@ class Profile_CCT {
 		global $current_screen;
 		
 		if($current_screen->id == 'profile_cct'):
-			wp_enqueue_style( 'profile-cct-edit-post', WP_PLUGIN_URL . '/profile-cct/css/profile-page.css' );
 			wp_enqueue_style("thickbox");
 			wp_enqueue_script("thickbox");
 			
+			wp_enqueue_style( 'profile-cct-edit-post', WP_PLUGIN_URL . '/profile-cct/css/profile-page.css' );
 			wp_enqueue_script( 'profile-cct-edit-post', WP_PLUGIN_URL . '/profile-cct/js/profile-page.js',array('jquery-ui-tabs' ) );
 		endif;
 		
@@ -208,6 +228,31 @@ class Profile_CCT {
 		register_setting( 'Profile_CCT_taxonomy', 'Profile_CCT_taxonomy' );
 		
 		
+		
+		
+		$role = get_role( 'author' ); // gets the author role
+		
+		// $this->e($role);
+		/*
+		'edit_post' => 'edit_profile_cct',
+	            'edit_posts' => 'edit_profiles_cct',
+	            'edit_others_posts' => 'edit_all_profile_cct',
+	            'publish_posts' => 'publish_profile_cct',
+	            'read_post' => 'read_profile_cct',
+	            'read_private_posts' => 'read_private_profile_cct',
+	            'delete_post' => 'delete_profile_cct'
+	            */
+	    $role->add_cap( 'edit_profiles_cct', false );
+		$role->add_cap( 'edit_profile_cct', false ); // would allow the author to edit others' posts for current theme only
+		$role->add_cap('publish_profile_cct', false );
+		
+		
+	}
+	function e($data){
+		echo "<pre>";
+		var_dump($data);
+		echo "</pre>";
+	
 	}
 	/**
 	 * add_menu_page function.
@@ -217,17 +262,32 @@ class Profile_CCT {
 	 */
 	public function add_menu_page() {
 	
+		$my_profile = add_submenu_page(
+			'edit.php?post_type=profile_cct',
+			__( 'My Profile', $this -> get_textdomain() ),
+			__( 'My Profile', $this -> get_textdomain() ),
+			'my_profile', 'my_profile',
+			array( $this, 'my_profile' ) );
+		
 		$page = add_submenu_page( 
 			'edit.php?post_type=profile_cct',
 			__( 'Settings', $this -> get_textdomain() ),
 			__( 'Settings', $this -> get_textdomain() ),
 			'manage_options', __FILE__,
 			array( $this, 'admin_pages' ) );
+	
+		
+			
+		
 			
 			
 		add_action( 'admin_print_styles-' . $page, array( $this, 'admin_styles' ) );
 		add_action( 'admin_print_scripts-' . $page, array( $this, 'admin_scripts' ) );
 		
+	}
+	
+	function my_profile(){
+			echo "hello";
 	}
 	
 	/**
@@ -304,6 +364,7 @@ class Profile_CCT {
 	 * @return void
 	 */
 	public function admin_pages() {
+		
 		
 		$type_of = (in_array($_GET['view'], array('form','page','list'))? $_GET['view']: NULL );
 		
@@ -420,9 +481,9 @@ class Profile_CCT {
 	function register_cpt_profile_cct() {
 	    $labels = array( 
 	        'name' => _x( 'Profiles', 'profile_cct' ),
-	        'singular_name' => _x( 'Profile', 'profile_cct' ),
-	        'add_new' => _x( 'Add New', 'profile_cct' ),
-	        'add_new_item' => _x( 'Add New Profile', 'profile_cct' ),
+	        'singular_name' => _x( 'My Profile', 'profile_cct' ),
+	        'add_new' => _x( 'My Profile', 'profile_cct' ),
+	        'add_new_item' => _x( 'My Profile', 'profile_cct' ),
 	        'edit_item' => _x( 'Edit Profile', 'profile_cct' ),
 	        'new_item' => _x( 'New Profile', 'profile_cct' ),
 	        'view_item' => _x( 'View Profile', 'profile_cct' ),
@@ -466,11 +527,16 @@ class Profile_CCT {
 	    );
 	
 	    register_post_type( 'profile_cct', $args );
-	    /*
+	    
 	    $role = get_role('administrator');
-
-		$role->add_cap('edit_profile_cct');
-	    */
+		
+		$role->add_cap( 'edit_profile_cct' );
+		$role->add_cap( 'edit_profiles_cct' );
+		$role->add_cap( 'edit_all_profile_cct' );
+		$role->add_cap( 'publish_profile_cct' );
+		$role->add_cap( 'read_private_profile_cct' );
+		$role->add_cap( 'delete_profile_cct' );
+	    
 	}
 	
 	/**
@@ -671,27 +737,37 @@ class Profile_CCT {
 	function save_post_data( $data, $postarr ) {
 		global $post;
 		
+		
 		// var_dump(isset( $_POST["profile_cct"] ),"1");
 		
 		if(!isset( $_POST["profile_cct"] ))
 			return $data;
+			
+		$profile_cct_data_previous =  get_post_meta($postarr['ID'], 'profile_cct', true);
 		
-		// var_dump("got this far","1");
-			// save the name of the person as the title 
-		if( is_array( $_POST["profile_cct"]["name"]) || !empty($_POST["profile_cct"]["name"])):
-			$data['post_title'] = $_POST["profile_cct"]["name"]['first']." ".$_POST["profile_cct"]["name"]['last'];
+		if(!is_array($profile_cct_data_previous))
+			$profile_cct_data_previous = array();
+			
+		$profile_cct_data = (is_array($_POST["profile_cct"]) ? 
+					array_merge( $profile_cct_data_previous, $_POST["profile_cct"] ): 
+					$profile_cct_data_previous );
+		
+		
+		// save the name of the person as the title 
+		if( is_array( $profile_cct_data["name"]) || !empty($profile_cct_data["name"])):
+			$data['post_title'] = $profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last'];
 		else:
 			$userdata = get_userdata($data['post_author']);
 			$data['post_title'] = $userdata->user_nicename;
 		endif;
 		
 		ob_start();
-			do_action('profile_cct_page','display', $data, 'page');
+			do_action('profile_cct_page','display', $profile_cct_data, 'page');
 			$content = ob_get_contents();
 		ob_end_clean();
 	
 		ob_start();
-			do_action('profile_cct_page','display', $data,'list');
+			do_action('profile_cct_page','display', $profile_cct_data, 'list');
 			$excerpt = ob_get_contents();
 		ob_end_clean();
 		
@@ -699,9 +775,7 @@ class Profile_CCT {
 		$data['post_content'] = $content;
 		
 		if(is_array($_POST["profile_cct"]))
-			update_post_meta($postarr['ID'], 'profile_cct', $_POST["profile_cct"]);
-			
-			
+			update_post_meta($postarr['ID'], 'profile_cct', $profile_cct_data);
 			
 			
 		return $data;
@@ -1021,9 +1095,9 @@ class Profile_CCT {
 		extract( $options );
 		
 		$hide = ( isset($show) && !$show ? ' style="display:none;"': '');
-		
 		if($this->action == 'display' && empty($value) && !in_array($type, array('end_shell','shell') ) && empty($hide) ):
 			echo "";
+			return true;
 		endif;
 		
 	 	
@@ -1053,10 +1127,10 @@ class Profile_CCT {
 	
 	 	switch($type) {
 	 		case 'text':
-			 	echo "<".$tag." ".$id.$class.$href.$hide.">";
-			 	
-			 	echo $separator.$display;
-				echo " </".$tag.">";
+			 	echo $separator."<".$tag." ".$id.$class.$href.$hide.">";
+		
+			 	echo $display;
+				echo "</".$tag.">";
 			break;
 			
 			case 'shell':
@@ -1224,7 +1298,7 @@ class Profile_CCT {
 					
 				endif;
 				
-				//var_dump("deleted - tabbed-".$count);
+		
 				
 				while($count < $tabs_count):
 					$count++;
@@ -1232,10 +1306,10 @@ class Profile_CCT {
 					
 					$minus = $count - 1;
 					
-					//var_dump("moved - tabbed-".$count. " to tabbed-".$minus);
+	
 					$this->update_option($type,'fields','tabbed-'.$minus, $fields);
 					
-					//var_dump("delete - tabbed-".$count);
+			
 					$fields = $this->delete_option($type,'fields','tabbed-'.$count);
 					
 				endwhile;
@@ -1300,7 +1374,7 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function is_data_array( $data ) {
-		// var_dump(is_array($data), is_array($data[0]), $data);
+		
 		if(!is_array($data) || !is_array($data[0]))
 			return false;
 		
