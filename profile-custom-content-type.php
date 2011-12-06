@@ -78,12 +78,10 @@ class Profile_CCT {
 	static public  $action 		= NULL;
 	static public  $settings_options = NULL;
 	static public  $form_fields = NULL;
-	static public  $page_fields = NULL;
-	static private $field = NULL;
-	static private $form_field_counter = 0;
 	static public  $taxonomies = NULL;
 	static public  $field_options = NULL;
 	static public  $option 		  = NULL;
+	static public  $field_options_type = NULL;
 	
 	/**
 	* construct
@@ -128,13 +126,11 @@ class Profile_CCT {
 
     		closedir($handle);
 		endif;
-		
+		// function to be executed on form admin page
 		add_action('profile_cct_form', array( $this,'profile_cct_form_field_shell'),10,1);
 		
+		// function to be executed on page and list admin pages
 		add_action('profile_cct_page', array( $this,'profile_cct_page_field_shell'),10,3);
-		
-		add_action('profile_cct_list', array( $this,'profile_cct_page_field_shell'),10,3);
-		
 		
 	}
 
@@ -170,10 +166,12 @@ class Profile_CCT {
 	 */
 	function add_style_edit() {
 		global $current_screen;
+		
 		if($current_screen->id == 'profile_cct'):
 			wp_enqueue_style( 'profile-cct-edit-post', WP_PLUGIN_URL . '/profile-cct/css/profile-page.css' );
-			wp_enqueue_script("thickbox");
 			wp_enqueue_style("thickbox");
+			wp_enqueue_script("thickbox");
+			
 			wp_enqueue_script( 'profile-cct-edit-post', WP_PLUGIN_URL . '/profile-cct/js/profile-page.js',array('jquery-ui-tabs' ) );
 		endif;
 		
@@ -201,13 +199,14 @@ class Profile_CCT {
 	 * @access public
 	 * @return void
 	 */
-	function admin_init(){
+	function admin_init() {
 		/* Register Settings */
 		register_setting( 'Profile_CCT_form_fields', 'Profile_CCT_form_fields',  array($this,'validate_form_fields'));
 		register_setting( 'Profile_CCT_page_fields', 'Profile_CCT_page_fields', array($this,'validate_page_fields'));
 		register_setting( 'Profile_CCT_list_page', 'Profile_CCT_list_page'  );
 		register_setting( 'Profile_CCT_settings', 'Profile_CCT_settings' );
 		register_setting( 'Profile_CCT_taxonomy', 'Profile_CCT_taxonomy' );
+		
 		
 	}
 	/**
@@ -216,7 +215,7 @@ class Profile_CCT {
 	 * @access public
 	 * @return void
 	 */
-	public function add_menu_page () {
+	public function add_menu_page() {
 	
 		$page = add_submenu_page( 
 			'edit.php?post_type=profile_cct',
@@ -237,7 +236,7 @@ class Profile_CCT {
 	 * @access public
 	 * @return void
 	 */
-	public function admin_styles(){
+	public function admin_styles() {
 	
 	// todo: this could be done with one css file 
 		wp_enqueue_style( 'profile-cct-admin', WP_PLUGIN_URL . '/profile-cct/css/admin.css' );
@@ -260,7 +259,7 @@ class Profile_CCT {
 	 * @access public
 	 * @return void
 	 */
-	public function admin_scripts(){
+	public function admin_scripts() {
 	
 		switch( $_GET['view'] ) {
 			case "form":
@@ -308,19 +307,51 @@ class Profile_CCT {
 		
 		$type_of = (in_array($_GET['view'], array('form','page','list'))? $_GET['view']: NULL );
 		
+		do_action('profile_cct_admin_pages', $type_of);
 		if($type_of):
 			if(!is_array($this->field_options[$type_of]))
 				$this->field_options[$type_of] = array();
 					
-			foreach ($this->get_contexts($type_of) as $context)
-				array_push($this->field_options[$type_of], $this->get_option($type_of, 'fields',$context));
+			foreach ($this->get_contexts($type_of) as $context):
+				
+				$fields = $this->get_option($type_of, 'fields',$context);
+				if( is_array($fields) ):
+					foreach( $fields as $field ):
+						$this->field_options[$type_of][] = $field;
+						$this->field_options_type[$type_of][] = $field['type'];
+					endforeach;
+				endif;
+				unset($fields, $field);
+			endforeach;
 			
-			unset($context);
+			// lets not forget the bench 
+			$fields = $this->get_option($type_of, 'fields','bench');
+			if( is_array($fields) ):
+				foreach( $fields as $field ):
+					$this->field_options[$type_of][] = $field;
+					$this->field_options_type[$type_of][] = $field['type'];
+				endforeach;
+			endif;
 			
+			unset($fields, $field);
 			
+			// ability to add new field such as dynamic once though this
+			// each type has to be unique
+			$dynamic_fields = apply_filters("profile_cct_dynamic_fields", array(),$type_of );
 			
-			var_dump($this->field_options[$type_of]);
-			var_dump($this->option[$type_of][])
+			if(is_array($dynamic_fields)):
+				foreach($dynamic_fields as $field):
+					// if we can't find the field lets add it to the other things 
+					if( !in_array($field['type'], $this->field_options_type[$type_of]) ):
+						
+						$this->field_options[$type_of][] = $field;
+						$this->field_options_type[$type_of][] = $field['type'];
+						$this->option[$type_of]['fields']['bench'][] = $field;
+						
+					endif;
+				endforeach;
+			endif;
+		
 		endif;
 		
 		
@@ -367,8 +398,13 @@ class Profile_CCT {
 		
 		}	
 	}
-	
-	function profiles_cct_init(){
+	/**
+	 * profiles_cct_init function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	function profiles_cct_init() {
 		$this->taxonomies = get_option( 'Profile_CCT_taxonomy');
 		
 		$this->register_cpt_profile_cct();
@@ -437,17 +473,26 @@ class Profile_CCT {
 	    */
 	}
 	
-	
-	function load_scripts_cpt_profile_cct()
-	{
+	/**
+	 * load_scripts_cpt_profile_cct function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	function load_scripts_cpt_profile_cct() {
 		if(!is_admin()):
 		wp_enqueue_script('jquery-ui-tabs');
 		wp_enqueue_style( 'profile-cct', WP_PLUGIN_URL . '/profile-cct/css/profile-cct.css' );
 		endif;
 		//add_filter('template_include', array( $this, 'help' ));
 	}
-	
-	function check_freshness(){
+	/**
+	 * check_freshness function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	function check_freshness() {
 		$tax = array();
 		
 		if( is_array($this->taxonomies) ):
@@ -471,7 +516,7 @@ class Profile_CCT {
 					ob_end_clean();
 				
 					ob_start();
-						do_action('profile_cct_list','display', $data,'list');
+						do_action('profile_cct_page','display', $data,'list');
 						$excerpt = ob_get_contents();
 					ob_end_clean();
 				    
@@ -505,7 +550,7 @@ class Profile_CCT {
 					ob_end_clean();
 				
 					ob_start();
-						do_action('profile_cct_list','display', $data,'list');
+						do_action('profile_cct_page','display', $data,'list');
 						$excerpt = ob_get_contents();
 					ob_end_clean();
 					
@@ -528,7 +573,7 @@ class Profile_CCT {
 		endif;
 	}
 	
-	function update_profile($post){
+	function update_profile( $post ) {
 		
 		$mypost['ID'] = $post->ID;
 		
@@ -544,15 +589,13 @@ class Profile_CCT {
 	 * @access public
 	 * @return void
 	 */
-	function edit_post()
-	{
+	function edit_post() {
 		global $post;
 			
 		$this->form_fields = get_option('Profile_CCT_form_fields');
 		
 		$user_data = get_post_meta($post->ID, 'profile_cct', true );
-		// $user_data = unserialize( $post->post_content_filtered );
-		// var_dump($user_data['name']);
+		
 		$contexts = $this->get_contexts();
  		
  		if( is_array( $contexts ) ):
@@ -563,8 +606,7 @@ class Profile_CCT {
 				
 				foreach($fields as $field):
 					// add_meta_box( $id, $title, $callback, $page, $context, $priority, $callback_args );
-					
-					// var_dump($user_data[ $field['type']]);
+					// todo: dynamically add meta boxes 
 					add_meta_box( 
 								$field['type']."-".$i.'-'.rand(0,999), 
 								$field['label'], 
@@ -586,7 +628,7 @@ class Profile_CCT {
 	 * @access public
 	 * @return void
 	 */
-	function edit_form_advanced(){
+	function edit_form_advanced() {
 		global $post;
 		
 		if($post->post_type == "profile_cct"):
@@ -626,8 +668,7 @@ class Profile_CCT {
 	 * @param mixed $postarr
 	 * @return void
 	 */
-	function save_post_data($data,$postarr)
-	{
+	function save_post_data( $data, $postarr ) {
 		global $post;
 		
 		// var_dump(isset( $_POST["profile_cct"] ),"1");
@@ -650,7 +691,7 @@ class Profile_CCT {
 		ob_end_clean();
 	
 		ob_start();
-			do_action('profile_cct_list','display', $data,'list');
+			do_action('profile_cct_page','display', $data,'list');
 			$excerpt = ob_get_contents();
 		ob_end_clean();
 		
@@ -676,7 +717,7 @@ class Profile_CCT {
 	 * @param mixed $action
 	 * @return void
 	 */
-	function profile_cct_form_field_shell($action){
+	function profile_cct_form_field_shell( $action ) {
 	 	
 	 	// the default contexts normal, side, and tabs
 	 	$contexts = $this->default_shells();
@@ -695,7 +736,11 @@ class Profile_CCT {
 		 				
 			 		if( is_array( $fields  ) ):
 				 		foreach($fields  as $field):
-				 			call_user_func('profile_cct_'.$field['type'].'_field_shell',$action,$field);
+				 			if( function_exists('profile_cct_'.$field['type'].'_field_shell') ):
+				 				call_user_func('profile_cct_'.$field['type'].'_field_shell',$action,$field);
+				 			else:
+				 				do_action( 'profile_cct_field_shell_'.$field['type'], $action, $field, $user_data[ $field['type'] ] );
+				 			endif;
 				 		endforeach;
 			 		endif;
 		 		?></ul>
@@ -705,8 +750,16 @@ class Profile_CCT {
 		 	endif;
 	 	endforeach;
 	 }
-	 
-	 function profile_cct_page_field_shell($action,$user_data,$where){
+	 /**
+	  * profile_cct_page_field_shell function.
+	  * 
+	  * @access public
+	  * @param mixed $action
+	  * @param mixed $user_data
+	  * @param mixed $where
+	  * @return void
+	  */
+	 function profile_cct_page_field_shell( $action, $user_data, $where ) {
 		$this->action = $action;
 		$contexts = $this->default_shells($where); ?><div id="page-shell"><?php 
 	 	foreach($contexts as $context):
@@ -725,7 +778,11 @@ class Profile_CCT {
 		 				
 			 		if( is_array( $fields  ) ):
 				 		foreach($fields  as $field):
-				 			call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field,$user_data[ $field['type']]);
+				 			if( function_exists('profile_cct_'.$field['type'].'_display_shell') ):
+				 				call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field,$user_data[ $field['type']]);
+				 			else:
+				 				do_action( 'profile_cct_display_shell_'.$field['type'], $action, $field, $user_data[ $field['type'] ] );
+				 			endif;
 				 		endforeach;
 			 		endif;
 			 		
@@ -738,47 +795,7 @@ class Profile_CCT {
 	 	
 	 	?></div> <!-- end of page shell --><?php
 	}
-	
-	
-	 function profile_cct_list_field_shell($action,$user_data,$where){
-	 	
-		$this->action = $action;
-		if($acttion == "edit")
-			$shell_id = 'id="'.$context.'-shell"';
-		
-		
-		$contexts = $this->default_shells($where); ?><div id="page-shell"><?php 
-	 	foreach($contexts as $context):
-	 		
-		 	if(function_exists('profile_cct_list_shell_'.$context)):
-		 		call_user_func('profile_cct_list_shell_'.$context,$action,$user_data);
-		 	else: 
-		 		
-		 		?><div <?php echo $shell_id; ?>class="shell"><?php 
-		 			if($action == 'edit'): ?>
-		 			<span class="description-shell"><?php echo $context; ?></span>
-		 			<ul class="form-builder sort" id="<?php echo $context; ?>">
-		 			<?php endif; 
-		 			 
-		 			$fields = $this->get_option('list','fields',$context);
-		 				
-			 		if( is_array( $fields  ) ):
-			 			
-				 		foreach($fields  as $field):
-				 			call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field,$user_data[ $field['type']]);
-				 		endforeach;
-			 		endif;			 		
-			 		
-			 		if($action == 'edit'): ?>
-		 			</ul> 
-		 			<?php endif; ?></div><?php 
-		 		
-		 	endif;
-	 	endforeach;
-	 	
-	 	?></div> <!-- end of page shell --><?php
-	}
-	
+
 	
 	 /**
 	  * start_field function.
@@ -788,7 +805,7 @@ class Profile_CCT {
 	  * @param mixed $options
 	  * @return void
 	  */
-	 function start_field($action, $options ) {
+	 function start_field( $action, $options ) {
 	 	extract( $options );
 	 	// be default show the remove button
 	 	if( !isset($show_remove))
@@ -867,8 +884,7 @@ class Profile_CCT {
 	  * @param mixed $options
 	  * @return void
 	  */
-	 function end_field( $action, $options )
-	 {
+	 function end_field( $action, $options ) {
 	 	$shell = 'div';
 	 	if($action == 'edit')
 	 		$shell = 'li';
@@ -897,8 +913,7 @@ class Profile_CCT {
 	  * @param mixed $options
 	  * @return void
 	  */
-	 function input_field( $options )
-	 {
+	 function input_field( $options ) {
 	 	
 	 	extract( $options );
 	 	
@@ -995,15 +1010,18 @@ class Profile_CCT {
 		
 	 }
 	 
-	function display_text($options)
-	{
+	/**
+	 * w function.
+	 * 
+	 * @access public
+	 * @param mixed $options
+	 * @return void
+	 */
+	function display_text($options) {
 		extract( $options );
-		//var_dump($show,'passed in');
+		
 		$hide = ( isset($show) && !$show ? ' style="display:none;"': '');
 		
-		
-		// var_dump($this->action == 'display' , empty($value) , !in_array($type, array('end_shell','shell') ) , empty($hide), "-end of test.$value");
-		// var_dump($show, "converted to", $this->action == 'display' && $show && empty($value) && !in_array($type, array('end_shell','shell')) );
 		if($this->action == 'display' && empty($value) && !in_array($type, array('end_shell','shell') ) && empty($hide) ):
 			echo "";
 		endif;
@@ -1081,12 +1099,9 @@ class Profile_CCT {
 	 * @access public
 	 * @return void
 	 */
-	function update_fields()
- 	{	
- 		
+	function update_fields() {	
  		$context = $_POST['context'];
-		
-		
+ 		
 		if(in_array($_POST['type'], array('form','page','list')))
 			$type = $_POST['type'];
 		else
@@ -1120,6 +1135,7 @@ class Profile_CCT {
 	 						$options[$_POST['field_index']]['link_to'] 		= $_POST['link_to'];
 	 						$options[$_POST['field_index']]['clear'] 		= $_POST['clear'];
 	 						$options[$_POST['field_index']]['text'] 		= $_POST['text'];
+	 						$options[$_POST['field_index']]['seperator'] 		= $_POST['seperator'];
  						break;
  					}
 					echo "updated";
@@ -1152,7 +1168,7 @@ class Profile_CCT {
 	 * @access public
 	 * @return void
 	 */
-	public function field_field_tab_index(){
+	public function field_field_tab_index() {
 		$this->tab_index++;
 		echo $this->tab_index;
 	}
@@ -1245,8 +1261,7 @@ class Profile_CCT {
 	 * @param mixed $input
 	 * @return void
 	 */
-	function validate_form_fields( $input )
-	{
+	function validate_form_fields( $input ) {
 		// last check before saving to the db
 		return $input;
 	}
@@ -1258,8 +1273,7 @@ class Profile_CCT {
 	 * @param mixed $input
 	 * @return void
 	 */
-	function validate_page_fields( $input )
-	{
+	function validate_page_fields( $input ) {
 		// last check before saving to the db
 		return $input;
 	}
@@ -1271,26 +1285,35 @@ class Profile_CCT {
 	 * @param mixed $value
 	 * @return void
 	 */ 
-	function stripslashes_deep( $value )
-	{
+	function stripslashes_deep( $value ) {
 	    $value = is_array($value) ?
 	                array_map('stripslashes_deep', $value) :
 	                stripslashes($value);
 	    return $value;
 	}
 	
-	
-	function is_data_array( $data )
-	{
+	/**
+	 * is_data_array function.
+	 * 
+	 * @access public
+	 * @param mixed $data
+	 * @return void
+	 */
+	function is_data_array( $data ) {
 		// var_dump(is_array($data), is_array($data[0]), $data);
 		if(!is_array($data) || !is_array($data[0]))
 			return false;
 		
 		return true;
 	}
-	
-	function serialize( $data )
-	{
+	/**
+	 * serialize function.
+	 * 
+	 * @access public
+	 * @param mixed $data
+	 * @return void
+	 */
+	function serialize( $data ) {
 		
 		foreach($data as $key => $value):
 			if( in_array($key,array("show_fields","show_multiple")))
@@ -1307,9 +1330,16 @@ class Profile_CCT {
 		
 		return implode("&",$str);
 	}
-	function default_shells($type = 'form')
-	{
-		switch($type){
+	
+	/**
+	 * default_shells function.
+	 * 
+	 * @access public
+	 * @param string $type. (default: 'form')
+	 * @return void
+	 */
+	function default_shells( $type = 'form' ) {
+		switch( $type ){
 			case 'form':
 				return array( 'normal','side','tabs');
 			break;
@@ -1324,13 +1354,19 @@ class Profile_CCT {
 		
 		}
 	}
-	
-	function get_contexts($type = 'form'){
+	/**
+	 * get_contexts function.
+	 * 
+	 * @access public
+	 * @param string $type. (default: 'form')
+	 * @return void
+	 */
+	function get_contexts( $type = 'form' ) {
 		
-		$contexts = $this->default_shells();
+		$contexts = $this->default_shells( $type );
 		$id = array_search('tabs',$contexts);
 		
-		if(is_numeric($id)):
+		if( is_numeric($id) ):
 	 		$tabs = $this->get_option($type,'tabs');
 	 	
 	 		if(is_array($tabs)):
@@ -1341,14 +1377,21 @@ class Profile_CCT {
 		 		endforeach;
 	 		endif;
 	 		
-	 		unset($contexts[$id]);
+	 		unset( $contexts[$id] );
 	 		$contexts = array_values($contexts);
 	 	endif;
 	 	return $contexts;
 	}
-	
+	/**
+	 * get_option function.
+	 * 
+	 * @access public
+	 * @param string $type. (default: 'form')
+	 * @param string $fields_or_tabs. (default: 'fields')
+	 * @param string $context. (default: 'normal')
+	 * @return void
+	 */
 	function get_option($type='form',$fields_or_tabs='fields',$context='normal'){
-		
 		// return the options from the array stored 
 		if(is_array($this->option[$type][$fields_or_tabs][$context])):
 			return $this->option[$type][$fields_or_tabs][$context];
@@ -1370,8 +1413,17 @@ class Profile_CCT {
 		return $option;
 		
 	}
-	
-	function update_option($type='form',$fields_or_tabs='fields',$context='normal',$update){
+	/**
+	 * update_option function.
+	 * 
+	 * @access public
+	 * @param string $type. (default: 'form')
+	 * @param string $fields_or_tabs. (default: 'fields')
+	 * @param string $context. (default: 'normal')
+	 * @param mixed $update
+	 * @return void
+	 */
+	function update_option($type='form',$fields_or_tabs='fields',$context='normal',$update) {
 		$settings = get_option('Profile_CCT_settings');
 		if(!is_array($settings))
 			$settings = array();
@@ -1382,18 +1434,32 @@ class Profile_CCT {
 		// update the settings
 		update_option( 'Profile_CCT_settings', $settings );
 		
-		return update_option( 'Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context, $update);
+		return update_option( 'Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context, $update );
 	}
-	function delete_option($type='form',$fields_or_tabs='fields',$context='normal'){
-			unset($this->option[$type][$fields_or_tabs][$context]); 
-		return delete_option('Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context);
+	/**
+	 * delete_option function.
+	 * 
+	 * @access public
+	 * @param string $type. (default: 'form')
+	 * @param string $fields_or_tabs. (default: 'fields')
+	 * @param string $context. (default: 'normal')
+	 * @return void
+	 */
+	function delete_option($type='form',$fields_or_tabs='fields',$context='normal') {
+			unset( $this->option[$type][$fields_or_tabs][$context] ); 
+		return delete_option( 'Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context );
 	}
-	
-	function default_options($type = 'form')
-	 {
+	/**
+	 * default_options function.
+	 * 
+	 * @access public
+	 * @param string $type. (default: 'form')
+	 * @return void
+	 */
+	function default_options($type = 'form') {
 	 		switch($type) {
 	 			case 'form':
-	 				return apply_filters('profile_cct_default_options', array(
+	 				return apply_filters( 'profile_cct_default_options', array(
 		 				'fields'=> array(
 				 				'tabbed-1' => array(
 								 		array( "type"=> "address", 		"label"=> "address",),
@@ -1422,11 +1488,11 @@ class Profile_CCT {
 								 		
 							 	)),
 					   'tabs' => array("Basic Info", "Bio")
-				 	));
+				 	), $type );
 	 			break;
 	 			
 	 			case 'page':
-	 				return apply_filters('profile_cct_default_options', array(
+	 				return apply_filters( 'profile_cct_default_options', array(
 		 				'fields'=> array(
 				 				'tabbed-1' => array(
 								 		array( "type"=> "address", 		"label"=> "address",),
@@ -1457,11 +1523,11 @@ class Profile_CCT {
 
 							 	)),
 					   'tabs' => array("Basic Info", "Bio")
-				 	));
+				 	) , $type );
 	 			break;
 	 			
 	 			case 'list':
-	 				return apply_filters('profile_cct_default_options', array(
+	 				return apply_filters( 'profile_cct_default_options', array(
 		 				'fields'=> array(
 							 	 'normal'=> array(
 							 	 		array( "type"=>"picture", "label"=>"picture" ),
@@ -1483,7 +1549,7 @@ class Profile_CCT {
 								 		array( "type"=> "permalink", 	"label"=> "permalink")
 							 			)
 							 	)
-				 		));				 	
+				 		) , $type );				 	
 				 break;
 	 		
 	 		

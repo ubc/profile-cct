@@ -15,7 +15,11 @@
 		$fields = $this->get_option('page','fields','bench');		 				
  		if( is_array( $fields  ) ):
 	 		foreach($fields  as $field):
-	 			call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field);
+	 			if( function_exists('profile_cct_'.$field['type'].'_display_shell') ):
+	 				call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field,$user_data[ $field['type']]);
+	 			else:
+	 				do_action( 'profile_cct_display_shell_'.$field['type'], $action, $field, $user_data[ $field['type'] ] );
+	 			endif;
 	 		endforeach;
  		endif;
 		?>

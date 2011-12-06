@@ -48,33 +48,29 @@ function profile_cct_picture_field_shell( $action, $options=null ) {
  * @return void
  */
 function profile_cct_picture_field( $data, $options ){
-	
+	global $post;
 	extract( $options );
 	
 	$field = Profile_CCT::get_object();
-	
 	$show = (is_array($show) ? $show : array());
 	
-	global $post;
+	
 	if(is_object($post)):
-	$thumbnail_id = get_post_meta( $post->ID, '_thumbnail_id', true );
-	
-	
-	profile_cct_picture_form($thumbnail_id);
+		$thumbnail_id = get_post_meta( $post->ID, '_thumbnail_id', true );
+		profile_cct_picture_form($thumbnail_id);
 	else:
-	profile_cct_picture_display(  $data, $options  );
+		profile_cct_picture_display(  $data, $options  );
 	endif;
-	
 }
 
 
 function profile_cct_picture_display_shell( $action, $options=null, $data=null ) {
 	
 	if( is_object($action) ):
-		$post = $action;
-		$action = "display";
-		$data = $options['args']['data'];
-		$options = $options['args']['options'];
+		$post 		= $action;
+		$action 	= "display";
+		$data 		= $options['args']['data'];
+		$options 	= $options['args']['options'];
 	endif;
 	
 	$field = Profile_CCT::get_object(); // prints "Creating new instance."
@@ -82,14 +78,14 @@ function profile_cct_picture_display_shell( $action, $options=null, $data=null )
 		$options = $field->form_fields['picture']; // stuff that is comming from the db
 	
 	$default_options = array(
-		'type'=>'picture',
-		'label'=>'picture',
-		'hide_label'=>true,
-		'before'=>'',
-		'width' => 'full',
-		'link_to'=>true,
-		'show_link_to' =>true,
-		'after'=>'',
+		'type'		=> 'picture',
+		'label'		=> 'picture',
+		'hide_label'=>  true,
+		'before'	=> '',
+		'width' 	=> 'full',
+		'link_to'	=> true,
+		'show_link_to' => true,
+		'after'		=> '',
 		);
 		
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
@@ -111,22 +107,19 @@ function profile_cct_picture_display(  $data, $options  ){
 	global $post;
 	extract( $options );
 	
-	$field = Profile_CCT::get_object();
+	$field 	= Profile_CCT::get_object();
+	$show 	= (is_array($show) ? $show : array());
+	$href 	= ( isset($post) ? get_permalink() : "#" );
 	
-	$show = (is_array($show) ? $show : array());
-	
-	$href = ( isset($post) ? get_permalink() : "#" );
-	
-	if(isset($post)){
+	if(isset($post)):
 		$field->display_text( array( 'field_type'=>$type, 'class'=>'', 'type'=>'shell', 'tag'=>'a','link_to'=>$link_to, 'href'=>$href ) );
 		echo get_the_post_thumbnail($post->ID, 'thumbnail');
 		$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'a','link_to'=>$link_to) );
-
-	}else{
+	else:
 		global $current_user;
       	get_currentuserinfo();
 		echo get_avatar($current_user->user_email, 150);
-	}
+	endif;
 		
 		
 }

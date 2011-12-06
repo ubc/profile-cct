@@ -14,8 +14,13 @@
 		$action = 'edit';
 		$fields = $this->get_option('list','fields','bench');		 				
  		if( is_array( $fields  ) ):
-	 		foreach($fields  as $field):
-	 			call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field);
+	 		foreach($fields  as $field):	 			
+	 			if( function_exists('profile_cct_'.$field['type'].'_display_shell') ):
+	 				call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field,$user_data[ $field['type']]);
+	 			else:
+	 				do_action( 'profile_cct_display_shell_'.$field['type'], $action, $field, $user_data[ $field['type'] ] );
+	 			endif;
+	 			
 	 		endforeach;
  		endif;
 		?>
@@ -30,7 +35,7 @@
 	<h3>List Content</h3>
 	<?php
 		$data = array();
-		do_action('profile_cct_list',$action,$data,"list");
+		do_action('profile_cct_page',$action,$data,"list");
 	?>
 	</div>
 </div><!-- /col-left -->
