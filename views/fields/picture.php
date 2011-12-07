@@ -194,12 +194,6 @@ function profile_cct_picture_init(){
 }
 
 
-function profile_cct_picture_add_photo() {
-
-echo "hello";
-}
-
-
 /**
  * profile_cct_picture_add_photo function.
  * The content inside the iframe 
@@ -207,7 +201,7 @@ echo "hello";
  * @access public
  * @return void
  */
-function profile_cct_picture_add_photo_real() {
+function profile_cct_picture_add_photo() {
 	global $current_user;
 	
 	

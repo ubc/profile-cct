@@ -227,9 +227,6 @@ class Profile_CCT {
 		register_setting( 'Profile_CCT_settings', 'Profile_CCT_settings' );
 		register_setting( 'Profile_CCT_taxonomy', 'Profile_CCT_taxonomy' );
 		
-		
-		
-		
 		$role = get_role( 'author' ); // gets the author role
 		
 		// $this->e($role);
@@ -275,11 +272,6 @@ class Profile_CCT {
 			__( 'Settings', $this -> get_textdomain() ),
 			'manage_options', __FILE__,
 			array( $this, 'admin_pages' ) );
-	
-		
-			
-		
-			
 			
 		add_action( 'admin_print_styles-' . $page, array( $this, 'admin_styles' ) );
 		add_action( 'admin_print_scripts-' . $page, array( $this, 'admin_scripts' ) );
