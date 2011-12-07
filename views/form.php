@@ -33,7 +33,7 @@
 </div><!-- /col-right -->
 
 <div id="col-middle">
-	<div class="col-wrap">
+	<div id="preview-form" class="col-wrap">
 	<h3>Preview</h3>
 	
 	<?php

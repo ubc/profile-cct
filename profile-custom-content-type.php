@@ -673,6 +673,7 @@ class Profile_CCT {
 				foreach($fields as $field):
 					// add_meta_box( $id, $title, $callback, $page, $context, $priority, $callback_args );
 					// todo: dynamically add meta boxes 
+					if(function_exists('profile_cct_'.$field['type'].'_field_shell')):
 					add_meta_box( 
 								$field['type']."-".$i.'-'.rand(0,999), 
 								$field['label'], 
@@ -683,6 +684,9 @@ class Profile_CCT {
 									'data'=>$user_data[ $field['type']]
 									)
 								);
+					else:
+						do_action("profile_cct_".$field['type']."_add_meta_box", $field, $context, $user_data[ $field['type']], $i);
+					endif;
 				endforeach;
 			endforeach;
 		endif;
@@ -884,16 +888,18 @@ class Profile_CCT {
 	 	// be default show the remove button
 	 	if( !isset($show_remove))
 	 		$show_remove = true;
+	 	
+	 	if( !isset($class) )
+	 		$class= "";
 	 		
 	 	$shell = 'div';
 	 	if($action == 'edit')
-	 		$shell = 'li';
-	 	
+	 		$shell = 'li';	
 	
 	 	if($action == 'edit'): 
 	 	
 	 		?>
-	 		<<?php echo $shell; ?> class="<?php echo esc_attr( $type); ?> field-item <?php echo $width; ?>" for="cct-<?php echo esc_attr( $type); ?>" data-options="<?php echo esc_attr( $this->serialize($options)); ?>" >
+	 		<<?php echo $shell; ?> class="<?php echo esc_attr( $type ); ?> field-item <?php echo $class." ".$width; ?>" for="cct-<?php echo esc_attr( $type); ?>" data-options="<?php echo esc_attr( $this->serialize($options)); ?>" >
 
 			<a href="#edit-field" class="edit">Edit</a>
 			<div class="edit-shell" style="display:none;">
@@ -939,7 +945,7 @@ class Profile_CCT {
 	 	endif;
 	 	if($action == 'display'):
 	 		echo $before;
-	 		 ?><<?php echo $shell; ?> class="<?php echo esc_attr( $type); ?> field-item <?php echo $width; ?>">
+	 		 ?><<?php echo $shell; ?> class="<?php echo esc_attr( $type ); ?> field-item <?php echo $class." ".$width; ?>">
 	 	<?php 
 	 	endif;
 	 	?>
@@ -1561,6 +1567,7 @@ class Profile_CCT {
 										array( "type"=>"picture", "label"=>"picture" )			 	
 							 			),
 							 	'bench' =>array(
+							 			
 							 			array( "type"=> "department",		"label"=> "department"),
 							 			array( "type"=> "education", 		"label"=> "education" ),
 							 			array( "type"=> "specialization",	"label"=> "specialization" ),
@@ -1585,7 +1592,7 @@ class Profile_CCT {
 							 		),
 						 		 'tabbed-2' =>array(
 							 			array( "type"=> "position" ,	"label"=> "position" ), 
-								 		array( "type"=> "bio",			"label"=> "bio" )
+								 		array( "type"=> "bio",			"label"=> "biography" )
 								 		
 							 		),
 							 	 'header'=> array( 
@@ -1599,9 +1606,6 @@ class Profile_CCT {
 							 			array( "type"=> "department",		"label"=> "department"),
 							 			array( "type"=> "education", 		"label"=> "education" ),
 							 			array( "type"=> "specialization",	"label"=> "specialization" ),
-								 		array( "type"=> "teaching",			"label"=> "teaching" ), 
-								 		array( "type"=> "publications",		"label"=> "publications" ), 
-								 		array( "type"=> "research",			"label"=> "research" ),
 								 		array( "type"=> "permalink", 		"label"=> "permalink")
 
 							 	)),
@@ -1624,13 +1628,10 @@ class Profile_CCT {
 								 		array( "type"=> "social",			"label"=> "social"),
 							 			array( "type"=> "position" ,		"label"=> "position" ),
 							 			array( "type"=> "department",		"label"=> "department" ),
-								 		array( "type"=> "bio",				"label"=> "bio" ),
 							 			array( "type"=> "education", 		"label"=> "education" ),
 							 			array( "type"=> "specialization",	"label"=> "specialization" ),
-								 		array( "type"=> "teaching",			"label"=> "teaching" ), 
-								 		array( "type"=> "publications",		"label"=> "publications" ), 
-								 		array( "type"=> "research",			"label"=> "research" ),
 								 		array( "type"=> "permalink", 		"label"=> "permalink")
+								 	
 							 			)
 							 	)
 				 		) , $type );				 	

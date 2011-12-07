@@ -137,6 +137,7 @@
 	float: left;
 }
 /* ----- Choices Field Structures ----- */
+#preview-form .form-builder li div span,
 .form-builder li div span {
 	margin:0 5px 0 0;
 	display:block;

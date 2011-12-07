@@ -16,7 +16,8 @@ function profile_cct_address_field_shell( $action, $options ) {
 		'label'=>'address',
 		'description'=>'',
 		'show'=>array('building-name','room-number','street-1','street-2','city','postal','province','country'),
-		'show_fields'=>array('building-name','room-number','street-1','street-2','city','postal','province','country')
+		'show_fields'=>array('building-name','room-number','street-1','street-2','city','postal','province','country'),
+		'class'=>'address'
 		);
 	
 	$options = (is_array($options) ? array_merge($default_options,$options): $default_options );

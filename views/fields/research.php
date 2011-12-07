@@ -1,71 +1,39 @@
 <?php 
 
-function profile_cct_research_field_shell( $action, $options ) {
-	
-	if( is_object($action) ):
-		$post = $action;
-		$action = "display";
-		$data = $options['args']['data'];
-		$options = $options['args']['options'];
-	endif;
 
-	$field = Profile_CCT::get_object(); // prints "Creating new instance."
+add_action('profile_cct_admin_pages', 'profile_cct_add_research_fields_filter', 10, 1);
+
+add_action('profile_cct_form', 'profile_cct_add_research_fields_filter', 5);
+add_action('profile_cct_page', 'profile_cct_add_research_fields_filter', 5);
+add_action('profile_cct_research_add_meta_box','profile_cct_research_add_meta_box',10, 4 );
+
+function profile_cct_add_research_fields_filter($type_of= null){
 	
-	$default_options = array(
-		'type' => 'research',
-		'label'=>'research',
-		'description'=>'',
-		);
-	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
-	
-	$field->start_field($action,$options);
-	
-	profile_cct_research_field($data,$options);
-	
-	$field->end_field( $action, $options );
+	// for now only on pages and lists
+	// if(in_array($type_of, array('page','list')) )
+	add_filter( 'profile_cct_dynamic_fields', 'profile_cct_add_research_fields' );
+		
+	add_action('profile_cct_display_shell_research', 'profile_cct_textarea_display_shell',10, 3);
+	add_action('profile_cct_field_shell_research', 'profile_cct_textarea_field_shell',10, 3);
 	
 }
-function profile_cct_research_field( $data, $options ){
 
-	extract( $options );
-	$field = Profile_CCT::get_object();
-
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'research','label'=>'', 'size'=>25, 'row'=>2, 'cols'=>20, 'value'=>$data['research'], 'type'=>'textarea') );
-
+function profile_cct_add_research_fields( $fields ){
+	$fields[] = array( "type"=> 'research', "label"=> "Research");
+	return $fields;
 }
 
-
-function profile_cct_research_display_shell( $action, $options, $data=null ) {
-	
-	if( is_object($action) ):
-		$post = $action;
-		$action = "display";
-		$data = $options['args']['data'];
-		$options = $options['args']['options'];
-	endif;
-
-	$field = Profile_CCT::get_object(); // prints "Creating new instance."
-	
-	$default_options = array(
-		'type' => 'research',
-		'label'=>'research',
-		'hide_label'=>true,
-		'before'=>'',
-		'after'=>''
-		);
-	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
-	
-	$field->start_field($action,$options);
-	
-	profile_cct_research_display($data,$options);
-	
-	$field->end_field( $action, $options );
-	
+function profile_cct_research_add_meta_box($field, $context, $data, $i){
+	add_meta_box( 
+		$field['type']."-".$i.'-'.rand(0,999), 
+		$field['label'], 
+		'profile_cct_textarea_field_shell', 
+		'profile_cct', $context, 'low', 
+		array(
+			'options'=>$field,
+			'data'=>$data
+			)
+	);
 }
-function profile_cct_research_display( $data, $options ){
 
-	extract( $options );
-	$field = Profile_CCT::get_object();
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'textarea research','default_text'=>'lorem ipsum', 'value'=>$data['research'], 'tag'=>'div', 'type'=>'text') );
-}
 
