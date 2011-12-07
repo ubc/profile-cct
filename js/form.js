@@ -23,8 +23,7 @@ var Profile_CCT_FORM ={
 		formB.find(".field-show").live("click", Profile_CCT_FORM.updateShow);
 		formB.find(".field-multiple").live("click", Profile_CCT_FORM.multipleShow);
 		formB.find(".save-field-settings").live("click", Profile_CCT_FORM.updateField);
-		formB.find(".field-before").live('keypress', Profile_CCT_FORM.updateTextarea);
-		formB.find(".field-after").live('keypress', Profile_CCT_FORM.updateTextarea);
+		formB.find(".field-textarea").live('keypress', Profile_CCT_FORM.updateTextarea);
 		formB.find(".field-text").live('keypress', Profile_CCT_FORM.updateText);
 		// name field
 		jQuery(".edit","#form-name").click(Profile_CCT_FORM.editField);

@@ -47,22 +47,23 @@ function profile_cct_textarea_display_shell( $action, $options, $data=null  ) {
 	
 	$field = Profile_CCT::get_object(); // prints "Creating new instance."
 	
-	
 	$default_options = array(
 		'type' => 'textarea',
 		'label'=> 'textarea',
 		'hide_label'=>true,
 		'before'=>'',
+		'empty'=>'',
 		'after'=>''
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	
-	
-	$field->start_field($action,$options);
-	
-	profile_cct_textarea_display($data,$options);
-	
-	$field->end_field( $action, $options );
+	if( !empty($data['textarea']) ||  $action == "edit" ):
+		$field->start_field($action,$options);
+		
+		profile_cct_textarea_display($data,$options);
+		
+		$field->end_field( $action, $options );
+	endif;
 	
 }
 function profile_cct_textarea_display( $data, $options ){

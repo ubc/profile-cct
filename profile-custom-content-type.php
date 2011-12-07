@@ -227,9 +227,6 @@ class Profile_CCT {
 		register_setting( 'Profile_CCT_settings', 'Profile_CCT_settings' );
 		register_setting( 'Profile_CCT_taxonomy', 'Profile_CCT_taxonomy' );
 		
-		
-		
-		
 		$role = get_role( 'author' ); // gets the author role
 		
 		// $this->e($role);
@@ -275,11 +272,6 @@ class Profile_CCT {
 			__( 'Settings', $this -> get_textdomain() ),
 			'manage_options', __FILE__,
 			array( $this, 'admin_pages' ) );
-	
-		
-			
-		
-			
 			
 		add_action( 'admin_print_styles-' . $page, array( $this, 'admin_styles' ) );
 		add_action( 'admin_print_scripts-' . $page, array( $this, 'admin_scripts' ) );
@@ -433,6 +425,8 @@ class Profile_CCT {
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list">List</a>
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='taxonomy' ) { echo "nav-tab-active"; } ?>" 
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=taxonomy">Taxonomy</a>
+		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='fields' ) { echo "nav-tab-active"; } ?>" 
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=fields">Fields</a>	
 		<a class="nav-tab <?php if( isset($_GET['view']) && $_GET['view'] =='helper' ) { echo "nav-tab-active"; } ?>" 
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=helper">HELPER</a>
 		</h3>
@@ -452,6 +446,9 @@ class Profile_CCT {
 			break;
 			case "taxonomy":
 				require_once("views/taxonomy.php");
+			break;
+			case "fields":
+				require_once("views/fields.php");
 			break;
 			default:
 				require_once("views/settings.php");
@@ -481,9 +478,9 @@ class Profile_CCT {
 	function register_cpt_profile_cct() {
 	    $labels = array( 
 	        'name' => _x( 'Profiles', 'profile_cct' ),
-	        'singular_name' => _x( 'My Profile', 'profile_cct' ),
-	        'add_new' => _x( 'My Profile', 'profile_cct' ),
-	        'add_new_item' => _x( 'My Profile', 'profile_cct' ),
+	        'singular_name' => _x( 'Profile', 'profile_cct' ),
+	        'add_new' => _x( 'Add New', 'profile_cct' ),
+	        'add_new_item' => _x( 'Add New Profile', 'profile_cct' ),
 	        'edit_item' => _x( 'Edit Profile', 'profile_cct' ),
 	        'new_item' => _x( 'New Profile', 'profile_cct' ),
 	        'view_item' => _x( 'View Profile', 'profile_cct' ),
@@ -923,10 +920,13 @@ class Profile_CCT {
 			 		$this->input_field( array('size'=>30, 'value'=>$text, 'class'=>'field-text','name'=>'text','label'=>'text input','type'=>'text' , 'before_label'=>true));
 			 	
 			 	if(isset($before))
-			 		$this->input_field( array('size'=>10, 'value'=>$before, 'class'=>'field-before','name'=>'before','label'=>'before html','type'=>'textarea' , 'before_label'=>true));
+			 		$this->input_field( array('size'=>10, 'value'=>$before, 'class'=>'field-textarea','name'=>'before','label'=>'before html','type'=>'textarea' , 'before_label'=>true));
 			 		
 			 	if(isset($after))
-			 		$this->input_field( array('size'=>10, 'value'=>$after, 'class'=>'field-after','name'=>'after','label'=>'after html','type'=>'textarea' , 'before_label'=>true));	
+			 		$this->input_field( array('size'=>10, 'value'=>$after, 'class'=>'field-textarea','name'=>'after','label'=>'after html','type'=>'textarea' , 'before_label'=>true));
+			 		
+			 	if(isset($empty))
+			 		$this->input_field( array('size'=>10, 'value'=>$empty, 'class'=>'field-textarea','name'=>'empty','label'=>'content to be displayed on empty','type'=>'textarea' , 'before_label'=>true));
 			 					
 				if(isset($show_fields))
 					$this->input_field(array('type'=>'multiple','all_fields'=>$show_fields, 'class'=>'field-show','selected_fields'=>$show,'name'=>'show', 'label'=>'show / hide input area','before_label'=>true));			
@@ -1140,7 +1140,7 @@ class Profile_CCT {
 	
 	 	switch($type) {
 	 		case 'text':
-			 	echo $separator."<".$tag." ".$id.$class.$href.$hide.">";
+			 	echo $separator." <".$tag." ".$id.$class.$href.$hide.">";
 		
 			 	echo $display;
 				echo "</".$tag.">";
@@ -1211,7 +1211,6 @@ class Profile_CCT {
 	 						$options[$_POST['field_index']]['description'] 	= $_POST['description'];
 	 						$options[$_POST['field_index']]['show'] 		= $_POST['show'];
 	 						$options[$_POST['field_index']]['multiple']		= ( isset($_POST['multiple']) &&  $_POST['multiple'] ? $_POST['multiple'] : 0); 
- 							
  						break;
  						case "page":
  						case "list":
@@ -1222,7 +1221,8 @@ class Profile_CCT {
 	 						$options[$_POST['field_index']]['link_to'] 		= $_POST['link_to'];
 	 						$options[$_POST['field_index']]['clear'] 		= $_POST['clear'];
 	 						$options[$_POST['field_index']]['text'] 		= $_POST['text'];
-	 						$options[$_POST['field_index']]['seperator'] 		= $_POST['seperator'];
+	 						$options[$_POST['field_index']]['empty'] 		= $_POST['empty'];
+	 						$options[$_POST['field_index']]['seperator'] 	= $_POST['seperator'];
  						break;
  					}
 					echo "updated";
@@ -1319,10 +1319,8 @@ class Profile_CCT {
 					
 					$minus = $count - 1;
 					
-	
 					$this->update_option($type,'fields','tabbed-'.$minus, $fields);
 					
-			
 					$fields = $this->delete_option($type,'fields','tabbed-'.$count);
 					
 				endwhile;
@@ -1392,6 +1390,33 @@ class Profile_CCT {
 			return false;
 		
 		return true;
+	}
+	
+	function is_array_empty($data, $excepton = array()){
+		// assume that the array is empty until proven otherwise.
+		$data_empty = true;
+		
+		// this is a multi
+		if( is_array($data[0]) ):
+			foreach($data as $items):
+				foreach($items as $item => $value):
+					if( !empty($value) &&  !in_array($item,  $excepton) )  // prove me wrong -> the value is there and the item is not a country field
+						$data_empty = false;
+					
+				endforeach;
+			endforeach;
+		elseif( is_array($data) ):
+			foreach($data as $item => $value):
+				if( !empty($value) &&  !in_array($item,  $excepton) )  // prove me wrong -> the value is there and the item is not a country field
+					$data_empty = false;
+					
+			endforeach;
+		endif;
+		
+		
+		return $data_empty;
+	
+	
 	}
 	/**
 	 * serialize function.
@@ -1642,6 +1667,20 @@ class Profile_CCT {
 	 		
 	 		
 	 		} 
+	 }
+	 
+	 function fields_to_clone() {
+	 	return apply_filters( 'profile_cct_fields_to_clone', array(
+				array( "type"=> "phone" ),
+				array( "type"=> "email" ),
+				array( "type"=> "address" ),
+				array( "type"=> "website" ),
+				array( "type"=> "position" ),
+				array( "type"=> "education" ),
+				array( "type"=> "textarea"  ),
+				array( "type"=> "text" ),
+				array( "type"=> "specialization" )
+			));	 
 	 }
 } // end class
 

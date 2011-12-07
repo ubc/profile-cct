@@ -54,6 +54,7 @@ function profile_cct_taxonomy_display_shell(  $action, $options, $data=null ) {
 	$default_options = array(
 		'width' => 'full',
 		'before'=>'',
+		'empty'=>'',
 		'after' =>'',
 		'text'	=>$options['label'].":",
 		'hide_label'=>true

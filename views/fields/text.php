@@ -1,6 +1,6 @@
 <?php 
 
-function profile_cct_specialization_field_shell( $action, $options ) {
+function profile_cct_text_field_shell( $action, $options ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -12,8 +12,8 @@ function profile_cct_specialization_field_shell( $action, $options ) {
 	$field = Profile_CCT::get_object(); // prints "Creating new instance."
 	
 	$default_options = array(
-		'type' => 'specialization',
-		'label'=>'specialization',
+		'type' => 'text',
+		'label'=>'text',
 		'description'=>'',
 		'multiple'=>true,
 		'show_multiple'=>true
@@ -26,24 +26,24 @@ function profile_cct_specialization_field_shell( $action, $options ) {
 	if( $field->is_data_array( $data ) ):
 		$count = 0;
 		foreach($data as $item_data):
-			profile_cct_specialization_field($item_data,$options,$count);
+			profile_cct_text_field($item_data,$options,$count);
 			$count++;
 		endforeach;
 		
 	else:
-		profile_cct_specialization_field($item_data,$options);
+		profile_cct_text_field($item_data,$options);
 	endif;
 	$field->end_field( $action, $options );
 	
 	
 }
-function profile_cct_specialization_field( $data, $options, $count = 0 ){
+function profile_cct_text_field( $data, $options, $count = 0 ){
 	
 	extract( $options );
 	$field = Profile_CCT::get_object();
 	echo "<div data-count='".$count."'>";
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'specialization', 'label'=>'', 'size'=>35, 'value'=>$data['specialization'], 'type'=>'text','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'text', 'label'=>'', 'size'=>35, 'value'=>$data['text'], 'type'=>'text','count'=>$count) );
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
 	echo "</div>";
@@ -51,8 +51,7 @@ function profile_cct_specialization_field( $data, $options, $count = 0 ){
 
 
 
-
-function profile_cct_specialization_display_shell(  $action, $options, $data=null ) {
+function profile_cct_text_display_shell(  $action, $options, $data=null ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -64,7 +63,7 @@ function profile_cct_specialization_display_shell(  $action, $options, $data=nul
 	$field = Profile_CCT::get_object(); // prints "Creating new instance."
 	
 	$default_options = array(
-		'type' => 'specialization',
+		'type' => 'text',
 		'width' => 'full',
 		'before'=>'',
 		'empty'=>'',
@@ -77,25 +76,25 @@ function profile_cct_specialization_display_shell(  $action, $options, $data=nul
 	if( $field->is_data_array( $data ) ):
 		
 		foreach($data as $item_data):
-			profile_cct_specialization_display($item_data,$options);
+			profile_cct_text_display($item_data,$options);
 		endforeach;
 		
 	else:
-		profile_cct_specialization_display($item_data,$options);
+		profile_cct_text_display($item_data,$options);
 	endif;
 	
 	$field->end_field( $action, $options );
 	
 }
-function profile_cct_specialization_display( $data, $options ){
+function profile_cct_text_display( $data, $options ){
 	
 	extract( $options );
 	$show = (is_array($show) ? $show : array());
 	$field = Profile_CCT::get_object();
 	
-
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'specialization', 'type'=>'shell', 'tag'=>'div') );
-	$field->display_text( array( 'field_type'=>$type, 'default_text'=>'Philanthropy', 'value'=>$data['specialization'], 'type'=>'text') );
+	$default_text = apply_filter('profile_cct_default_text_'.$type, "Default Text");
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'text', 'type'=>'shell', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'default_text'=>$default_text, 'value'=>$data['text'], 'type'=>'text') );
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 	
 }

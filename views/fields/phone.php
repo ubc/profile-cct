@@ -22,21 +22,24 @@ function profile_cct_phone_field_shell( $action, $options ) {
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	
-	
 	$field->start_field($action,$options);
 	
 	if( $field->is_data_array( $data ) ):
 		$count = 0;
 		foreach($data as $item_data):
+			
 			profile_cct_phone_field($item_data,$options, $count);
 			$count++;
+			
 		endforeach;
 		
 	else:
-		profile_cct_phone_field($item_data,$options);
+		// this should only occure if the there is no data
+		profile_cct_phone_field($data,$options);
 	endif;
 	
 	$field->end_field( $action, $options );
+	
 	
 }
 function profile_cct_phone_field( $data, $options, $count = 0 ){
@@ -77,6 +80,7 @@ function profile_cct_phone_display_shell(  $action, $options, $data=null ) {
 		'type' => 'phone',
 		'label_hide'=>true,
 		'before'=>'',
+		'empty'=>'',
 		'after'=>'',
 		'width' => 'full',
 		'show'=>array('type','tel-1'),
@@ -84,20 +88,28 @@ function profile_cct_phone_display_shell(  $action, $options, $data=null ) {
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	
+	if( !$field->is_array_empty($data , array('option') ) ||  $action == "edit" ):
 	
-	$field->start_field($action,$options);
-	
-	if( $field->is_data_array( $data ) ):
+		$field->start_field($action,$options);
 		
-		foreach($data as $item_data):
-			profile_cct_phone_display($item_data,$options);
-		endforeach;
+		if( $field->is_data_array( $data ) ):
+			
+			foreach($data as $item_data):
+				if( !$field->is_array_empty( $item_data, array('option') ) ||  $action == "edit" ):
+					profile_cct_phone_display($item_data,$options);
+				endif;
+			endforeach;
+			
+		else:
+			// this shouldn't be happening unless its displaying stuff for the 
+			profile_cct_phone_display($data,$options);
+		endif;
+		
+		$field->end_field( $action, $options );
 		
 	else:
-		profile_cct_phone_display($item_data,$options);
+		echo $empty;
 	endif;
-	
-	$field->end_field( $action, $options );
 	
 }
 function profile_cct_phone_display( $data, $options ){
@@ -108,11 +120,16 @@ function profile_cct_phone_display( $data, $options ){
 	
 	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'telephone tel', 'type'=>'shell', 'tag'=>'div') );
-	$field->display_text( array( 'field_type'=>$type,  'class'=>'type', 'default_text'=>'Work', 'separator'=>':','value'=>$data['option'], 'type'=>'text', 'tag'=>'span') );
+	$field->display_text( array( 'field_type'=>$type,  'class'=>'type', 'default_text'=>'Work', 'value'=>$data['option'], 'type'=>'text', 'tag'=>'span') );
 	
 	
-	$field->display_text( array( 'field_type'=>$type,  'class'=>'tel-1', 'default_text'=>'735', 'value'=>$data['tel-1'], 'type'=>'text', 'tag'=>'span') );
-	$field->display_text( array( 'field_type'=>$type,  'class'=>'tel-2', 'default_text'=>'279', 'separator'=>'-', 'value'=>$data['tel-2'], 'type'=>'text', 'tag'=>'span') );
+	$field->display_text( array( 'field_type'=>$type,  'class'=>'tel-1', 'default_text'=>'735', 'separator'=>':','value'=>$data['tel-1'], 'type'=>'text', 'tag'=>'span') );
+	
+	$seperator = '-';
+	if(empty($data['tel-1']))
+		$seperator = ':';
+		
+	$field->display_text( array( 'field_type'=>$type,  'class'=>'tel-2', 'default_text'=>'279', 'separator'=>$seperator, 'value'=>$data['tel-2'], 'type'=>'text', 'tag'=>'span') );
 	$field->display_text( array( 'field_type'=>$type,  'class'=>'tel-3', 'default_text'=>'2963',  'separator'=>'-','value'=>$data['tel-3'], 'type'=>'text', 'tag'=>'span') );
 	$field->display_text( array( 'field_type'=>$type,  'class'=>'extension', 'default_text'=>'2', 'separator'=>' ext:','value'=>$data['extension'], 'type'=>'text', 'tag'=>'span') );
 	

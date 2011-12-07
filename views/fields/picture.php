@@ -82,6 +82,7 @@ function profile_cct_picture_display_shell( $action, $options=null, $data=null )
 		'label'		=> 'picture',
 		'hide_label'=>  true,
 		'before'	=> '',
+		'empty'		=> '',
 		'width' 	=> 'full',
 		'link_to'	=> true,
 		'show_link_to' => true,
@@ -193,12 +194,6 @@ function profile_cct_picture_init(){
 }
 
 
-function profile_cct_picture_add_photo() {
-
-echo "hello";
-}
-
-
 /**
  * profile_cct_picture_add_photo function.
  * The content inside the iframe 
@@ -206,7 +201,7 @@ echo "hello";
  * @access public
  * @return void
  */
-function profile_cct_picture_add_photo_real() {
+function profile_cct_picture_add_photo() {
 	global $current_user;
 	
 	
