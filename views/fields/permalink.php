@@ -17,7 +17,6 @@ function profile_cct_permalink_display_shell(  $action, $options, $data=null ) {
 		'type' => 'permalink',
 		'width' => 'full',
 		'before'=>'',
-		'empty'=>'',
 		'after' =>'',
 		'text'	=>'more info',
 		'hide_label'=>true
