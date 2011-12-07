@@ -1572,8 +1572,9 @@ class Profile_CCT {
 							 			array( "type"=> "education", 		"label"=> "education" ),
 							 			array( "type"=> "specialization",	"label"=> "specialization" ),
 								 		array( "type"=> "teaching",			"label"=> "teaching" ), 
-								 		array( "type"=> "publications",		"label"=> "publications" ), 
-								 		array( "type"=> "research",			"label"=> "research" )
+								 		array( "type"=> "publications",		"label"=> "publications" ),
+								 		array( "type"=> "research",			"label"=> "research" ),
+								 		array( "type"=> "currentresearch",	"label"=> "current research" )
 								 		
 							 	)),
 					   'tabs' => array("Basic Info", "Bio")
@@ -1606,6 +1607,7 @@ class Profile_CCT {
 							 			array( "type"=> "department",		"label"=> "department"),
 							 			array( "type"=> "education", 		"label"=> "education" ),
 							 			array( "type"=> "specialization",	"label"=> "specialization" ),
+							 			array( "type"=> "currentresearch",	"label"=> "current research" ),
 								 		array( "type"=> "permalink", 		"label"=> "permalink")
 
 							 	)),
@@ -1630,6 +1632,7 @@ class Profile_CCT {
 							 			array( "type"=> "department",		"label"=> "department" ),
 							 			array( "type"=> "education", 		"label"=> "education" ),
 							 			array( "type"=> "specialization",	"label"=> "specialization" ),
+							 			array( "type"=> "currentresearch",	"label"=> "current research" ),
 								 		array( "type"=> "permalink", 		"label"=> "permalink")
 								 	
 							 			)
