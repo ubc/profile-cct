@@ -73,6 +73,7 @@ function profile_cct_education_display_shell( $action, $options, $data=null  ) {
 		'label'=>'education',
 		'hide_label'=>true,
 		'before'=>'',
+		'empty'=>'',
 		'width' => 'full',
 		'after'=>'',
 		'show'=>array('year'),
@@ -80,20 +81,28 @@ function profile_cct_education_display_shell( $action, $options, $data=null  ) {
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	
-	$field->start_field($action,$options);
-	if( $field->is_data_array( $data ) ):
+	if( !$field->is_array_empty($data , array('year') ) ||  $action == "edit" ):
+		$field->start_field($action,$options);
 		
-		foreach($data as $item_data):
+		if( $field->is_data_array( $data ) ):
+			foreach($data as $item_data):
+				
+				if( !$field->is_array_empty($item_data , array('year') ) ||  $action == "edit" ):
+					profile_cct_education_display($item_data,$options);
+					
+				endif;
+			endforeach;
+			
+		else:
+			
 			profile_cct_education_display($item_data,$options);
-		endforeach;
-		
+		endif;
+		$field->end_field( $action, $options );
 	else:
-		profile_cct_education_display($item_data,$options);
+		echo $empty;
 	endif;
-	
-	$field->end_field( $action, $options );
 }
-function profile_cct_education_display( $data, $options ){
+function profile_cct_education_display( $data, $options){
 
 	extract( $options );
 	
@@ -102,16 +111,16 @@ function profile_cct_education_display( $data, $options ){
 	$show = (is_array($show) ? $show : array());
 	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'educaton', 'type'=>'shell', 'tag'=>'div') );
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'school','default_text'=>'University of Gotham', 'value'=>$data['school'], 'type'=>'text','count'=>$count) );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'school','default_text'=>'University of Gotham', 'value'=>$data['school'], 'type'=>'text') );
 	
 
-	$field->display_text( array( 'class'=>'year','default_text'=>'1939', 'separator'=>',', 'value'=>$data['year'], 'type'=>'text', 'show'=> in_array('year',$show),'count'=>$count));
+	$field->display_text( array( 'class'=>'year','default_text'=>'1939', 'separator'=>',', 'value'=>$data['year'], 'type'=>'text', 'show'=> in_array('year',$show)));
 
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'textarea bio','default_text'=>'Finance', 'separator'=>',',  'value'=>$data['degree'], 'type'=>'text','count'=>$count) );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'textarea bio','default_text'=>'Finance', 'separator'=>',',  'value'=>$data['degree'], 'type'=>'text') );
 	
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'honors','default_text'=>'BCom', 'separator'=>',',  'value'=>$data['honours'], 'type'=>'text','count'=>$count) );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'honors','default_text'=>'BCom', 'separator'=>',',  'value'=>$data['honours'], 'type'=>'text') );
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 
 }

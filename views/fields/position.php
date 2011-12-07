@@ -69,6 +69,7 @@ function profile_cct_position_display_shell( $action, $options, $data=null ) {
 		'label'=>'position',
 		'hide_label'=>true,
 		'before'=>'',
+		'empty'=>'',
 		'width' => 'full',
 		'after'=>'',
 		'show'=>array(),
@@ -77,19 +78,26 @@ function profile_cct_position_display_shell( $action, $options, $data=null ) {
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	
-	$field->start_field($action,$options);
 	
-	if( $field->is_data_array( $data ) ):
+	if( !$field->is_array_empty($data , array()) ||  $action == "edit" ):
+		$field->start_field($action,$options);
 		
-		foreach($data as $item_data):
-			profile_cct_position_display($item_data,$options);
-		endforeach;
+		if( $field->is_data_array( $data ) ):
+			
+			foreach($data as $item_data):
+				if( !$field->is_array_empty( $item_data ) ||  $action == "edit" ):
+					profile_cct_position_display($item_data,$options);
+				endif;
+			endforeach;
+			
+		else:
+			profile_cct_position_display($data,$options);
+		endif;
 		
+		$field->end_field( $action, $options );
 	else:
-		profile_cct_position_display($item_data,$options);
+		echo $empty;
 	endif;
-	
-	$field->end_field( $action, $options );
 	
 }
 function profile_cct_position_display( $data, $options ){
@@ -101,7 +109,7 @@ function profile_cct_position_display( $data, $options ){
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'position', 'type'=>'shell', 'tag'=>'div') );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'role','default_text'=>'CEO', 'value'=>$data['position'], 'type'=>'text','count'=>$count, ) );
 
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'org','separator'=>',','default_text'=>'Wayne Enterprises', 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array("organization",$show),'count'=>$count) );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'org','separator'=>',','default_text'=>'Wayne Enterprises', 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array('organization',$show),'count'=>$count) );
 	
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 

@@ -66,6 +66,7 @@ function profile_cct_address_display_shell( $action, $options, $data=null ) {
 		'width' => 'full',
 		'hide_label'=>true,
 		'before'=>'',
+		'empty'=>'',
 		'after' =>'',
 		'show'=>array('building-name','room-number','street-1','street-2','city','postal','province','country'),
 		'show_fields'=>array('building-name','room-number','street-1','street-2','city','postal','province','country')
@@ -73,11 +74,18 @@ function profile_cct_address_display_shell( $action, $options, $data=null ) {
 	
 	$options = (is_array($options) ? array_merge($default_options,$options): $default_options );
 	
-	$field->start_field($action,$options);
 	
-	profile_cct_address_display($data,$options);
+	// don't display the address if there is nothing to display	
+	if( !$field->is_array_empty($data , array('country')) ||  $action == "edit" ):
 	
-	$field->end_field( $action, $options );
+		$field->start_field($action,$options);
+		
+		profile_cct_address_display($data,$options);
+		
+		$field->end_field( $action, $options );
+	else:
+		echo $empty;
+	endif;
 
 }
 function profile_cct_address_display( $data, $options ){

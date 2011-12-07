@@ -66,22 +66,29 @@ function profile_cct_website_display_shell( $action, $options, $data=null ) {
 		'label'=> 'website',
 		'hide_label'=>true,
 		'before'=>'',
+		'empty'=>'',
 		'width' => 'full',
 		'after'=>'',
 		
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
-	
-	$field->start_field($action,$options);
-	if( $field->is_data_array( $data ) ):
-		foreach($data as $item_data):
-			profile_cct_website_display($item_data,$options);
-		endforeach;
+
+	if( !$field->is_array_empty( $data ) ||  $action == "edit" ):
+		$field->start_field( $action, $options );
+		if( $field->is_data_array( $data ) ):
+			foreach($data as $item_data):
+				if( !$field->is_array_empty( $item_data ) ||  $action == "edit" ):
+					profile_cct_website_display( $item_data, $options );
+				endif;		
+			endforeach;
+		else:
+			profile_cct_website_display( $data , $options );
+		endif;
+		
+		$field->end_field( $action, $options );
 	else:
-		profile_cct_website_display($data,$options);
+		echo $empty;
 	endif;
-	
-	$field->end_field( $action, $options );
 	
 }
 function profile_cct_website_display( $data, $options ){
