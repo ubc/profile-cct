@@ -118,6 +118,10 @@ span.symbol{
 	width:5px;
 	margin:5px 5px 0  -5px
 }
+*/
+.wrap-fields{
+	clear:both;
+}
 /* add fields */
 .field-shell,
 .description,

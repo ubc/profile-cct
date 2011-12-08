@@ -44,7 +44,7 @@ function profile_cct_social_field( $data, $options, $count = 0 ){
 		$social_array[] =  $social_item['label'];
 	endforeach;
 	
-	echo "<div data-count='".$count."'>";
+	echo "<div class='wrap-fields' data-count='".$count."'>";
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'option', 'label'=>'option',  'value'=>$data['option'], 'all_fields'=>$social_array, 'type'=>'select','count'=>$count) );
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';

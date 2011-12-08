@@ -139,8 +139,6 @@ class Profile_CCT {
 		// function to be executed on page and list admin pages
 		add_action('profile_cct_page', array( $this,'profile_cct_page_field_shell'),10,3);
 		
-		
-		
 		// for permisions
 		// add_filter( 'views_edit-profile_cct', array( $this,'admin_views_filter'),10,3);
 		
@@ -411,7 +409,7 @@ class Profile_CCT {
 		screen_icon( 'users' );
 		?>
 		<div class="wrap">
-		<h2><?php echo $this -> get_plugin_data( 'Name' ) ?></h2>
+		<h2>Profile Settings</h2>
 		<h3 class="nav-tab-wrapper">
 		
 		<a class="nav-tab <?php if( !isset($_GET['view']) ) { echo "nav-tab-active"; } ?>" 
