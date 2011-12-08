@@ -41,7 +41,7 @@ function profile_cct_email_field( $data, $options, $count = 0 ){
 	
 	extract( $options );
 	$field = Profile_CCT::get_object();
-	echo "<div data-count='".$count."'>";
+	echo "<div class='wrap-fields' data-count='".$count."'>";
 	
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'email', 'label'=>'', 'size'=>35, 'value'=>$data['email'], 'type'=>'text','count'=>$count) );
 	if($count)

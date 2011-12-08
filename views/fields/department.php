@@ -42,7 +42,7 @@ function profile_cct_department_field( $data, $options, $count = 0 ){
 	
 	extract( $options );
 	$field = Profile_CCT::get_object();
-	echo "<div data-count='".$count."'>";
+	echo "<div class='wrap-fields' data-count='".$count."'>";
 	
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'department', 'label'=>'name', 'size'=>35, 'value'=>$data['department'], 'type'=>'text','count'=>$count) );
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'url', 'label'=>'url - http://', 'size'=>35, 'value'=>$data['url'], 'type'=>'text','count'=>$count, 'show'=>in_array('url', $show)) );

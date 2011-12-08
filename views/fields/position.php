@@ -16,7 +16,7 @@ function profile_cct_position_field_shell($action, $options ) {
 		'label'=>'position',
 		'description'=>'',
 		'show'=>array('organization'),
-		'show_fields'=>array('organization'),
+		'show_fields'=>array('organization','url'),
 		'multiple'=>true,
 		'show_multiple' =>true
 		);
@@ -44,9 +44,10 @@ function profile_cct_position_field( $data, $options, $count = 0 ){
 	$field = Profile_CCT::get_object();
 	$show = (is_array($show) ? $show : array());
 	
-	echo "<div data-count='".$count."'>";
+	echo "<div class='wrap-fields' data-count='".$count."'>";
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'position','label'=>'title', 'size'=>35, 'value'=>$data['position'], 'type'=>'text','count'=>$count) ); 
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'organization','label'=>'organization', 'size'=>35, 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array("organization",$show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'url', 'label'=>'url - http://', 'size'=>35, 'value'=>$data['url'], 'type'=>'text','count'=>$count, 'show'=>in_array('url', $show)) );
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
 	echo "</div>";
@@ -109,7 +110,13 @@ function profile_cct_position_display( $data, $options ){
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'position', 'type'=>'shell', 'tag'=>'div') );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'role','default_text'=>'CEO', 'value'=>$data['position'], 'type'=>'text','count'=>$count, ) );
 
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'org','separator'=>',','default_text'=>'Wayne Enterprises', 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array('organization',$show),'count'=>$count) );
+	if( empty($data['url']) ):
+		$field->display_text( array( 'field_type'=>$type, 'class'=>'org organization','separator'=>',','default_text'=>'Wayne Enterprises', 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array('organization',$show)) );
+	else:
+		$field->display_text( array( 'field_type'=>$type, 'class'=>'org organization url','separator'=>',','default_text'=>'Wayne Enterprises', 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array('organization',$show), 'tag'=> 'a', 'href'=> $data['url']) );
+			endif;
+	
+	
 	
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 
