@@ -33,7 +33,7 @@ function profile_cct_currentresearch_field_shell( $action, $options ) {
 		endforeach;
 		
 	else:
-		profile_cct_currentresearch_field($item_data,$options);
+		profile_cct_currentresearch_field($data,$options,$count=0);
 	endif;
 	
 	$field->end_field( $action, $options );
@@ -93,11 +93,26 @@ function profile_cct_currentresearch_display_shell( $action, $options, $data=nul
 	
 	$options = (is_array($options) ? array_merge($default_options,$options): $default_options );
 	
-	$field->start_field($action,$options);
-	
-	profile_cct_currentresearch_display($data,$options);
-	
-	$field->end_field( $action, $options );
+	if( !$field->is_array_empty($data , array('start-date-month','start-date-year','end-date-month','end-date-year','project-status') ) ||  $action == "edit" ):
+		$field->start_field($action,$options);
+		
+		if( $field->is_data_array( $data ) ):
+			foreach($data as $item_data):
+				
+				if( !$field->is_array_empty($item_data , array('start-date-month','start-date-year','end-date-month','end-date-year','project-status') ) ||  $action == "edit" ):
+					profile_cct_currentresearch_display($item_data,$options);
+					
+				endif;
+			endforeach;
+			
+		else:
+			
+			profile_cct_currentresearch_display($data,$options);
+		endif;
+		$field->end_field( $action, $options );
+	else:
+		echo $empty;
+	endif;
 
 }
 function profile_cct_currentresearch_display( $data, $options ){

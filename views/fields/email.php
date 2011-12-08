@@ -73,18 +73,26 @@ function profile_cct_email_display_shell(  $action, $options, $data=null ) {
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	
-	$field->start_field($action,$options);
-	if( $field->is_data_array( $data ) ):
-		
-		foreach($data as $item_data):
-			profile_cct_email_display($item_data,$options);
-		endforeach;
-		
-	else:
-		profile_cct_email_display($item_data,$options);
-	endif;
+
+	if( !$field->is_array_empty($data) ||  $action == "edit" ):
+		$field->start_field($action,$options);
 	
-	$field->end_field( $action, $options );
+		if( $field->is_data_array( $data ) ):
+			foreach($data as $item_data):
+				if( !$field->is_array_empty($item_data) ||  $action == "edit" ):
+					profile_cct_email_display($item_data,$options);
+				endif;
+			endforeach;
+		
+		else:
+			profile_cct_email_display($item_data,$options);
+		endif;
+		
+		$field->end_field( $action, $options );
+	
+	else:
+		echo $empty;
+	endif;
 	
 }
 function profile_cct_email_display( $data, $options ){

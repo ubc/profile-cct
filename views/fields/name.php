@@ -53,9 +53,9 @@ function profile_cct_name_field( $data, $options ){
 	
 	$show = (is_array($show) ? $show : array());
 	$field->input_field( array( 'field_type'=>$type,'field_id'=>'salutations','label'=>'Salutations', 'size'=>2, 'value'=>$data['salutations'], 	'type'=>'text', 'show' => in_array("salutations",$show)) );
-	$field->input_field( array( 'field_type'=>$type,'field_id'=>'first','label'=>'First', 'size'=>14, 'value'=>$data['first'], 	'type'=>'text', ));
+	$field->input_field( array( 'field_type'=>$type,'field_id'=>'first','label'=>'First', 'size'=>14, 'value'=>$data['first'], 	'type'=>'text' ));
 	$field->input_field( array( 'field_type'=>$type,'field_id'=>'middle','label'=>'Middle', 'size'=>3,'value'=>$data['middle'], 'type'=>'text', 'show' => in_array("middle",$show) ));
-	$field->input_field( array( 'field_type'=>$type,'field_id'=>'last','label'=>'Last', 'size'=>19, 'value'=>$data['last'], 	'type'=>'text', ));
+	$field->input_field( array( 'field_type'=>$type,'field_id'=>'last','label'=>'Last', 'size'=>19, 'value'=>$data['last'], 	'type'=>'text' ));
 	$field->input_field( array( 'field_type'=>$type,'field_id'=>'credentials', 'label'=>'Credentials','size'=>7, 'value'=>$data['credentials'],'type'=>'text',  'show' => in_array("credentials",$show)));
 	
 }
@@ -107,12 +107,10 @@ function profile_cct_name_display( $data, $options ){
 	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'fn n', 'type'=>'shell', 'tag'=>'h2','link_to'=>$link_to, 'href'=>$href ) );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'honorific-prefix salutations','default_text'=>'Mr', 'value'=>$data['salutations'], 'type'=>'text' , 'show' => in_array("salutations",$show)) );
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'given-name','default_text'=>'Bruce', 'value'=>$data['first'], 	'type'=>'text', ));
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'given-name','default_text'=>'Bruce', 'value'=>$data['first'], 	'type'=>'text' ));
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'additional-name middle','default_text'=>'Anthony', 'value'=>$data['middle'], 'type'=>'text', 'show' => in_array("middle",$show) ));
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'family-name','default_text'=>'Wayne', 'value'=>$data['last'], 	'type'=>'text', ));
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'family-name','default_text'=>'Wayne', 'value'=>$data['last'], 	'type'=>'text' ));
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'honorific-suffix suffix credentials','separator'=>',','default_text'=>'BCom', 'value'=>$data['credentials'],'type'=>'text',  'show' => in_array("credentials",$show)));
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'h2','link_to'=>$link_to) );
 	
 }
-
-

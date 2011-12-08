@@ -75,24 +75,25 @@ function profile_cct_department_display_shell(  $action, $options, $data=null ) 
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	
-	if( !empty($data) ||  $action == "edit" ):
+	if( !$field->is_array_empty($data) ||  $action == "edit" ):
 		$field->start_field($action,$options );
 		
 		if( $field->is_data_array( $data ) ):
 			
 			foreach($data as $item_data):
-				profile_cct_department_display($item_data,$options);
+				if( !$field->is_array_empty($item_data) ||  $action == "edit" ):
+					profile_cct_department_display($item_data,$options);
+				endif;
 			endforeach;
 			
 		else:
-			profile_cct_department_display($item_data,$options);
+			profile_cct_department_display($data,$options);
 		endif;
 		
 		$field->end_field( $action, $options );
 	else:
 		echo $empty;
 	endif;
-	
 	
 }
 function profile_cct_department_display( $data, $options ){

@@ -73,18 +73,26 @@ function profile_cct_specialization_display_shell(  $action, $options, $data=nul
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	
-	$field->start_field($action,$options);
-	if( $field->is_data_array( $data ) ):
+	if( !$field->is_array_empty($data) ||  $action == "edit" ):
+		$field->start_field($action,$options);
 		
-		foreach($data as $item_data):
-			profile_cct_specialization_display($item_data,$options);
-		endforeach;
+		if( $field->is_data_array( $data ) ):
 		
-	else:
-		profile_cct_specialization_display($item_data,$options);
-	endif;
+			foreach($data as $item_data):
+				if( !$field->is_array_empty($item_data) ||  $action == "edit" ):
+					profile_cct_specialization_display($item_data,$options);
+				endif;
+			endforeach;
+		
+		else:
+			profile_cct_specialization_display($data,$options);
+		endif;
 	
-	$field->end_field( $action, $options );
+		$field->end_field( $action, $options );
+	
+	else:
+		echo $empty;
+	endif;
 	
 }
 function profile_cct_specialization_display( $data, $options ){

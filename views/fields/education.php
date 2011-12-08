@@ -95,7 +95,7 @@ function profile_cct_education_display_shell( $action, $options, $data=null  ) {
 			
 		else:
 			
-			profile_cct_education_display($item_data,$options);
+			profile_cct_education_display($data,$options);
 		endif;
 		$field->end_field( $action, $options );
 	else:
