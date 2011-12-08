@@ -67,8 +67,6 @@ if(isset( $_GET['d'])):
 	delete_option('Profile_CCT_page_tabs_normal');
 	delete_option('Profile_CCT_page_fields');
 	
-
-
 	delete_option('Profile_CCT_list_fields_normal');
 	delete_option('Profile_CCT_list_fields_bench');
 	
@@ -523,14 +521,18 @@ class Profile_CCT {
 	
 	    register_post_type( 'profile_cct', $args );
 	    
-	    $role = get_role('administrator');
+	    $roles = apply_filters('profile_cct_admin_roles', array('administrator','editor'));
+	    foreach($roles as $role_name):
+		    $role = get_role($role_name);
+			
+			$role->add_cap( 'edit_profile_cct' );
+			$role->add_cap( 'edit_profiles_cct' );
+			$role->add_cap( 'edit_all_profile_cct' );
+			$role->add_cap( 'publish_profile_cct' );
+			$role->add_cap( 'read_private_profile_cct' );
+			$role->add_cap( 'delete_profile_cct' );
 		
-		$role->add_cap( 'edit_profile_cct' );
-		$role->add_cap( 'edit_profiles_cct' );
-		$role->add_cap( 'edit_all_profile_cct' );
-		$role->add_cap( 'publish_profile_cct' );
-		$role->add_cap( 'read_private_profile_cct' );
-		$role->add_cap( 'delete_profile_cct' );
+		endforeach;
 	    
 	}
 	
