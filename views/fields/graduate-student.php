@@ -137,7 +137,7 @@ function profile_cct_graduatestudent_display( $data, $options ){
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'additional-name student-middle','default_text'=>'John', 'value'=>$data['student-middle'], 'type'=>'text', 'show' => in_array("student-middle",$show) ));
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'student-family-name','default_text'=>'Grayson', 'value'=>$data['student-last'], 'type'=>'text' ));
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'honorific-suffix suffix student-credentials','separator'=>',','default_text'=>'B.S.S.', 'value'=>$data['student-credentials'],'type'=>'text', 'show' => in_array("student-credentials",$show)));
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'student-website','default_text'=>'http://richardjohngrayson.com/', 'value'=>$data['student-website'], 'type'=>'text', 'show' => in_array("student-website",$show) ));
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'student-website','default_text'=>'http://richardjohngrayson.com/', 'type'=>'text', 'tag'=>'a', 'href'=>$data['student-website'], 'show' => in_array("student-website",$show) ));
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 	
 }

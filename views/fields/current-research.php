@@ -48,7 +48,7 @@ function profile_cct_currentresearch_field( $data, $options ){
     $year_built_max = date("Y")+10;
 	$year_array = range($year_built_max, $year_built_min);
 	$completion_year_array = range($year_built_max, date("Y"));
-	$project_status_array = array("In Progress", "Completed");
+	$project_status_array = array("Current", "Completed");
 	
 	echo "<div data-count='".$count."'>";
 	
@@ -135,7 +135,7 @@ function profile_cct_currentresearch_display( $data, $options ){
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'end-date-month','default_text'=>'December', 'value'=>$data['end-date-month'], 'type'=>'text', 'show'=> in_array("end-date-month",$show)) );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'end-date-year','default_text'=>'2016', 'separator'=>',', 'value'=>$data['end-date-year'], 'type'=>'text', 'show'=> in_array("end-date-year",$show)) );
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'project-status','default_text'=>'In Progress', 'value'=>$data['project-status'], 'type'=>'text', 'show' => in_array("project-status",$show) ) );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'project-status','default_text'=>'Current', 'value'=>$data['project-status'], 'type'=>'text', 'show' => in_array("project-status",$show) ) );
 	
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell','tag'=>'div') );
 
