@@ -46,7 +46,7 @@ function profile_cct_education_field( $data, $options, $count = 0 ){
 	$year_array = range($year_built_max, $year_built_min);
 	$show = (is_array($show) ? $show : array());
 	
-	echo "<div data-count='".$count."'>";
+	echo "<div class='wrap-fields' data-count='".$count."'>";
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'school', 'label'=>'school name', 'size'=>35,  'value'=>$data['school'], 'type'=>'text','count'=>$count) );
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'year', 'label'=>'year', 'size'=>25,  'value'=>$data['year'], 'all_fields'=>$year_array,  'type'=>'select', 'show'=> in_array('year',$show),'count'=>$count));
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'degree','label'=>'degree', 'size'=>5,  'value'=>$data['degree'], 'type'=>'text','count'=>$count) );
