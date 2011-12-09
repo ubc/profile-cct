@@ -1600,6 +1600,7 @@ class Profile_CCT {
 							 	'bench' =>array(
 							 			
 							 			array( "type"=> "department",		"label"=> "department"),
+							 			array( "type"=> "courses",			"label"=> "courses" ),
 							 			array( "type"=> "education", 		"label"=> "education" ),
 							 			array( "type"=> "awards",			"label"=> "awards" ),
 							 			array( "type"=> "specialization",	"label"=> "specialization" ),
@@ -1638,12 +1639,14 @@ class Profile_CCT {
 							 			),
 							 	'bench' =>array(
 							 			array( "type"=> "department",		"label"=> "department"),
+							 			
 							 			array( "type"=> "education", 		"label"=> "education" ),
 							 			array( "type"=> "awards",			"label"=> "awards" ),
 							 			array( "type"=> "specialization",	"label"=> "specialization" ),
 							 			array( "type"=> "currentresearch",	"label"=> "current research" ),
 							 			array( "type"=> "graduatestudent",	"label"=> "graduate student" ),
-								 		array( "type"=> "permalink", 		"label"=> "permalink")
+								 		array( "type"=> "permalink", 		"label"=> "permalink"),
+								 		array( "type"=> "courses",			"label"=> "courses" )
 
 							 	)),
 					   'tabs' => array("Basic Info", "Bio")
@@ -1665,6 +1668,7 @@ class Profile_CCT {
 								 		array( "type"=> "social",			"label"=> "social"),
 							 			array( "type"=> "position" ,		"label"=> "position" ),
 							 			array( "type"=> "department",		"label"=> "department" ),
+							 			array( "type"=> "courses",			"label"=> "courses" ),
 							 			array( "type"=> "education", 		"label"=> "education" ),
 							 			array( "type"=> "awards",			"label"=> "awards" ),
 							 			array( "type"=> "specialization",	"label"=> "specialization" ),
