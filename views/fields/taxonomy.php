@@ -83,11 +83,12 @@ function profile_cct_taxonomy_display( $data, $options ){
 	$field = Profile_CCT::get_object();
 	
 	$taxonomy = $type;
-	$field->display_text( array( 'field_type'=>$taxonomy, 'class'=>'taxonomy', 'type'=>'shell', 'tag'=>'div') );
-	$field->display_text( array( 'field_type'=>$type, 'default_text'=>$label, 'value'=>$text, 'type'=>'text', 'tag'=>'span', 'class'=>'text-input', 'title'=>$label.":") );
+	$field->display_text( array( 'field_type'=>$taxonomy, 'class'=>'taxonomy', 'type'=>'shell', 'tag'=>'p') );
+	$field->display_text( array( 'field_type'=>$type, 'default_text'=>$label, 'value'=>$text." ", 'type'=>'text', 'tag'=>'span', 'class'=>'text-input', 'title'=>$label.":") );
 	if( is_object( $post ) ):
 		
 		$terms =  get_the_terms( $post->ID, $taxonomy );
+		
 		if(is_array($terms)):
 			foreach ( $terms as $term ):
 		        $link = get_term_link( $term, $taxonomy );
@@ -108,14 +109,6 @@ function profile_cct_taxonomy_display( $data, $options ){
 		$field->display_text( array( 'field_type'=>$type,  'class'=>'tag', 'separator'=>', ', 'href'=>'#', 'default_text'=>$single.' 3', 'value'=>'', 'type'=>'text', 'tag'=>'a') );
 		
 	endif;
-	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'p') );
 
-	
-	/*
-	$href = ( isset($post) ? get_taxonomy() : "#" );
-
-	
-	$field->display_text( array( 'field_type'=>$type, 'default_text'=>'more info', 'value'=>$text, 'type'=>'text', 'tag'=>'a', 'href'=>$href, 'class'=>'text-input', 'title'=>'more info') );
-	
-	*/
 }

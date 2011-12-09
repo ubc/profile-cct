@@ -34,7 +34,7 @@ function profile_cct_register_taxonomy($taxonomy){
 		'menu_name' => __( $taxonomy['plural'] ),
 	); 	
 	// finally register the taxonomy
-	register_taxonomy('profile_cct_'.sanitize_title($taxonomy['single']),array('profile_cct'), array(
+	register_taxonomy('profile_cct_'.str_replace( '-','_',sanitize_title($taxonomy['single'])),array('profile_cct'), array(
 		'hierarchical' => $taxonomy['hierarchical']? true: false,
 		'labels' => $labels,
 		'show_ui' => true,

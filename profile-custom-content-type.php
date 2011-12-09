@@ -237,7 +237,7 @@ class Profile_CCT {
 	            */
 	    $role->add_cap( 'edit_profiles_cct', false );
 		$role->add_cap( 'edit_profile_cct', false ); // would allow the author to edit others' posts for current theme only
-		$role->add_cap('publish_profile_cct', false );
+		$role->add_cap( 'publish_profile_cct', false );
 		
 		
 	}
@@ -560,7 +560,7 @@ class Profile_CCT {
 		
 		if( is_array($this->taxonomies) ):
 			foreach($this->taxonomies as $taxonomy):
-				$tax[] = 'profile_cct_'.sanitize_title($taxonomy['single']);
+				$tax[] = 'profile_cct_'.str_replace( '-','_',sanitize_title($taxonomy['single']));
 			endforeach;
 		endif;
 		
@@ -738,9 +738,6 @@ class Profile_CCT {
 	function save_post_data( $data, $postarr ) {
 		global $post;
 		
-		
-		// var_dump(isset( $_POST["profile_cct"] ),"1");
-		
 		if(!isset( $_POST["profile_cct"] ))
 			return $data;
 			
@@ -755,6 +752,16 @@ class Profile_CCT {
 		
 		
 		// save the name of the person as the title 
+		if( is_array( $profile_cct_data["name"]) || !empty($profile_cct_data["name"])):
+			$data['post_title'] = $profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last'];
+			$data['post_name']	= sanitize_title($profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last']);
+		else:
+			$userdata = get_userdata($data['post_author']);
+			$data['post_title'] = $userdata->user_nicename;
+			$data['post_name']	= sanitize_title($userdata->user_nicename);
+		endif;
+		
+		
 		if( is_array( $profile_cct_data["name"]) || !empty($profile_cct_data["name"])):
 			$data['post_title'] = $profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last'];
 		else:
@@ -1140,8 +1147,7 @@ class Profile_CCT {
 	
 	 	switch($type) {
 	 		case 'text':
-			 	echo $separator." <".$tag." ".$id.$class.$href.$hide.">";
-		
+			 	echo $separator.' <'.$tag.' '.$id.$class.$href.$hide.'>';
 			 	echo $display;
 				echo "</".$tag.">";
 			break;
@@ -1149,12 +1155,12 @@ class Profile_CCT {
 			case 'shell':
 				if($tag == 'a'):
 					if($link_to):
-						echo "<".$tag." ".$id.$class.$href.">";
+						echo '<'.$tag.' '.$id.$class.$href.'>';
 					else:
-						echo "<span ".$id.$class.">";
+						echo '<span '.$id.$class.'>';
 					endif;
 				else:
-					echo "<".$tag." ".$id.$class.">";
+					echo '<'.$tag.' '.$id.$class.'>';
 					if($link_to):
 						echo '<a '.$href.'>';
 					endif;
@@ -1165,15 +1171,15 @@ class Profile_CCT {
 			case 'end_shell';
 				if($tag == 'a'):
 					if($link_to):
-						echo "</".$tag.">";
+						echo '</'.$tag.'>';
 					else:
-						echo "</span>";
+						echo '</span>';
 					endif;
 				else:
 					if($link_to):
 						echo '</a>';
 					endif;
-					echo "</".$tag.">";
+					echo '</'.$tag.'>';
 				endif;
 			break;
 	 		
