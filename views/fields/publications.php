@@ -1,6 +1,6 @@
 <?php 
 
-
+// Adds the action to top of admin_pages
 add_action('profile_cct_admin_pages', 'profile_cct_add_publications_fields_filter', 10, 1);
 
 add_action('profile_cct_form', 'profile_cct_add_publications_fields_filter', 5);
