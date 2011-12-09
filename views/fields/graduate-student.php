@@ -63,12 +63,12 @@ function profile_cct_graduatestudent_field( $data, $options, $count = 0 ){
 	$show = (is_array($show) ? $show : array());
 	
 	echo "<div data-count='".$count."'>";
-	$field->input_field( array( 'field_type'=>$type,'field_id'=>'student-salutations','label'=>'Salutations', 'size'=>2, 'value'=>$data['student-salutations'], 'type'=>'text', 'show' => in_array("student-salutations",$show),'count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type,'field_id'=>'student-first','label'=>'First', 'size'=>14, 'value'=>$data['student-first'], 	'type'=>'text','count'=>$count));
-	$field->input_field( array( 'field_type'=>$type,'field_id'=>'student-middle','label'=>'Middle', 'size'=>3,'value'=>$data['student-middle'], 'type'=>'text','show'=>in_array("student-middle",$show),'count'=>$count));
-	$field->input_field( array( 'field_type'=>$type,'field_id'=>'student-last','label'=>'Last', 'size'=>19, 'value'=>$data['student-last'], 	'type'=>'text','count'=>$count));
-	$field->input_field( array( 'field_type'=>$type,'field_id'=>'student-credentials', 'label'=>'Credentials','size'=>7, 'value'=>$data['student-credentials'],'type'=>'text',  'show' => in_array("student-credentials",$show),'count'=>$count));
-	$field->input_field( array( 'field_type'=>$type,'field_id'=>'student-website', 'label'=>'Website','size'=>35, 'value'=>$data['student-website'],'type'=>'text',  'show' => in_array("student-website",$show),'count'=>$count));
+	$field->input_field( array( 'field_type'=>$type,'multiple'=>$multiple,'field_id'=>'student-salutations','label'=>'Salutations', 'size'=>2, 'value'=>$data['student-salutations'], 'type'=>'text', 'show' => in_array("student-salutations",$show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type,'multiple'=>$multiple,'field_id'=>'student-first','label'=>'First', 'size'=>14, 'value'=>$data['student-first'], 	'type'=>'text','count'=>$count));
+	$field->input_field( array( 'field_type'=>$type,'multiple'=>$multiple,'field_id'=>'student-middle','label'=>'Middle', 'size'=>3,'value'=>$data['student-middle'], 'type'=>'text','show'=>in_array("student-middle",$show),'count'=>$count));
+	$field->input_field( array( 'field_type'=>$type,'multiple'=>$multiple,'field_id'=>'student-last','label'=>'Last', 'size'=>19, 'value'=>$data['student-last'], 	'type'=>'text','count'=>$count));
+	$field->input_field( array( 'field_type'=>$type,'multiple'=>$multiple,'field_id'=>'student-credentials', 'label'=>'Credentials','size'=>7, 'value'=>$data['student-credentials'],'type'=>'text',  'show' => in_array("student-credentials",$show),'count'=>$count));
+	$field->input_field( array( 'field_type'=>$type,'multiple'=>$multiple,'field_id'=>'student-website', 'label'=>'Website','size'=>35, 'value'=>$data['student-website'],'type'=>'text',  'show' => in_array("student-website",$show),'count'=>$count));
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
 	echo "</div>";
@@ -137,7 +137,7 @@ function profile_cct_graduatestudent_display( $data, $options ){
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'additional-name student-middle','default_text'=>'John', 'value'=>$data['student-middle'], 'type'=>'text', 'show' => in_array("student-middle",$show) ));
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'student-family-name','default_text'=>'Grayson', 'value'=>$data['student-last'], 'type'=>'text' ));
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'honorific-suffix suffix student-credentials','separator'=>',','default_text'=>'B.S.S.', 'value'=>$data['student-credentials'],'type'=>'text', 'show' => in_array("student-credentials",$show)));
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'student-website','default_text'=>'http://richardjohngrayson.com/', 'value'=>$data['student-website'], 'type'=>'text', 'show' => in_array("student-website",$show) ));
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'student-website','default_text'=>'http://richardjohngrayson.com/', 'type'=>'text', 'tag'=>'a', 'href'=>$data['student-website'], 'show' => in_array("student-website",$show) ));
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 	
 }
