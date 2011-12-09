@@ -1593,6 +1593,7 @@ class Profile_CCT {
 							 			
 							 			array( "type"=> "department",		"label"=> "department"),
 							 			array( "type"=> "education", 		"label"=> "education" ),
+							 			array( "type"=> "awards",			"label"=> "awards" ),
 							 			array( "type"=> "specialization",	"label"=> "specialization" ),
 								 		array( "type"=> "teaching",			"label"=> "teaching" ), 
 								 		array( "type"=> "publications",		"label"=> "publications" ),
@@ -1630,6 +1631,7 @@ class Profile_CCT {
 							 	'bench' =>array(
 							 			array( "type"=> "department",		"label"=> "department"),
 							 			array( "type"=> "education", 		"label"=> "education" ),
+							 			array( "type"=> "awards",			"label"=> "awards" ),
 							 			array( "type"=> "specialization",	"label"=> "specialization" ),
 							 			array( "type"=> "currentresearch",	"label"=> "current research" ),
 							 			array( "type"=> "graduatestudent",	"label"=> "graduate student" ),
@@ -1656,6 +1658,7 @@ class Profile_CCT {
 							 			array( "type"=> "position" ,		"label"=> "position" ),
 							 			array( "type"=> "department",		"label"=> "department" ),
 							 			array( "type"=> "education", 		"label"=> "education" ),
+							 			array( "type"=> "awards",			"label"=> "awards" ),
 							 			array( "type"=> "specialization",	"label"=> "specialization" ),
 							 			array( "type"=> "currentresearch",	"label"=> "current research" ),
 							 			array( "type"=> "graduatestudent",	"label"=> "graduate student" ),
