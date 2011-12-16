@@ -5,7 +5,7 @@
 	<th scope="row">...</th>
 	<td><fieldset><legend class="screen-reader-text"><span>...</span></legend>
 	<label for="default_pingback_flag">
-	<input type="checkbox" checked="checked" value="1" id="default_pingback_flag" name="default_pingback_flag"> Allow UBC directory intergration</label>
+	<input type="checkbox" checked="checked" value="1" id="default_pingback_flag" name="default_pingback_flag"> Allow UBC directory integration</label>
 	<br>
 	<label for="default_ping_status">
 	<input type="checkbox" checked="checked" value="open" id="default_ping_status" name="default_ping_status"> Allow subscribers to manage profile</label>

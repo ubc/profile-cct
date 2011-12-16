@@ -22,6 +22,8 @@ function profile_cct_address_field_shell( $action, $options ) {
 	
 	$options = (is_array($options) ? array_merge($default_options,$options): $default_options );
 	
+	
+	
 	$field->start_field($action,$options);
 	
 	profile_cct_address_field($data,$options);

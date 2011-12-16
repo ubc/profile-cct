@@ -109,3 +109,35 @@
 	margin-bottom: 10px;
 }
 
+/*for checkboxes to display in one line*/
+.days label {
+	display: inline;
+	margin-right: 10px;
+}
+
+.days {
+	clear: left;
+	margin-bottom: 0px;
+}
+
+/* office hours horizontal rules */
+.officehours div.wrap-fields hr {
+	clear: left;
+	display: block;
+	margin-top: 40px;
+	color: #CCC;
+	background-color: #CCC;
+}
+
+/* office hours first horizontal rule */
+.officehours div.wrap-fields:first-child hr {
+	margin-top: 0;
+	color: #CCC;
+	background-color: #CCC;
+}
+
+/*separators on profile page view have a small margin*/
+.separator {
+	margin-left: 5px;
+	margin-right: 5px;
+}

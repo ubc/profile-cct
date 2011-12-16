@@ -33,13 +33,13 @@ function profile_cct_currentresearch_field_shell( $action, $options ) {
 		endforeach;
 		
 	else:
-		profile_cct_currentresearch_field($data,$options,$count=0);
+		profile_cct_currentresearch_field($data,$options);
 	endif;
 	
 	$field->end_field( $action, $options );
 
 }
-function profile_cct_currentresearch_field( $data, $options ){
+function profile_cct_currentresearch_field( $data, $options, $count = 0){
 
 	extract( $options );
 	$show = (is_array($show) ? $show : array());
@@ -54,7 +54,7 @@ function profile_cct_currentresearch_field( $data, $options ){
 	
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-title', 'label'=>'Project Title', 'size'=>35, 'value'=>$data['project-title'], 'type'=>'text','count'=>$count) );
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-description','label'=>'Project Description', 'size'=>35, 'value'=>$data['project-description'], 'type'=>'textarea','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-website', 'label'=>'Project Website', 'size'=>35, 'value'=>$data['project-website'], 'type'=>'text', 'show' => in_array("project-website",$show) ) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-website', 'label'=>'Project Website', 'size'=>35, 'value'=>$data['project-website'], 'type'=>'text', 'show' => in_array("project-website",$show), 'count'=>$count ) );
 	
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'start-date-month','label'=>'month', 'size'=>35, 'value'=>$data['start-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type'=>'select', 'show' => in_array("start-date-month",$show),'count'=>$count) );
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'start-date-year','label'=>'year', 'size'=>35, 'value'=>$data['start-date-year'], 'all_fields'=>$year_array, 'type'=>'select', 'show' => in_array("start-date-year",$show),'count'=>$count) );

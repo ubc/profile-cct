@@ -934,7 +934,7 @@ class Profile_CCT {
 			 		
 			 	if(isset($empty))
 			 		$this->input_field( array('size'=>10, 'value'=>$empty, 'class'=>'field-textarea','name'=>'empty','label'=>'content to be displayed on empty','type'=>'textarea' , 'before_label'=>true));
-			 					
+			 			
 				if(isset($show_fields))
 					$this->input_field(array('type'=>'multiple','all_fields'=>$show_fields, 'class'=>'field-show','selected_fields'=>$show,'name'=>'show', 'label'=>'show / hide input area','before_label'=>true));			
 				
@@ -1013,10 +1013,10 @@ class Profile_CCT {
 	 	$cols = ( isset($cols)? ' cols="'.$cols.'"': '');
 	 	$class = ( isset($class)? ' class="'.$class.'"': ' class="field text"');
 	 	$id = ( isset($id)? ' id="'.$id.'"': ' ');
-	 	
+	 	$separator = (isset($separator) ? '<span class="separator">'.$separator.'</span>': "");
 	 	
 	 	if($type =='multiple')
-	 		$name = ( isset($name)? ' name="'.$name.'[]"':  ' name="profile_cct['.$field_type.']['.$field_id.'][]"');
+	 		$name = ( isset($name)? ' name="'.$name.'[]"':  ' name="profile_cct['.$field_type.']['.$count.']['.$field_id.'][]"');
 	 	elseif($multiple)
 	 		$name = ( isset($name)? ' name="'.$name.'[]"':  ' name="profile_cct['.$field_type.']['.$count.']['.$field_id.']"');
 	 	else
@@ -1025,7 +1025,10 @@ class Profile_CCT {
 	 	$show = ( isset($show) && !$show ? ' style="display:none;"': '');
 	 	switch($type) {
 	 		case 'text':
-			 	?>
+	 		
+	 			if ($separator)
+	 				echo $separator;
+	 			?>
 			 	<span <?php echo $field_id_class.$show; ?>>
 			 		<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
 					<input type="text" <?php echo $size.$class.$name; ?> value="<?php echo esc_attr($value); ?>" id="">
@@ -1035,8 +1038,10 @@ class Profile_CCT {
 			break;
 			
 			case 'multiple':
-	 				?><div <?php echo $field_id_class.$show;  ?>>
-	 				<?php 
+	 				?><div <?php echo $field_id_class.$show;  ?>><?php
+	 				if ($separator)
+	 					echo $separator;
+	 					
 	 				if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } 
 	 				// need to change the name in this case
 					$selected_fields = (is_array($selected_fields) ? $selected_fields : array());
@@ -1054,6 +1059,9 @@ class Profile_CCT {
 	 				<?php 
 	 		break;
 	 		case 'checkbox':
+	 				if ($separator)
+	 					echo $separator;
+	 					
 	 				?><div <?php echo $field_id_class.$show;  ?>>
 	 				<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
 	 					<label><input type="checkbox" <?php checked( $value ); ?> value="1" <?php echo $class.$name; ?> /> <?php echo $field; ?></label>
@@ -1063,6 +1071,10 @@ class Profile_CCT {
 	 		break;
 	 		
 	 		case 'select':
+	 		
+	 				if ($separator)
+	 					echo $separator;
+	 				
 	 				?><span <?php echo $field_id_class.$show;  ?>>
 	 				<?php 
 	 				if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php }  				
@@ -1083,6 +1095,8 @@ class Profile_CCT {
 	 		break;
 	 		
 	 		case 'textarea':
+	 				if ($separator)
+	 					echo $separator;
 	 				?>
 	 				<span <?php echo $field_id_class; ?>>
 	 				<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
@@ -1601,6 +1615,7 @@ class Profile_CCT {
 							 			
 							 			array( "type"=> "department",		"label"=> "department"),
 							 			array( "type"=> "courses",			"label"=> "courses" ),
+							 			array( "type"=> "officehours",		"label"=> "office hours" ),
 							 			array( "type"=> "education", 		"label"=> "education" ),
 							 			array( "type"=> "awards",			"label"=> "awards" ),
 							 			array( "type"=> "specialization",	"label"=> "specialization" ),
@@ -1646,7 +1661,8 @@ class Profile_CCT {
 							 			array( "type"=> "currentresearch",	"label"=> "current research" ),
 							 			array( "type"=> "graduatestudent",	"label"=> "graduate student" ),
 								 		array( "type"=> "permalink", 		"label"=> "permalink"),
-								 		array( "type"=> "courses",			"label"=> "courses" )
+								 		array( "type"=> "courses",			"label"=> "courses" ),
+								 		array( "type"=> "officehours",		"label"=> "office hours" )
 
 							 	)),
 					   'tabs' => array("Basic Info", "Bio")
@@ -1669,6 +1685,7 @@ class Profile_CCT {
 							 			array( "type"=> "position" ,		"label"=> "position" ),
 							 			array( "type"=> "department",		"label"=> "department" ),
 							 			array( "type"=> "courses",			"label"=> "courses" ),
+							 			array( "type"=> "officehours",		"label"=> "office hours" ),
 							 			array( "type"=> "education", 		"label"=> "education" ),
 							 			array( "type"=> "awards",			"label"=> "awards" ),
 							 			array( "type"=> "specialization",	"label"=> "specialization" ),

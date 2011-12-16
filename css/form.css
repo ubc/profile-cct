@@ -222,7 +222,13 @@
 	-khtml-border-radius:3px;
 	border-radius:3px;
 	border:1px solid #DFDFDF;
-	width: 100%;
+	/*width: 100%; commented this out as it interferes with checkboxes being displayed on signle line with label and appears to not affect anything else*/
+}
+
+/*for checkboxes to display in one line*/
+.form-builder li div.multiple-shell label {
+	display: inline;
+	margin-right: 10px;
 }
 
 #side-shell .form-builder .text,
