@@ -1623,6 +1623,7 @@ class Profile_CCT {
 								 		array( "type"=> "publications",		"label"=> "publications" ),
 								 		array( "type"=> "research",			"label"=> "research" ),
 								 		array( "type"=> "currentresearch",	"label"=> "current research" ),
+								 		array( "type"=> "unitassociations",	"label"=> "unit associations"),
 								 		array( "type"=> "graduatestudent",	"label"=> "graduate student" )
 								 		
 							 	)),
@@ -1654,13 +1655,13 @@ class Profile_CCT {
 							 			),
 							 	'bench' =>array(
 							 			array( "type"=> "department",		"label"=> "department"),
-							 			
 							 			array( "type"=> "education", 		"label"=> "education" ),
 							 			array( "type"=> "awards",			"label"=> "awards" ),
 							 			array( "type"=> "specialization",	"label"=> "specialization" ),
 							 			array( "type"=> "currentresearch",	"label"=> "current research" ),
 							 			array( "type"=> "graduatestudent",	"label"=> "graduate student" ),
 								 		array( "type"=> "permalink", 		"label"=> "permalink"),
+								 		array( "type"=> "unitassociations",	"label"=> "unit associations"),
 								 		array( "type"=> "courses",			"label"=> "courses" ),
 								 		array( "type"=> "officehours",		"label"=> "office hours" )
 
@@ -1691,8 +1692,8 @@ class Profile_CCT {
 							 			array( "type"=> "specialization",	"label"=> "specialization" ),
 							 			array( "type"=> "currentresearch",	"label"=> "current research" ),
 							 			array( "type"=> "graduatestudent",	"label"=> "graduate student" ),
-								 		array( "type"=> "permalink", 		"label"=> "permalink")
-								 	
+								 		array( "type"=> "permalink", 		"label"=> "permalink"),
+								 		array( "type"=> "unitassociations",	"label"=> "unit associations")
 							 			)
 							 	)
 				 		) , $type );				 	

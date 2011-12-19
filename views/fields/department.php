@@ -42,6 +42,7 @@ function profile_cct_department_field( $data, $options, $count = 0 ){
 	
 	extract( $options );
 	$field = Profile_CCT::get_object();
+	$show = (is_array($show) ? $show : array());
 	echo "<div class='wrap-fields' data-count='".$count."'>";
 	
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'department', 'label'=>'name', 'size'=>35, 'value'=>$data['department'], 'type'=>'text','count'=>$count) );
@@ -99,7 +100,6 @@ function profile_cct_department_display_shell(  $action, $options, $data=null ) 
 function profile_cct_department_display( $data, $options ){
 	
 	extract( $options );
-	$show = (is_array($show) ? $show : array());
 	$field = Profile_CCT::get_object();
 	
 	
