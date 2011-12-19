@@ -127,8 +127,19 @@ function profile_cct_officehours_display( $data, $options ){
 	$show = (is_array($show) ? $show : array());
 	
 	$field = Profile_CCT::get_object();
+	$separator = '';
 	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'officehours', 'type'=>'shell','tag'=>'div') );
+	
+	if ( isset( $data['days'] ) ) {
+		foreach( $data['days'] as $day ) {
+			$field->display_text( array( 'field_type'=>$type, 'class'=>'days','default_text'=>'Monday', 'separator'=>$separator, 'value'=>$day, 'type'=>'text' ) );
+			$separator = ',';
+		}
+	}
+	else
+		$field->display_text( array( 'field_type'=>$type, 'class'=>'days', 'default_text'=>'Monday', 'type'=>'text' ) );
+	
 	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'start-hour','default_text'=>'11', 'value'=>$data['start-hour'], 'type'=>'text' ) );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'start-minute','default_text'=>'15', 'separator'=>':', 'value'=>$data['start-minute'], 'type'=>'text') );
