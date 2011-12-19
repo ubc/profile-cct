@@ -1,6 +1,6 @@
 <?php
 
-function profile_cct_currentresearch_field_shell( $action, $options ) {
+function profile_cct_projects_field_shell( $action, $options ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -12,14 +12,14 @@ function profile_cct_currentresearch_field_shell( $action, $options ) {
 	$field = Profile_CCT::get_object(); // prints "Creating new instance."
 	
 	$default_options = array(
-		'type' => 'currentresearch',
-		'label'=>'currentresearch',
+		'type' => 'projects',
+		'label'=>'projects',
 		'description'=>'',
 		'show'=>array('project-website','start-date-month','start-date-year','end-date-month','end-date-year','project-status'),
 		'multiple'=>true,
 		'show_multiple'=>true,
 		'show_fields'=>array('project-website','start-date-month','start-date-year','end-date-month','end-date-year','project-status'),
-		'class'=>'currentresearch'
+		'class'=>'projects'
 		);
 	
 	$options = (is_array($options) ? array_merge($default_options,$options): $default_options );
@@ -28,18 +28,18 @@ function profile_cct_currentresearch_field_shell( $action, $options ) {
 	if( $field->is_data_array( $data ) ):
 		$count = 0;
 		foreach($data as $item_data):
-			profile_cct_currentresearch_field($item_data,$options,$count);
+			profile_cct_projects_field($item_data,$options,$count);
 			$count++;
 		endforeach;
 		
 	else:
-		profile_cct_currentresearch_field($data,$options);
+		profile_cct_projects_field($data,$options);
 	endif;
 	
 	$field->end_field( $action, $options );
 
 }
-function profile_cct_currentresearch_field( $data, $options, $count = 0){
+function profile_cct_projects_field( $data, $options, $count = 0){
 
 	extract( $options );
 	$show = (is_array($show) ? $show : array());
@@ -70,7 +70,7 @@ function profile_cct_currentresearch_field( $data, $options, $count = 0){
 }
 
 
-function profile_cct_currentresearch_display_shell( $action, $options, $data=null ) {
+function profile_cct_projects_display_shell( $action, $options, $data=null ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -82,7 +82,7 @@ function profile_cct_currentresearch_display_shell( $action, $options, $data=nul
 	$field = Profile_CCT::get_object(); // prints "Creating new instance."
 	
 	$default_options = array(
-		'type' => 'currentresearch',
+		'type' => 'projects',
 		'width' => 'full',
 		'hide_label'=>true,
 		'before'=>'',
@@ -100,14 +100,14 @@ function profile_cct_currentresearch_display_shell( $action, $options, $data=nul
 			foreach($data as $item_data):
 				
 				if( !$field->is_array_empty($item_data , array('start-date-month','start-date-year','end-date-month','end-date-year','project-status') ) ||  $action == "edit" ):
-					profile_cct_currentresearch_display($item_data,$options);
+					profile_cct_projects_display($item_data,$options);
 					
 				endif;
 			endforeach;
 			
 		else:
 			
-			profile_cct_currentresearch_display($data,$options);
+			profile_cct_projects_display($data,$options);
 		endif;
 		$field->end_field( $action, $options );
 	else:
@@ -115,7 +115,7 @@ function profile_cct_currentresearch_display_shell( $action, $options, $data=nul
 	endif;
 
 }
-function profile_cct_currentresearch_display( $data, $options ){
+function profile_cct_projects_display( $data, $options ){
 
 	extract( $options );
 	$show = (is_array($show) ? $show : array());
@@ -123,7 +123,7 @@ function profile_cct_currentresearch_display( $data, $options ){
 
 	$field = Profile_CCT::get_object();
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'currentresearch', 'type'=>'shell','tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'projects', 'type'=>'shell','tag'=>'div') );
 	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'project-title','default_text'=>'Cure for Cancer', 'value'=>$data['project-title'], 'type'=>'text' ) );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'project-description','default_text'=>'The current research at Wayne Biotech is focused on finding a cure for cancer.', 'value'=>$data['project-description'], 'type'=>'text') );
