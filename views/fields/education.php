@@ -31,7 +31,7 @@ function profile_cct_education_field_shell(  $action, $options) {
 		endforeach;
 		
 	else:
-		profile_cct_education_field($item_data,$options);
+		profile_cct_education_field($data,$options);
 	endif;
 	
 	$field->end_field( $action, $options );

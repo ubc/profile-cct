@@ -1613,18 +1613,19 @@ class Profile_CCT {
 							 			),
 							 	'bench' =>array(
 							 			
-							 			array( "type"=> "department",		"label"=> "department"),
-							 			array( "type"=> "courses",			"label"=> "courses" ),
-							 			array( "type"=> "officehours",		"label"=> "office hours" ),
-							 			array( "type"=> "education", 		"label"=> "education" ),
-							 			array( "type"=> "awards",			"label"=> "awards" ),
-							 			array( "type"=> "specialization",	"label"=> "specialization" ),
-								 		array( "type"=> "teaching",			"label"=> "teaching" ), 
-								 		array( "type"=> "publications",		"label"=> "publications" ),
-								 		array( "type"=> "research",			"label"=> "research" ),
-								 		array( "type"=> "currentresearch",	"label"=> "current research" ),
-								 		array( "type"=> "unitassociations",	"label"=> "unit associations"),
-								 		array( "type"=> "graduatestudent",	"label"=> "graduate student" )
+							 			array( "type"=> "department",				"label"=> "department"),
+							 			array( "type"=> "courses",					"label"=> "courses" ),
+							 			array( "type"=> "officehours",				"label"=> "office hours" ),
+							 			array( "type"=> "education", 				"label"=> "education" ),
+							 			array( "type"=> "awards",					"label"=> "awards" ),
+							 			array( "type"=> "specialization",			"label"=> "specialization" ),
+								 		array( "type"=> "teaching",					"label"=> "teaching" ), 
+								 		array( "type"=> "publications",				"label"=> "publications" ),
+								 		array( "type"=> "research",					"label"=> "research" ),
+								 		array( "type"=> "currentresearch",			"label"=> "current research" ),
+								 		array( "type"=> "unitassociations",			"label"=> "unit associations"),
+								 		array( "type"=> "professionalaffiliations",	"label"=> "professional affiliations"),
+								 		array( "type"=> "graduatestudent",			"label"=> "graduate student" )
 								 		
 							 	)),
 					   'tabs' => array("Basic Info", "Bio")
@@ -1654,16 +1655,17 @@ class Profile_CCT {
 													 	
 							 			),
 							 	'bench' =>array(
-							 			array( "type"=> "department",		"label"=> "department"),
-							 			array( "type"=> "education", 		"label"=> "education" ),
-							 			array( "type"=> "awards",			"label"=> "awards" ),
-							 			array( "type"=> "specialization",	"label"=> "specialization" ),
-							 			array( "type"=> "currentresearch",	"label"=> "current research" ),
-							 			array( "type"=> "graduatestudent",	"label"=> "graduate student" ),
-								 		array( "type"=> "permalink", 		"label"=> "permalink"),
-								 		array( "type"=> "unitassociations",	"label"=> "unit associations"),
-								 		array( "type"=> "courses",			"label"=> "courses" ),
-								 		array( "type"=> "officehours",		"label"=> "office hours" )
+							 			array( "type"=> "department",				"label"=> "department"),
+							 			array( "type"=> "education", 				"label"=> "education" ),
+							 			array( "type"=> "awards",					"label"=> "awards" ),
+							 			array( "type"=> "specialization",			"label"=> "specialization" ),
+							 			array( "type"=> "currentresearch",			"label"=> "current research" ),
+							 			array( "type"=> "graduatestudent",			"label"=> "graduate student" ),
+								 		array( "type"=> "permalink", 				"label"=> "permalink"),
+								 		array( "type"=> "unitassociations",			"label"=> "unit associations"),
+								 		array( "type"=> "professionalaffiliations",	"label"=> "professional affiliations"),
+								 		array( "type"=> "courses",					"label"=> "courses" ),
+								 		array( "type"=> "officehours",				"label"=> "office hours" )
 
 							 	)),
 					   'tabs' => array("Basic Info", "Bio")
@@ -1693,7 +1695,8 @@ class Profile_CCT {
 							 			array( "type"=> "currentresearch",	"label"=> "current research" ),
 							 			array( "type"=> "graduatestudent",	"label"=> "graduate student" ),
 								 		array( "type"=> "permalink", 		"label"=> "permalink"),
-								 		array( "type"=> "unitassociations",	"label"=> "unit associations")
+								 		array( "type"=> "unitassociations",	"label"=> "unit associations"),
+								 		array( "type"=> "professionalaffiliations",	"label"=> "professional affiliations")
 							 			)
 							 	)
 				 		) , $type );				 	

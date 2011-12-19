@@ -31,7 +31,7 @@ function profile_cct_permalink_display_shell(  $action, $options, $data=null ) {
 		endforeach;
 		
 	else:
-		profile_cct_permalink_display($item_data,$options);
+		profile_cct_permalink_display($data,$options);
 	endif;
 	
 	$field->end_field( $action, $options );

@@ -31,7 +31,7 @@ function profile_cct_email_field_shell( $action, $options ) {
 		endforeach;
 		
 	else:
-		profile_cct_email_field($item_data,$options);
+		profile_cct_email_field($data,$options);
 	endif;
 	$field->end_field( $action, $options );
 	

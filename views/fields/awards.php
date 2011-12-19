@@ -41,7 +41,7 @@ function profile_cct_awards_field_shell( $action, $options=null ) {
 		endforeach;
 		
 	else:
-		profile_cct_awards_field($item_data,$options);
+		profile_cct_awards_field($data,$options);
 	endif;
 	$field->end_field( $action, $options );
 	

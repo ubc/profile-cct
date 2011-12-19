@@ -32,7 +32,7 @@ function profile_cct_unitassociations_field_shell( $action, $options ) {
 		endforeach;
 		
 	else:
-		profile_cct_unitassociations_field($item_data,$options);
+		profile_cct_unitassociations_field($data,$options);
 	endif;
 	$field->end_field( $action, $options );
 	
@@ -55,7 +55,7 @@ function profile_cct_unitassociations_field( $data, $options, $count = 0 ){
 
 
 
-function profile_cct_unitassociationst_display_shell(  $action, $options, $data=null ) {
+function profile_cct_unitassociations_display_shell(  $action, $options, $data=null ) {
 	
 	if( is_object($action) ):
 		$post = $action;
