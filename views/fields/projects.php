@@ -127,7 +127,7 @@ function profile_cct_projects_display( $data, $options ){
 	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'project-title','default_text'=>'Cure for Cancer', 'value'=>$data['project-title'], 'type'=>'text' ) );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'project-description','default_text'=>'The current research at Wayne Biotech is focused on finding a cure for cancer.', 'value'=>$data['project-description'], 'type'=>'text') );
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'project-website','default_text'=>'http://wayneenterprises.biz', 'value'=>$data['project-website'], 'type'=>'text', 'show' => in_array("project-website",$show) ) );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'project-website','default_text'=>'http://wayneenterprises.biz', 'separator'=>'<br />'/*needs changing?*/, 'value'=>$data['project-website'], 'type'=>'text', 'show' => in_array("project-website",$show) ) );
 	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'start-date-month','default_text'=>'January', 'value'=>$data['start-date-month'], 'type'=>'text', 'show'=> in_array("start-date-month",$show)) );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'start-date-year','default_text'=>'2006', 'separator'=>',', 'value'=>$data['start-date-year'], 'type'=>'text', 'show'=> in_array("start-date-year",$show)) );

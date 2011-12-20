@@ -1126,8 +1126,8 @@ class Profile_CCT {
 			echo "";
 			return true;
 		endif;
-		
 	 	
+	 	$prepend_class = $class;
 	 	$class = ( isset($class)? ' class="'.$class.'"': ' class=""');
 	 	$id = ( isset($id)? ' id="'.$id.'"': ' ');
 	 	
@@ -1156,7 +1156,7 @@ class Profile_CCT {
 	 	
 	 	$display = ( $value ? $value :$default_text);
 	 	
-	 	$separator = (isset($separator) ? '<span class="separator">'.$separator.'</span>': "");
+	 	$separator = (isset($separator) ? '<span class="'.$prepend_class.'-separator">'.$separator.'</span>': "");
 	 	
 	
 	 	switch($type) {

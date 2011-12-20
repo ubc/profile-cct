@@ -108,8 +108,10 @@ var Profile_CCT_FORM ={
 		if(el.attr('checked'))
 		{
 			jQuery('.'+el_class,el.parent().parent().parent().parent()).show();
+			jQuery('.'+el_class+'-separator',el.parent().parent().parent().parent()).show();
 		}else{
 			jQuery('.'+el_class,el.parent().parent().parent().parent()).hide();
+			jQuery('.'+el_class+'-separator',el.parent().parent().parent().parent()).hide();
 		}
 		
 	},
