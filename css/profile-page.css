@@ -9,6 +9,11 @@
 	float: left;
 	margin-top: 5px;
 }
+.field-item .textarea-shell,
+.field-item .mceEditor{
+	margin-top: 0;
+	width:100%;
+}
 .field-item label{
 	display: block;
 	color:#888;
@@ -24,7 +29,6 @@
     padding: 2px 4px;
 }
 #post-body-content textarea{
-	width: 600px;
 	display: block;
 	height: 300px;
 }
@@ -55,19 +59,21 @@
 	float: left;
 	margin: 10px 0 0;
 }
+.field-shell{
+	width: 100%;
+}
 .remove-fields{
 	float: left;
 	margin-top: 5px;
 }
 
 /* ----- Tabs ----- */
-.ui-tabs-nav{
+#tabs .ui-tabs-nav{
 	border-bottom: 1px solid #CCCCCC;
     padding-bottom: 0;
     height: 30px;
     margin-bottom: 10px;
 }
-
 .ui-tabs-nav li.ui-state-active,
 .ui-tabs-nav li a:hover{
 	border-color: #CCCCCC #CCCCCC #FFFFFF;

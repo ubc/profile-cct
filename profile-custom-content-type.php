@@ -1015,13 +1015,19 @@ class Profile_CCT {
 	 	$id = ( isset($id)? ' id="'.$id.'"': ' ');
 	 	$separator = (isset($separator) ? '<span class="separator">'.$separator.'</span>': "");
 	 	
-	 	if($type =='multiple')
+	 	if($type =='multiple'):
 	 		$name = ( isset($name)? ' name="'.$name.'[]"':  ' name="profile_cct['.$field_type.']['.$count.']['.$field_id.'][]"');
-	 	elseif($multiple)
+	 		$textarea_id = 'profile_cct-'.$field_type.'-'.$count.'-'.$field_id;
+	 		$textarea_name = 'profile_cct['.$field_type.']['.$count.']['.$field_id.'][]';
+	 	elseif($multiple):
 	 		$name = ( isset($name)? ' name="'.$name.'[]"':  ' name="profile_cct['.$field_type.']['.$count.']['.$field_id.']"');
-	 	else
+	 		$textarea_id = 'profile_cct-'.$field_type.'-'.$count.'-'.$field_id;
+	 		$textarea_name = 'profile_cct['.$field_type.']['.$count.']['.$field_id.']';
+	 	else:
 	 		$name = ( isset($name)? ' name="'.$name.'"': ' name="profile_cct['.$field_type.']['.$field_id.']"');
-	 		
+	 		$textarea_id = 'profile_cct-'.$field_type.'-'.$field_id;
+	 		$textarea_name = 'profile_cct['.$field_type.']['.$field_id.']';
+	 	endif;
 	 	$show = ( isset($show) && !$show ? ' style="display:none;"': '');
 	 	switch($type) {
 	 		case 'text':
@@ -1100,7 +1106,7 @@ class Profile_CCT {
 	 				?>
 	 				<span <?php echo $field_id_class; ?>>
 	 				<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
-					<textarea <?php echo $size.$class.$name.$row.$cols; ?> id=""><?php echo esc_html($value); ?></textarea>
+	 				<?php wp_editor( $value, $textarea_id, array('textarea_name'=>$textarea_name,'teeny'=>true, 'media_buttons'=>false) ); ?>
 					<?php if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
 					</span>
 	 				<?php
