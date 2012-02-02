@@ -427,7 +427,9 @@ class Profile_CCT {
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=helper">HELPER</a>
 		</h3>
 		
-		<?php switch( $_GET['view'] ) {
+		<?php 
+		$this->action = 'edit';
+		switch( $_GET['view'] ) {
 			case "form":
 				require_once("views/form.php");
 			break;
@@ -1106,8 +1108,16 @@ class Profile_CCT {
 	 				?>
 	 				<span <?php echo $field_id_class; ?>>
 	 				<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
-	 				<?php wp_editor( $value, $textarea_id, array('textarea_name'=>$textarea_name,'teeny'=>true, 'media_buttons'=>false) ); ?>
-					<?php if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+	 				
+	 				<?php 
+					// only dispaly the editor on the Profile edit side	
+	 				if( $this->action == 'edit' ): ?>
+	 					<textarea <?php echo $size.$class.$name.$row.$cols; ?> id=""><?php echo esc_html($value); ?></textarea>
+	 				<?php 
+	 				else:
+	 					wp_editor( $value, $textarea_id, array('textarea_name'=>$textarea_name,'teeny'=>true, 'media_buttons'=>false) );
+	 				endif;
+					if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
 					</span>
 	 				<?php
 	 		break;
