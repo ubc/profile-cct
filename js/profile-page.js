@@ -10,6 +10,8 @@ var Profile_CCT_PAGE = {
 		//jQuery('.hide-if-js',Profile_CCT_PAGE.tabs_shell).removeClass('hide-if-js'); // this helps with showing the meta boxes 
 		jQuery('.add-multiple').click(Profile_CCT_PAGE.addFields);
 		jQuery('.remove-fields').live('click',Profile_CCT_PAGE.removeFields);
+		jQuery(".wrap-social-fields select").live('change', Profile_CCT_PAGE.updateSocialLabel);
+		jQuery(".add-multiple").live('click', Profile_CCT_PAGE.clearSocialLabel);
 		
 		// placed right after tb_show call
 		if(typeof window.tb_remove == 'function') {
@@ -32,7 +34,7 @@ var Profile_CCT_PAGE = {
 	addFields : function(e){
 		e.preventDefault();
 		var link = jQuery(this);
-		
+		//
 		if(link.prev().children('div').hasClass('days'))
 			var days_case = true;
 		
@@ -75,12 +77,30 @@ var Profile_CCT_PAGE = {
 		//if(link.prev().find('.remove-fields'))
 		
 	},
+	
 	removeFields: function(e) {
 		e.preventDefault();
 		var link = jQuery(this);
 		link.parent().remove();
 		//link.prev().children('hr').remove();
+	},
+	
+	
+	updateSocialLabel: function(e){
+		var value = jQuery(this).val();
+		jQuery(this).parent().next().children("label").text(socialArray[value].user_url);
+	},
+	
+	clearSocialLabel: function(e){
+		jQuery(this).prev().children(".username").children("label").text("");
 	}
+	
 };
 
 jQuery(document).ready(Profile_CCT_PAGE.onReady);
+
+var socialOptions = profileCCTSocialArray;
+var socialArray=new Array();
+for(var i = 0; i < socialOptions.length; i++){
+	 socialArray[socialOptions[i].label] = socialOptions[i];
+}

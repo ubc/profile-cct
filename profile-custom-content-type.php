@@ -189,6 +189,7 @@ class Profile_CCT {
 			
 			wp_enqueue_style( 'profile-cct-edit-post', WP_PLUGIN_URL . '/profile-cct/css/profile-page.css' );
 			wp_enqueue_script( 'profile-cct-edit-post', WP_PLUGIN_URL . '/profile-cct/js/profile-page.js',array('jquery-ui-tabs' ) );
+			wp_localize_script( 'profile-cct-edit-post', 'profileCCTSocialArray', profile_cct_social_options());
 		endif;
 		
 	}
