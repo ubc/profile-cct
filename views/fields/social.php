@@ -45,8 +45,8 @@ function profile_cct_social_field( $data, $options, $count = 0 ){
 		$social_array[] =  $social_item['label'];
 		$social_array_details[$social_item['label']] =  $social_item;	
 	endforeach;
-	
-	print_r(array_search($data['option'],$social_array_options));
+
+	//print_r(array_search($data['option'],$social_array_options));
 	echo "<div class='wrap-fields wrap-social-fields' data-count='".$count."'>";
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'option', 'label'=>'option',  'value'=>$data['option'], 'all_fields'=>$social_array, 'type'=>'select','count'=>$count) );
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'username', 'label'=>$social_array_details[$data['option']]['user_url'],  'value'=>$data['username'], 'all_fields'=>$social_array, 'type'=>'text','count'=>$count) );
@@ -96,6 +96,7 @@ function profile_cct_social_display( $data, $options ){
 	extract( $options );
 	$field = Profile_CCT::get_object();
 	
+	//make an associative array
 	$social_array_options = profile_cct_social_options();
 	foreach($social_array_options as $social_item):
 		$social_array[$social_item['label']] =  $social_item;
@@ -105,7 +106,9 @@ function profile_cct_social_display( $data, $options ){
 	
 	$user_url = $social_array[$data['option']]['user_url'];
 	$social_link = '<a href="' . str_replace('{value}',$data['username'], $user_url) . '">' . $data['username'] . '</a>';
+	$img_path = get_bloginfo('url') . '/' . 'wp-content/plugins/profile-cct/img/';
 	
+	echo '<img src="' . $img_path . $social_array[$data['option']]['type'] . '.png" />';
 	$field->display_text( array( 'field_type'=>$type,  'class'=>'social type', 'default_text'=>'', 'value'=>$data['option'], 'type'=>'text', 'tag'=>'span') );
 	$field->display_text( array( 'field_type'=>$type,  'class'=>'social link', 'default_text'=>'', 'separator'=>':', 'value'=>$social_link, 'type'=>'text', 'tag'=>'span') );
 	
