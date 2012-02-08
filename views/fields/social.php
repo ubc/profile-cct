@@ -106,11 +106,11 @@ function profile_cct_social_display( $data, $options ){
 	
 	$user_url = $social_array[$data['option']]['user_url'];
 	$social_link = '<a href="' . str_replace('{value}',$data['username'], $user_url) . '">' . $data['username'] . '</a>';
-	$img_path = get_bloginfo('url') . '/' . 'wp-content/plugins/profile-cct/img/';
+	$img_path = plugins_url() . '/profile-cct/img/';
 	
-	echo '<img src="' . $img_path . $social_array[$data['option']]['type'] . '.png" />';
-	$field->display_text( array( 'field_type'=>$type,  'class'=>'social type', 'default_text'=>'', 'value'=>$data['option'], 'type'=>'text', 'tag'=>'span') );
-	$field->display_text( array( 'field_type'=>$type,  'class'=>'social link', 'default_text'=>'', 'separator'=>':', 'value'=>$social_link, 'type'=>'text', 'tag'=>'span') );
+	echo '<img src="' . $img_path . $social_array[$data['option']]['type'] . '.png" class="icon" />';
+	$field->display_text( array( 'field_type'=>$type,  'class'=>'type', 'default_text'=>'', 'value'=>$data['option'], 'type'=>'text', 'tag'=>'span') );
+	$field->display_text( array( 'field_type'=>$type,  'class'=>'link', 'default_text'=>'', 'separator'=>':', 'value'=>$social_link, 'type'=>'text', 'tag'=>'span') );
 	
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 }
