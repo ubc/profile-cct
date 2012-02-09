@@ -31,6 +31,12 @@
     width: 68%;
 	float: left;
 }
+#tabs .ui-tabs-nav{
+	border-bottom: 1px solid #CCCCCC;
+    padding-bottom: 0;
+    height: 27px;
+    margin-bottom: 10px;
+}
 #col-middle #side-shell{
 	max-width: 300px;
 	width: 31%;

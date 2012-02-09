@@ -20,6 +20,8 @@ var Profile_CCT_PAGE = {
 				jQuery("#TB_window").fadeOut("fast",function(){jQuery('#TB_window,#TB_overlay,#TB_HideSelect').unload("#TB_ajaxContent").unbind().remove();});
 			}
 		}
+		
+		jQuery('.wp-editor-area').closest('.meta-box-sortables').removeClass('meta-box-sortables');
 		 
 
 	},
