@@ -1,3 +1,10 @@
+.post-php .add-new-h2,
+.post-new-php .add-new-h2{
+	display: none;
+}
+.field-item .textarea-shell{
+	margin:-15px 0 0 0;
+}
 .inside{ position: relative; overflow: hidden; }
 .hndle span{ text-transform: capitalize; }
 /* Name */
@@ -11,7 +18,7 @@
 }
 .field-item .textarea-shell,
 .field-item .mceEditor{
-	margin-top: 0;
+	margin: 0;
 	width:100%;
 }
 .field-item label{
