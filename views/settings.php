@@ -39,7 +39,9 @@
 		<em><span>copy and paste</span></em>
 	</p>
 </form>
+have options for how you want to list the view. 
 
+Have options on how many person you want to list.
 <form>
 <table class="form-table">
 	<tbody><tr valign="top">

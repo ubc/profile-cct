@@ -6,7 +6,7 @@
  * Domain Path: /languages
  * Description: Allows administrators to manage user profiles better in order to display them on their websites
  * Author: Enej Bajgoric, CTLT
- * Version: 0.0.1alpha
+ * Version: 1.0beta
  * Licence: GPLv2
  * Author URI: http://ctlt.ubc.ca
  */
@@ -324,7 +324,7 @@ class Profile_CCT {
 	 */
 	public function add_menu_page() {
 		$current_user = wp_get_current_user();
-		if( !$current_user->has_cap('edit_others_profile_cct') ):
+		
 		
 		$public_profile = add_submenu_page(
 			'users.php',
@@ -332,6 +332,7 @@ class Profile_CCT {
 			__( 'Public Profile', $this -> get_textdomain() ),
 			'read', 'public_profile',
 			array( $this, 'public_profile' ) );
+		if( !$current_user->has_cap('edit_others_profile_cct') ):
 		endif;
 		$page = add_submenu_page(
 			'edit.php?post_type=profile_cct',
@@ -483,22 +484,26 @@ class Profile_CCT {
 		<h3 class="nav-tab-wrapper">
 
 		<a class="nav-tab <?php if( !isset($_GET['view']) ) { echo "nav-tab-active"; } ?>"
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php">Settings</a>
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php">About</a>
 		<span>Builder:</span>
+		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='taxonomy' ) { echo "nav-tab-active"; } ?>"
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=taxonomy">Taxonomy</a>
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='form' ) { echo "nav-tab-active"; } ?>"
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=form">Form</a>
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='page' ) { echo "nav-tab-active"; } ?>"
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=page">Page</a>
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=page">Person View</a>
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='list' ) { echo "nav-tab-active"; } ?>"
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list">List</a>
-		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='taxonomy' ) { echo "nav-tab-active"; } ?>"
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=taxonomy">Taxonomy</a>
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list">List View</a>
+		
+		<!-- 
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='fields' ) { echo "nav-tab-active"; } ?>"
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=fields">Fields</a>
+		
 		<a class="nav-tab <?php if( isset($_GET['view']) && $_GET['view'] =='helper' ) { echo "nav-tab-active"; } ?>"
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=helper">HELPER</a>
+			-->
 		</h3>
-
+		
 		<?php
 		$this->action = 'edit';
 		switch( $_GET['view'] ) {
@@ -521,7 +526,7 @@ class Profile_CCT {
 			require_once("views/fields.php");
 			break;
 		default:
-			require_once("views/settings.php");
+			require_once("views/about.php");
 			break;
 
 		}

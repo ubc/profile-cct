@@ -67,10 +67,12 @@
 	top:3px;
 	position: relative;
 }
-#col-right p{
+.info{
 	background: #EAF2FA;
 	padding: 5px;
 	border-radius: 4px;
+}
+.info em{
 	font-size: 11px;
 }
 
