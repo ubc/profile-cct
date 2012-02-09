@@ -67,11 +67,13 @@
 	top:3px;
 	position: relative;
 }
-#col-right p{
+.info{
 	background: #EAF2FA;
 	padding: 5px;
 	border-radius: 4px;
-	font-size: 11px;
+}
+.info em{
+	font-size: 12px;
 }
 
 .shell{

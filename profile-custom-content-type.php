@@ -6,7 +6,7 @@
  * Domain Path: /languages
  * Description: Allows administrators to manage user profiles better in order to display them on their websites
  * Author: Enej Bajgoric, CTLT
- * Version: 0.0.1alpha
+ * Version: 1.0beta
  * Licence: GPLv2
  * Author URI: http://ctlt.ubc.ca
  */
@@ -41,36 +41,36 @@ if ( !defined('ABSPATH') )
 	die('-1');
 
 
-if(isset( $_GET['d'])):
+if(isset( $_GET['delete_profile_cct_data'])):
 	delete_option('Profile_CCT_form_fields_tabbed-1');
-delete_option('Profile_CCT_form_fields_tabbed-2');
-delete_option('Profile_CCT_form_fields_tabbed-3');
-delete_option('Profile_CCT_form_fields_tabbed-4');
-delete_option('Profile_CCT_form_fields_tabbed-5');
-delete_option('Profile_CCT_form_fields_tabbed-6');
-delete_option('Profile_CCT_form_fields_normal');
-delete_option('Profile_CCT_form_fields_side');
-delete_option('Profile_CCT_form_fields_bench');
-delete_option('Profile_CCT_form_tabs_normal');
-
-
-delete_option('Profile_CCT_page_fields_tabbed-1');
-delete_option('Profile_CCT_page_fields_tabbed-2');
-delete_option('Profile_CCT_page_fields_tabbed-3');
-delete_option('Profile_CCT_page_fields_tabbed-4');
-delete_option('Profile_CCT_page_fields_tabbed-5');
-delete_option('Profile_CCT_page_fields_tabbed-6');
-delete_option('Profile_CCT_page_fields_header');
-delete_option('Profile_CCT_page_fields_side');
-delete_option('Profile_CCT_page_fields_bottom');
-delete_option('Profile_CCT_page_fields_bench');
-delete_option('Profile_CCT_page_tabs_normal');
-delete_option('Profile_CCT_page_fields');
-
-delete_option('Profile_CCT_list_fields_normal');
-delete_option('Profile_CCT_list_fields_bench');
-
-delete_option('Profile_CCT_page_fields');
+	delete_option('Profile_CCT_form_fields_tabbed-2');
+	delete_option('Profile_CCT_form_fields_tabbed-3');
+	delete_option('Profile_CCT_form_fields_tabbed-4');
+	delete_option('Profile_CCT_form_fields_tabbed-5');
+	delete_option('Profile_CCT_form_fields_tabbed-6');
+	delete_option('Profile_CCT_form_fields_normal');
+	delete_option('Profile_CCT_form_fields_side');
+	delete_option('Profile_CCT_form_fields_bench');
+	delete_option('Profile_CCT_form_tabs_normal');
+	
+	
+	delete_option('Profile_CCT_page_fields_tabbed-1');
+	delete_option('Profile_CCT_page_fields_tabbed-2');
+	delete_option('Profile_CCT_page_fields_tabbed-3');
+	delete_option('Profile_CCT_page_fields_tabbed-4');
+	delete_option('Profile_CCT_page_fields_tabbed-5');
+	delete_option('Profile_CCT_page_fields_tabbed-6');
+	delete_option('Profile_CCT_page_fields_header');
+	delete_option('Profile_CCT_page_fields_side');
+	delete_option('Profile_CCT_page_fields_bottom');
+	delete_option('Profile_CCT_page_fields_bench');
+	delete_option('Profile_CCT_page_tabs_normal');
+	delete_option('Profile_CCT_page_fields');
+	
+	delete_option('Profile_CCT_list_fields_normal');
+	delete_option('Profile_CCT_list_fields_bench');
+	
+	delete_option('Profile_CCT_page_fields');
 
 endif;
 
@@ -156,7 +156,23 @@ class Profile_CCT {
     		 if( (int)$post->post_author != $current_user->ID && !current_user_can('edit_others_profile_cct') ):
     			$wp_admin_bar->remove_menu('edit');
     		endif;
-    	endif;	
+    	endif;
+    	$wp_admin_bar->remove_menu('logout');
+    	
+    	$wp_admin_bar->add_menu( array(
+			'parent' => 'user-actions',
+			'id'     => 'edit-public-profile',
+			'title'  => __( 'Edit Public Profile' ),
+			'href' => admin_url('users.php?page=public_profile'),
+			));
+		
+		// this shouldn't be messing with the logout 
+		$wp_admin_bar->add_menu( array(
+			'parent' => 'user-actions',
+			'id'     => 'logout',
+			'title'  => __( 'Log Out' ),
+			'href'   => wp_logout_url(),
+			) );
     		
     }
 
@@ -247,7 +263,7 @@ class Profile_CCT {
 		            'read_private_posts' => 'read_private_profile_cct',
 		            'delete_post' => 'delete_profile_cct'
 		            */
-		$roles = array('author','contributor');
+		$roles = array('author','contributor', 'subscriber');
 		foreach( $roles as $role_name):
 		
 			$role = get_role( $role_name ); // gets the author role
@@ -256,10 +272,10 @@ class Profile_CCT {
 			$role->add_cap( 'publish_profile_cct', false );
 			$role->add_cap( 'edit_others_profile_cct',false);
 		endforeach;
-
+		/*
 		$role = get_role( 'subscriber' ); // gets the author role
 		$role->add_cap( 'public_profile_profiles_cct', false );
-
+		*/
 		// redirect users to their profile page
 		if($plugin_page == 'public_profile' &&  in_array($pagenow, array('profile.php','users.php'))  ):
 		
@@ -324,7 +340,7 @@ class Profile_CCT {
 	 */
 	public function add_menu_page() {
 		$current_user = wp_get_current_user();
-		if( !$current_user->has_cap('edit_others_profile_cct') ):
+		
 		
 		$public_profile = add_submenu_page(
 			'users.php',
@@ -332,6 +348,7 @@ class Profile_CCT {
 			__( 'Public Profile', $this -> get_textdomain() ),
 			'read', 'public_profile',
 			array( $this, 'public_profile' ) );
+		if( !$current_user->has_cap('edit_others_profile_cct') ):
 		endif;
 		$page = add_submenu_page(
 			'edit.php?post_type=profile_cct',
@@ -483,22 +500,26 @@ class Profile_CCT {
 		<h3 class="nav-tab-wrapper">
 
 		<a class="nav-tab <?php if( !isset($_GET['view']) ) { echo "nav-tab-active"; } ?>"
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php">Settings</a>
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php">About</a>
 		<span>Builder:</span>
+		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='taxonomy' ) { echo "nav-tab-active"; } ?>"
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=taxonomy">Taxonomy</a>
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='form' ) { echo "nav-tab-active"; } ?>"
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=form">Form</a>
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='page' ) { echo "nav-tab-active"; } ?>"
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=page">Page</a>
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=page">Person View</a>
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='list' ) { echo "nav-tab-active"; } ?>"
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list">List</a>
-		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='taxonomy' ) { echo "nav-tab-active"; } ?>"
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=taxonomy">Taxonomy</a>
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list">List View</a>
+		
+		<!-- 
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='fields' ) { echo "nav-tab-active"; } ?>"
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=fields">Fields</a>
+		
 		<a class="nav-tab <?php if( isset($_GET['view']) && $_GET['view'] =='helper' ) { echo "nav-tab-active"; } ?>"
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=helper">HELPER</a>
+			-->
 		</h3>
-
+		
 		<?php
 		$this->action = 'edit';
 		switch( $_GET['view'] ) {
@@ -521,7 +542,7 @@ class Profile_CCT {
 			require_once("views/fields.php");
 			break;
 		default:
-			require_once("views/settings.php");
+			require_once("views/about.php");
 			break;
 
 		}

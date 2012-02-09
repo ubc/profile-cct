@@ -1,10 +1,8 @@
+<p class="info">Drag and drop the fields into place, just the way you want to. Don't forget to click the edit button for some customization. Also you don't have to click a save button. Enjoy</p>
 <div id="col-container">
 	<div id="notify">
-		<span id="spinner" class="update"><img src="<?php echo admin_url(); ?>/images/wpspin_light.gif" alt="spinner" /> thinking...</span>
-		
+		<span id="spinner" class="update"><img src="<?php echo admin_url(); ?>/images/wpspin_light.gif" alt="spinner" /> thinking...</span>	
 	</div>
-
-
 <div id="col-right">
 	<div class="col-wrap">
 	
@@ -24,7 +22,7 @@
  		endif;
 		?>
 	</ul>
-	<p><em>drag and drop the fields that you want to be displayed in the page</em></p>
+	<p class="info"><em>Place fields that you don't want to display above .</em> &uarr;</p>
 		
 	</div>
 </div><!-- /col-right -->
@@ -33,7 +31,7 @@
 	<div class="col-wrap">
 	<h3>Page Content</h3>
 	<?php
-		$data = array();
+		$data = array(); 
 		do_action('profile_cct_page',$action,$data,"page");
 	?>
 	</div>
