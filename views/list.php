@@ -18,7 +18,6 @@
 	 			else:
 	 				do_action( 'profile_cct_display_shell_'.$field['type'], $action, $field, $user_data[ $field['type'] ] );
 	 			endif;
-	 			
 	 		endforeach;
  		endif;
 		?>

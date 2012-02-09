@@ -31,7 +31,7 @@
 	<div class="col-wrap">
 	<h3>Page Content</h3>
 	<?php
-		$data = array();
+		$data = array(); 
 		do_action('profile_cct_page',$action,$data,"page");
 	?>
 	</div>

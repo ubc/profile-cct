@@ -41,36 +41,36 @@ if ( !defined('ABSPATH') )
 	die('-1');
 
 
-if(isset( $_GET['d'])):
+if(isset( $_GET['delete_profile_cct_data'])):
 	delete_option('Profile_CCT_form_fields_tabbed-1');
-delete_option('Profile_CCT_form_fields_tabbed-2');
-delete_option('Profile_CCT_form_fields_tabbed-3');
-delete_option('Profile_CCT_form_fields_tabbed-4');
-delete_option('Profile_CCT_form_fields_tabbed-5');
-delete_option('Profile_CCT_form_fields_tabbed-6');
-delete_option('Profile_CCT_form_fields_normal');
-delete_option('Profile_CCT_form_fields_side');
-delete_option('Profile_CCT_form_fields_bench');
-delete_option('Profile_CCT_form_tabs_normal');
-
-
-delete_option('Profile_CCT_page_fields_tabbed-1');
-delete_option('Profile_CCT_page_fields_tabbed-2');
-delete_option('Profile_CCT_page_fields_tabbed-3');
-delete_option('Profile_CCT_page_fields_tabbed-4');
-delete_option('Profile_CCT_page_fields_tabbed-5');
-delete_option('Profile_CCT_page_fields_tabbed-6');
-delete_option('Profile_CCT_page_fields_header');
-delete_option('Profile_CCT_page_fields_side');
-delete_option('Profile_CCT_page_fields_bottom');
-delete_option('Profile_CCT_page_fields_bench');
-delete_option('Profile_CCT_page_tabs_normal');
-delete_option('Profile_CCT_page_fields');
-
-delete_option('Profile_CCT_list_fields_normal');
-delete_option('Profile_CCT_list_fields_bench');
-
-delete_option('Profile_CCT_page_fields');
+	delete_option('Profile_CCT_form_fields_tabbed-2');
+	delete_option('Profile_CCT_form_fields_tabbed-3');
+	delete_option('Profile_CCT_form_fields_tabbed-4');
+	delete_option('Profile_CCT_form_fields_tabbed-5');
+	delete_option('Profile_CCT_form_fields_tabbed-6');
+	delete_option('Profile_CCT_form_fields_normal');
+	delete_option('Profile_CCT_form_fields_side');
+	delete_option('Profile_CCT_form_fields_bench');
+	delete_option('Profile_CCT_form_tabs_normal');
+	
+	
+	delete_option('Profile_CCT_page_fields_tabbed-1');
+	delete_option('Profile_CCT_page_fields_tabbed-2');
+	delete_option('Profile_CCT_page_fields_tabbed-3');
+	delete_option('Profile_CCT_page_fields_tabbed-4');
+	delete_option('Profile_CCT_page_fields_tabbed-5');
+	delete_option('Profile_CCT_page_fields_tabbed-6');
+	delete_option('Profile_CCT_page_fields_header');
+	delete_option('Profile_CCT_page_fields_side');
+	delete_option('Profile_CCT_page_fields_bottom');
+	delete_option('Profile_CCT_page_fields_bench');
+	delete_option('Profile_CCT_page_tabs_normal');
+	delete_option('Profile_CCT_page_fields');
+	
+	delete_option('Profile_CCT_list_fields_normal');
+	delete_option('Profile_CCT_list_fields_bench');
+	
+	delete_option('Profile_CCT_page_fields');
 
 endif;
 
