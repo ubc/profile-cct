@@ -156,7 +156,23 @@ class Profile_CCT {
     		 if( (int)$post->post_author != $current_user->ID && !current_user_can('edit_others_profile_cct') ):
     			$wp_admin_bar->remove_menu('edit');
     		endif;
-    	endif;	
+    	endif;
+    	$wp_admin_bar->remove_menu('logout');
+    	
+    	$wp_admin_bar->add_menu( array(
+			'parent' => 'user-actions',
+			'id'     => 'edit-public-profile',
+			'title'  => __( 'Edit Public Profile' ),
+			'href' => admin_url('users.php?page=public_profile'),
+			));
+		
+		// this shouldn't be messing with the logout 
+		$wp_admin_bar->add_menu( array(
+			'parent' => 'user-actions',
+			'id'     => 'logout',
+			'title'  => __( 'Log Out' ),
+			'href'   => wp_logout_url(),
+			) );
     		
     }
 
@@ -247,7 +263,7 @@ class Profile_CCT {
 		            'read_private_posts' => 'read_private_profile_cct',
 		            'delete_post' => 'delete_profile_cct'
 		            */
-		$roles = array('author','contributor');
+		$roles = array('author','contributor', 'subscriber');
 		foreach( $roles as $role_name):
 		
 			$role = get_role( $role_name ); // gets the author role
@@ -256,10 +272,10 @@ class Profile_CCT {
 			$role->add_cap( 'publish_profile_cct', false );
 			$role->add_cap( 'edit_others_profile_cct',false);
 		endforeach;
-
+		/*
 		$role = get_role( 'subscriber' ); // gets the author role
 		$role->add_cap( 'public_profile_profiles_cct', false );
-
+		*/
 		// redirect users to their profile page
 		if($plugin_page == 'public_profile' &&  in_array($pagenow, array('profile.php','users.php'))  ):
 		
