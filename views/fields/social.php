@@ -92,7 +92,8 @@ function profile_cct_social_display_shell(  $action, $options, $data=null  ) {
 
 
 function profile_cct_social_display( $data, $options ){
-
+	if(empty($data['option']))return;
+	
 	extract( $options );
 	$field = Profile_CCT::get_object();
 	
