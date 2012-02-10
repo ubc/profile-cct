@@ -48,6 +48,8 @@ if ( !empty($_POST) && check_admin_referer( 'add_profile_taxonomy','add_profile_
 	   		
 			profile_cct_register_taxonomy($new_taxonomy);
 	   		flush_rewrite_rules();
+	   		
+	   		$note = "<p class='info'>Now you can add ".esc_attr($_POST['single-name'])." to the <a href=\"".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=page')."\">person page</a> or the <a href=\"".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list')."\">list view</a></p>" ;
    		endif;
    		
    	endif;
@@ -56,6 +58,7 @@ endif;
 ?>
 
 	<p><strong>Tax&middot;on&middot;o&middot;my</strong> - The classification of something, a way to group things and be able to filter them later.</p>
+	<?php echo $note; ?>
 	<h3>Current Taxonomies </h3>
 	<?php if(is_array($taxonomys) && !empty($taxonomys)) : ?>
 	<table class="widefat">
@@ -122,7 +125,7 @@ endif;
 			<td>
 				<fieldset><legend class="screen-reader-text"><span>Hierarchical</span></legend>
 					<label title='g:i a'><input type="radio"  name="hierarchical" value="1"  /> <span>Yes - Works like Post Categories</span></label> <br />
-					<label title='g:i a'><input type="radio" name="hierarchical" value="0" selected="selected" /> <span>No - Works like Post Tags</span></label>
+					<label title='g:i a'><input type="radio" name="hierarchical" value="0" checked="checked" /> <span>No - Works like Post Tags</span></label>
 				</fieldset>
 			</td>
 			</tr>

@@ -101,7 +101,7 @@ function profile_cct_social_display( $data, $options ){
 	foreach($social_array_options as $social_item):
 		$social_array[$social_item['label']] =  $social_item;
 	endforeach;
-	
+	if( !empty( $data['username'] )):
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'social', 'type'=>'shell', 'tag'=>'div') );
 	
 	$user_url = $social_array[$data['option']]['user_url'];
@@ -118,6 +118,7 @@ function profile_cct_social_display( $data, $options ){
 	));
 	
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
+	endif;
 }
 
 
