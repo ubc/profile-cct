@@ -14,7 +14,6 @@ if ( !defined( 'PROFILE_CCT_FULL_HEIGHT' ) )
  * @return void
  */
 function profile_cct_picture_field_shell( $action, $options=null ) {
-	
 	if( is_object($action) ):
 		$post = $action;
 		$action = "display";
@@ -24,12 +23,14 @@ function profile_cct_picture_field_shell( $action, $options=null ) {
 	
 	$field = Profile_CCT::get_object(); // prints "Creating new instance."
 	if( !is_array($options) )
-		$options = $field->form_fields['picture']; // stuff that is comming from the db
+		$options = $field->form_fields['picture']; // stuff that is coming from the db
 	
 	$default_options = array(
 		'type'=>'picture',
 		'label'=>'picture',	
 		'description'=>'',
+		'picture_width' => '150',
+		'picture_height' => '150',
 		);
 		
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
@@ -114,7 +115,7 @@ function profile_cct_picture_display(  $data, $options  ){
 	
 	if(isset($post)):
 		$field->display_text( array( 'field_type'=>$type, 'class'=>'', 'type'=>'shell', 'tag'=>'a','link_to'=>$link_to, 'href'=>$href ) );
-		echo get_the_post_thumbnail($post->ID, 'thumbnail');
+		echo get_the_post_thumbnail($post->ID, 'full');
 		$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'a','link_to'=>$link_to) );
 	else:
 		global $current_user;
@@ -203,6 +204,11 @@ function profile_cct_picture_init(){
  */
 function profile_cct_picture_add_photo() {
 	global $current_user;
+	
+	$field = Profile_CCT::get_object(); // prints "Creating new instance."
+	print_r($field);
+	if( !is_array($options) )
+		$options = $field->form_fields['picture']; // stuff that is comming from the db
 	
 	
 	$post_id = $_GET['post_id'];
@@ -300,8 +306,10 @@ function profile_cct_picture_add_photo_step1($post_id)
  */
 function profile_cct_picture_add_photo_step2($post_id)
 {
-	
-	
+		$img_width = PROFILE_CCT_FULL_WIDTH;
+		$img_height = PROFILE_CCT_FULL_HEIGHT;
+		//todo
+		
 		if (!(($_FILES["uploadedfile"]["type"] == "image/gif") || ($_FILES["uploadedfile"]["type"] == "image/jpeg") || ($_FILES["uploadedfile"]["type"] == "image/png") || ($_FILES["uploadedfile"]["type"] == "image/pjpeg") || ($_FILES["uploadedfile"]["type"] == "image/x-png"))){
 			echo "<div class='error'><p>".__("Please upload an image file (.jpeg, .gif, .png).",'user-avatar')."</p></div>";
 			profile_cct_picture_add_photo_step1($post_id);
