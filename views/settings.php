@@ -21,14 +21,14 @@ if( !empty($_POST)):
 			$picture_options = array('picture' => array ( 'width'=>$width, 'height'=>$height ));
 			$new_options = array_merge($options, $picture_options);
 		else:
-			echo 'Dimensions should be between 100x100 and 360x400';
+			echo '<div class="error settings-error"><p>Picture dimensions should be between 100x100 and 360x400</p></div>';
 		endif;
 		
 		//Store updated options
 		update_option('Profile_CCT_settings', $new_options);
 	
 	else:	//if nonce failed
-		echo 'nonce failed.';
+		echo '<div class="error settings-error"><p>Verification error. Try again.</p></div>';
 	endif;
 endif;
 
