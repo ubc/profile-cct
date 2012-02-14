@@ -19,6 +19,6 @@ function profile_cct_column_display_thumb( $column_name, $post_id ) {
 	if ( 'thumb' != $column_name )
 		return;
 	
-	echo get_the_post_thumbnail($post_id, array(50,50) );
+	echo profile_cct_get_the_post_thumbnail($post_id, array(50,50) );
 }
 add_action( 'manage_profile_cct_posts_custom_column', 'profile_cct_column_display_thumb', 10, 2 );

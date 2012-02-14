@@ -14,6 +14,11 @@ if ( !defined( 'PROFILE_CCT_FULL_HEIGHT' ) )
  * @return void
  */
 function profile_cct_picture_field_shell( $action, $options=null ) {
+	if(!current_theme_supports('post-thumbnails')):
+		echo '<p>Not supported by this theme</p>';
+		return;
+	endif;
+	
 	if( is_object($action) ):
 		$post = $action;
 		$action = "display";
@@ -115,7 +120,7 @@ function profile_cct_picture_display(  $data, $options  ){
 	
 	if(isset($post)):
 		$field->display_text( array( 'field_type'=>$type, 'class'=>'', 'type'=>'shell', 'tag'=>'a','link_to'=>$link_to, 'href'=>$href ) );
-		echo get_the_post_thumbnail($post->ID, 'full');
+		echo profile_cct_get_the_post_thumbnail($post->ID, 'full');
 		$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'a','link_to'=>$link_to) );
 	else:
 		global $current_user;
@@ -138,7 +143,7 @@ function profile_cct_picture_form($thumbnail_id)
 	$picture_options = profile_cct_get_picture_options();
 	$iframe_width = $picture_options['width'] + 550;
 	if($thumbnail_id): ?>
-		<div id="user-avatar-display-image"><?php echo get_the_post_thumbnail($post_id, 'thumbnail'); ?></div>
+		<div id="user-avatar-display-image"><?php echo profile_cct_get_the_post_thumbnail($post_id, 'thumbnail'); ?></div>
 		<a id="user-avatar-link" class="button thickbox" href="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=1&post_id=<?php echo $post->ID; ?>&TB_iframe=true&width=<?php echo $iframe_width; ?>&height=500" ><?php _e('Update Picture','user-avatar'); ?></a> 
 	<?php
 		// Remove the User-Avatar button if there is no uploaded image
@@ -278,7 +283,7 @@ function profile_cct_picture_add_photo_step1($post_id)
 {
 	?>
 	<p id="step1-image" >
-		<?php echo get_the_post_thumbnail($post_id, 'full'); ?>
+		<?php echo profile_cct_get_the_post_thumbnail($post_id, 'full'); ?>
 	</p>
 	<div id="user-avatar-step1">
 	<form enctype="multipart/form-data" id="uploadForm" method="POST" action="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=2&post_id=<?php echo $post_id; ?>" >
@@ -509,7 +514,7 @@ function profile_cct_picture_add_photo_step3($post_id)
 	?>
 	<script type="text/javascript">
 	    //<![CDATA[
-		self.parent.profile_cct_picture_refresh_image('<?php echo get_the_post_thumbnail($post_id, 'thumbnail'); ?>');
+		self.parent.profile_cct_picture_refresh_image('<?php echo profile_cct_get_the_post_thumbnail($post_id, 'thumbnail'); ?>');
 		self.parent.profile_cct_add_remove_avatar_link();
 		//]]>
 	</script>
@@ -517,7 +522,7 @@ function profile_cct_picture_add_photo_step3($post_id)
 		<h3><?php _e("Here's your new profile picture...",'user-avatar'); ?></h3>
 		<span style="float:left;">
 		<?php
-		 echo get_the_post_thumbnail($post_id, 'full'); 
+		 echo profile_cct_get_the_post_thumbnail($post_id, 'full'); 
 		 ?>
 		</span>
 		<a id="user-avatar-step3-close" class="button" onclick="self.parent.tb_remove();" ><?php _e('Close','user-avatar'); ?></a>
@@ -552,6 +557,14 @@ function profile_cct_picture_delete(){
 		}		
 }
 
+
+/**
+ * profile_cct_get_picture_options function.
+ * Description: Retrieve picture options from site settings
+ * @access public
+ * @return
+ *		Associative array of all picture related options
+ */
 function profile_cct_get_picture_options(){
 	$options = get_option('Profile_CCT_settings');
 	
@@ -559,4 +572,22 @@ function profile_cct_get_picture_options(){
 		$options['picture'] = array('width'=>150, 'height'=>150);
 		
 	return $options['picture'];
+}
+
+
+/**
+ * profile_cct_get_the_post_thumbnail function.
+ * Description: Display post thumbnail if supported by theme, else an error message.
+ * @access public
+ * @param $post_id ID of post to get thumbnail for
+ * @param $type Which thumbnail format to get
+ * @return
+ *		Associative array of all picture related options
+ */
+function profile_cct_get_the_post_thumbnail($post_id, $type){
+	if(current_theme_supports('post-thumbnails')):
+		return get_the_post_thumbnail($post_id, $type);
+	else:
+		return "<p></p>";
+	endif;
 }
