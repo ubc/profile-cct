@@ -15,7 +15,7 @@ function profile_cct_position_field_shell($action, $options ) {
 		'type' => 'position',
 		'label'=>'position',
 		'description'=>'',
-		'show'=>array('organization'),
+		'show'=>array(),
 		'show_fields'=>array('organization','url'),
 		'multiple'=>true,
 		'show_multiple' =>true

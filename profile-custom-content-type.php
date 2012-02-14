@@ -753,7 +753,7 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function edit_post() {
-		global $post, $post_new_file, $pagenow, $current_user;
+		global $post, $post_new_file, $pagenow, $current_user, $post_type;
 			$post_new_file = '#';
 		
 		
@@ -803,7 +803,7 @@ class Profile_CCT {
 		remove_meta_box('authordiv', 'post', 'normal');
 		remove_meta_box('revisionsdiv', 'post', 'normal');
 		
-		if ( post_type_supports($post_type, 'revisions') && 0 < $post_ID && wp_get_post_revisions( $post_ID ) )
+		if (  0 < $post->ID && wp_get_post_revisions( $post->ID ) )
 			add_meta_box('revisionsdiv', __('Revisions'), 'post_revisions_meta_box', null, 'side', 'low');
 		
 		if ( is_super_admin() || current_user_can( $post_type_object->cap->edit_others_posts ) )
@@ -1883,3 +1883,19 @@ Make sure that select who this use is suppoed to be.
 
 if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT' ) )
 	add_action( 'plugins_loaded', array( 'Profile_CCT', 'get_object' ) );
+	
+
+
+function profile_cct_rewrite_flush() 
+{
+    // First, we "add" the custom post type via the above written function.
+    // Note: "add" is written with quotes, as CPTs don't get added to the DB,
+    // They are only referenced in the post_type column with a post entry, 
+    // when you add a post of this CPT.
+    array( 'Profile_CCT', 'register_cpt_profile_cct' );
+
+    // ATTENTION: This is *only* done during plugin activation hook in this example!
+    // You should *NEVER EVER* do this on every page load!!
+    flush_rewrite_rules();
+}
+register_activation_hook( __FILE__, 'profile_cct_rewrite_flush' );
