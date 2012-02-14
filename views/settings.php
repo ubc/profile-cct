@@ -1,5 +1,66 @@
+<?php
+$default_options=array(
+	"picture"=>array(
+		"width"=>150,
+		"height"=>150,
+	)
+);
+
+$options = get_option('Profile_CCT_settings');
+if( !empty($_POST)):
+	if(wp_verify_nonce($_POST['update_settings_nonce_field'], 'update_settings_nonce')):
+	
+		if(empty($options)):
+			$options = array();
+		endif;
+	
+		//Validate pic options
+		$width = intval($_POST['picture_width']);
+		$height = intval($_POST['picture_height']);
+		if( $width >= 100 && $width <= 360 && $height >= 100 && $height <= 400):
+			$picture_options = array('picture' => array ( 'width'=>$width, 'height'=>$height ));
+			$new_options = array_merge($options, $picture_options);
+		else:
+			echo 'Dimensions should be between 100x100 and 360x400';
+		endif;
+		
+		//Store updated options
+		update_option('Profile_CCT_settings', $new_options);
+	
+	else:	//if nonce failed
+		echo 'nonce failed.';
+	endif;
+endif;
+
+//If new options were submitted, put them into the $options variable since that's what the form's
+//default values are filled from
+if($new_options):
+	$options = $new_options;
+elseif(empty($options)):
+	$options = $default_options;
+endif;
+
+?>
+
 <form method="post" action="">
-   <?php settings_fields('Profile_CCT_settings'); ?>
+	<h3>Picture Dimensions</h3>
+	<?php wp_nonce_field( 'update_settings_nonce','update_settings_nonce_field' ); ?>
+		
+	<table class="form-table">
+	<tbody>
+	<tr valign="top">
+		<th scope="row">Width</th>
+		<td><input type="text" size="3" name="picture_width" id="picture_width" value="<?php echo $options['picture']['width']; ?>" /> pixels</td>
+	</tr>
+	<tr valign="top">
+		<th scope="row">Height</th>
+		<td><input type="text" size="3" name="picture_height" id="picture_height" value="<?php echo $options['picture']['height']; ?>" /> pixels</td>
+	</tr>
+	</tbody></table>
+	<input type="submit" class="button-primary" value="<?php _e('Submit') ?>" />
+</form>	
+	
+<!--
 <table class="form-table">
 	<tbody><tr valign="top">
 	<th scope="row">...</th>
@@ -71,4 +132,4 @@ Have options on how many person you want to list.
 </form>
 
 
-
+-->
