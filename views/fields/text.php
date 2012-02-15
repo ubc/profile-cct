@@ -92,7 +92,7 @@ function profile_cct_text_display( $data, $options ){
 	$show = (is_array($show) ? $show : array());
 	$field = Profile_CCT::get_object();
 	
-	$default_text = apply_filter('profile_cct_default_text_'.$type, "Default Text");
+	$default_text = apply_filters('profile_cct_default_text_'.$type, "Default Text");
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'text', 'type'=>'shell', 'tag'=>'div') );
 	$field->display_text( array( 'field_type'=>$type, 'default_text'=>$default_text, 'value'=>$data['text'], 'type'=>'text') );
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );

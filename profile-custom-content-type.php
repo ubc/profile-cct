@@ -528,11 +528,13 @@ class Profile_CCT {
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=page">Person View</a>
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='list' ) { echo "nav-tab-active"; } ?>"
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list">List View</a>
-		
-		
+
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='fields' ) { echo "nav-tab-active"; } ?>"
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=fields">Fields</a>
+		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='settings' ) { echo "nav-tab-active"; } ?>"
+			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=settings">Settings</a>
 		<!-- 
+
 		<a class="nav-tab <?php if( isset($_GET['view']) && $_GET['view'] =='helper' ) { echo "nav-tab-active"; } ?>"
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=helper">HELPER</a>
 			-->
@@ -558,6 +560,9 @@ class Profile_CCT {
 			break;
 		case "fields":
 			require_once("views/fields.php");
+			break;
+		case "settings":
+			require_once("views/settings.php");
 			break;
 		default:
 			require_once("views/about.php");
@@ -1066,7 +1071,7 @@ Make sure that select who this use is suppoed to be.
 			?>	<input type="hidden" name="label" value="<?php echo esc_attr( $label ); ?>" /> <?php
 		endif;
 
-
+		
 		if(isset($description))
 			$this->input_field( array('size'=>10, 'value'=>$description, 'class'=>'field-description','name'=>'description','label'=>'description','type'=>'textarea' , 'before_label'=>true));
 
@@ -1093,7 +1098,15 @@ Make sure that select who this use is suppoed to be.
 
 		if(isset($show_link_to))
 			$this->input_field(array('type'=>'checkbox','name'=>'link_to', 'class'=>'field-multiple', 'field'=>'wrap the field with a link to the profile page', 'value'=>$link_to,'label'=>'link to profile','before_label'=>true));
-?>
+		
+		if(isset($picture_width))
+			$this->input_field( array('size'=>10, 'value'=>$picture_width, 'class'=>'field-text','name'=>'picture_width','label'=>'Width','type'=>'text' , 'before_label'=>true));
+		
+		if(isset($picture_height))
+			$this->input_field( array('size'=>10, 'value'=>$picture_height, 'class'=>'field-text','name'=>'picture_height','label'=>'Height','type'=>'text' , 'before_label'=>true));
+
+
+		?>
 				<input type="button" value="Save" class="button save-field-settings" />
 				<span class="spinner" style="display:none;"><img src="<?php echo admin_url(); ?>/images/wpspin_light.gif" alt="spinner" /> saving...</span>
 			</div>
@@ -1395,6 +1408,10 @@ Make sure that select who this use is suppoed to be.
 					$options[$_POST['field_index']]['description']  = $_POST['description'];
 					$options[$_POST['field_index']]['show']   = $_POST['show'];
 					$options[$_POST['field_index']]['multiple']  = ( isset($_POST['multiple']) &&  $_POST['multiple'] ? $_POST['multiple'] : 0);
+					if(isset($_POST['picture_width'])):
+						$options[$_POST['field_index']]['picture_width'] = $_POST['picture_width'];
+						$options[$_POST['field_index']]['picture_height'] = $_POST['picture_height'];
+					endif;
 					break;
 				case "page":
 				case "list":
