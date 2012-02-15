@@ -34,8 +34,6 @@ function profile_cct_picture_field_shell( $action, $options=null ) {
 		'type'=>'picture',
 		'label'=>'picture',	
 		'description'=>'',
-		'picture_width' => '150',
-		'picture_height' => '150',
 		);
 		
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
