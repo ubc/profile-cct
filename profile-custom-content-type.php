@@ -35,7 +35,20 @@
  ==============================================================================
  This plugin requires WordPress >= 3.2 and tested with PHP Interpreter >= 5.2
  */
-
+$db_fields = array(
+		array(
+			'type'=>'clonesecondwebsite',
+			'label'=>'Second Website',
+			'field_clone'=>'website'
+		),
+		array(
+			'type'=>'clonesecondphone',
+			'label'=>'Second Phone',
+			'field_clone'=>'phone'
+		),
+		
+		
+		);
 // don't load directly
 if ( !defined('ABSPATH') )
 	die('-1');
@@ -52,6 +65,8 @@ if(isset( $_GET['delete_profile_cct_data'])):
 	delete_option('Profile_CCT_form_fields_side');
 	delete_option('Profile_CCT_form_fields_bench');
 	delete_option('Profile_CCT_form_tabs_normal');
+	
+	
 	
 	
 	delete_option('Profile_CCT_page_fields_tabbed-1');
@@ -71,6 +86,8 @@ if(isset( $_GET['delete_profile_cct_data'])):
 	delete_option('Profile_CCT_list_fields_bench');
 	
 	delete_option('Profile_CCT_page_fields');
+	
+	delete_option('Profile_CCT_settings');
 
 endif;
 
@@ -253,7 +270,7 @@ class Profile_CCT {
 		register_setting( 'Profile_CCT_taxonomy', 'Profile_CCT_taxonomy' );
 
 
-		// $this->e($role);
+		
 			/*
 					'edit_post' => 'edit_profile_cct',
 		            'edit_posts' => 'edit_profiles_cct',
@@ -297,7 +314,7 @@ class Profile_CCT {
 			
 			if(!$id):
 				// lets create public profile on the fly...
-				// var_dump($current_user);
+				
 				
 				
 				
@@ -453,42 +470,43 @@ class Profile_CCT {
 			foreach ($this->get_contexts($type_of) as $context):
 
 				$fields = $this->get_option($type_of, 'fields',$context);
+				if( is_array($fields) ):
+					foreach( $fields as $field ):
+						$this->field_options[$type_of][] = $field;
+						$this->field_options_type[$type_of][] = $field['type'];
+					endforeach;
+				endif;
+				unset($fields, $field);
+			endforeach;
+
+			// lets not forget the bench
+			$fields = $this->get_option($type_of, 'fields','bench');
 			if( is_array($fields) ):
 				foreach( $fields as $field ):
 					$this->field_options[$type_of][] = $field;
 				$this->field_options_type[$type_of][] = $field['type'];
 			endforeach;
-		endif;
-		unset($fields, $field);
-		endforeach;
+			endif;
 
-		// lets not forget the bench
-		$fields = $this->get_option($type_of, 'fields','bench');
-		if( is_array($fields) ):
-			foreach( $fields as $field ):
-				$this->field_options[$type_of][] = $field;
-			$this->field_options_type[$type_of][] = $field['type'];
-		endforeach;
-		endif;
+			unset($fields, $field);
 
-		unset($fields, $field);
-
-		// ability to add new field such as dynamic once though this
-		// each type has to be unique
-		$dynamic_fields = apply_filters("profile_cct_dynamic_fields", array(),$type_of );
-
-		if(is_array($dynamic_fields)):
-			foreach($dynamic_fields as $field):
-				// if we can't find the field lets add it to the other things
-				if( !in_array($field['type'], $this->field_options_type[$type_of]) ):
-
-					$this->field_options[$type_of][] = $field;
-				$this->field_options_type[$type_of][] = $field['type'];
-			$this->option[$type_of]['fields']['bench'][] = $field;
-
-		endif;
-		endforeach;
-		endif;
+			// ability to add new field such as dynamic once though this
+			// each type has to be unique
+			$dynamic_fields = apply_filters("profile_cct_dynamic_fields", array(),$type_of );
+			
+		
+			if(is_array($dynamic_fields)):
+				foreach($dynamic_fields as $field):
+					// if we can't find the field lets add it to the other things
+					if( !in_array($field['type'], $this->field_options_type[$type_of]) ):
+	
+						$this->field_options[$type_of][] = $field;
+						$this->field_options_type[$type_of][] = $field['type'];
+						$this->option[$type_of]['fields']['bench'][] = $field;
+	
+					endif;
+				endforeach;
+			endif;
 
 		endif;
 
@@ -511,10 +529,10 @@ class Profile_CCT {
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='list' ) { echo "nav-tab-active"; } ?>"
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list">List View</a>
 		
-		<!-- 
+		
 		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='fields' ) { echo "nav-tab-active"; } ?>"
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=fields">Fields</a>
-		
+		<!-- 
 		<a class="nav-tab <?php if( isset($_GET['view']) && $_GET['view'] =='helper' ) { echo "nav-tab-active"; } ?>"
 			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=helper">HELPER</a>
 			-->
@@ -796,7 +814,7 @@ class Profile_CCT {
 		endforeach;
 		endif;
 		
-		// var_dump('removing the author div');
+		
 		remove_meta_box('authordiv', 'post', 'normal');
 		remove_meta_box('revisionsdiv', 'post', 'normal');
 		
@@ -944,19 +962,20 @@ Make sure that select who this use is suppoed to be.
 		 		<div id="<?php echo $context; ?>-shell">
 		 			<span class="description-shell"><?php echo $context; ?></span>
 		 			<ul class="form-builder sort" id="<?php echo $context; ?>">
-		 		<?php
-		$fields = $this->get_option('form','fields',$context);
-
-		if( is_array( $fields  ) ):
-			foreach($fields  as $field):
-				if( function_exists('profile_cct_'.$field['type'].'_field_shell') ):
-					call_user_func('profile_cct_'.$field['type'].'_field_shell',$action,$field);
-				else:
-					do_action( 'profile_cct_field_shell_'.$field['type'], $action, $field, $user_data[ $field['type'] ] );
-				endif;
-			endforeach;
-		endif;
-		?></ul>
+		 			<?php
+					$fields = $this->get_option('form','fields',$context);
+			
+					if( is_array( $fields  ) ):
+						foreach($fields  as $field):
+							if( function_exists('profile_cct_'.$field['type'].'_field_shell') ):
+								call_user_func('profile_cct_'.$field['type'].'_field_shell',$action,$field);
+							else:
+								do_action( 'profile_cct_field_shell_'.$field['type'], $action, $field, $user_data[ $field['type'] ] );
+							endif;
+						endforeach;
+						
+					endif;
+					?></ul>
 		 		</div>
 		 		<?php
 
@@ -1846,8 +1865,7 @@ Make sure that select who this use is suppoed to be.
 					)
 				) , $type );
 			break;
-
-
+			
 		}
 	}
 
@@ -1861,7 +1879,8 @@ Make sure that select who this use is suppoed to be.
 				array( "type"=> "education" ),
 				array( "type"=> "textarea"  ),
 				array( "type"=> "text" ),
-				array( "type"=> "specialization" )
+				array( "type"=> "project" ),
+				array( "type"=> "courses" )
 			));
 	}
 } // end class
@@ -1877,6 +1896,7 @@ function profile_cct_rewrite_flush()
     // Note: "add" is written with quotes, as CPTs don't get added to the DB,
     // They are only referenced in the post_type column with a post entry, 
     // when you add a post of this CPT.
+    
     array( 'Profile_CCT', 'register_cpt_profile_cct' );
 
     // ATTENTION: This is *only* done during plugin activation hook in this example!

@@ -56,7 +56,6 @@ if ( !empty($_POST) && check_admin_referer( 'add_profile_taxonomy','add_profile_
 endif;
 
 ?>
-
 	<p><strong>Tax&middot;on&middot;o&middot;my</strong> - The classification of something, a way to group things and be able to filter them later.</p>
 	<?php echo $note; ?>
 	<h3>Current Taxonomies </h3>
@@ -98,7 +97,7 @@ endif;
 	<?php endif; ?>
 	<?php echo (isset($error['duplicate'])? "<br /><div class='error below-h2'><p>The <strong>".$single."</strong> ".$error['duplicate']."</p></div>": ""); ?>
 	<h3>Add Taxonomy </h3>
-	<form method="post" action="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=taxonomy">
+	<form method="post" action="<?php admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=taxonomy'); ?>">
 		<?php wp_nonce_field( 'add_profile_taxonomy','add_profile_taxonomy_field' ); ?>
 		
 		<table class="form-table">
