@@ -72,7 +72,7 @@ endif;
 		<?php 
 			  $count = 0;
 			  foreach($taxonomys as $taxonomy): ?>
-		<tr>
+		<tr <?php if($count%2) echo 'class="alternate"'; ?>>
 		<td ><?php echo $taxonomy['single']; ?> / <?php echo $taxonomy['plural']; ?>
 		<div class="row-actions">
 			<span class="trash"><a href="?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=taxonomy&remove=<?php echo $count."&_wpnonce=".wp_create_nonce('profile_cct_remove_taxonomy'.$count); ?> " class="submitdelete">Delete</a>
@@ -97,7 +97,7 @@ endif;
 	<?php endif; ?>
 	<?php echo (isset($error['duplicate'])? "<br /><div class='error below-h2'><p>The <strong>".$single."</strong> ".$error['duplicate']."</p></div>": ""); ?>
 	<h3>Add Taxonomy </h3>
-	<form method="post" action="<?php admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=taxonomy'); ?>">
+	<form method="post" action="<?php echo admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=taxonomy'); ?>">
 		<?php wp_nonce_field( 'add_profile_taxonomy','add_profile_taxonomy_field' ); ?>
 		
 		<table class="form-table">

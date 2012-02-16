@@ -66,7 +66,7 @@ if(isset( $_GET['delete_profile_cct_data'])):
 	delete_option('Profile_CCT_form_fields_bench');
 	delete_option('Profile_CCT_form_tabs_normal');
 	
-	
+	delete_site_option('Profile_CCT_global_settings');
 	
 	
 	delete_option('Profile_CCT_page_fields_tabbed-1');
@@ -608,7 +608,7 @@ class Profile_CCT {
 		$args = array(
 			'labels' => $labels,
 			'hierarchical' => false,
-
+			'menu_icon' => plugins_url( 'icon.png' , __FILE__ ),
 			'supports' => array( 'revisions','author'  ),
 			'public' => true,
 			'show_ui' => true,
