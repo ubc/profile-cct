@@ -66,7 +66,10 @@ if(isset( $_GET['delete_profile_cct_data'])):
 	delete_option('Profile_CCT_form_fields_bench');
 	delete_option('Profile_CCT_form_tabs_normal');
 	
-	delete_site_option('Profile_CCT_global_settings');
+	if( $_GET['delete_profile_cct_data'] == "DELETE-GLOBAL" ) {
+		delete_site_option('Profile_CCT_global_settings');
+	}
+	
 	
 	
 	delete_option('Profile_CCT_page_fields_tabbed-1');

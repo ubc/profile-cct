@@ -3,7 +3,6 @@ global $blog_id;
 
 $global_settings = get_site_option('Profile_CCT_global_settings', array());
 
-
 // for local 
 if( !empty($this->settings_options['clone_fields']) ):
 	foreach( $this->settings_options['clone_fields'] as $local_clone_field):
@@ -33,7 +32,7 @@ if ( !empty($_POST) && check_admin_referer( 'add_profile_field','add_profile_fie
 	$new_type = trim(strip_tags($_POST['field_type']));
 
 	// we want to eather add a completly new type or add one to the local array
-	if(empty($error) || !empty($new_type)):
+	if(empty($error) || !empty($new_type) ):
 		
 		$type = "clone_".strtolower(preg_replace('/[^A-Za-z0-9]+/', '_', $field_label));
 		$field_type = $type;
@@ -48,8 +47,9 @@ if ( !empty($_POST) && check_admin_referer( 'add_profile_field','add_profile_fie
 				$global_clone_fields[] = $clone_field['type'];
 				
 				// just adding one to the local array
-				if($new_type == $clone_field['type']) {
+				if($new_type == $clone_field['type'] || ($type == $clone_field['type'] && $clone_field['field_clone'] == $field_clone) ) {
 					$copy_to_local = $clone_field;
+					$new_type = $clone_field['type'];
 					unset($copy_to_local['blogs']); // local array doesn't need to worry about 
 					$global_to_change_count = $global_count;
 				}
@@ -71,6 +71,7 @@ if ( !empty($_POST) && check_admin_referer( 'add_profile_field','add_profile_fie
 		
 		endif;
 		
+		// create a new 
 		if(empty($copy_to_local)):
 			$new_field = array(
 				'type'=>$field_type,
@@ -91,7 +92,7 @@ if ( !empty($_POST) && check_admin_referer( 'add_profile_field','add_profile_fie
 				// make sure that the new clone fields is added to the clone_fields
 				$clone_fields[] = $copy_to_local['type'];
 				
-				$note =  	"<p class='info'>Now you can add ". $copy_to_local['label']." Field to the <a href=\"".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=form')."\">form</a>, <a href=\"".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=page')."\">person page</a> or the <a href=\"".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list')."\">list view</a></p>";
+				$note = "<p class='info'>Now you can add ". $copy_to_local['label']." Field to the <a href=\"".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=form')."\">form</a>, <a href=\"".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=page')."\">person page</a> or the <a href=\"".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list')."\">list view</a></p>";
 			endif;
 		endif;
 		
@@ -113,16 +114,52 @@ if ( !empty($_POST) && check_admin_referer( 'add_profile_field','add_profile_fie
    		
    	endif;
 endif;
-// Remove Fields
+// Remove Fields 
+if( is_numeric($_GET['remove']) ):
+	$global_field = $global_settings['clone_fields'][$_GET['remove']];
+	
+	if( wp_verify_nonce($_GET['_wpnonce'], 'profile_cct_remove_field'.$global_field['type']) ) :
+		$count = 0;
+		unset($count_set);
+		unset($clone_fields); // we will recreate this later
+		$clone_fields = array();
+		foreach($this->settings_options['clone_fields'] as $field):
+			
+			if( $global_field['type'] == $field['type'] ):
+				$count_set = $count;
+			else:
+			
+				$clone_fields[] = $field['type'];
+			endif;
+			
+			$count++;
+		endforeach;
+		// remove the fields
+		if(is_numeric($count_set)):
+			unset($this->settings_options['clone_fields'][$count_set]);
+			
+			// also remove the site from the blogs global array
+			$blogs = str_replace($blog_id, "", $global_field['blogs']);
+			$blogs = str_replace(",,", "", $blogs);
+			$blogs = ( substr($blogs,-1) == "," ? substr($blogs,0,-1) : $blogs );
+			 
+			$global_settings['clone_fields'][$_GET['remove']]['blogs'] = $blogs;
+			
+			update_option( 'Profile_CCT_settings', $this->settings_options );
+			update_site_option( 'Profile_CCT_global_settings', $global_settings );
+		endif;
+		
+	endif;
 
-
+	
+endif; // remove fields localy 
 			
 	
 ?>
 
 <?php echo $note; ?>
 
-<h3>Available Fields </h3>
+<h3>Available Fields</h3>
 	<?php if(is_array($global_settings['clone_fields']) && !empty($global_settings['clone_fields'])) : ?>
 	<table class="widefat">
 		<thead>
@@ -137,7 +174,7 @@ endif;
 		<?php 
 			  $count = 0;
 			  foreach($global_settings['clone_fields'] as $field): 
-			  var_dump($field);
+			  
 			  ?>
 				<tr <?php if($count%2) echo 'class="alternate"'; ?>>
 				<td ><?php echo $field['label']; ?>
@@ -150,7 +187,7 @@ endif;
 					</form>
 				<?php else: ?>
 				<div class="row-actions">
-					<span class="trash"><a href="?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=fields&remove=<?php echo $count."&_wpnonce=".wp_create_nonce('profile_cct_remove_taxonomy'.$count); ?> " class="submitdelete">Delete</a>
+					<span class="trash"><a href="?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=fields&remove=<?php echo $count."&_wpnonce=".wp_create_nonce('profile_cct_remove_field'.$field['type']); ?> " class="submitdelete">Delete</a>
 				</div>
 				<?php endif; ?>
 				</td>
