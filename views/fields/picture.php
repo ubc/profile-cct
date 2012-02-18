@@ -473,7 +473,6 @@ function profile_cct_picture_add_photo_step3($post_id)
 			$_POST['width'] = $_POST['width'] * $_POST['oitar'];
 			$_POST['height'] = $_POST['height'] * $_POST['oitar'];
 		}
-		
 	$original = get_attached_file( $_POST['attachment_id'] );
 
 	$cropped = wp_crop_image($_POST['attachment_id'], $_POST['x1'], $_POST['y1'], $_POST['width'], $_POST['height'], $picture_options['width'], $picture_options['height']);

@@ -997,6 +997,7 @@ Make sure that select who this use is suppoed to be.
 	 * @return void
 	 */
 	function profile_cct_page_field_shell( $action, $user_data, $where ) {
+		print_r($where);
 		$this->action = $action;
 		$contexts = $this->default_shells($where); ?><div id="page-shell"><?php
 		foreach($contexts as $context):
@@ -1011,7 +1012,7 @@ Make sure that select who this use is suppoed to be.
 		 			<ul class="form-builder sort" id="<?php echo $context; ?>">
 		 			<?php endif;
 
-		$fields = $this->get_option($where,'fields',$context);
+		$fields = $this->get_option($where,'fields',$context) ;//+ $this->get_option('form','fields',$context);
 
 		if( is_array( $fields  ) ):
 			foreach($fields  as $field):
@@ -1062,7 +1063,7 @@ Make sure that select who this use is suppoed to be.
 
 			<a href="#edit-field" class="edit">Edit</a>
 			<div class="edit-shell" style="display:none;">
-					<input type="hidden" name="type" value="<?php echo esc_attr( $type ); ?>" />
+					<input type="hidden" name="field_type" value="<?php echo esc_attr( $type ); ?>" />
 				<?php
 
 		if(empty($hide_label) && !$hide_label):
@@ -1089,6 +1090,9 @@ Make sure that select who this use is suppoed to be.
 
 		if(isset($empty))
 			$this->input_field( array('size'=>10, 'value'=>$empty, 'class'=>'field-textarea','name'=>'empty','label'=>'content to be displayed on empty','type'=>'textarea' , 'before_label'=>true));
+
+		if(isset($url_prefix))
+			$this->input_field(array('value'=>$url_prefix, 'class'=>'field-text','name'=> 'url_prefix', 'label'=>'url prefix','type'=>'text','before_label'=>true));
 
 		if(isset($show_fields))
 			$this->input_field(array('type'=>'multiple','all_fields'=>$show_fields, 'class'=>'field-show','selected_fields'=>$show,'name'=>'show', 'label'=>'show / hide input area','before_label'=>true));
@@ -1200,6 +1204,20 @@ Make sure that select who this use is suppoed to be.
 				</span>
 				<?php
 			break;
+
+		case 'hidden':
+
+			if ($separator)
+				echo $separator;
+?>
+			 	<span <?php echo $field_id_class.$show; ?>>
+			 		<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+					<input type="hidden" <?php echo $size.$class.$name; ?> value="<?php echo esc_attr($value); ?>" id="">
+					<?php if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+				</span>
+				<?php
+			break;
+
 
 		case 'multiple':
 			?><div <?php echo $field_id_class.$show;  ?>><?php
@@ -1403,6 +1421,11 @@ Make sure that select who this use is suppoed to be.
 					$options[$_POST['field_index']]['description']  = $_POST['description'];
 					$options[$_POST['field_index']]['show']   = $_POST['show'];
 					$options[$_POST['field_index']]['multiple']  = ( isset($_POST['multiple']) &&  $_POST['multiple'] ? $_POST['multiple'] : 0);
+					$options[$_POST['field_index']]['url_prefix']   = $_POST['url_prefix'];
+					
+					// save the url prefix also in the settings array
+					$this->settings_options['data-url']= array( $_POST['field_type'] => $_POST['url_prefix']);
+					update_option('Profile_CCT_settings', $this->settings_options);
 					break;
 				case "page":
 				case "list":
@@ -1703,9 +1726,13 @@ Make sure that select who this use is suppoed to be.
 			// get the
 			$option = get_option('Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context);
 
+		if($type=='page'):
+			//find_option();
+		endif;
+
 		if(!is_array($option)):
 			$default = $this->default_options($type);
-
+		
 		if($fields_or_tabs == 'fields')
 			$option = $default[$fields_or_tabs][$context];
 		else
@@ -1731,9 +1758,9 @@ Make sure that select who this use is suppoed to be.
 		$settings = get_option('Profile_CCT_settings');
 		if(!is_array($settings))
 			$settings = array();
-
+			
 		$settings[$type.'_updated'] = time();
-
+		
 		$this->option[$type][$fields_or_tabs][$context] = $update;
 		// update the settings
 		update_option( 'Profile_CCT_settings', $settings );
@@ -1797,8 +1824,8 @@ Make sure that select who this use is suppoed to be.
 							array( "type"=> "projects",   "label"=> "projects" ),
 							array( "type"=> "unitassociations",   "label"=> "unit associations"),
 							array( "type"=> "professionalaffiliations", "label"=> "professional affiliations"),
-							array( "type"=> "graduatestudent",   "label"=> "graduate student" )
-
+							array( "type"=> "graduatestudent",   "label"=> "graduate student" ),
+							array( "type"=> "data", "label"=> "data"),
 						)),
 					'tabs' => array("Basic Info", "Bio")
 				), $type );
@@ -1837,7 +1864,8 @@ Make sure that select who this use is suppoed to be.
 							array( "type"=> "unitassociations",   "label"=> "unit associations"),
 							array( "type"=> "professionalaffiliations", "label"=> "professional affiliations"),
 							array( "type"=> "courses",     "label"=> "courses" ),
-							array( "type"=> "officehours",    "label"=> "office hours" )
+							array( "type"=> "officehours",    "label"=> "office hours" ),
+							array( "type"=> "data", "label"=> "data"),
 
 						)),
 					'tabs' => array("Basic Info", "Bio")
@@ -1868,7 +1896,7 @@ Make sure that select who this use is suppoed to be.
 							array( "type"=> "graduatestudent", "label"=> "graduate student" ),
 							array( "type"=> "permalink",   "label"=> "permalink"),
 							array( "type"=> "unitassociations", "label"=> "unit associations"),
-							array( "type"=> "professionalaffiliations", "label"=> "professional affiliations")
+							
 						)
 					)
 				) , $type );

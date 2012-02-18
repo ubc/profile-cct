@@ -9,20 +9,24 @@ $default_options=array(
 $options = get_option('Profile_CCT_settings');
 if( !empty($_POST)):
 	if(wp_verify_nonce($_POST['update_settings_nonce_field'], 'update_settings_nonce')):
-	
+		
 		if(empty($options)):
 			$options = array();
 		endif;
+	
+		$new_options = $options;
 	
 		//Validate pic options
 		$width = intval($_POST['picture_width']);
 		$height = intval($_POST['picture_height']);
 		if( $width >= 100 && $width <= 360 && $height >= 100 && $height <= 400):
-			$picture_options = array('picture' => array ( 'width'=>$width, 'height'=>$height ));
-			$new_options = array_merge($options, $picture_options);
+			$picture_options = array ( 'width'=>$width, 'height'=>$height );
+			$new_options['picture'] = $picture_options;
 		else:
 			echo '<div class="error settings-error"><p>Picture dimensions should be between 100x100 and 360x400</p></div>';
 		endif;
+		
+		//$new_options['data'] = array('url_prefix' => $_POST['data_url_prefix']);
 		
 		//Store updated options
 		update_option('Profile_CCT_settings', $new_options);
@@ -44,8 +48,7 @@ endif;
 
 <form method="post" action="">
 	<h3>Picture Dimensions</h3>
-	<?php wp_nonce_field( 'update_settings_nonce','update_settings_nonce_field' ); ?>
-		
+	<?php wp_nonce_field( 'update_settings_nonce','update_settings_nonce_field' ); ?>	
 	<table class="form-table">
 	<tbody>
 	<tr valign="top">
@@ -57,6 +60,19 @@ endif;
 		<td><input type="text" size="3" name="picture_height" id="picture_height" value="<?php echo $options['picture']['height']; ?>" /> pixels</td>
 	</tr>
 	</tbody></table>
+	
+	<!--
+	<h3>External Data Field</h3>
+	<table class="form-table">
+	<tbody>
+	<tr valign="top">
+		<th scope="row">URL Prefix</th>
+		<td><input type="text" size="40" name="data_url_prefix" id="data_url_prefix" value="<?php echo $options['data']['url_prefix']; ?>" /></td>
+	</tr>
+
+	</tbody></table>
+	-->
+	
 	<input type="submit" class="button-primary" value="<?php _e('Save Settings') ?>" />
 </form>	
 	
