@@ -105,21 +105,32 @@ function profile_cct_data_display( $data, $options ){
 	
 	extract( $options );
 	$field = Profile_CCT::get_object();
-	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'data', 'type'=>'shell', 'tag'=>'div') );
-	//$field->display_text( array( 'field_type'=>$type, 'default_text'=>'...', 'value'=>$url_prefix.$data['url'], 'type'=>'text' ) );
 		
 		$settings = get_option('Profile_CCT_settings');
 		$url_prefix = $settings['data-url'][$type];
 		$url = $url_prefix . $data['url'];
 
-		$html = file_get_html($url);
-		$content = $html->find('body');;
-		echo $content[0]->innertext;
-		//echo $html->innertext;
+		//attempt to get page
+		if($html = file_get_html($url)):
+			$html_body= $html->find('body', 0);
+			
+			//Don't output undesirable elements
+			$bad_elements = $html_body->find('script, iframe');
+			foreach ($bad_elements as $e):
+				$e->outertext = '';
+			endforeach;
+			
+			//should we treat onclick/onmouseover/etc event tags as possibly malicious?
+			//$bad_atts = $html_body->find('');
+			
+			echo $html_body;
+			$html->clear();
+		else:
+			echo "Couldn't access external data";
+		endif;
 	
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
-	
 }
 
 function profile_cct_data_get_url_prefix(){
