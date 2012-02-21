@@ -593,6 +593,16 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function register_cpt_profile_cct() {
+	
+	
+		if( empty($this->settings_options['slug']) ) {
+			$slug = 'person';
+		
+		} else {
+			
+			$slug = $this->setting['slug'];
+		
+		}
 		$labels = array(
 			'name' => _x( 'Profiles', 'profile_cct' ),
 			'singular_name' => _x( 'Profile', 'profile_cct' ),
@@ -624,7 +634,7 @@ class Profile_CCT {
 			'query_var' => true,
 			'can_export' => true,
 			'rewrite' => array(
-				'slug' => 'person',
+				'slug' => $slug,
 				'with_front' => true,
 				'feeds' => true,
 				'pages' => true
@@ -1000,7 +1010,7 @@ Make sure that select who this use is suppoed to be.
 	 * @return void
 	 */
 	function profile_cct_page_field_shell( $action, $user_data, $where ) {
-		print_r($where);
+		
 		$this->action = $action;
 		$contexts = $this->default_shells($where); ?><div id="page-shell"><?php
 		foreach($contexts as $context):
