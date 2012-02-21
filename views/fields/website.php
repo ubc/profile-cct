@@ -43,8 +43,8 @@ function profile_cct_website_field( $data, $options, $count = 0 ){
 	$show = (is_array($show) ? $show : array());
 	
 	echo "<div class='wrap-fields' data-count='".$count."'>";
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'website', 'label'=>'website - http://', 'size'=>35, 'value'=>$data['website'], 'type'=>'text','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'site-title', 'label'=>'site title', 'size'=>35, 'value'=>$data['site-title'], 'type'=>'text', 'show'=>in_array('site-title', $show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'website', 'label'=>'Website - http://', 'size'=>35, 'value'=>$data['website'], 'type'=>'text','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'site-title', 'label'=>'Site title', 'size'=>35, 'value'=>$data['site-title'], 'type'=>'text', 'show'=>in_array('site-title', $show),'count'=>$count) );
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
 	echo "</div>";

@@ -68,7 +68,7 @@ function profile_cct_graduatestudent_field( $data, $options, $count = 0 ){
 	$field->input_field( array( 'field_type'=>$type,'multiple'=>$multiple,'field_id'=>'student-middle','label'=>'Middle', 'size'=>3,'value'=>$data['student-middle'], 'type'=>'text','show'=>in_array("student-middle",$show),'count'=>$count));
 	$field->input_field( array( 'field_type'=>$type,'multiple'=>$multiple,'field_id'=>'student-last','label'=>'Last', 'size'=>19, 'value'=>$data['student-last'], 	'type'=>'text','count'=>$count));
 	$field->input_field( array( 'field_type'=>$type,'multiple'=>$multiple,'field_id'=>'student-credentials', 'label'=>'Credentials','size'=>7, 'value'=>$data['student-credentials'],'type'=>'text',  'show' => in_array("student-credentials",$show),'count'=>$count));
-	$field->input_field( array( 'field_type'=>$type,'multiple'=>$multiple,'field_id'=>'student-website', 'label'=>'website - http://','size'=>35, 'value'=>$data['student-website'],'type'=>'text',  'show' => in_array("student-website",$show),'count'=>$count));
+	$field->input_field( array( 'field_type'=>$type,'multiple'=>$multiple,'field_id'=>'student-website', 'label'=>'Website - http://','size'=>35, 'value'=>$data['student-website'],'type'=>'text',  'show' => in_array("student-website",$show),'count'=>$count));
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
 	echo "</div>";

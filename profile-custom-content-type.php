@@ -918,6 +918,11 @@ Make sure that select who this use is suppoed to be.
 		$data['post_name'] = sanitize_title($userdata->user_nicename);
 		endif;
 
+		/*
+		if($data['post_name'] conflicts with an existing post):
+			append a number to the url slug or something
+		end
+		*/
 
 		if( is_array( $profile_cct_data["name"]) || !empty($profile_cct_data["name"])):
 			$data['post_title'] = $profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last'];
@@ -1919,7 +1924,8 @@ Make sure that select who this use is suppoed to be.
 				array( "type"=> "textarea"  ),
 				array( "type"=> "text" ),
 				array( "type"=> "project" ),
-				array( "type"=> "courses" )
+				array( "type"=> "courses" ),
+				array( "type"=> "data" )
 			));
 	}
 } // end class

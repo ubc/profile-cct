@@ -56,13 +56,13 @@ function profile_cct_projects_field( $data, $options, $count = 0){
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-description','label'=>'Project Description', 'size'=>35, 'value'=>$data['project-description'], 'type'=>'textarea','count'=>$count) );
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-website', 'label'=>'Project Website', 'size'=>35, 'value'=>$data['project-website'], 'type'=>'text', 'show' => in_array("project-website",$show), 'count'=>$count ) );
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'start-date-month','label'=>'month', 'size'=>35, 'value'=>$data['start-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type'=>'select', 'show' => in_array("start-date-month",$show),'count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'start-date-year','label'=>'year', 'size'=>35, 'value'=>$data['start-date-year'], 'all_fields'=>$year_array, 'type'=>'select', 'show' => in_array("start-date-year",$show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'start-date-month','label'=>'Month', 'size'=>35, 'value'=>$data['start-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type'=>'select', 'show' => in_array("start-date-month",$show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'start-date-year','label'=>'Year', 'size'=>35, 'value'=>$data['start-date-year'], 'all_fields'=>$year_array, 'type'=>'select', 'show' => in_array("start-date-year",$show),'count'=>$count) );
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'end-date-month','label'=>'month', 'size'=>35, 'value'=>$data['end-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type'=>'select', 'show' => in_array("end-date-month",$show),'count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'end-date-year','label'=>'year', 'size'=>35, 'value'=>$data['end-date-year'], 'all_fields'=>$completion_year_array, 'type'=>'select', 'show' => in_array("end-date-year",$show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'end-date-month','label'=>'Month', 'size'=>35, 'value'=>$data['end-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type'=>'select', 'show' => in_array("end-date-month",$show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'end-date-year','label'=>'Year', 'size'=>35, 'value'=>$data['end-date-year'], 'all_fields'=>$completion_year_array, 'type'=>'select', 'show' => in_array("end-date-year",$show),'count'=>$count) );
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-status','label'=>'status', 'size'=>35, 'value'=>$data['project-status'], 'all_fields'=>$project_status_array, 'type'=>'select', 'show' => in_array("project-status",$show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-status','label'=>'Status', 'size'=>35, 'value'=>$data['project-status'], 'all_fields'=>$project_status_array, 'type'=>'select', 'show' => in_array("project-status",$show),'count'=>$count) );
 	
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';

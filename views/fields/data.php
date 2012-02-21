@@ -47,7 +47,7 @@ function profile_cct_data_field( $data, $options, $count = 0 ){
 	$url_prefix = $settings['data-url'][$type];
 	
 	echo "<div class='wrap-fields' data-count='".$count."'>";
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'url', 'label'=>'URL - '.$url_prefix, 'size'=>35, 'value'=>$data['url'], 'type'=>'text','count'=>$count, ) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'url', 'label'=>'Website - '.$url_prefix, 'size'=>35, 'value'=>$data['url'], 'type'=>'text','count'=>$count, ) );
 	//$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'url_prefix', 'label'=>'', 'value'=>$url_prefix, 'type'=>'hidden','count'=>$count, ) );
 	//if($count)
 	// 			echo ' <a class="remove-fields button" href="#">Remove</a>';

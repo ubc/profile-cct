@@ -45,8 +45,8 @@ function profile_cct_unitassociations_field( $data, $options, $count = 0 ){
 	$show = (is_array($show) ? $show : array());
 	echo "<div class='wrap-fields' data-count='".$count."'>";
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'unit', 'label'=>'name', 'size'=>35, 'value'=>$data['unit'], 'type'=>'text','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'unit-website', 'label'=>'website', 'size'=>35, 'value'=>$data['unit-website'], 'type'=>'text','count'=>$count, 'show'=>in_array('unit-website', $show)) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'unit', 'label'=>'Name', 'size'=>35, 'value'=>$data['unit'], 'type'=>'text','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'unit-website', 'label'=>'Website - http://', 'size'=>35, 'value'=>$data['unit-website'], 'type'=>'text','count'=>$count, 'show'=>in_array('unit-website', $show)) );
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
 	echo "</div>";

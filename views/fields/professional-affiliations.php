@@ -50,11 +50,11 @@ function profile_cct_professionalaffiliations_field( $data, $options, $count = 0
 	
 	echo "<div class='wrap-fields' data-count='".$count."'>";
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id'=>'affiliation', 'label'=>'affiliation', 'size'=>35, 'value'=>$data['affiliation'], 'type'=>'text','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id'=>'affiliation-website', 'label'=>'website', 'size'=>35, 'value'=>$data['affiliation-website'], 'type'=>'text','show'=>in_array('affiliation-website', $show), 'count'=>$count ));
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id'=>'affiliation-role', 'label'=>'role', 'size'=>35, 'value'=>$data['affiliation-role'], 'type'=>'text', 'show'=>in_array('affiliation-role', $show), 'count'=>$count ));
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id'=>'active-date-month', 'separator'=>'member since:', 'label'=>'month', 'size'=>35, 'value'=>$data['active-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type'=>'select', 'show' => in_array("active-date-month",$show),'count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id'=>'active-date-year', 'label'=>'year', 'size'=>35, 'value'=>$data['active-date-year'], 'all_fields'=>$active_year_array, 'type'=>'select', 'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id'=>'affiliation', 'label'=>'Affiliation', 'size'=>35, 'value'=>$data['affiliation'], 'type'=>'text','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id'=>'affiliation-website', 'label'=>'Website - http://', 'size'=>35, 'value'=>$data['affiliation-website'], 'type'=>'text','show'=>in_array('affiliation-website', $show), 'count'=>$count ));
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id'=>'affiliation-role', 'label'=>'Role', 'size'=>35, 'value'=>$data['affiliation-role'], 'type'=>'text', 'show'=>in_array('affiliation-role', $show), 'count'=>$count ));
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id'=>'active-date-month', 'separator'=>'member since:', 'label'=>'Month', 'size'=>35, 'value'=>$data['active-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type'=>'select', 'show' => in_array("active-date-month",$show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id'=>'active-date-year', 'label'=>'Year', 'size'=>35, 'value'=>$data['active-date-year'], 'all_fields'=>$active_year_array, 'type'=>'select', 'count'=>$count) );
 	
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';

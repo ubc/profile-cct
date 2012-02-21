@@ -57,13 +57,13 @@ function profile_cct_officehours_field( $data, $options, $count = 0 ){
 	
 	echo "<div class='wrap-fields' data-count='".$count."'>";
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'start-hour', 'label'=>'hour', 'size'=>2, 'value'=>$data['start-hour'], 'all_fields'=>$hour_array, 'type'=>'select','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'start-minute', 'label'=>'minute', 'size'=>2, 'separator'=>':', 'value'=>$data['start-minute'], 'all_fields'=>$minute_array, 'type'=>'select','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'start-period', 'label'=>'period', 'size'=>2, 'value'=>$data['start-period'], 'all_fields'=>$period_array, 'type'=>'select','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'start-hour', 'label'=>'Hour', 'size'=>2, 'value'=>$data['start-hour'], 'all_fields'=>$hour_array, 'type'=>'select','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'start-minute', 'label'=>'Minute', 'size'=>2, 'separator'=>':', 'value'=>$data['start-minute'], 'all_fields'=>$minute_array, 'type'=>'select','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'start-period', 'label'=>'Period', 'size'=>2, 'value'=>$data['start-period'], 'all_fields'=>$period_array, 'type'=>'select','count'=>$count) );
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'end-hour', 'label'=>'hour', 'size'=>2,'separator'=>'-', 'value'=>$data['end-hour'], 'all_fields'=>$hour_array, 'type'=>'select','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'end-minute', 'label'=>'minute', 'size'=>2, 'separator'=>':', 'value'=>$data['end-minute'], 'all_fields'=>$minute_array, 'type'=>'select','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'end-period', 'label'=>'period', 'size'=>2, 'value'=>$data['end-period'], 'all_fields'=>$period_array, 'type'=>'select','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'end-hour', 'label'=>'Hour', 'size'=>2,'separator'=>'-', 'value'=>$data['end-hour'], 'all_fields'=>$hour_array, 'type'=>'select','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'end-minute', 'label'=>'Minute', 'size'=>2, 'separator'=>':', 'value'=>$data['end-minute'], 'all_fields'=>$minute_array, 'type'=>'select','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'end-period', 'label'=>'Period', 'size'=>2, 'value'=>$data['end-period'], 'all_fields'=>$period_array, 'type'=>'select','count'=>$count) );
 	
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'days', 'value'=>$data['days'], 'selected_fields'=>$data['days'], 'all_fields'=>profile_cct_list_of_days(), 'type'=>'multiple','count'=>$count) );
 	
