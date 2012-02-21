@@ -836,7 +836,7 @@ class Profile_CCT {
 	function post_author_meta_box($post) {
 	global $user_ID;
 ?>
-Make sure that select who this use is suppoed to be.
+Make sure that select who this use is supposed to be.
 <label class="screen-reader-text" for="post_author_override"><?php _e('Author'); ?></label>
 <?php
 	wp_dropdown_users( array(
