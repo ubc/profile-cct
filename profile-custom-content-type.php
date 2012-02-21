@@ -594,14 +594,12 @@ class Profile_CCT {
 	 */
 	function register_cpt_profile_cct() {
 	
-	
+		
 		if( empty($this->settings_options['slug']) ) {
 			$slug = 'person';
 		
 		} else {
-			
-			$slug = $this->setting['slug'];
-		
+			$slug = $this->settings_options['slug'];
 		}
 		$labels = array(
 			'name' => _x( 'Profiles', 'profile_cct' ),
@@ -811,10 +809,12 @@ class Profile_CCT {
 			foreach( $contexts as $context ):
 
 				$fields = $this->get_option('form','fields',$context);
-
+			
 			foreach($fields as $field):
+				
 				// add_meta_box( $id, $title, $callback, $page, $context, $priority, $callback_args );
 				if(function_exists('profile_cct_'.$field['type'].'_field_shell')):
+					
 					add_meta_box(
 						$field['type']."-".$i.'-'.rand(0,999),
 						$field['label'],
@@ -1010,7 +1010,7 @@ Make sure that select who this use is suppoed to be.
 	 * @return void
 	 */
 	function profile_cct_page_field_shell( $action, $user_data, $where ) {
-		
+		print_r($where);
 		$this->action = $action;
 		$contexts = $this->default_shells($where); ?><div id="page-shell"><?php
 		foreach($contexts as $context):
@@ -1914,7 +1914,16 @@ Make sure that select who this use is suppoed to be.
 					)
 				) , $type );
 			break;
-			
+		
+		case 'settings':
+			return apply_filters( 'profile_cct_default_options', array( 
+				"picture"=>array(
+					"width"=>150,
+					"height"=>150,
+				),
+				'slug' => 'person',
+				), $type );
+			break;
 		}
 	}
 

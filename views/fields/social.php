@@ -46,7 +46,7 @@ function profile_cct_social_field( $data, $options, $count = 0 ){
 		$social_array_details[$social_item['label']] =  $social_item;	
 	endforeach;
 
-	//print_r(array_search($data['option'],$social_array_options));
+	
 	echo "<div class='wrap-fields wrap-social-fields' data-count='".$count."'>";
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'option', 'label'=>'option',  'value'=>$data['option'], 'all_fields'=>$social_array, 'type'=>'select','count'=>$count) );
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'username', 'label'=>$social_array_details[$data['option']]['user_url'],  'value'=>$data['username'], 'all_fields'=>$social_array, 'type'=>'text','count'=>$count) );

@@ -135,6 +135,6 @@ function profile_cct_data_display( $data, $options ){
 
 function profile_cct_data_get_url_prefix(){
 	$options = get_option('Profile_CCT_settings');
-	//print_r($options);
+	
 	return $options['data']['url_prefix'];
 }
