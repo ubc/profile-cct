@@ -918,18 +918,15 @@ Make sure that select who this use is supposed to be.
 		$data['post_name'] = sanitize_title($userdata->user_nicename);
 		endif;
 
-		/*
-		if($data['post_name'] conflicts with an existing post):
-			append a number to the url slug or something
-		end
-		*/
-
 		if( is_array( $profile_cct_data["name"]) || !empty($profile_cct_data["name"])):
 			$data['post_title'] = $profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last'];
 		else:
 			$userdata = get_userdata($data['post_author']);
 		$data['post_title'] = $userdata->user_nicename;
 		endif;
+		
+		//Ensure there is no slug conflict
+		$data['post_name'] = wp_unique_post_slug($data['post_name'], $postarr['ID'], 'publish', 'profile_cct', 0);
 
 		ob_start();
 		do_action('profile_cct_page','display', $profile_cct_data, 'page');
@@ -1432,7 +1429,7 @@ Make sure that select who this use is supposed to be.
 					$options[$_POST['field_index']]['url_prefix']   = $_POST['url_prefix'];
 					
 					// save the url prefix also in the settings array
-					$this->settings_options['data-url']= array( $_POST['field_type'] => $_POST['url_prefix']);
+					$this->settings_options['data-url'] = array_merge ($this->settings_options['data-url'], array($_POST['field_type'] => $_POST['url_prefix']));
 					update_option('Profile_CCT_settings', $this->settings_options);
 					break;
 				case "page":
