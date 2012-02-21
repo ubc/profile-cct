@@ -581,7 +581,7 @@ class Profile_CCT {
 	 */
 	function profiles_cct_init() {
 		$this->taxonomies = get_option( 'Profile_CCT_taxonomy');
-
+	
 		$this->register_cpt_profile_cct();
 		$this->load_scripts_cpt_profile_cct();
 	}
@@ -1925,6 +1925,12 @@ Make sure that select who this use is supposed to be.
 				array( "type"=> "data" )
 			));
 	}
+	
+	function install() {
+		$field = Profile_CCT::get_object();
+		$field->register_cpt_profile_cct();
+		flush_rewrite_rules();
+	}
 } // end class
 
 if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT' ) )
@@ -1932,17 +1938,5 @@ if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT' ) )
 	
 
 
-function profile_cct_rewrite_flush() 
-{
-    // First, we "add" the custom post type via the above written function.
-    // Note: "add" is written with quotes, as CPTs don't get added to the DB,
-    // They are only referenced in the post_type column with a post entry, 
-    // when you add a post of this CPT.
-    
-    array( 'Profile_CCT', 'register_cpt_profile_cct' );
 
-    // ATTENTION: This is *only* done during plugin activation hook in this example!
-    // You should *NEVER EVER* do this on every page load!!
-    flush_rewrite_rules();
-}
-register_activation_hook( __FILE__, 'profile_cct_rewrite_flush' );
+register_activation_hook( __FILE__, array('Profile_CCT', 'install') );
