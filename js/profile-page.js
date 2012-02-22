@@ -62,18 +62,44 @@ var Profile_CCT_PAGE = {
 		
 		link.prev().data('count',count+1);
 		
-		link.prev().find('input,select,textarea').each(function(index, value){
+		link.prev().find('input,select,textarea,label').each(function(index, value){
 			var new_count = jQuery(this).parent().parent().data('count');
 			
 			var name = jQuery(this).attr('name');
-		
-			var new_name = name.replace(count, new_count);
-		
-			if( jQuery(this).attr('type') == 'checkbox' ) {
-				jQuery(this).attr('name',new_name).attr('checked',false);
+			var id = jQuery(this).attr('id');
+			var labelFor = jQuery(this).attr('for');
+			
+			var new_name="";
+			var new_id="";
+			var new_labelFor="";
+			
+			if(name !== undefined){
+				new_name = name.replace(count, new_count);
 			}
-			else
+			
+			if(id !== undefined){
+				new_id = id.replace(count, new_count);
+			}else if(labelFor !== undefined){
+				new_labelFor = labelFor.replace(count, new_count);
+			}
+			
+			if( jQuery(this).attr('type') == 'checkbox' ){
+				jQuery(this).attr('name',new_name).attr('checked',false);
+				
+				if(new_id!="")
+					jQuery(this).attr('id',new_id);
+					
+				if(new_labelFor!="")
+					jQuery(this).attr('for',new_labelFor);
+			}else{
 				jQuery(this).attr('name',new_name).val('');
+				
+				if(new_id!="")
+					jQuery(this).attr('id',new_id);
+					
+				if(new_labelFor!="")
+					jQuery(this).attr('for',new_labelFor);
+			}
 			
 		});
 		//if(link.prev().find('.remove-fields'))
