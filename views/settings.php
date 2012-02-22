@@ -3,13 +3,14 @@
 /* the current default settings
 */
 $default_options = $this->default_options( 'settings' );
-
-if(	empty($this->settings_options['picture']) )
+if(	empty($this->settings_options['picture'] ) )
 	$this->settings_options['picture'] = $default_options['picture'];
 
-if( empty($this->settings_options['slug']) )
+if(	empty($this->settings_options['slug'] ) )
 	$this->settings_options['slug'] = $default_options['slug'];
-	
+
+if(	empty($this->settings_options['permissions'] ) )
+	$this->settings_options['permissions'] = $default_options['permissions'];
 	
 if( !empty($_POST) ):
 	if(wp_verify_nonce($_POST['update_settings_nonce_field'], 'update_settings_nonce')):
@@ -32,6 +33,33 @@ if( !empty($_POST) ):
 		else:
 			$this->settings_options['slug'] = 'person';
 		endif;
+	
+		// lets deal with permissions	
+		$post_permissions = $_POST['options']['permissions'];
+		
+		foreach($this->settings_options['permissions'] as $user=>$permission_array):
+			if($user != 'administrator'): // don't want people changing the permissions of the admin
+				
+				$role = get_role( $user );
+				
+				foreach($permission_array as $permission => $can):
+					if( isset( $this->settings_options['permissions'][$user][$permission] ) ):
+						$this->settings_options['permissions'][$user][$permission] = (bool)$post_permissions[$user][$permission];
+						// add the new capability
+						if( (bool)$post_permissions[$user][$permission] ):
+							$role->add_cap( $permission );
+							
+						else:
+  							$role->remove_cap(  $permission );
+  							
+  						endif;
+					endif;
+				endforeach;
+				// $this->e($role);
+			endif;
+			
+		endforeach;
+		
 		
 		//Store updated options
 		update_option('Profile_CCT_settings', $this->settings_options);
@@ -69,16 +97,41 @@ endif;
 	<tr valign="top">
 		<th scope="row"><label for="slug">Slug</label></th>
 		<td><input type="text"  name="slug" id="slug" value="<?php echo esc_attr($this->settings_options['slug']); ?>" /><br />
-			By default its set to 'person'
+			By default it is set to 'person'
 		</td>
 	</tr>
 
 	</tbody></table>
 	
 	
+	<h3>Permissions</h3>
+	Set permissions for profile 
+	<table class="wp-list-table widefat fixed posts ">
+		<thead>
+			<tr>
+				<th>Role</th>
+				<th>Edit profile</th>
+				<th>Edit profiles </th>
+				<th>Edit others profile</th>
+				<th>Publish profile</th>
+				<th>Read private profile</th>
+				<th>Delete profile</th>
+				<th>Delete others profiles</th>
+			</tr>
+		</thead>		
+		<tbody id="the-list">
+				<?php 
+				$count = 0;
+				foreach($this->settings_options['permissions'] as $user=>$permission):
+					$this->permissions_table($user, ($count%2)); $count++;
+				endforeach; ?>
+		</tbody>
+	</table>
+	<br />
 	<input type="submit" class="button-primary" value="<?php _e('Save Settings') ?>" />
 </form>	
-	
+
+
 <!--
 <table class="form-table">
 	<tbody><tr valign="top">

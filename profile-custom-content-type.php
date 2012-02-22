@@ -173,26 +173,32 @@ class Profile_CCT {
     	
     	if ( 'profile_cct' == get_post_type() ):
     		
-    		 if( (int)$post->post_author != $current_user->ID && !current_user_can('edit_others_profile_cct') ):
+    		 if( ( current_user_can('edit_profile_cct') && (int)$post->post_author != $current_user->ID ) || current_user_can('edit_others_profile_cct') ):
     			$wp_admin_bar->remove_menu('edit');
     		endif;
     	endif;
-    	$wp_admin_bar->remove_menu('logout');
     	
-    	$wp_admin_bar->add_menu( array(
-			'parent' => 'user-actions',
-			'id'     => 'edit-public-profile',
-			'title'  => __( 'Edit Public Profile' ),
-			'href' => admin_url('users.php?page=public_profile'),
-			));
-		
-		// this shouldn't be messing with the logout 
-		$wp_admin_bar->add_menu( array(
-			'parent' => 'user-actions',
-			'id'     => 'logout',
-			'title'  => __( 'Log Out' ),
-			'href'   => wp_logout_url(),
-			) );
+    	if(current_user_can('edit_profile_cct')) :
+    	
+	    	$wp_admin_bar->remove_menu('logout');
+	    	
+	    	
+	    	$wp_admin_bar->add_menu( array(
+				'parent' => 'user-actions',
+				'id'     => 'edit-public-profile',
+				'title'  => __( 'Edit Public Profile' ),
+				'href' => admin_url('users.php?page=public_profile'),
+				));
+			
+			// this shouldn't be messing with the logout 
+			$wp_admin_bar->add_menu( array(
+				'parent' => 'user-actions',
+				'id'     => 'logout',
+				'title'  => __( 'Log Out' ),
+				'href'   => wp_logout_url(),
+				) );
+			
+		endif;
     		
     }
 
@@ -271,34 +277,11 @@ class Profile_CCT {
 		register_setting( 'Profile_CCT_list_page', 'Profile_CCT_list_page', array($this,'validate_list_fields')  );
 		register_setting( 'Profile_CCT_settings', 'Profile_CCT_settings' );
 		register_setting( 'Profile_CCT_taxonomy', 'Profile_CCT_taxonomy' );
-
-
 		
-			/*
-					'edit_post' => 'edit_profile_cct',
-		            'edit_posts' => 'edit_profiles_cct',
-		            'edit_others_posts' => 'edit_others_profile_cct',
-		            'publish_posts' => 'publish_profile_cct',
-		            'read_post' => 'read_profile_cct',
-		            'read_private_posts' => 'read_private_profile_cct',
-		            'delete_post' => 'delete_profile_cct'
-		            */
-		$roles = array('author','contributor', 'subscriber');
-		foreach( $roles as $role_name):
-		
-			$role = get_role( $role_name ); // gets the author role
-			$role->add_cap( 'edit_profiles_cct', false );
-			$role->add_cap( 'edit_profile_cct', true ); //
-			$role->add_cap( 'publish_profile_cct', false );
-			$role->add_cap( 'edit_others_profile_cct',false);
-		endforeach;
-		/*
-		$role = get_role( 'subscriber' ); // gets the author role
-		$role->add_cap( 'public_profile_profiles_cct', false );
-		*/
-		// redirect users to their profile page
+		// redirect users to their profile page and create one if it doesn't exist
 		if($plugin_page == 'public_profile' &&  in_array($pagenow, array('profile.php','users.php'))  ):
 		
+			
 			$arguments = array(
 						'post_type' => 'profile_cct',
 						'author'	=> $current_user->ID,
@@ -307,9 +290,7 @@ class Profile_CCT {
 						);
 			
 			$the_query = new WP_Query( $arguments );
-			
 			while ( $the_query->have_posts() ) : $the_query->the_post();
-				
 				$id = get_the_ID();
 			endwhile;
 			// Reset Post Data
@@ -317,10 +298,6 @@ class Profile_CCT {
 			
 			if(!$id):
 				// lets create public profile on the fly...
-				
-				
-				
-				
 				$post_arg = array(
     				'post_author' => $current_user->ID,  //The user ID number of the author.
     				'post_content' => 'test', //The full text of the post.
@@ -329,8 +306,6 @@ class Profile_CCT {
   					'post_title' => $current_user->display_name, //The title of your post.
   					'post_type' => 'profile_cct' //You may want to insert a regular post, page, link, a menu item or 
 				);  
-				
-				
 				
 				$id = wp_insert_post( $post_arg );
 				
@@ -341,9 +316,6 @@ class Profile_CCT {
 			exit;
 			
 		endif;
-		
-		
-		//if($plugin_page)
 
 	}
 	function e($data){
@@ -359,17 +331,14 @@ class Profile_CCT {
 	 * @return void
 	 */
 	public function add_menu_page() {
-		$current_user = wp_get_current_user();
-		
 		
 		$public_profile = add_submenu_page(
 			'users.php',
 			__( 'Public Profile', $this -> get_textdomain() ),
 			__( 'Public Profile', $this -> get_textdomain() ),
-			'read', 'public_profile',
+			'edit_profile_cct', 'public_profile',
 			array( $this, 'public_profile' ) );
-		if( !$current_user->has_cap('edit_others_profile_cct') ):
-		endif;
+		
 		$page = add_submenu_page(
 			'edit.php?post_type=profile_cct',
 			__( 'Settings', $this -> get_textdomain() ),
@@ -384,9 +353,8 @@ class Profile_CCT {
 
 	function public_profile(){
 	
-	
 		// a page asking the user to create a public profile 
-		echo ('redirect didn\'t work');
+		wp_die('redirect didn\'t work');
 	}
 
 	/**
@@ -517,31 +485,31 @@ class Profile_CCT {
 		screen_icon( 'users' );
 ?>
 		<div class="wrap">
-		<h2>Profile Settings</h2>
-		<h3 class="nav-tab-wrapper">
-
-		<a class="nav-tab <?php if( !isset($_GET['view']) ) { echo "nav-tab-active"; } ?>"
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php">About</a>
-		<span>Builder:</span>
-		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='taxonomy' ) { echo "nav-tab-active"; } ?>"
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=taxonomy">Taxonomy</a>
-		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='form' ) { echo "nav-tab-active"; } ?>"
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=form">Form</a>
-		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='page' ) { echo "nav-tab-active"; } ?>"
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=page">Person View</a>
-		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='list' ) { echo "nav-tab-active"; } ?>"
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list">List View</a>
-
-		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='fields' ) { echo "nav-tab-active"; } ?>"
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=fields">Fields</a>
-		<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='settings' ) { echo "nav-tab-active"; } ?>"
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=settings">Settings</a>
-		<!-- 
-
-		<a class="nav-tab <?php if( isset($_GET['view']) && $_GET['view'] =='helper' ) { echo "nav-tab-active"; } ?>"
-			href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=helper">HELPER</a>
-			-->
-		</h3>
+			<h2>Profile Settings</h2>
+			<h3 class="nav-tab-wrapper">
+	
+				<a class="nav-tab <?php if( !isset($_GET['view']) ) { echo "nav-tab-active"; } ?>"
+					href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php">About</a>
+				<span>Builder:</span>
+				<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='taxonomy' ) { echo "nav-tab-active"; } ?>"
+					href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=taxonomy">Taxonomy</a>
+				<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='form' ) { echo "nav-tab-active"; } ?>"
+					href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=form">Form</a>
+				<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='page' ) { echo "nav-tab-active"; } ?>"
+					href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=page">Person View</a>
+				<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='list' ) { echo "nav-tab-active"; } ?>"
+					href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list">List View</a>
+		
+				<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='fields' ) { echo "nav-tab-active"; } ?>"
+					href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=fields">Fields</a>
+				<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='settings' ) { echo "nav-tab-active"; } ?>"
+					href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=settings">Settings</a>
+				<!-- 
+		
+				<a class="nav-tab <?php if( isset($_GET['view']) && $_GET['view'] =='helper' ) { echo "nav-tab-active"; } ?>"
+					href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=helper">HELPER</a>
+					-->
+			</h3>
 		
 		<?php
 		$this->action = 'edit';
@@ -571,7 +539,10 @@ class Profile_CCT {
 			require_once("views/about.php");
 			break;
 
-		}
+		} 
+		?>
+		</div>
+		<?php
 	}
 	/**
 	 * profiles_cct_init function.
@@ -580,6 +551,7 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function profiles_cct_init() {
+	
 		$this->taxonomies = get_option( 'Profile_CCT_taxonomy');
 	
 		$this->register_cpt_profile_cct();
@@ -638,7 +610,7 @@ class Profile_CCT {
 				'pages' => true
 			),
 			'capabilities' => array(
-				'edit_post' => 			'edit_profile_cct',
+				'edit_post' => 			'edit_profile_cct', // used for has public profile
 				'edit_posts' => 		'edit_profiles_cct',
 				'edit_others_posts' => 	'edit_others_profile_cct',
 				'publish_posts' => 		'publish_profile_cct',
@@ -651,20 +623,6 @@ class Profile_CCT {
 
 		register_post_type( 'profile_cct', $args );
 
-		$roles = apply_filters('profile_cct_admin_roles', array('administrator','editor'));
-		
-		foreach($roles as $role_name):
-			$role = get_role($role_name);
-
-			$role->add_cap( 'edit_profile_cct' );
-			$role->add_cap( 'edit_profiles_cct' );
-			$role->add_cap( 'edit_all_profile_cct' );
-			$role->add_cap( 'publish_profile_cct' );
-			$role->add_cap( 'read_private_profile_cct' );
-			$role->add_cap( 'delete_profile_cct' );
-
-		endforeach;
-
 	}
 
 	/**
@@ -676,9 +634,9 @@ class Profile_CCT {
 	function load_scripts_cpt_profile_cct() {
 		if(!is_admin()):
 			wp_enqueue_script('jquery-ui-tabs');
-		wp_enqueue_style( 'profile-cct', WP_PLUGIN_URL . '/profile-cct/css/profile-cct.css' );
+			wp_enqueue_style( 'profile-cct', WP_PLUGIN_URL . '/profile-cct/css/profile-cct.css' );
 		endif;
-		//add_filter('template_include', array( $this, 'help' ));
+		
 	}
 	/**
 	 * check_freshness function.
@@ -698,32 +656,32 @@ class Profile_CCT {
 		if(is_post_type_archive( 'profile_cct' ) || is_tax($tax)):
 
 			if ( have_posts() ) : while ( have_posts() ) : the_post();
+	
+					global $post;
+	
+				if( $this->settings_options["list_updated"] > strtotime($post->post_modified_gmt )):
+	
+					$data = get_post_meta($post->ID, 'profile_cct', true);
+					ob_start();
+					do_action('profile_cct_page','display', $data, 'page');
+					$content = ob_get_contents();
+					ob_end_clean();
+			
+					ob_start();
+					do_action('profile_cct_page','display', $data,'list');
+					$excerpt = ob_get_contents();
+					ob_end_clean();
+			
+					$post->post_excerpt = $excerpt;
+					$post->post_content = $content;
+			
+					$this->update_profile( $post );
+				endif;
+				endwhile;
+	
+			endif;
 
-				global $post;
-
-			if( $this->settings_options["list_updated"] > strtotime($post->post_modified_gmt )):
-
-				$data = get_post_meta($post->ID, 'profile_cct', true);
-			ob_start();
-		do_action('profile_cct_page','display', $data, 'page');
-		$content = ob_get_contents();
-		ob_end_clean();
-
-		ob_start();
-		do_action('profile_cct_page','display', $data,'list');
-		$excerpt = ob_get_contents();
-		ob_end_clean();
-
-		$post->post_excerpt = $excerpt;
-		$post->post_content = $content;
-
-		$this->update_profile( $post );
-		endif;
-		endwhile;
-
-		endif;
-
-		rewind_posts();
+			rewind_posts();
 
 		endif;
 		//
@@ -732,36 +690,33 @@ class Profile_CCT {
 
 
 
-		if ( have_posts() ) : while ( have_posts() ) : the_post();
-			global $post;
-
-		if( $this->settings_options["page_updated"] > strtotime($post->post_modified_gmt )):
-
-			$data = get_post_meta($post->ID, 'profile_cct', true);
-		ob_start();
-		do_action('profile_cct_page','display', $data, 'page');
-		$content = ob_get_contents();
-		ob_end_clean();
-
-		ob_start();
-		do_action('profile_cct_page','display', $data,'list');
-		$excerpt = ob_get_contents();
-		ob_end_clean();
-
-
-		$post->post_excerpt = $excerpt;
-		$post->post_content = $content;
-
-		$this->update_profile( $post );
-		endif;
-
-		endwhile;
-
-		endif;
-		rewind_posts();
-
-
-
+			if ( have_posts() ) : while ( have_posts() ) : the_post();
+				global $post;
+	
+				if( $this->settings_options["page_updated"] > strtotime($post->post_modified_gmt )):
+		
+					$data = get_post_meta($post->ID, 'profile_cct', true);
+					ob_start();
+					do_action('profile_cct_page','display', $data, 'page');
+					$content = ob_get_contents();
+					ob_end_clean();
+			
+					ob_start();
+					do_action('profile_cct_page','display', $data,'list');
+					$excerpt = ob_get_contents();
+					ob_end_clean();
+		
+		
+					$post->post_excerpt = $excerpt;
+					$post->post_content = $content;
+			
+					$this->update_profile( $post );
+				endif;
+	
+			endwhile;
+	
+			endif;
+			rewind_posts();
 
 
 		endif;
@@ -785,16 +740,11 @@ class Profile_CCT {
 	 */
 	function edit_post() {
 		global $post, $post_new_file, $pagenow, $current_user, $post_type;
-			$post_new_file = '#';
 		
-		
-		// who can edit this
-		
+		$post_new_file = '#';
 		
 		if( (int)$post->post_author != $current_user->ID && !current_user_can('edit_others_profile_cct') ):
-			
 			wp_die('You are not allow to edit this profile');
-			
 		endif;
 		
 		
@@ -846,7 +796,7 @@ class Profile_CCT {
 	function post_author_meta_box($post) {
 	global $user_ID;
 ?>
-Make sure that select who this use is suppoed to be.
+Make sure that you select who this use is supposed to be.<br />
 <label class="screen-reader-text" for="post_author_override"><?php _e('Author'); ?></label>
 <?php
 	wp_dropdown_users( array(
@@ -1010,7 +960,7 @@ Make sure that select who this use is suppoed to be.
 	 * @return void
 	 */
 	function profile_cct_page_field_shell( $action, $user_data, $where ) {
-		print_r($where);
+		
 		$this->action = $action;
 		$contexts = $this->default_shells($where); ?><div id="page-shell"><?php
 		foreach($contexts as $context):
@@ -1801,6 +1751,7 @@ Make sure that select who this use is suppoed to be.
 	 * @return void
 	 */
 	function default_options($type = 'form') {
+		
 		switch($type) {
 		case 'form':
 			return apply_filters( 'profile_cct_default_options', array(
@@ -1916,13 +1867,64 @@ Make sure that select who this use is suppoed to be.
 			break;
 		
 		case 'settings':
-			return apply_filters( 'profile_cct_default_options', array( 
-				"picture"=>array(
-					"width"=>150,
-					"height"=>150,
-				),
-				'slug' => 'person',
-				), $type );
+			return apply_filters( 'profile_cct_default_options', 
+				array( 
+					"picture"	=> array(
+						"width"	=>150,
+						"height"=>150,
+					),
+					'slug' => 'person',
+					"permissions"=> array(
+						'administrator' => array(
+							'edit_profile_cct'			=>	true,
+							'edit_profiles_cct' 		=>	true,
+							'edit_others_profile_cct'   =>	true,
+				            'publish_profile_cct'		=>  true,
+							'read_private_profile_cct'	=> 	true,
+							'delete_profile_cct'		=>  true,
+							'delete_others_profile_cct' =>  true
+						),
+						'editor' => array(
+							'edit_profile_cct'			=>	true,
+							'edit_profiles_cct' 		=>	true,
+							'edit_others_profile_cct'   =>	true,
+				            'publish_profile_cct'		=>  true,
+							'read_private_profile_cct'	=> 	true,
+							'delete_profile_cct'		=>  true,
+							'delete_others_profile_cct' =>  true
+						
+						),
+						'author' => array(
+							'edit_profile_cct'			=>	true,
+							'edit_profiles_cct' 		=>	true,
+							'edit_others_profile_cct'   =>	false,
+				            'publish_profile_cct'		=>  true,
+							'read_private_profile_cct'	=> 	false,
+							'delete_profile_cct'		=>  false,
+							'delete_others_profile_cct' =>  false
+						),
+						'contributor' => array(
+							'edit_profile_cct'			=>	true,
+							'edit_profiles_cct' 		=>	false,
+							'edit_others_profile_cct'   =>	false,
+				            'publish_profile_cct'		=>  false,
+							'read_private_profile_cct'	=> 	false,
+							'delete_profile_cct'		=>  false,
+							'delete_others_profile_cct' =>  false
+						),
+						'subscriber'  => array(
+							'edit_profile_cct'			=>	true,
+							'edit_profiles_cct' 		=>	false,
+							'edit_others_profile_cct'   =>	false,
+				            'publish_profile_cct'		=>  false,
+							'read_private_profile_cct'	=> 	false,
+							'delete_profile_cct'		=>  false,
+							'delete_others_profile_cct' =>  false
+						)
+					)
+				
+				), $type);
+				
 			break;
 		}
 	}
@@ -1942,10 +1944,60 @@ Make sure that select who this use is suppoed to be.
 			));
 	}
 	
+	function permissions_table( $user, $alternate=false) {
+		
+		if( is_array($this->settings_options['permissions'][$user]) ):
+		
+			$disabled = ($user == 'administrator'? 'disabled' : '');
+			?>
+			<tr <?php echo ($alternate ? 'class="alternate"': '' ) ?>>
+				<td><?php echo ucwords($user); ?></td>
+				<?php foreach($this->settings_options['permissions'][$user] as $action=>$can): ?>
+				<td><input type="checkbox" name="options[permissions][<?php echo $user; ?>][<?php echo $action; ?>]" <?php echo $disabled; ?> value="1" <?php checked($can); ?> /></td>	
+				<?php endforeach; ?>
+			</tr>
+			<?php 
+		endif;
+			
+	}
+	
 	function install() {
 		$field = Profile_CCT::get_object();
 		$field->register_cpt_profile_cct();
 		flush_rewrite_rules();
+		
+		// set up the permissions
+		if( is_array($field->settings_options['permissions']) )
+		$field->settings_options = $field->default_options( 'settings' );
+		
+		foreach($field->settings_options['permissions'] as $user=>$permission_array):
+			$role = get_role( $user );
+			foreach($permission_array as $permission => $can):
+			
+				// add the new capability
+				if( $field->settings_options['permissions'][$user][$permission] ):
+					$role->add_cap( $permission );
+				else: // or remove it
+					$role->remove_cap(  $permission );
+				endif;
+				
+			endforeach;
+		endforeach;
+		
+	}
+	function uninstall() {
+		
+		// remove permissions
+		$field = Profile_CCT::get_object();
+		$default = $field->default_options( 'settings' );
+		foreach($default['permissions'] as $user=>$permission_array):
+			$role = get_role( $user );
+			foreach($permission_array as $permission => $can):
+					$role->remove_cap(  $permission );	
+			endforeach;
+			
+			
+		endforeach;
 	}
 } // end class
 
@@ -1956,3 +2008,4 @@ if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT' ) )
 
 
 register_activation_hook( __FILE__, array('Profile_CCT', 'install') );
+register_deactivation_hook( __FILE__, array('Profile_CCT', 'uninstall') );
