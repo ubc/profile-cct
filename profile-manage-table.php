@@ -3,8 +3,9 @@
 function profile_cct_column_register( $columns ) {
 	unset($columns);
 	$columns["cb"]= '<input type="checkbox" />';
-    $columns['thumb'] = __( 'Thumb', 'profile_cct' );
+    
     $columns["title"] = __( "Title" );
+    $columns['thumb'] = __( 'Picture', 'profile_cct' );
     $columns["author"] = __( "Author" );     
     $columns["date"] = __( "Date" );
   

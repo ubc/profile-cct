@@ -1058,7 +1058,7 @@ Make sure that you select who this is supposed to be.<br />
 			$this->input_field( array('size'=>10, 'value'=>$empty, 'class'=>'field-textarea','name'=>'empty','label'=>'content to be displayed on empty','type'=>'textarea' , 'before_label'=>true));
 
 		if(isset($url_prefix))
-			$this->input_field(array('value'=>$url_prefix, 'class'=>'field-text','name'=> 'url_prefix', 'label'=>'url prefix','type'=>'text', 'class'=>'field-url-prefix','before_label'=>true));
+			$this->input_field(array('value'=>$url_prefix, 'class'=>'field-text','name'=> 'url_prefix', 'label'=>'url prefix ( http:// )','type'=>'text', 'class'=>'field-url-prefix','before_label'=>true));
 
 		if(isset($show_fields))
 			$this->input_field(array('type'=>'multiple','all_fields'=>$show_fields, 'class'=>'field-show','selected_fields'=>$show,'name'=>'show', 'label'=>'show / hide input area','before_label'=>true));
@@ -1384,6 +1384,7 @@ Make sure that you select who this is supposed to be.<br />
 			if(is_numeric($_POST['field_index'])):
 				switch($type){
 				case "form":
+					
 					$options[$_POST['field_index']]['label']   = $_POST['label'];
 					$options[$_POST['field_index']]['description']  = $_POST['description'];
 					$options[$_POST['field_index']]['show']   = $_POST['show'];
@@ -1391,7 +1392,10 @@ Make sure that you select who this is supposed to be.<br />
 					$options[$_POST['field_index']]['url_prefix']   = $_POST['url_prefix'];
 					
 					// save the url prefix also in the settings array
-					$this->settings_options['data-url'] = array_merge ($this->settings_options['data-url'], array($_POST['field_type'] => $_POST['url_prefix']));
+					if(!is_array($this->settings_options['data-url']))
+						$this->settings_options['data-url'] = array();
+						
+					$this->settings_options['data-url'] = array_merge ($this->settings_options['data-url'], array($_POST['field_type'] => trim($_POST['url_prefix']) ));
 					update_option('Profile_CCT_settings', $this->settings_options);
 					break;
 				case "page":

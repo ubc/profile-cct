@@ -18,14 +18,14 @@ var Profile_CCT_FORM ={
 			
 		formB.find(".edit").live("click", Profile_CCT_FORM.editField);
 		
-		formB.find(".field-label").live("keypress", Profile_CCT_FORM.updateLabel);
-		formB.find(".field-description").live("keypress", Profile_CCT_FORM.updateDescription );
-		formB.find(".field-url-prefix").live("keypress", Profile_CCT_FORM.updateUrlPrefix );
+		formB.find(".field-label").live("keyup", Profile_CCT_FORM.updateLabel);
+		formB.find(".field-description").live("keyup", Profile_CCT_FORM.updateDescription );
+		formB.find(".field-url-prefix").live("keyup", Profile_CCT_FORM.updateUrlPrefix );
 		formB.find(".field-show").live("click", Profile_CCT_FORM.updateShow);
 		formB.find(".field-multiple").live("click", Profile_CCT_FORM.multipleShow);
 		formB.find(".save-field-settings").live("click", Profile_CCT_FORM.updateField);
-		formB.find(".field-textarea").live('keypress', Profile_CCT_FORM.updateTextarea);
-		formB.find(".field-text").live('keypress', Profile_CCT_FORM.updateText);
+		formB.find(".field-textarea").live('keyup', Profile_CCT_FORM.updateTextarea);
+		formB.find(".field-text").live('keyup', Profile_CCT_FORM.updateText);
 		// name field
 		jQuery(".edit","#form-name").click(Profile_CCT_FORM.editField);
 	},
