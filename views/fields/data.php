@@ -101,6 +101,10 @@ function profile_cct_data_display_shell(  $action, $options, $data=null ) {
 	
 }
 function profile_cct_data_display( $data, $options ){
+	if(empty($data['url'])):
+		return;
+	endif;
+
 	require_once(WP_PLUGIN_DIR.'/profile-cct/inc/simple_html_dom.php');
 	
 	extract( $options );

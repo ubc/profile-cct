@@ -1002,7 +1002,6 @@ Make sure that select who this use is supposed to be.
 	 * @return void
 	 */
 	function profile_cct_page_field_shell( $action, $user_data, $where ) {
-		print_r($where);
 		$this->action = $action;
 		$contexts = $this->default_shells($where); ?><div id="page-shell"><?php
 		foreach($contexts as $context):
