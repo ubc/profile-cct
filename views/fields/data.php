@@ -47,7 +47,7 @@ function profile_cct_data_field( $data, $options, $count = 0 ){
 	$url_prefix = $settings['data-url'][$type];
 	
 	echo "<div class='wrap-fields' data-count='".$count."'>";
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'url', 'label'=>'URL - '.$url_prefix, 'size'=>35, 'value'=>$data['url'], 'type'=>'text','count'=>$count, ) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'url', 'label'=>'Website - '.$url_prefix, 'size'=>35, 'value'=>$data['url'], 'type'=>'text','count'=>$count, ) );
 	//$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'url_prefix', 'label'=>'', 'value'=>$url_prefix, 'type'=>'hidden','count'=>$count, ) );
 	//if($count)
 	// 			echo ' <a class="remove-fields button" href="#">Remove</a>';
@@ -101,34 +101,40 @@ function profile_cct_data_display_shell(  $action, $options, $data=null ) {
 	
 }
 function profile_cct_data_display( $data, $options ){
+
 	require_once(WP_PLUGIN_DIR.'/profile-cct/inc/simple_html_dom.php');
 	
 	extract( $options );
 	$field = Profile_CCT::get_object();
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'data', 'type'=>'shell', 'tag'=>'div') );
 		
-		$settings = get_option('Profile_CCT_settings');
-		$url_prefix = $settings['data-url'][$type];
-		$url = $url_prefix . $data['url'];
-
-		//attempt to get page
-		if($html = file_get_html($url)):
-			$html_body= $html->find('body', 0);
-			
-			//Don't output undesirable elements
-			$bad_elements = $html_body->find('script, iframe');
-			foreach ($bad_elements as $e):
-				$e->outertext = '';
-			endforeach;
-			
-			//should we treat onclick/onmouseover/etc event tags as possibly malicious?
-			//$bad_atts = $html_body->find('');
-			
-			echo $html_body;
-			$html->clear();
+		if(empty($data['url'])):
+			$field->display_text( array( 'field_type'=>$type, 'class'=>'external-data','default_text'=>'[External Data Feed]', 'value'=>'', 'type'=>'text' ));
 		else:
-			echo "Couldn't access external data";
-		endif;
+			
+			$settings = get_option('Profile_CCT_settings');
+			$url_prefix = $settings['data-url'][$type];
+			$url = $url_prefix . $data['url'];
+			
+			//attempt to get page
+			if($html = file_get_html($url)):
+				$html_body= $html->find('body', 0);
+				
+				//Don't output undesirable elements
+				$bad_elements = $html_body->find('script, iframe');
+				foreach ($bad_elements as $e):
+					$e->outertext = '';
+				endforeach;
+				
+				//should we treat onclick/onmouseover/etc event tags as possibly malicious?
+				//$bad_atts = $html_body->find('');
+				
+				echo $html_body;
+				$html->clear();
+			else:
+				echo "Couldn't access external data";
+			endif;// file_get_html($url)
+		endif;//empty($data['url'])
 	
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 }

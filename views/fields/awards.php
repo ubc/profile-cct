@@ -66,7 +66,7 @@ function profile_cct_awards_field( $data, $options, $count = 0 ){
 	
 	echo "<div data-count='".$count."'>";
 	$field->input_field( array( 'field_type'=>$type,'multiple'=>$multiple,'field_id'=>'award-name','label'=>'Award Name', 'size'=>25, 'value'=>$data['award-name'], 'type'=>'text','count'=>$count));
-	$field->input_field( array( 'field_type'=>$type,'multiple'=>$multiple,'field_id'=>'award-website', 'label'=>'website - http://','size'=>35, 'value'=>$data['award-website'],'type'=>'text', 'show' => in_array("award-website",$show),'count'=>$count));
+	$field->input_field( array( 'field_type'=>$type,'multiple'=>$multiple,'field_id'=>'award-website', 'label'=>'Website - http://','size'=>35, 'value'=>$data['award-website'],'type'=>'text', 'show' => in_array("award-website",$show),'count'=>$count));
 	$field->input_field( array( 'field_type'=>$type,'multiple'=>$multiple,'field_id'=>'receival-date-month','label'=>'Month', 'size'=>35, 'value'=>$data['receival-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type'=>'select', 'show' => in_array("receival-date-month",$show),'count'=>$count) );
 	$field->input_field( array( 'field_type'=>$type,'multiple'=>$multiple,'field_id'=>'receival-date-year','label'=>'Year', 'size'=>35, 'value'=>$data['receival-date-year'], 'all_fields'=>$awarded_year_array, 'type'=>'select', 'count'=>$count) );
 	if($count)

@@ -796,7 +796,9 @@ class Profile_CCT {
 	function post_author_meta_box($post) {
 	global $user_ID;
 ?>
-Make sure that you select who this use is supposed to be.<br />
+
+Make sure that you select who this is supposed to be.<br />
+
 <label class="screen-reader-text" for="post_author_override"><?php _e('Author'); ?></label>
 <?php
 	wp_dropdown_users( array(
@@ -878,13 +880,15 @@ Make sure that you select who this use is supposed to be.<br />
 		$data['post_name'] = sanitize_title($userdata->user_nicename);
 		endif;
 
-
 		if( is_array( $profile_cct_data["name"]) || !empty($profile_cct_data["name"])):
 			$data['post_title'] = $profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last'];
 		else:
 			$userdata = get_userdata($data['post_author']);
 		$data['post_title'] = $userdata->user_nicename;
 		endif;
+		
+		//Ensure there is no slug conflict
+		$data['post_name'] = wp_unique_post_slug($data['post_name'], $postarr['ID'], 'publish', 'profile_cct', 0);
 
 		ob_start();
 		do_action('profile_cct_page','display', $profile_cct_data, 'page');
@@ -960,7 +964,6 @@ Make sure that you select who this use is supposed to be.<br />
 	 * @return void
 	 */
 	function profile_cct_page_field_shell( $action, $user_data, $where ) {
-		
 		$this->action = $action;
 		$contexts = $this->default_shells($where); ?><div id="page-shell"><?php
 		foreach($contexts as $context):
@@ -1055,7 +1058,7 @@ Make sure that you select who this use is supposed to be.<br />
 			$this->input_field( array('size'=>10, 'value'=>$empty, 'class'=>'field-textarea','name'=>'empty','label'=>'content to be displayed on empty','type'=>'textarea' , 'before_label'=>true));
 
 		if(isset($url_prefix))
-			$this->input_field(array('value'=>$url_prefix, 'class'=>'field-text','name'=> 'url_prefix', 'label'=>'url prefix','type'=>'text','before_label'=>true));
+			$this->input_field(array('value'=>$url_prefix, 'class'=>'field-text','name'=> 'url_prefix', 'label'=>'url prefix','type'=>'text', 'class'=>'field-url-prefix','before_label'=>true));
 
 		if(isset($show_fields))
 			$this->input_field(array('type'=>'multiple','all_fields'=>$show_fields, 'class'=>'field-show','selected_fields'=>$show,'name'=>'show', 'label'=>'show / hide input area','before_label'=>true));
@@ -1387,7 +1390,7 @@ Make sure that you select who this use is supposed to be.<br />
 					$options[$_POST['field_index']]['url_prefix']   = $_POST['url_prefix'];
 					
 					// save the url prefix also in the settings array
-					$this->settings_options['data-url']= array( $_POST['field_type'] => $_POST['url_prefix']);
+					$this->settings_options['data-url'] = array_merge ($this->settings_options['data-url'], array($_POST['field_type'] => $_POST['url_prefix']));
 					update_option('Profile_CCT_settings', $this->settings_options);
 					break;
 				case "page":
@@ -1940,7 +1943,8 @@ Make sure that you select who this use is supposed to be.<br />
 				array( "type"=> "textarea"  ),
 				array( "type"=> "text" ),
 				array( "type"=> "project" ),
-				array( "type"=> "courses" )
+				array( "type"=> "courses" ),
+				array( "type"=> "data" )
 			));
 	}
 	
