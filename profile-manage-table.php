@@ -5,7 +5,7 @@ function profile_cct_column_register( $columns ) {
 	$columns["cb"]= '<input type="checkbox" />';
     
     $columns["title"] = __( "Title" );
-    $columns['thumb'] = __( 'Thumb', 'profile_cct' );
+    $columns['thumb'] = __( 'Picture', 'profile_cct' );
     $columns["author"] = __( "Author" );     
     $columns["date"] = __( "Date" );
   
