@@ -20,6 +20,7 @@ var Profile_CCT_FORM ={
 		
 		formB.find(".field-label").live("keypress", Profile_CCT_FORM.updateLabel);
 		formB.find(".field-description").live("keypress", Profile_CCT_FORM.updateDescription );
+		formB.find(".field-url-prefix").live("keypress", Profile_CCT_FORM.updateUrlPrefix );
 		formB.find(".field-show").live("click", Profile_CCT_FORM.updateShow);
 		formB.find(".field-multiple").live("click", Profile_CCT_FORM.multipleShow);
 		formB.find(".save-field-settings").live("click", Profile_CCT_FORM.updateField);
@@ -81,6 +82,19 @@ var Profile_CCT_FORM ={
 		},10);
 
 	},
+	
+	updateUrlPrefix : function(e){
+		var el = jQuery(this);
+		el.parent().parent().addClass('changed');
+		setTimeout( function () {		
+			var text_label = el.val();
+			
+			el.parent().parent().parent().find(".url label").text("Website - " + text_label);
+			
+		},10);
+
+	},
+	
 	updateTextarea :function(e){
 		jQuery(this).parent().parent().addClass('changed');
 		

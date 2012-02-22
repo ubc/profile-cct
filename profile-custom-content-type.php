@@ -1096,7 +1096,7 @@ Make sure that select who this use is supposed to be.
 			$this->input_field( array('size'=>10, 'value'=>$empty, 'class'=>'field-textarea','name'=>'empty','label'=>'content to be displayed on empty','type'=>'textarea' , 'before_label'=>true));
 
 		if(isset($url_prefix))
-			$this->input_field(array('value'=>$url_prefix, 'class'=>'field-text','name'=> 'url_prefix', 'label'=>'url prefix','type'=>'text','before_label'=>true));
+			$this->input_field(array('value'=>$url_prefix, 'class'=>'field-text','name'=> 'url_prefix', 'label'=>'url prefix','type'=>'text', 'class'=>'field-url-prefix','before_label'=>true));
 
 		if(isset($show_fields))
 			$this->input_field(array('type'=>'multiple','all_fields'=>$show_fields, 'class'=>'field-show','selected_fields'=>$show,'name'=>'show', 'label'=>'show / hide input area','before_label'=>true));

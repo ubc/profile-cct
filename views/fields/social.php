@@ -79,6 +79,15 @@ function profile_cct_social_display_shell(  $action, $options, $data=null  ) {
 	
 	$field->start_field($action,$options);
 	
+	if(!isset($data)){
+		//default placeholder data for sample page view
+		$data = array(
+			array('option'=>'Facebook','username'=>'BruceWayne'),
+			array('option'=>'Twitter','username'=>'bwayne'),
+			array('option'=>'YouTube','username'=>'bruce'),
+		);
+	}
+	
 	if( $field->is_data_array( $data ) ):
 		foreach($data as $item_data):
 			profile_cct_social_display($item_data,$options);
@@ -92,17 +101,21 @@ function profile_cct_social_display_shell(  $action, $options, $data=null  ) {
 
 
 function profile_cct_social_display( $data, $options ){
+	
 	if(empty($data['option']))return;
 	
 	extract( $options );
 	$field = Profile_CCT::get_object();
 	
-	//make an associative array
+	
+	//make an associative array from the social-options
 	$social_array_options = profile_cct_social_options();
 	foreach($social_array_options as $social_item):
 		$social_array[$social_item['label']] =  $social_item;
 	endforeach;
-	if( !empty( $data['username'] )):
+	
+	
+	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'social', 'type'=>'shell', 'tag'=>'div') );
 	$user_url = $social_array[$data['option']]['user_url'];
 	$img_path = plugins_url() . '/profile-cct/img/';
@@ -112,13 +125,14 @@ function profile_cct_social_display( $data, $options ){
 	$field->display_text( array( 
 		'field_type'=>$type,  
 		'class'=>'type', 
+
 		'value'=>'<strong>' . $data['option'] . '</strong>/' . $data['username'], 
 		'type'=>'text', 'href'=>str_replace('{value}',$data['username'], $user_url), 
 		'tag'=>'a', 
 	));
 	
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
-	endif;
+	
 }
 
 
