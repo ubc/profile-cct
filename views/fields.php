@@ -89,6 +89,8 @@ if ( !empty($_POST) && check_admin_referer( 'add_profile_field','add_profile_fie
 				// also update the blogs field in the particular 
 				update_site_option( 'Profile_CCT_global_settings',$global_settings );
 				
+				// remove the errors from the 
+				unset($error);
 				// make sure that the new clone fields is added to the clone_fields
 				$clone_fields[] = $copy_to_local['type'];
 				

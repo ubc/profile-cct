@@ -306,7 +306,7 @@ function profile_cct_picture_add_photo_step1($post_id)
 function profile_cct_picture_add_photo_step2($post_id)
 {
 		$picture_options = profile_cct_get_picture_options();	
-		//print_r($picture_options);
+		
 		
 		if (!(($_FILES["uploadedfile"]["type"] == "image/gif") || ($_FILES["uploadedfile"]["type"] == "image/jpeg") || ($_FILES["uploadedfile"]["type"] == "image/png") || ($_FILES["uploadedfile"]["type"] == "image/pjpeg") || ($_FILES["uploadedfile"]["type"] == "image/x-png"))){
 			echo "<div class='error'><p>".__("Please upload an image file (.jpeg, .gif, .png).",'user-avatar')."</p></div>";

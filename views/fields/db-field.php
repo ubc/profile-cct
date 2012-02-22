@@ -1,6 +1,6 @@
 <?php 
 
-// lets do somethinging if we have some fileds
+// lets you add fields that are dynamically created by adding to the clone_fields in the settings option
 if( is_array($this->settings_options['clone_fields']) ): 
 	// add the fields that need to be applied to the form page
 	add_action('profile_cct_form', 			'profile_cct_add_db_fields_filter', 5);
@@ -52,7 +52,7 @@ function profile_cct_db_add_meta_box($field, $context, $data, $i){
 			$field['type']."-".$i.'-'.rand(0,999), 
 			$field['label'], 
 			'profile_cct_'.$db_field['field_clone'].'_field_shell', 
-			'profile_cct', $context, 'low', 
+			'profile_cct', $context, 'high', 
 			array(
 				'options'=>$field,
 				'data'=>$data

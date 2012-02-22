@@ -1,48 +1,49 @@
 <?php
-$default_options=array(
-	"picture"=>array(
-		"width"=>150,
-		"height"=>150,
-	)
-);
 
-$options = get_option('Profile_CCT_settings');
-if( !empty($_POST)):
+/* the current default settings
+*/
+$default_options = $this->default_options( 'settings' );
+
+if(	empty($this->settings_options['picture']) )
+	$this->settings_options['picture'] = $default_options['picture'];
+
+if( empty($this->settings_options['slug']) )
+	$this->settings_options['slug'] = $default_options['slug'];
+	
+	
+if( !empty($_POST) ):
 	if(wp_verify_nonce($_POST['update_settings_nonce_field'], 'update_settings_nonce')):
 		
-		if(empty($options)):
-			$options = array();
-		endif;
-	
-		$new_options = $options;
+		
 	
 		//Validate pic options
 		$width = intval($_POST['picture_width']);
 		$height = intval($_POST['picture_height']);
 		if( $width >= 100 && $width <= 360 && $height >= 100 && $height <= 400):
 			$picture_options = array ( 'width'=>$width, 'height'=>$height );
-			$new_options['picture'] = $picture_options;
+			$this->settings_options['picture'] = $picture_options;
 		else:
 			echo '<div class="error settings-error"><p>Picture dimensions should be between 100x100 and 360x400</p></div>';
 		endif;
 		
-		//$new_options['data'] = array('url_prefix' => $_POST['data_url_prefix']);
+		$slug = trim( $_POST['slug'] );
+		if( !empty( $slug ) ):
+			$this->settings_options['slug'] = sanitize_title( trim( $_POST['slug'] ) );
+		else:
+			$this->settings_options['slug'] = 'person';
+		endif;
 		
 		//Store updated options
-		update_option('Profile_CCT_settings', $new_options);
-	
+		update_option('Profile_CCT_settings', $this->settings_options);
+		
+		// lets flush the rules again
+		$this->register_cpt_profile_cct();
+		flush_rewrite_rules();
 	else:	//if nonce failed
 		echo '<div class="error settings-error"><p>Verification error. Try again.</p></div>';
 	endif;
 endif;
 
-//If new options were submitted, put them into the $options variable since that's what the form's
-//default values are filled from
-if($new_options):
-	$options = $new_options;
-elseif(empty($options)):
-	$options = $default_options;
-endif;
 
 ?>
 
@@ -52,26 +53,28 @@ endif;
 	<table class="form-table">
 	<tbody>
 	<tr valign="top">
-		<th scope="row">Width</th>
-		<td><input type="text" size="3" name="picture_width" id="picture_width" value="<?php echo $options['picture']['width']; ?>" /> pixels</td>
+		<th scope="row"><label for="picture_width">Width</label></th>
+		<td><input type="text" size="3" name="picture_width" id="picture_width" value="<?php echo esc_attr($this->settings_options['picture']['width']); ?>" /> pixels</td>
 	</tr>
 	<tr valign="top">
-		<th scope="row">Height</th>
-		<td><input type="text" size="3" name="picture_height" id="picture_height" value="<?php echo $options['picture']['height']; ?>" /> pixels</td>
+		<th scope="row"><label for="picture_height">Height</label></th>
+		<td><input type="text" size="3" name="picture_height" id="picture_height" value="<?php echo esc_attr($this->settings_options['picture']['height']); ?>" /> pixels</td>
 	</tr>
 	</tbody></table>
 	
-	<!--
-	<h3>External Data Field</h3>
+	
+	<h3>Permalink</h3>
 	<table class="form-table">
 	<tbody>
 	<tr valign="top">
-		<th scope="row">URL Prefix</th>
-		<td><input type="text" size="40" name="data_url_prefix" id="data_url_prefix" value="<?php echo $options['data']['url_prefix']; ?>" /></td>
+		<th scope="row"><label for="slug">Slug</label></th>
+		<td><input type="text"  name="slug" id="slug" value="<?php echo esc_attr($this->settings_options['slug']); ?>" /><br />
+			By default its set to 'person'
+		</td>
 	</tr>
 
 	</tbody></table>
-	-->
+	
 	
 	<input type="submit" class="button-primary" value="<?php _e('Save Settings') ?>" />
 </form>	
