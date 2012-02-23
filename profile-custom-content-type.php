@@ -1138,6 +1138,7 @@ Make sure that you select who this is supposed to be.<br />
 		$before_label = ( isset($before_label) && $before_label ? true:false);
 		$field_id_class = ( isset($field_id)? ' class="'.$field_id.' '.$type.'-shell"': '');
 
+		//print_r($options);
 
 		$size = ( isset($size)? ' size="'.$size.'"': '');
 		$row = ( isset($row)? ' row="'.$row.'"': '');
@@ -1167,9 +1168,9 @@ Make sure that you select who this is supposed to be.<br />
 				echo $separator;
 ?>
 			 	<span <?php echo $field_id_class.$show; ?>>
-			 		<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
-					<input type="text" <?php echo $size.$class.$name; ?> value="<?php echo esc_attr($value); ?>" id="">
-					<?php if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+			 		<?php if($before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php } ?>
+					<input type="text" id="<?php echo $textarea_id; ?>" <?php echo $size.$class.$name; ?> value="<?php echo esc_attr($value); ?>" id="">
+					<?php if(!$before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php } ?>
 				</span>
 				<?php
 			break;
@@ -1193,18 +1194,18 @@ Make sure that you select who this is supposed to be.<br />
 			if ($separator)
 				echo $separator;
 
-			if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php }
+			if($before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php }
 			// need to change the name in this case
 			$selected_fields = (is_array($selected_fields) ? $selected_fields : array());
 
 			foreach($all_fields as $field):
 
 ?>
-	 					<label><input type="checkbox" <?php checked( in_array($field,$selected_fields) ); ?> value="<?php echo $field; ?>" <?php echo $class.$name; ?> /> <?php echo $field; ?></label>
+	 					<label><input type="checkbox" id="<?php echo $textarea_id; ?>" <?php checked( in_array($field,$selected_fields) ); ?> value="<?php echo $field; ?>" <?php echo $class.$name; ?> /> <?php echo $field; ?></label>
 	 					<?php
 			endforeach;
 
-			if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+			if(!$before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php } ?>
 
 	 				</div>
 	 				<?php
@@ -1214,9 +1215,9 @@ Make sure that you select who this is supposed to be.<br />
 				echo $separator;
 
 			?><div <?php echo $field_id_class.$show;  ?>>
-	 				<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
-	 					<label><input type="checkbox" <?php checked( $value ); ?> value="1" <?php echo $class.$name; ?> /> <?php echo $field; ?></label>
-	 				<?php if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+	 				<?php if($before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php } ?>
+	 					<label><input id="<?php echo $textarea_id; ?>" type="checkbox" <?php checked( $value ); ?> value="1" <?php echo $class.$name; ?> /> <?php echo $field; ?></label>
+	 				<?php if(!$before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php } ?>
 	 				</div>
 	 				<?php
 			break;
@@ -1228,9 +1229,9 @@ Make sure that you select who this is supposed to be.<br />
 
 			?><span <?php echo $field_id_class.$show;  ?>>
 	 				<?php
-			if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php }
+			if($before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php }
 ?>
-	 				<select <?php echo $name; ?> >
+	 				<select id="<?php echo $textarea_id; ?>" <?php echo $name; ?> >
 	 				<?php
 			foreach($all_fields as $field): ?>
 	 					<option  value="<?php echo $field; ?>" <?php selected($value,$field); ?> > <?php echo $field; ?></option>
@@ -1239,7 +1240,7 @@ Make sure that you select who this is supposed to be.<br />
 ?>
 	 				</select>
 	 				<?php
-			if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+			if(!$before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php } ?>
 
 	 				</span>
 	 				<?php
@@ -1255,7 +1256,7 @@ Make sure that you select who this is supposed to be.<br />
 	 				<?php
 			// only dispaly the editor on the Profile edit side
 			if( $this->action == 'edit' ): ?>
-	 					<textarea <?php echo $size.$class.$name.$row.$cols; ?> id=""><?php echo esc_html($value); ?></textarea>
+	 					<textarea <?php echo $size.$class.$name.$row.$cols; ?> id="<?php echo $textarea_id; ?>"><?php echo esc_html($value); ?></textarea>
 	 				<?php
 			else:
 				wp_editor( $value, $textarea_id, array('textarea_name'=>$textarea_name,'teeny'=>true, 'media_buttons'=>false) );
