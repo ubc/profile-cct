@@ -1713,55 +1713,37 @@ Make sure that you select who this is supposed to be.<br />
 					$options = $default[$fields_or_tabs][$context];
 				else
 					$options = $default[$fields_or_tabs];
+			endif;
 			
-			else:
 				 
-				 // lets check if we have the fresh version since we last updated the plugin
-				 /* CHECK to see if we need to do the merge */
-				$perform_merge = false;
+			 // lets check if we have the fresh version since we last updated the plugin
+			 /* CHECK to see if we need to do the merge */
+			$perform_merge = false;
+			
+			// can we find the version settings
+			if(!isset($this->settings_options['version'][$type][$fields_or_tabs][$context])):
+				$perform_merge = true;
+			// are they less then the current version
+			elseif(  $this->version() > $this->settings_options['version'][$type][$fields_or_tabs][$context] ):
+				$perform_merge = true;
+			endif;
+			
+			// lets perform the merge 
+			if($perform_merge && $context == 'bench'):
 				
-				// can we find the version settings
-				if(!isset($this->settings_options['version'][$type][$fields_or_tabs][$context])):
-					$perform_merge = true;
-				// are they less then the current version
-				elseif(  $this->version() > $this->settings_options['version'][$type][$fields_or_tabs][$context] ):
-					$perform_merge = true;
-				endif;
+				$new_fields = $this->default_options('new_fields');
 				
-				// lets perform the merge 
-				if($perform_merge):
+				// lets add the new fields in this version to the banch
+				if( is_array($new_fields[$this->version()]) ):
+					foreach( $new_fields[$this->version()] as $field) :
+						
+						if( in_array( $type , $field['where'] ) ):
+							$options[] = $field['field'];
+						endif;
 					
-					// 
-					$options_array = array();
-					foreach($options as $item):
-						$options_array[] = $item['type'];
 					endforeach;
-					
-					$default = $this->default_options($type);
-					
-					if( $fields_or_tabs == 'fields' ):
-						$new_options = $default[$fields_or_tabs][$context];
-						foreach($new_options as $new_item):
-							if( !in_array($new_item['type'], $options_array) ):
-								$options[] = $new_item;
-								
-							endif;
-						endforeach;
-					else:
-						foreach($new_options as $new_item):
-							if( !in_array($new_item['type'], $options_array) ):
-								$options[] = $new_item;
-								
-							endif;
-						endforeach;
-					endif;
-					
-					
 					$this->update_option($type,$fields_or_tabs,$context,$options);
-					
-
 				endif;
-				
 			endif; 
 				
 			
@@ -1851,7 +1833,6 @@ Make sure that you select who this is supposed to be.<br />
 							array( "type"=> "unitassociations",   "label"=> "unit associations"),
 							array( "type"=> "professionalaffiliations", "label"=> "professional affiliations"),
 							array( "type"=> "graduatestudent",   "label"=> "graduate student" ),
-							array( "type"=> "data", "label"=> "data"),
 						)),
 					'tabs' => array("Basic Info", "Bio")
 				), $type );
@@ -1891,8 +1872,6 @@ Make sure that you select who this is supposed to be.<br />
 							array( "type"=> "professionalaffiliations", "label"=> "professional affiliations"),
 							array( "type"=> "courses",     "label"=> "courses" ),
 							array( "type"=> "officehours",    "label"=> "office hours" ),
-							array( "type"=> "data", "label"=> "data"),
-
 						)),
 					'tabs' => array("Basic Info", "Bio")
 				) , $type );
@@ -1987,6 +1966,18 @@ Make sure that you select who this is supposed to be.<br />
 				
 				), $type);
 				
+			break;
+			
+		case 'new_fields':
+			return apply_filters( 'profile_cct_default_options', 
+						array( 
+							"1.1"	=> array( 
+									array( 
+										'field' => array( "type"=> "data", "label"=> "data"), 
+										'where' => array( "form","page", "list" )
+									)
+							)
+						), $type);
 			break;
 		}
 	}
