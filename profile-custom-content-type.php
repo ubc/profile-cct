@@ -401,18 +401,13 @@ class Profile_CCT {
 					'type' => 'list'
 				));
 			break;
-			/*case "helper":
-				wp_register_style( 'profile-cct-helper', WP_PLUGIN_URL . '/profile-cct/stylesheet.css' );
-			break;
-			*/
+			
 		default:
 			// wp_enqueue_script( 'profile-cct-settings', WP_PLUGIN_URL . '/profile-cct/js/settings.js' );
 			break;
 
-
-
 		}
-		wp_enqueue_style( 'profile-cct-general', WP_PLUGIN_URL . '/profile-cct/js/general.js' );
+		
 	}
 	/**
 	 * admin_pages function.
