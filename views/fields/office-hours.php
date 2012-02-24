@@ -145,9 +145,9 @@ function profile_cct_officehours_display( $data, $options ){
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'start-minute','default_text'=>'15', 'separator'=>':', 'value'=>$data['start-minute'], 'type'=>'text') );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'start-period','default_text'=>'AM', 'value'=>$data['start-period'], 'type'=>'text') );
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'start-hour','default_text'=>'12', 'separator'=>'-', 'value'=>$data['start-hour'], 'type'=>'text' ) );
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'start-minute','default_text'=>'05', 'separator'=>':', 'value'=>$data['start-minute'], 'type'=>'text') );
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'start-period','default_text'=>'PM', 'value'=>$data['start-period'], 'type'=>'text') );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'end-hour','default_text'=>'12', 'separator'=>'-', 'value'=>$data['end-hour'], 'type'=>'text' ) );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'end-minute','default_text'=>'05', 'separator'=>':', 'value'=>$data['end-minute'], 'type'=>'text') );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'end-period','default_text'=>'PM', 'value'=>$data['end-period'], 'type'=>'text') );
 	
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell','tag'=>'div') );
 

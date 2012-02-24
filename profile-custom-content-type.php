@@ -6,7 +6,7 @@
  * Domain Path: /languages
  * Description: Allows administrators to manage user profiles better in order to display them on their websites
  * Author: Enej Bajgoric, CTLT
- * Version: 1.1
+ * Version: 1.0beta
  * Licence: GPLv2
  * Author URI: http://ctlt.ubc.ca
  */
@@ -225,9 +225,6 @@ class Profile_CCT {
 	 */
 	public function get_textdomain() {
 		return $this ->get_plugin_data( 'TextDomain' );
-	}
-	public function version() {
-		return $this ->get_plugin_data( 'Version' );
 	}
 	/**
 	 * add_style_edit function.
@@ -1693,82 +1690,29 @@ Make sure that you select who this is supposed to be.<br />
 	 * @return void
 	 */
 	function get_option($type='form',$fields_or_tabs='fields',$context='normal'){
-		
-		
 		// return the options from the array stored
 		if(is_array($this->option[$type][$fields_or_tabs][$context])):
 			return $this->option[$type][$fields_or_tabs][$context];
 		else:
-			
-			// get the option
-			$options = get_option('Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context);
-			
-			
-						
-			// if we can't find one in the database
-			if(!is_array($options)):
-				$default = $this->default_options($type);
-			
-				if($fields_or_tabs == 'fields')
-					$options = $default[$fields_or_tabs][$context];
-				else
-					$options = $default[$fields_or_tabs];
-			
-			else:
-				 
-				 // lets check if we have the fresh version since we last updated the plugin
-				 /* CHECK to see if we need to do the merge */
-				$perform_merge = false;
-				
-				// can we find the version settings
-				if(!isset($this->settings_options['version'][$type][$fields_or_tabs][$context])):
-					$perform_merge = true;
-				// are they less then the current version
-				elseif(  $this->version() > $this->settings_options['version'][$type][$fields_or_tabs][$context] ):
-					$perform_merge = true;
-				endif;
-				
-				// lets perform the merge 
-				if($perform_merge):
-					
-					// 
-					$options_array = array();
-					foreach($options as $item):
-						$options_array[] = $item['type'];
-					endforeach;
-					
-					$default = $this->default_options($type);
-					
-					if( $fields_or_tabs == 'fields' ):
-						$new_options = $default[$fields_or_tabs][$context];
-						foreach($new_options as $new_item):
-							if( !in_array($new_item['type'], $options_array) ):
-								$options[] = $new_item;
-								
-							endif;
-						endforeach;
-					else:
-						foreach($new_options as $new_item):
-							if( !in_array($new_item['type'], $options_array) ):
-								$options[] = $new_item;
-								
-							endif;
-						endforeach;
-					endif;
-					
-					
-					$this->update_option($type,$fields_or_tabs,$context,$options);
-					
+			// get the
+			$option = get_option('Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context);
 
-				endif;
-				
-			endif; 
-				
-			
+		if($type=='page'):
+			//find_option();
 		endif;
 
-		$this->option[$type][$fields_or_tabs][$context] = $options;
-		return $options;
+		if(!is_array($option)):
+			$default = $this->default_options($type);
+		
+		if($fields_or_tabs == 'fields')
+			$option = $default[$fields_or_tabs][$context];
+		else
+			$option = $default[$fields_or_tabs];
+		endif;
+		endif;
+
+		$this->option[$type][$fields_or_tabs][$context] = $option;
+		return $option;
 
 	}
 	/**
@@ -1782,14 +1726,15 @@ Make sure that you select who this is supposed to be.<br />
 	 * @return void
 	 */
 	function update_option($type='form',$fields_or_tabs='fields',$context='normal',$update) {
-		
-		$this->settings_options['version'][$type][$fields_or_tabs][$context] = $this->version();
-		$this->settings_options[$type.'_updated'] = time();
-		// saving of the version number
+		$settings = get_option('Profile_CCT_settings');
+		if(!is_array($settings))
+			$settings = array();
+			
+		$settings[$type.'_updated'] = time();
 		
 		$this->option[$type][$fields_or_tabs][$context] = $update;
 		// update the settings
-		update_option( 'Profile_CCT_settings', $this->settings_options );
+		update_option( 'Profile_CCT_settings', $settings );
 
 		return update_option( 'Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context, $update );
 	}
@@ -1838,6 +1783,7 @@ Make sure that you select who this is supposed to be.<br />
 							array( "type"=>"picture", "label"=>"picture" )
 						),
 						'bench' =>array(
+
 							array( "type"=> "department",    "label"=> "department"),
 							array( "type"=> "courses",     "label"=> "courses" ),
 							array( "type"=> "officehours",    "label"=> "office hours" ),
