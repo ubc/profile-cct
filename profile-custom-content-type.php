@@ -35,24 +35,12 @@
  ==============================================================================
  This plugin requires WordPress >= 3.2 and tested with PHP Interpreter >= 5.2
  */
-$db_fields = array(
-		array(
-			'type'=>'clonesecondwebsite',
-			'label'=>'Second Website',
-			'field_clone'=>'website'
-		),
-		array(
-			'type'=>'clonesecondphone',
-			'label'=>'Second Phone',
-			'field_clone'=>'phone'
-		),
-		
-		
-		);
+
 // don't load directly
 if ( !defined('ABSPATH') )
 	die('-1');
 
+define('PROFILE_CCT_DIR', plugin_dir_path(__FILE__));
 
 if(isset( $_GET['delete_profile_cct_data'])):
 	delete_option('Profile_CCT_form_fields_tabbed-1');
@@ -94,8 +82,8 @@ if(isset( $_GET['delete_profile_cct_data'])):
 
 endif;
 
-require_once('profile-taxonomies.php');
-require_once('profile-manage-table.php');
+require(PROFILE_CCT_DIR.'profile-taxonomies.php');
+require(PROFILE_CCT_DIR.'profile-manage-table.php');
 
 class Profile_CCT {
 	static private $classobj = NULL;
@@ -146,8 +134,7 @@ class Profile_CCT {
 			/* This is the correct way to loop over the directory. */
 			while (false !== ($file = readdir($handle))):
 				if(substr($file,0,1) != ".")
-					require_once($dir.$file);
-
+					require($dir.$file);
 				endwhile;
 
 			closedir($handle);
@@ -173,7 +160,7 @@ class Profile_CCT {
     	
     	if ( 'profile_cct' == get_post_type() ):
     		
-    		 if( ( current_user_can('edit_profile_cct') && (int)$post->post_author != $current_user->ID ) || current_user_can('edit_others_profile_cct') ):
+    		 if( !( current_user_can('edit_profile_cct') && (int)$post->post_author != $current_user->ID ) && !current_user_can('edit_others_profile_cct') ):
     			$wp_admin_bar->remove_menu('edit');
     		endif;
     	endif;
@@ -182,7 +169,7 @@ class Profile_CCT {
     	
 	    	$wp_admin_bar->remove_menu('logout');
 	    	
-	    	
+	
 	    	$wp_admin_bar->add_menu( array(
 				'parent' => 'user-actions',
 				'id'     => 'edit-public-profile',
@@ -434,118 +421,7 @@ class Profile_CCT {
 	 * @return void
 	 */
 	public function admin_pages() {
-		$type_of = (in_array($_GET['view'], array('form','page','list'))? $_GET['view']: NULL );
-
-		do_action('profile_cct_admin_pages', $type_of);
-		if($type_of):
-			if(!is_array($this->field_options[$type_of]))
-				$this->field_options[$type_of] = array();
-
-			foreach ($this->get_contexts($type_of) as $context):
-
-				$fields = $this->get_option($type_of, 'fields',$context);
-				if( is_array($fields) ):
-					foreach( $fields as $field ):
-						$this->field_options[$type_of][] = $field;
-						$this->field_options_type[$type_of][] = $field['type'];
-					endforeach;
-				endif;
-				unset($fields, $field);
-			endforeach;
-
-			// lets not forget the bench
-			$fields = $this->get_option($type_of, 'fields','bench');
-			if( is_array($fields) ):
-				foreach( $fields as $field ):
-					$this->field_options[$type_of][] = $field;
-				$this->field_options_type[$type_of][] = $field['type'];
-			endforeach;
-			endif;
-
-			unset($fields, $field);
-
-			// ability to add new field such as dynamic once though this
-			// each type has to be unique
-			$dynamic_fields = apply_filters("profile_cct_dynamic_fields", array(),$type_of );
-			
-		
-			if(is_array($dynamic_fields)):
-				foreach($dynamic_fields as $field):
-					// if we can't find the field lets add it to the other things
-					if( !in_array($field['type'], $this->field_options_type[$type_of]) ):
-	
-						$this->field_options[$type_of][] = $field;
-						$this->field_options_type[$type_of][] = $field['type'];
-						$this->option[$type_of]['fields']['bench'][] = $field;
-	
-					endif;
-				endforeach;
-			endif;
-
-		endif;
-
-
-		screen_icon( 'users' );
-?>
-		<div class="wrap">
-			<h2>Profile Settings</h2>
-			<h3 class="nav-tab-wrapper">
-	
-				<a class="nav-tab <?php if( !isset($_GET['view']) ) { echo "nav-tab-active"; } ?>"
-					href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php">About</a>
-				<span>Builder:</span>
-				<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='taxonomy' ) { echo "nav-tab-active"; } ?>"
-					href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=taxonomy">Taxonomy</a>
-				<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='form' ) { echo "nav-tab-active"; } ?>"
-					href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=form">Form</a>
-				<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='page' ) { echo "nav-tab-active"; } ?>"
-					href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=page">Person View</a>
-				<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='list' ) { echo "nav-tab-active"; } ?>"
-					href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list">List View</a>
-		
-				<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='fields' ) { echo "nav-tab-active"; } ?>"
-					href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=fields">Fields</a>
-				<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='settings' ) { echo "nav-tab-active"; } ?>"
-					href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=settings">Settings</a>
-				<!-- 
-		
-				<a class="nav-tab <?php if( isset($_GET['view']) && $_GET['view'] =='helper' ) { echo "nav-tab-active"; } ?>"
-					href="edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=helper">HELPER</a>
-					-->
-			</h3>
-		
-		<?php
-		$this->action = 'edit';
-		switch( $_GET['view'] ) {
-		case "form":
-			require_once("views/form.php");
-			break;
-		case "page":
-			require_once("views/page.php");
-			break;
-		case "list":
-			require_once("views/list.php");
-			break;
-		case "helper":
-			require_once("views/helper.php");
-			break;
-		case "taxonomy":
-			require_once("views/taxonomy.php");
-			break;
-		case "fields":
-			require_once("views/fields.php");
-			break;
-		case "settings":
-			require_once("views/settings.php");
-			break;
-		default:
-			require_once("views/about.php");
-			break;
-
-		} 
-		?>
-		</div>
-		<?php
+		require(PROFILE_CCT_DIR.'class/admin_pages.php');
 	}
 	/**
 	 * profiles_cct_init function.
@@ -1132,143 +1008,8 @@ Make sure that you select who this is supposed to be.<br />
 	 * @return void
 	 */
 	function input_field( $options ) {
-
-		extract( $options );
-
-		$before_label = ( isset($before_label) && $before_label ? true:false);
-		$field_id_class = ( isset($field_id)? ' class="'.$field_id.' '.$type.'-shell"': '');
-
-		//print_r($options);
-
-		$size = ( isset($size)? ' size="'.$size.'"': '');
-		$row = ( isset($row)? ' row="'.$row.'"': '');
-		$cols = ( isset($cols)? ' cols="'.$cols.'"': '');
-		$class = ( isset($class)? ' class="'.$class.'"': ' class="field text"');
-		$id = ( isset($id)? ' id="'.$id.'"': ' ');
-		$separator = (isset($separator) ? '<span class="separator">'.$separator.'</span>': "");
-
-		if($type =='multiple'):
-			$name = ( isset($name)? ' name="'.$name.'[]"':  ' name="profile_cct['.$field_type.']['.$count.']['.$field_id.'][]"');
-		$textarea_id = 'profile_cct-'.$field_type.'-'.$count.'-'.$field_id;
-		$textarea_name = 'profile_cct['.$field_type.']['.$count.']['.$field_id.'][]';
-		elseif($multiple):
-			$name = ( isset($name)? ' name="'.$name.'[]"':  ' name="profile_cct['.$field_type.']['.$count.']['.$field_id.']"');
-		$textarea_id = 'profile_cct-'.$field_type.'-'.$count.'-'.$field_id;
-		$textarea_name = 'profile_cct['.$field_type.']['.$count.']['.$field_id.']';
-		else:
-			$name = ( isset($name)? ' name="'.$name.'"': ' name="profile_cct['.$field_type.']['.$field_id.']"');
-		$textarea_id = 'profile_cct-'.$field_type.'-'.$field_id;
-		$textarea_name = 'profile_cct['.$field_type.']['.$field_id.']';
-		endif;
-		$show = ( isset($show) && !$show ? ' style="display:none;"': '');
-		switch($type) {
-		case 'text':
-
-			if ($separator)
-				echo $separator;
-?>
-			 	<span <?php echo $field_id_class.$show; ?>>
-			 		<?php if($before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php } ?>
-					<input type="text" id="<?php echo $textarea_id; ?>" <?php echo $size.$class.$name; ?> value="<?php echo esc_attr($value); ?>" id="">
-					<?php if(!$before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php } ?>
-				</span>
-				<?php
-			break;
-
-		case 'hidden':
-
-			if ($separator)
-				echo $separator;
-?>
-			 	<span <?php echo $field_id_class.$show; ?>>
-			 		<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
-					<input type="hidden" <?php echo $size.$class.$name; ?> value="<?php echo esc_attr($value); ?>" id="">
-					<?php if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
-				</span>
-				<?php
-			break;
-
-
-		case 'multiple':
-			?><div <?php echo $field_id_class.$show;  ?>><?php
-			if ($separator)
-				echo $separator;
-
-			if($before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php }
-			// need to change the name in this case
-			$selected_fields = (is_array($selected_fields) ? $selected_fields : array());
-
-			foreach($all_fields as $field):
-
-?>
-	 					<label><input type="checkbox" id="<?php echo $textarea_id; ?>" <?php checked( in_array($field,$selected_fields) ); ?> value="<?php echo $field; ?>" <?php echo $class.$name; ?> /> <?php echo $field; ?></label>
-	 					<?php
-			endforeach;
-
-			if(!$before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php } ?>
-
-	 				</div>
-	 				<?php
-			break;
-		case 'checkbox':
-			if ($separator)
-				echo $separator;
-
-			?><div <?php echo $field_id_class.$show;  ?>>
-	 				<?php if($before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php } ?>
-	 					<label><input id="<?php echo $textarea_id; ?>" type="checkbox" <?php checked( $value ); ?> value="1" <?php echo $class.$name; ?> /> <?php echo $field; ?></label>
-	 				<?php if(!$before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php } ?>
-	 				</div>
-	 				<?php
-			break;
-
-		case 'select':
-
-			if ($separator)
-				echo $separator;
-
-			?><span <?php echo $field_id_class.$show;  ?>>
-	 				<?php
-			if($before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php }
-?>
-	 				<select id="<?php echo $textarea_id; ?>" <?php echo $name; ?> >
-	 				<?php
-			foreach($all_fields as $field): ?>
-	 					<option  value="<?php echo $field; ?>" <?php selected($value,$field); ?> > <?php echo $field; ?></option>
-	 					<?php
-			endforeach;
-?>
-	 				</select>
-	 				<?php
-			if(!$before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php } ?>
-
-	 				</span>
-	 				<?php
-			break;
-
-		case 'textarea':
-			if ($separator)
-				echo $separator;
-?>
-	 				<span <?php echo $field_id_class; ?>>
-	 				<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
-
-	 				<?php
-			// only dispaly the editor on the Profile edit side
-			if( $this->action == 'edit' ): ?>
-	 					<textarea <?php echo $size.$class.$name.$row.$cols; ?> id="<?php echo $textarea_id; ?>"><?php echo esc_html($value); ?></textarea>
-	 				<?php
-			else:
-				wp_editor( $value, $textarea_id, array('textarea_name'=>$textarea_name,'teeny'=>true, 'media_buttons'=>false) );
-			endif;
-			if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
-					</span>
-	 				<?php
-			break;
-
-
-		}
-
+		
+		require(PROFILE_CCT_DIR.'class/input_field.php');
 	}
 
 	/**
@@ -1279,85 +1020,7 @@ Make sure that you select who this is supposed to be.<br />
 	 * @return void
 	 */
 	function display_text($options) {
-		extract( $options );
-
-		$hide = ( isset($show) && !$show ? ' style="display:none;"': '');
-		if($this->action == 'display' && empty($value) && !in_array($type, array('end_shell','shell') ) && empty($hide) ):
-			echo "";
-		return true;
-		endif;
-
-		$prepend_class = $class;
-		$class = ( isset($class)? ' class="'.$class.'"': ' class=""');
-		$id = ( isset($id)? ' id="'.$id.'"': ' ');
-
-		$href = ( isset($href)? ' href="'.$href.'"': ' ');
-
-
-		$show = ( isset($show) && !$show ? false: true);
-
-		$tag = (isset($tag) ? $tag :"span");
-
-		switch( $default_text ){
-		case 'lorem ipsum':
-
-			$default_text = "<p><strong>".$field_type."</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc in velit ac sem dapibus cursus. Donec faucibus adipiscing ipsum ut auctor. Integer quis metus iaculis lacus vulputate facilisis. Fusce malesuada volutpat sapien eu commodo. Integer sed magna orci, quis commodo elit. In convallis fringilla mollis. Pellentesque dapibus mi quis nunc pulvinar lobortis. Sed ut purus auctor ligula aliquam egestas eu at sem. Sed eget nisl urna. Etiam vitae leo id erat porttitor iaculis et et lorem. Curabitur condimentum libero eget sapien dictum congue. In hac habitasse platea dictumst. In in nulla et elit vehicula tempor. Donec sem arcu, viverra quis dignissim ac, adipiscing sed nunc.</p>
-
-<p>Quisque malesuada tellus vitae massa semper non faucibus leo sollicitudin. In sit amet feugiat ligula. Ut id ultrices magna. Proin ut imperdiet tellus. Nulla interdum eleifend massa egestas malesuada. Suspendisse potenti. Nulla suscipit imperdiet velit sit amet pretium. In sit amet lectus felis, commodo varius eros. Duis sapien diam, sagittis faucibus elementum vulputate, faucibus a mi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec viverra, quam in pretium volutpat, elit sapien tempor neque, quis adipiscing magna quam vitae velit.</p>";
-			break;
-
-		case 'bruce bio':
-
-			$default_text = "<p><strong>".$field_type."</strong> A wealthy businessman who lives in Gotham City, born to Dr. Thomas Wayne and his wife Martha, two very wealthy and charitable Gotham City socialites.</p>
-
-<p>Known for his contributions to charity, notably through his Wayne Foundation, a charity devoted to helping the victims of crime and preventing people from becoming criminals.</p>";
-			break;
-		}
-
-		$display = ( $value ? $value :$default_text);
-
-		$separator = (isset($separator) ? '<span class="'.$prepend_class.'-separator">'.$separator.'</span>': "");
-
-
-		switch($type) {
-		case 'text':
-			echo $separator.' <'.$tag.' '.$id.$class.$href.$hide.'>';
-			echo $display;
-			echo "</".$tag.">";
-			break;
-
-		case 'shell':
-			if($tag == 'a'):
-				if($link_to):
-					echo '<'.$tag.' '.$id.$class.$href.'>';
-				else:
-					echo '<span '.$id.$class.'>';
-				endif;
-			else:
-				echo '<'.$tag.' '.$id.$class.'>';
-			if($link_to):
-				echo '<a '.$href.'>';
-			endif;
-			endif;
-
-			break;
-
-		case 'end_shell';
-			if($tag == 'a'):
-				if($link_to):
-					echo '</'.$tag.'>';
-				else:
-					echo '</span>';
-				endif;
-			else:
-				if($link_to):
-					echo '</a>';
-				endif;
-			echo '</'.$tag.'>';
-			endif;
-			break;
-
-		}
+		require(PROFILE_CCT_DIR.'class/display_text.php');
 	}
 
 	/**
@@ -1683,6 +1346,7 @@ Make sure that you select who this is supposed to be.<br />
 		endif;
 		return $contexts;
 	}
+	
 	/**
 	 * get_option function.
 	 *
@@ -1702,8 +1366,6 @@ Make sure that you select who this is supposed to be.<br />
 			
 			// get the option
 			$options = get_option('Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context);
-			
-			
 						
 			// if we can't find one in the database
 			if(!is_array($options)):
@@ -1746,7 +1408,6 @@ Make sure that you select who this is supposed to be.<br />
 				endif;
 			endif; 
 				
-			
 		endif;
 
 		$this->option[$type][$fields_or_tabs][$context] = $options;
@@ -1797,189 +1458,7 @@ Make sure that you select who this is supposed to be.<br />
 	 */
 	function default_options($type = 'form') {
 		
-		switch($type) {
-		case 'form':
-			return apply_filters( 'profile_cct_default_options', array(
-					'fields'=> array(
-						'tabbed-1' => array(
-							array( "type"=> "address",   "label"=> "address",),
-							array( "type"=> "phone",  "label"=> "phone" ),
-							array( "type"=> "email",  "label"=> "email" ),
-							array( "type"=> "website",  "label"=> "website"),
-							array( "type"=> "social",  "label"=> "social")
-						),
-						'tabbed-2' =>array(
-							array( "type"=> "position" , "label"=> "position" ),
-							array( "type"=> "bio",   "label"=> "bio" )
-
-						),
-						'normal'=> array(
-							array("type"=> "name" , "label"=> "name" )
-						),
-						'side'=> array(
-							array( "type"=>"picture", "label"=>"picture" )
-						),
-						'bench' =>array(
-							array( "type"=> "department",    "label"=> "department"),
-							array( "type"=> "courses",     "label"=> "courses" ),
-							array( "type"=> "officehours",    "label"=> "office hours" ),
-							array( "type"=> "education",     "label"=> "education" ),
-							array( "type"=> "awards",     "label"=> "awards" ),
-							array( "type"=> "specialization",   "label"=> "specialization" ),
-							array( "type"=> "teaching",     "label"=> "teaching" ),
-							array( "type"=> "publications",    "label"=> "publications" ),
-							array( "type"=> "research",     "label"=> "research" ),
-							array( "type"=> "projects",   "label"=> "projects" ),
-							array( "type"=> "unitassociations",   "label"=> "unit associations"),
-							array( "type"=> "professionalaffiliations", "label"=> "professional affiliations"),
-							array( "type"=> "graduatestudent",   "label"=> "graduate student" ),
-						)),
-					'tabs' => array("Basic Info", "Bio")
-				), $type );
-			break;
-
-		case 'page':
-			return apply_filters( 'profile_cct_default_options', array(
-					'fields'=> array(
-						'tabbed-1' => array(
-							array( "type"=> "address",  "label"=> "address",),
-							array( "type"=> "phone", "label"=> "phone" ),
-							array( "type"=> "email", "label"=> "email" ),
-							array( "type"=> "website", "label"=> "website"),
-							array( "type"=> "social", "label"=> "social")
-						),
-						'tabbed-2' =>array(
-							array( "type"=> "position" , "label"=> "position" ),
-							array( "type"=> "bio",   "label"=> "biography" )
-
-						),
-						'header'=> array(
-							array( "type"=>"picture", "label"=>"picture" ),
-							array("type"=> "name" ,  "label"=> "name" )
-						),
-						'bottom'=> array(
-
-						),
-						'bench' =>array(
-							array( "type"=> "department",    "label"=> "department"),
-							array( "type"=> "education",     "label"=> "education" ),
-							array( "type"=> "awards",     "label"=> "awards" ),
-							array( "type"=> "specialization",   "label"=> "specialization" ),
-							array( "type"=> "projects",   "label"=> "projects" ),
-							array( "type"=> "graduatestudent",   "label"=> "graduate student" ),
-							array( "type"=> "permalink",     "label"=> "permalink"),
-							array( "type"=> "unitassociations",   "label"=> "unit associations"),
-							array( "type"=> "professionalaffiliations", "label"=> "professional affiliations"),
-							array( "type"=> "courses",     "label"=> "courses" ),
-							array( "type"=> "officehours",    "label"=> "office hours" ),
-						)),
-					'tabs' => array("Basic Info", "Bio")
-				) , $type );
-			break;
-
-		case 'list':
-			return apply_filters( 'profile_cct_default_options', array(
-					'fields'=> array(
-						'normal'=> array(
-							array( "type"=>"picture",  "label"=>"picture" ),
-							array( "type"=> "name" , "label"=> "name" ),
-							array( "type"=> "phone", "label"=> "phone" ),
-							array( "type"=> "email", "label"=> "email" )
-						),
-						'bench' =>array(
-							array( "type"=> "address",    "label"=> "address"),
-							array( "type"=> "website",   "label"=> "website"),
-							array( "type"=> "social",   "label"=> "social"),
-							array( "type"=> "position" ,  "label"=> "position" ),
-							array( "type"=> "department",  "label"=> "department" ),
-							array( "type"=> "courses",   "label"=> "courses" ),
-							array( "type"=> "officehours",  "label"=> "office hours" ),
-							array( "type"=> "education",   "label"=> "education" ),
-							array( "type"=> "awards",   "label"=> "awards" ),
-							array( "type"=> "specialization", "label"=> "specialization" ),
-							array( "type"=> "projects", "label"=> "projects" ),
-							array( "type"=> "graduatestudent", "label"=> "graduate student" ),
-							array( "type"=> "permalink",   "label"=> "permalink"),
-							array( "type"=> "unitassociations", "label"=> "unit associations"),
-							
-						)
-					)
-				) , $type );
-			break;
-		
-		case 'settings':
-			return apply_filters( 'profile_cct_default_options', 
-				array( 
-					"picture"	=> array(
-						"width"	=>150,
-						"height"=>150,
-					),
-					'slug' => 'person',
-					"permissions"=> array(
-						'administrator' => array(
-							'edit_profile_cct'			=>	true,
-							'edit_profiles_cct' 		=>	true,
-							'edit_others_profile_cct'   =>	true,
-				            'publish_profile_cct'		=>  true,
-							'read_private_profile_cct'	=> 	true,
-							'delete_profile_cct'		=>  true,
-							'delete_others_profile_cct' =>  true
-						),
-						'editor' => array(
-							'edit_profile_cct'			=>	true,
-							'edit_profiles_cct' 		=>	true,
-							'edit_others_profile_cct'   =>	true,
-				            'publish_profile_cct'		=>  true,
-							'read_private_profile_cct'	=> 	true,
-							'delete_profile_cct'		=>  true,
-							'delete_others_profile_cct' =>  true
-						
-						),
-						'author' => array(
-							'edit_profile_cct'			=>	true,
-							'edit_profiles_cct' 		=>	true,
-							'edit_others_profile_cct'   =>	false,
-				            'publish_profile_cct'		=>  true,
-							'read_private_profile_cct'	=> 	false,
-							'delete_profile_cct'		=>  false,
-							'delete_others_profile_cct' =>  false
-						),
-						'contributor' => array(
-							'edit_profile_cct'			=>	true,
-							'edit_profiles_cct' 		=>	false,
-							'edit_others_profile_cct'   =>	false,
-				            'publish_profile_cct'		=>  false,
-							'read_private_profile_cct'	=> 	false,
-							'delete_profile_cct'		=>  false,
-							'delete_others_profile_cct' =>  false
-						),
-						'subscriber'  => array(
-							'edit_profile_cct'			=>	true,
-							'edit_profiles_cct' 		=>	false,
-							'edit_others_profile_cct'   =>	false,
-				            'publish_profile_cct'		=>  false,
-							'read_private_profile_cct'	=> 	false,
-							'delete_profile_cct'		=>  false,
-							'delete_others_profile_cct' =>  false
-						)
-					)
-				
-				), $type);
-				
-			break;
-			
-		case 'new_fields':
-			return apply_filters( 'profile_cct_default_options', 
-						array( 
-							"1.1"	=> array( 
-									array( 
-										'field' => array( "type"=> "data", "label"=> "data"), 
-										'where' => array( "form","page", "list" )
-									)
-							)
-						), $type);
-			break;
-		}
+		require(PROFILE_CCT_DIR.'class/default_options.php');
 	}
 
 	function fields_to_clone() {
