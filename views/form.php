@@ -32,7 +32,8 @@
 		<h3>Preview</h3>
 		
 		<?php
-			do_action('profile_cct_form',$action);
+			$data = array();
+			do_action('profile_cct_form',$action,$data,"form");
 		?>
 		</div>
 	</div><!-- /col-left -->

@@ -140,10 +140,12 @@ class Profile_CCT {
 			closedir($handle);
 		endif;
 		// function to be executed on form admin page
-		add_action('profile_cct_form', array( $this,'profile_cct_form_field_shell'),10,1);
+		add_action('profile_cct_form', array( $this,'form_field_shell'),10,1);
+		
+		add_action('profile_cct_form', array( $this,'recount_field'),11,1);
 
 		// function to be executed on page and list admin pages
-		add_action('profile_cct_page', array( $this,'profile_cct_page_field_shell'),10,3);
+		add_action('profile_cct_page', array( $this,'page_field_shell'),10,3);
 		
 		// function removed the edit Public profile from everyone but the person who can really edit it
 		add_action( 'wp_before_admin_bar_render', array($this, 'edit_admin_bar_render'),20 );
@@ -788,13 +790,13 @@ Make sure that you select who this is supposed to be.<br />
 
 
 	/**
-	 * profile_cct_form_field_shell function.
+	 * form_field_shell function.
 	 *
 	 * @access public
 	 * @param mixed $action
 	 * @return void
 	 */
-	function profile_cct_form_field_shell( $action ) {
+	function form_field_shell( $action ) {
 
 		// the default contexts normal, side, and tabs
 		$contexts = $this->default_shells();
@@ -829,7 +831,7 @@ Make sure that you select who this is supposed to be.<br />
 		endforeach;
 	}
 	/**
-	 * profile_cct_page_field_shell function.
+	 * page_field_shell function.
 	 *
 	 * @access public
 	 * @param mixed $action
@@ -837,7 +839,7 @@ Make sure that you select who this is supposed to be.<br />
 	 * @param mixed $where
 	 * @return void
 	 */
-	function profile_cct_page_field_shell( $action, $user_data, $where ) {
+	function page_field_shell( $action, $user_data, $where ) {
 		$this->action = $action;
 		$contexts = $this->default_shells($where); ?><div id="page-shell"><?php
 		foreach($contexts as $context):
