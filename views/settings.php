@@ -20,11 +20,11 @@ if( !empty($_POST) ):
 		//Validate pic options
 		$width = intval($_POST['picture_width']);
 		$height = intval($_POST['picture_height']);
-		if( $width >= 100 && $width <= 360 && $height >= 100 && $height <= 400):
+		if( $width >= 100 && $width <= 560 && $height >= 100 && $height <= 560):
 			$picture_options = array ( 'width'=>$width, 'height'=>$height );
 			$this->settings_options['picture'] = $picture_options;
 		else:
-			echo '<div class="error settings-error"><p>Picture dimensions should be between 100x100 and 360x400</p></div>';
+			echo '<div class="error settings-error"><p>Picture dimensions should be between 100x100 and 560x560</p></div>';
 		endif;
 		
 		$slug = trim( $_POST['slug'] );

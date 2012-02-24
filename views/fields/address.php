@@ -44,9 +44,10 @@ function profile_cct_address_field( $data, $options ){
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'street-2','label'=>'Address Line 2', 'size'=>74, 'value'=>$data['street-2'], 'type'=>'text', 'show' => in_array("street-2",$show)) );
 	
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'city','label'=>'City', 'size'=>35, 'value'=>$data['city'], 'type'=>'text', 'show' => in_array("city",$show)) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'province','label'=>'Province / State /  Region', 'size'=>35, 'value'=>$data['province'], 'type'=>'text', 'show' => in_array("province",$show)) );
+	
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'postal','label'=>'Postal / Zip Code', 'size'=>35, 'value'=>$data['postal'], 'type'=>'text', 'show' => in_array("postal",$show)) );
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'province','label'=>'Province / State /  Region', 'size'=>35, 'value'=>$data['province'], 'type'=>'text', 'show' => in_array("province",$show)) );
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'country','label'=>'Country', 'size'=>35, 'value'=>$data['country'], 'all_fields'=>profile_cct_list_of_countries(), 'type'=>'select', 'show' => in_array("country",$show)) );
 
 }
@@ -107,9 +108,9 @@ function profile_cct_address_display( $data, $options ){
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'extended-address street-2','default_text'=>'', 'value'=>$data['street-2'], 'type'=>'text', 'show' => in_array("street-2",$show),'tag'=>'div') );
 	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'locality city','default_text'=>'Gotham', 'value'=>$data['city'], 'type'=>'text', 'show' => in_array("city",$show)) );
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'postal','default_text'=>'V1Z 2X0', 'value'=>$data['postal'], 'type'=>'text', 'show' => in_array("postal",$show)) );
-	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'region province','default_text'=>'Connecticut', 'value'=>$data['province'], 'type'=>'text', 'show' => in_array("province",$show)) );
+	
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'postal','default_text'=>'V1Z 2X0', 'value'=>$data['postal'], 'type'=>'text', 'show' => in_array("postal",$show)) );
 	
 	$field->display_text( 
 	array( 'field_type'=>$type, 'class'=>'country-name country','default_text'=>'United States', 'value'=>$data['country'], 'all_fields'=>profile_cct_list_of_countries(), 'type'=>'text', 'show' => in_array("country",$show) ,'tag'=>'div') );

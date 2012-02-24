@@ -14,7 +14,7 @@ function profile_cct_social_field_shell( $action, $options ) {
 	$default_options = array(
 		'type' => 'social',
 		'label'=>'social',
-		'description'=>'',
+		
 		'multiple'=>true,
 		'show_multiple' =>true
 		);
@@ -73,7 +73,11 @@ function profile_cct_social_display_shell(  $action, $options, $data=null  ) {
 	$default_options = array(
 		'type' => 'social',
 		'label'=>'social',
-		'description'=>'',
+		
+		'before'=>'',
+		'empty'=>'',
+		'after'=>'',
+		'width' => 'full',
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	
