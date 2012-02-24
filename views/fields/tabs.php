@@ -45,21 +45,25 @@ function profile_cct_show_tabs($action,$type, $user_data = null) {
 		
 		endif; 
 		?><ul><?php 
-				$count = 1;
-				foreach( $tabs as $tab) : 
-					?><li><a href="#tabs-<?php echo $count; ?>" class="tab-link"><?php echo $tab; ?></a><?php 
-				if($act): ?>
-					<span class="remove-tab">Remove Tab</span> <span class="edit-tab">Edit</span><input type="text" class="edit-tab-input" value="<?php echo esc_attr($tab); ?>" /><input type="button" class="edit-tab-save button" value="Save" />
-				<?php endif;
-					?></li><?php
-					$count++;
-				endforeach;
-				if($act): ?>
-				<li id="add-tab-shell"><a href="#add-tabshell" id="add-tab" title="Add Tab">Add Tab</a></li>
-				<?php 
-				endif; 
-				?></ul><?php 
-			$count = 1;
+		$count = 1;
+		if(is_array($tabs)):
+			foreach( $tabs as $tab) : 
+				?><li><a href="#tabs-<?php echo $count; ?>" class="tab-link"><?php echo $tab; ?></a><?php 
+			if($act): ?>
+				<span class="remove-tab">Remove Tab</span> <span class="edit-tab">Edit</span><input type="text" class="edit-tab-input" value="<?php echo esc_attr($tab); ?>" /><input type="button" class="edit-tab-save button" value="Save" />
+			<?php endif;
+				?></li><?php
+				$count++;
+			endforeach;
+		endif;
+		if($act): ?>
+		<li id="add-tab-shell"><a href="#add-tabshell" id="add-tab" title="Add Tab">Add Tab</a></li>
+		<?php 
+		endif; 
+		?></ul><?php 
+		
+		$count = 1;
+		if(is_array($tabs)):
 			foreach( $tabs as $tab) :
 			?><div id="tabs-<?php echo $count?>"><?php 
 				if($act): ?>
@@ -67,12 +71,13 @@ function profile_cct_show_tabs($action,$type, $user_data = null) {
 					<ul class="form-builder sort" id="tabbed-<?php echo $count?>">
 					<?php 
 				endif;
+				
 				unset($fields);
 				
 				$fields = $profile->get_option($type,'fields','tabbed-'.$count);
 				
 				
-				$i =0;
+				$i = 0;
 				
 				if(is_array($fields)):
 					foreach( $fields as $field):
@@ -96,8 +101,10 @@ function profile_cct_show_tabs($action,$type, $user_data = null) {
 				endif; 
 					?></div><?php 
 				$count++;
-			endforeach; ?>
-			<?php if($act): ?>
+			endforeach; 
+		endif;
+			
+			if($act): ?>
 				<div id="add-tabshell"></div>
 			<?php else: ?>
 				<script type="text/javascript">
