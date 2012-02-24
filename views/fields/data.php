@@ -102,7 +102,7 @@ function profile_cct_data_display_shell(  $action, $options, $data=null ) {
 }
 function profile_cct_data_display( $data, $options ){
 
-	require(PROFILE_CCT_DIR.'inc/simple_html_dom.php');
+	require_once(PROFILE_CCT_DIR.'inc/simple_html_dom.php');
 	
 	extract( $options );
 	$field = Profile_CCT::get_object();
