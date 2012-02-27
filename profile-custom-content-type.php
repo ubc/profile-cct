@@ -142,7 +142,7 @@ class Profile_CCT {
 		// function to be executed on form admin page
 		add_action('profile_cct_form', array( $this,'form_field_shell'),10,1);
 		
-		add_action('profile_cct_form', array( $this,'recount_field'),11,1);
+		add_action('profile_cct_form', array( $this,'recount_field'),11,3);
 
 		// function to be executed on page and list admin pages
 		add_action('profile_cct_page', array( $this,'page_field_shell'),10,3);
@@ -876,7 +876,10 @@ Make sure that you select who this is supposed to be.<br />
 
 		?></div> <!-- end of page shell --><?php
 	}
-
+	function recount_field( $action, $user_data, $where ) {
+	
+	
+	}
 
 	/**
 	 * start_field function.
