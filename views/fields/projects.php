@@ -111,7 +111,7 @@ function profile_cct_projects_display_shell( $action, $options, $data=null ) {
 		endif;
 		$field->end_field( $action, $options );
 	else:
-		echo $empty;
+		echo $options['empty'];
 	endif;
 
 }

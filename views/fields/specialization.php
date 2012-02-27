@@ -91,7 +91,7 @@ function profile_cct_specialization_display_shell(  $action, $options, $data=nul
 		$field->end_field( $action, $options );
 	
 	else:
-		echo $empty;
+		echo $options['empty'];
 	endif;
 	
 }

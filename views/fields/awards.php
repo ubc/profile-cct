@@ -117,7 +117,7 @@ function profile_cct_awards_display_shell( $action, $options=null, $data ) {
 		$field->end_field( $action, $options );
 	
 	else:
-		echo $empty;
+		echo $options['empty'];
 	endif;
 
 }

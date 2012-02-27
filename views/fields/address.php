@@ -54,6 +54,7 @@ function profile_cct_address_field( $data, $options ){
 
 
 function profile_cct_address_display_shell( $action, $options, $data=null ) {
+	//print_r($options);
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -87,7 +88,7 @@ function profile_cct_address_display_shell( $action, $options, $data=null ) {
 		
 		$field->end_field( $action, $options );
 	else:
-		echo $empty;
+		echo $options['empty'];
 	endif;
 
 }

@@ -93,7 +93,7 @@ function profile_cct_unitassociations_display_shell(  $action, $options, $data=n
 		
 		$field->end_field( $action, $options );
 	else:
-		echo $empty;
+		echo $options['empty'];
 	endif;
 	
 }

@@ -99,7 +99,7 @@ function profile_cct_education_display_shell( $action, $options, $data=null  ) {
 		endif;
 		$field->end_field( $action, $options );
 	else:
-		echo $empty;
+		echo $options['empty'];
 	endif;
 }
 function profile_cct_education_display( $data, $options){

@@ -102,7 +102,7 @@ function profile_cct_professionalaffiliations_display_shell(  $action, $options,
 		
 		$field->end_field( $action, $options );
 	else:
-		echo $empty;
+		echo $options['empty'];
 	endif;
 	
 }

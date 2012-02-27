@@ -119,7 +119,7 @@ function profile_cct_graduatestudent_display_shell( $action, $options=null, $dat
 		$field->end_field( $action, $options );
 	
 	else:
-		echo $empty;
+		echo $options['empty'];
 	endif;
 
 }
