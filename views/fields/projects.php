@@ -50,7 +50,7 @@ function profile_cct_projects_field( $data, $options, $count = 0){
 	$completion_year_array = range($year_built_max, date("Y"));
 	$project_status_array = array("Current", "Completed");
 	
-	echo "<div data-count='".$count."'>";
+	echo '<div data-count="'.$count.'" class="wrap-fields">';
 	
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-title', 'label'=>'Project Title', 'size'=>35, 'value'=>$data['project-title'], 'type'=>'text','count'=>$count) );
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-description','label'=>'Project Description', 'size'=>35, 'value'=>$data['project-description'], 'type'=>'textarea','count'=>$count) );

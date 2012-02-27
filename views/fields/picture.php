@@ -139,10 +139,11 @@ function profile_cct_picture_form($thumbnail_id)
 {
 	global $post;
 	$picture_options = profile_cct_get_picture_options();
-	$iframe_width = $picture_options['width'] + 550;
+	//var_dump($picture_options);
+	$iframe_width = $picture_options['width'] + 520;
 	if($thumbnail_id): ?>
 		<div id="user-avatar-display-image"><?php echo profile_cct_get_the_post_thumbnail($post_id, 'thumbnail'); ?></div>
-		<a id="user-avatar-link" class="button thickbox" href="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=1&post_id=<?php echo $post->ID; ?>&TB_iframe=true&width=<?php echo $iframe_width; ?>&height=500" ><?php _e('Update Picture','user-avatar'); ?></a> 
+		<a id="user-avatar-link" class="button thickbox" href="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=1&post_id=<?php echo $post->ID; ?>&TB_iframe=true&width=<?php echo $iframe_width; ?>&height=600" ><?php _e('Update Picture','user-avatar'); ?></a> 
 	<?php
 		// Remove the User-Avatar button if there is no uploaded image
 		$remove_url = admin_url('post.php')."?post=".$post->ID."&action=edit&delete_avatar=true&_nononce=". wp_create_nonce('profile_cct_picture');
@@ -351,8 +352,8 @@ function profile_cct_picture_add_photo_step2($post_id)
 		}
 		
 		$preview_width = $picture_options['width'];
-		if($preview_width > 400)
-			$preview_width = 400;
+		if($preview_width > 560)
+			$preview_width = 560;
 		?>
 		<form id="iframe-crop-form" method="POST" action="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=3&post_id=<?php echo esc_attr($post_id); ?>">
 		

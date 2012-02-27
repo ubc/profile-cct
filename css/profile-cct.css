@@ -19,6 +19,9 @@
 .half {
 	width:50%;
 }
+.full {
+	clear:both;
+}
 
 .profile_cct{
 	position: relative;

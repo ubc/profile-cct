@@ -860,6 +860,7 @@ Make sure that you select who this is supposed to be.<br />
 			foreach($fields  as $field):
 				if( function_exists('profile_cct_'.$field['type'].'_display_shell') ):
 					call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field,$user_data[ $field['type']]);
+					//var_dump($field);
 				else:
 					do_action( 'profile_cct_display_shell_'.$field['type'], $action, $field, $user_data[ $field['type'] ] );
 				endif;
