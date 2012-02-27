@@ -2,8 +2,11 @@
 if ( !defined( 'PROFILE_CCT_FULL_WIDTH' ) )
 	define( 'PROFILE_CCT_FULL_WIDTH', 150 );
 	
-if ( !defined( 'PROFILE_CCT_FULL_HEIGHT' ) )
+	if ( !defined( 'PROFILE_CCT_FULL_HEIGHT' ) )
 	define( 'PROFILE_CCT_FULL_HEIGHT', 150 );
+	
+	if ( !defined( 'PROFILE_CCT_MAX_PREVIEW_WIDTH' ) )
+	define( 'PROFILE_CCT_MAX_PREVIEW_WIDTH', 400 );
 
 /**
  * profile_cct_picture_field_shell function.
@@ -140,7 +143,7 @@ function profile_cct_picture_form($thumbnail_id)
 	global $post;
 	$picture_options = profile_cct_get_picture_options();
 	//var_dump($picture_options);
-	$iframe_width = $picture_options['width'] + 520;
+	$iframe_width = $picture_options['width'] + 400;
 	if($thumbnail_id): ?>
 		<div id="user-avatar-display-image"><?php echo profile_cct_get_the_post_thumbnail($post_id, 'thumbnail'); ?></div>
 		<a id="user-avatar-link" class="button thickbox" href="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=1&post_id=<?php echo $post->ID; ?>&TB_iframe=true&width=<?php echo $iframe_width; ?>&height=600" ><?php _e('Update Picture','user-avatar'); ?></a> 
@@ -153,7 +156,7 @@ function profile_cct_picture_form($thumbnail_id)
 	else:
 		?>
 		<div id="user-avatar-display-image"></div>
-	<a id="user-avatar-link" class="button thickbox" href="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=1&post_id=<?php echo $post->ID; ?>&TB_iframe=true&width=720&height=450" title="<?php _e('Upload and Crop an Image to be Displayed','user-avatar'); ?>" ><?php _e('Add Picture','user-avatar'); ?></a> 
+	<a id="user-avatar-link" class="button thickbox" href="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=1&post_id=<?php echo $post->ID; ?>&TB_iframe=true&width=<?php echo $iframe_width; ?>&height=600" title="<?php _e('Upload and Crop an Image to be Displayed','user-avatar'); ?>" ><?php _e('Add Picture','user-avatar'); ?></a> 
 	<?php
 	endif;
 	?>
@@ -352,8 +355,15 @@ function profile_cct_picture_add_photo_step2($post_id)
 		}
 		
 		$preview_width = $picture_options['width'];
-		if($preview_width > 560)
-			$preview_width = 560;
+		if($preview_width > PROFILE_CCT_MAX_PREVIEW_WIDTH){
+			$ratio = $preview_width / PROFILE_CCT_MAX_PREVIEW_WIDTH;
+		
+			$preview_width = $preview_width / $ratio;
+			$preview_height = $picture_options['height'] / $ratio;
+		}else{
+			$ratio = 1;
+		};
+		
 		?>
 		<form id="iframe-crop-form" method="POST" action="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=3&post_id=<?php echo esc_attr($post_id); ?>">
 		
@@ -369,7 +379,7 @@ function profile_cct_picture_add_photo_step2($post_id)
 		
 		<div id="user-avatar-preview" style="width: <?php echo $preview_width; ?>px; margin-right:10px;">
 		<h4>Preview</h4>
-		<span class="attachment-thumbnail"><div id="preview" style="width: <?php echo $picture_options['width']; ?>px; height: <?php echo $picture_options['height']; ?>px; overflow: hidden;" >
+		<span class="attachment-thumbnail"><div id="preview" style="width: <?php echo $preview_width; ?>px; height: <?php echo $preview_height; ?>px; overflow: hidden;" >
 		<img src="<?php echo esc_url_raw($url); ?>"  width="<?php echo esc_attr($width); ?>" height="<?php echo $height; ?>">
 		</div></span>
 		<p class="submit" >
@@ -381,6 +391,7 @@ function profile_cct_picture_add_photo_step2($post_id)
 		<input type="hidden" name="height" id="height" value="<?php echo esc_attr($height) ?>" />
 		<input type="hidden" name="attachment_id" id="attachment_id" value="<?php echo esc_attr($id); ?>" />
 		<input type="hidden" name="oitar" id="oitar" value="<?php echo esc_attr($oitar); ?>" />
+		<input type="hidden" name="preview_ratio" id="preview_ratio" value="<?php echo esc_attr($oitar); ?>" />
 		<?php wp_nonce_field('user-avatar'); ?>
 		<input type="submit" id="user-avatar-crop-button" value="<?php esc_attr_e('Crop Image','user-avatar'); ?>" />
 		</p>
@@ -439,8 +450,8 @@ function profile_cct_picture_add_photo_step2($post_id)
 				if (!c.width || !c.height)
         			return;
     
-			    var scaleX = <?php echo $picture_options['width']; ?> / c.width;
-			    var scaleY = <?php echo $picture_options['height']; ?> / c.height;
+			    var scaleX = <?php echo PROFILE_CCT_MAX_PREVIEW_WIDTH; ?> / c.width;
+			    var scaleY = <?php echo $picture_options['height'] / ( $picture_options['width'] / PROFILE_CCT_MAX_PREVIEW_WIDTH)   ?> / c.height;
 				
 			    jQuery('#preview img').css({
 			        width: Math.round(scaleX * <?php echo $width; ?>),
