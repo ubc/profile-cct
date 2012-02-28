@@ -3,54 +3,7 @@
 	$type_of = (in_array($_GET['view'], array('form','page','list'))? $_GET['view']: NULL );
 
 	do_action('profile_cct_admin_pages', $type_of);
-	if($type_of):
-		if(!is_array($this->field_options[$type_of]))
-			$this->field_options[$type_of] = array();
-
-		foreach ($this->get_contexts($type_of) as $context):
-
-			$fields = $this->get_option($type_of, 'fields',$context);
-			if( is_array($fields) ):
-				foreach( $fields as $field ):
-					$this->field_options[$type_of][] = $field;
-					$this->field_options_type[$type_of][] = $field['type'];
-				endforeach;
-			endif;
-			unset($fields, $field);
-		endforeach;
-
-		// lets not forget the bench
-		$fields = $this->get_option($type_of, 'fields','bench');
-		if( is_array($fields) ):
-			foreach( $fields as $field ):
-				$this->field_options[$type_of][] = $field;
-			$this->field_options_type[$type_of][] = $field['type'];
-		endforeach;
-		endif;
-
-		unset($fields, $field);
-
-		// ability to add new field such as dynamic once though this
-		// each type has to be unique
-		$dynamic_fields = apply_filters("profile_cct_dynamic_fields", array(),$type_of );
-		
 	
-		if(is_array($dynamic_fields)):
-			foreach($dynamic_fields as $field):
-				// if we can't find the field lets add it to the other things
-				if( !in_array($field['type'], $this->field_options_type[$type_of]) ):
-
-					$this->field_options[$type_of][] = $field;
-					$this->field_options_type[$type_of][] = $field['type'];
-					$this->option[$type_of]['fields']['bench'][] = $field;
-
-				endif;
-			endforeach;
-		endif;
-
-	endif;
-
-
 	screen_icon( 'users' );
 ?>
 	<div class="wrap">
@@ -82,9 +35,12 @@
 	
 	<?php
 	$this->action = 'edit';
+	
+	do_action("profile_cct_before_page",$_GET['view']);
+	
 	switch( $_GET['view'] ) {
-	case "form":
-		
+	
+	case "form":	
 		require(PROFILE_CCT_DIR."views/form.php");
 		break;
 	case "page":

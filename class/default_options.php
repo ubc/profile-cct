@@ -2,7 +2,7 @@
 
 switch($type) {
 		case 'form':
-			return apply_filters( 'profile_cct_default_options', array(
+			$options = array(
 					'fields'=> array(
 						'tabbed-1' => array(
 							array( "type"=> "address",   "label"=> "address",),
@@ -38,11 +38,11 @@ switch($type) {
 							array( "type"=> "graduatestudent",   "label"=> "graduate student" ),
 						)),
 					'tabs' => array("Basic Info", "Bio")
-				), $type );
+				);
 			break;
 
 		case 'page':
-			return apply_filters( 'profile_cct_default_options', array(
+			$options =  array(
 					'fields'=> array(
 						'tabbed-1' => array(
 							array( "type"=> "address",  "label"=> "address",),
@@ -77,11 +77,11 @@ switch($type) {
 							array( "type"=> "officehours",    "label"=> "office hours" ),
 						)),
 					'tabs' => array("Basic Info", "Bio")
-				) , $type );
+				);
 			break;
 
 		case 'list':
-			return apply_filters( 'profile_cct_default_options', array(
+			$options =  array(
 					'fields'=> array(
 						'normal'=> array(
 							array( "type"=>"picture",  "label"=>"picture" ),
@@ -107,12 +107,11 @@ switch($type) {
 							
 						)
 					)
-				) , $type );
+				);
 			break;
 		
 		case 'settings':
-			return apply_filters( 'profile_cct_default_options', 
-				array( 
+			$options = array( 
 					"picture"	=> array(
 						"width"	=>150,
 						"height"=>150,
@@ -167,19 +166,18 @@ switch($type) {
 						)
 					)
 				
-				), $type);
+				);
 				
 			break;
 			
 		case 'new_fields':
-			return apply_filters( 'profile_cct_default_options', 
-						array( 
+			$options = array( 
 							"1.1"	=> array( 
 									array( 
 										'field' => array( "type"=> "data", "label"=> "data"), 
 										'where' => array( "form","page", "list" )
 									)
 							)
-						), $type);
+						);
 			break;
 		}

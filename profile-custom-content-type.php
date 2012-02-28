@@ -42,45 +42,7 @@ if ( !defined('ABSPATH') )
 
 define('PROFILE_CCT_DIR', plugin_dir_path(__FILE__));
 
-if(isset( $_GET['delete_profile_cct_data'])):
-	delete_option('Profile_CCT_form_fields_tabbed-1');
-	delete_option('Profile_CCT_form_fields_tabbed-2');
-	delete_option('Profile_CCT_form_fields_tabbed-3');
-	delete_option('Profile_CCT_form_fields_tabbed-4');
-	delete_option('Profile_CCT_form_fields_tabbed-5');
-	delete_option('Profile_CCT_form_fields_tabbed-6');
-	delete_option('Profile_CCT_form_fields_normal');
-	delete_option('Profile_CCT_form_fields_side');
-	delete_option('Profile_CCT_form_fields_bench');
-	delete_option('Profile_CCT_form_tabs_normal');
-	
-	if( $_GET['delete_profile_cct_data'] == "DELETE-GLOBAL" ) {
-		delete_site_option('Profile_CCT_global_settings');
-	}
-	
-	
-	
-	delete_option('Profile_CCT_page_fields_tabbed-1');
-	delete_option('Profile_CCT_page_fields_tabbed-2');
-	delete_option('Profile_CCT_page_fields_tabbed-3');
-	delete_option('Profile_CCT_page_fields_tabbed-4');
-	delete_option('Profile_CCT_page_fields_tabbed-5');
-	delete_option('Profile_CCT_page_fields_tabbed-6');
-	delete_option('Profile_CCT_page_fields_header');
-	delete_option('Profile_CCT_page_fields_side');
-	delete_option('Profile_CCT_page_fields_bottom');
-	delete_option('Profile_CCT_page_fields_bench');
-	delete_option('Profile_CCT_page_tabs_normal');
-	delete_option('Profile_CCT_page_fields');
-	
-	delete_option('Profile_CCT_list_fields_normal');
-	delete_option('Profile_CCT_list_fields_bench');
-	
-	delete_option('Profile_CCT_page_fields');
-	
-	delete_option('Profile_CCT_settings');
 
-endif;
 
 require(PROFILE_CCT_DIR.'profile-taxonomies.php');
 require(PROFILE_CCT_DIR.'profile-manage-table.php');
@@ -93,9 +55,9 @@ class Profile_CCT {
 	static public  $settings_options = NULL;
 	static public  $form_fields = NULL;
 	static public  $taxonomies = NULL;
-	static public  $field_options = NULL;
-	static public  $option     = NULL;
-	static public  $field_options_type = NULL;
+	static public  $form_field_options = NULL;
+	static public  $option     = NULL; 
+	static public  $current_form_fields = NULL; // stores the current state of the form field... the labels and if it is on the banch... 
 
 	/**
 	 * construct
@@ -139,10 +101,12 @@ class Profile_CCT {
 
 			closedir($handle);
 		endif;
+		add_action('profile_cct_before_page', array( $this,'recount_field'),10,1);
+		add_action('profile_cct_before_page', array( $this,'display_fields_check'),11,1);
 		// function to be executed on form admin page
 		add_action('profile_cct_form', array( $this,'form_field_shell'),10,1);
 		
-		add_action('profile_cct_form', array( $this,'recount_field'),11,3);
+		
 
 		// function to be executed on page and list admin pages
 		add_action('profile_cct_page', array( $this,'page_field_shell'),10,3);
@@ -213,10 +177,10 @@ class Profile_CCT {
 	 * @return void
 	 */
 	public function get_textdomain() {
-		return $this ->get_plugin_data( 'TextDomain' );
+		return $this->get_plugin_data( 'TextDomain' );
 	}
 	public function version() {
-		return $this ->get_plugin_data( 'Version' );
+		return $this->get_plugin_data( 'Version' );
 	}
 	/**
 	 * add_style_edit function.
@@ -270,6 +234,10 @@ class Profile_CCT {
 		register_setting( 'Profile_CCT_settings', 'Profile_CCT_settings' );
 		register_setting( 'Profile_CCT_taxonomy', 'Profile_CCT_taxonomy' );
 		
+		
+		if( isset( $_GET['delete_profile_cct_data']) )
+			$this->delete_all();
+		
 		// redirect users to their profile page and create one if it doesn't exist
 		if($plugin_page == 'public_profile' &&  in_array($pagenow, array('profile.php','users.php'))  ):
 		
@@ -315,6 +283,10 @@ class Profile_CCT {
 		var_dump($data);
 		echo "</pre>";
 
+	}
+	function microtime_float() {
+    list($usec, $sec) = explode(" ", microtime());
+    return ((float)$usec + (float)$sec);
 	}
 	/**
 	 * add_menu_page function.
@@ -418,7 +390,13 @@ class Profile_CCT {
 	 * @return void
 	 */
 	public function admin_pages() {
+		$time_start = $this->microtime_float();
 		require(PROFILE_CCT_DIR.'class/admin_pages.php');
+		
+		$time_end = $this->microtime_float();
+		$time = $time_end - $time_start;
+
+		echo "Did nothing in $time seconds\n";
 	}
 	/**
 	 * profiles_cct_init function.
@@ -782,7 +760,6 @@ Make sure that you select who this is supposed to be.<br />
 		if(is_array($_POST["profile_cct"]))
 			update_post_meta($postarr['ID'], 'profile_cct', $profile_cct_data);
 
-
 		return $data;
 
 	}
@@ -843,29 +820,30 @@ Make sure that you select who this is supposed to be.<br />
 		$this->action = $action;
 		$contexts = $this->default_shells($where); ?><div id="page-shell"><?php
 		foreach($contexts as $context):
-
+			
+			// this is being called for tabs 
 			if(function_exists('profile_cct_page_shell_'.$context)):
 				call_user_func('profile_cct_page_shell_'.$context,$action,$user_data);
 			else:
 
 				?><div id="<?php echo $context; ?>-shell" class="shell"><?php
-			if($action == 'edit'): ?>
+				
+				if($action == 'edit'): ?>
 		 			<span class="description-shell"><?php echo $context; ?></span>
-		 			<ul class="form-builder sort" id="<?php echo $context; ?>">
-		 			<?php endif;
+		 			<ul class="form-builder sort" id="<?php echo $context; ?>"><?php 
+		 		endif;
 
-		$fields = $this->get_option($where,'fields',$context) ;//+ $this->get_option('form','fields',$context);
+				$fields = $this->get_option($where,'fields',$context) ;//+ $this->get_option('form','fields',$context);
 
-		if( is_array( $fields  ) ):
-			foreach($fields  as $field):
-				if( function_exists('profile_cct_'.$field['type'].'_display_shell') ):
-					call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field,$user_data[ $field['type']]);
-					
-				else:
-					do_action( 'profile_cct_display_shell_'.$field['type'], $action, $field, $user_data[ $field['type'] ] );
+				if( is_array( $fields  ) ):
+					foreach($fields  as $field):
+						if( function_exists('profile_cct_'.$field['type'].'_display_shell') ):
+							call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field,$user_data[ $field['type']]);
+						else:
+							do_action( 'profile_cct_display_shell_'.$field['type'], $action, $field, $user_data[ $field['type'] ] );
+						endif;
+					endforeach;
 				endif;
-			endforeach;
-		endif;
 
 		if($action == 'edit'): ?>
 		 			</ul>
@@ -876,9 +854,169 @@ Make sure that you select who this is supposed to be.<br />
 
 		?></div> <!-- end of page shell --><?php
 	}
-	function recount_field( $action, $user_data, $where ) {
+	/**
+	 * display_fields_check function.
+	 * helps us determin what info is already set in the form on what isn't
+	 * @access public
+	 * @param mixed $where
+	 * @return void
+	 */
+	function display_fields_check($where){
+	
+		if( !in_array( $where, array('page','list') ) )
+			return true;
+		
+		$contexts = $this->get_contexts('form');
+		
+		// CURRENT FIELDS
+		// all the fields that are there 
+		$current_fields = array();
+		foreach($contexts as $context):
+			foreach($this->get_option('form','fields',$context) as $field):
+			
+				$field['is_active'] = true;
+				
+				$this->current_form_fields[$field['type']] = $field;
+			endforeach;
+		endforeach;
+		
+		// don't forget the banch field
+		foreach($this->get_option('form','fields','bench') as $field):
+			$field['is_active'] = false;
+			$this->current_form_fields[$field['type']] = $field;
+		endforeach;
+		
+		//$this->e($this->current_form_fields);
+		return true;
+	}
+	/**
+	 * recount_field function.
+	 * 
+	 * @access public
+	 * @param mixed $action
+	 * @param mixed $user_data
+	 * @param mixed $where
+	 * @return void
+	 */
+	function recount_field( $where ) {
 	
 	
+		if( !in_array( $where, array('form','page','list') ) )
+			return true;
+	
+		// lets see what all the fields are that are suppoed to be there.
+		$contexts = $this->get_contexts($where);
+		
+		// CURRENT FIELDS
+		// all the fields that are there 
+		$current_fields = array();
+		foreach($contexts as $context):
+			
+			foreach($this->get_option($where,'fields',$context) as $field):
+				
+				$current_fields[] = $field['type'];
+			endforeach;
+		endforeach;
+		
+		// don't forget the banch field
+		foreach($this->get_option($where,'fields','bench') as $field):
+			$current_fields[] = $field['type'];
+		endforeach;
+		
+		
+		
+		// DYNAMIC FIELDS
+		// all the fields that get included 
+		// - taxonomy fields 
+		// - db fields (added via the add field function)
+		// all the once that are 
+		$dynamic_fields = apply_filters("profile_cct_dynamic_fields", array(), $where );
+		$all_dynamic_fields = array(); 
+		$real_fields = array(); // array of all the default fields containing the field array with the key field['type']
+		
+		if(is_array($dynamic_fields)):
+			foreach($dynamic_fields as $field):
+				$all_dynamic_fields[] 		 = $field['type'];
+				$real_fields[$field['type']] = $field;
+				
+				if( !in_array($field['type'], $current_fields) ): // add to the current_fields array
+					$current_fields[] = $field['type'];
+					$this->option[$where]['fields']['bench'][] = $field;
+				endif;
+				
+			endforeach;
+		endif;
+		
+		/*
+				
+		$this->e("current fields after merge with dynamic fields");
+		$this->e($current_fields);
+		
+		$this->e("dynamic fields");
+		$this->e($all_dynamic_fields);
+		*/
+		
+		
+		// DEFAULT FIELDS NOW 
+		unset($context);
+		
+		// all the other fields 
+		$default_fields = array();
+			
+		// get the default 
+		$default_options =  $this->default_options($where);
+		
+		foreach($default_options['fields'] as $context =>$fields):
+			foreach($fields as $field):
+				$default_fields[] 	= $field['type'];
+				$real_fields[$field['type']] = $field;
+			endforeach;
+			unset($field);
+		endforeach;
+		
+		// also don't forget fields that are fields that were added later
+		$new_fields = $this->default_options('new_fields');
+		foreach($new_fields as $version):
+			foreach($version as $field):
+			
+				if( in_array($where, $field['where']) ): // only add it if it supports the the current where state
+					$default_fields[] = $field['field']['type'];
+					$real_fields[$field['field']['type']] = $field['field'];
+				endif; 
+			endforeach;
+			unset($field);
+		endforeach;
+		
+		unset($version);
+		
+		// merging the default array with the dynamic one
+		$default_fields = array_merge($default_fields, $all_dynamic_fields);
+		
+		/*
+		$this->e("default fields");
+		$this->e($default_fields);
+		// all the default fields should contain the dynamic fields as well 
+		
+		
+		$this->e("default fields after merging with default fields");
+		$this->e($default_fields);
+		*/
+		
+		// $this->e("difference between current_fields and default fields");
+		
+		$different = array_diff($default_fields, $current_fields);
+		
+		unset($field);
+		if( !empty( $different) ):
+			
+			// add the fields back to the banch the array... 
+			foreach($different as $field)
+			$this->option[$where]['fields']['bench'][] = $real_fields[$field];
+			
+		endif;
+		
+	return true;
+		
 	}
 
 	/**
@@ -903,9 +1041,15 @@ Make sure that you select who this is supposed to be.<br />
 			$shell = 'li';
 
 		if($action == 'edit'):
-
+		
+		// check to see what the name of the form is
+		$is_in_form = ( (isset($this->current_form_fields) && $this->current_form_fields[$type]['is_active']) ? "is-active" : "");
+		
+		// the label should always be the same as what it was set in the form
+		
+		$label 		= ( (isset($this->current_form_fields) && !empty($this->current_form_fields[$type]['label'])) ? $this->current_form_fields[$type]['label'] : $label);		
 ?>
-	 		<<?php echo $shell; ?> class="<?php echo esc_attr( $type ); ?> field-item <?php echo $class." ".$width; ?>" for="cct-<?php echo esc_attr( $type); ?>" data-options="<?php echo esc_attr( $this->serialize($options)); ?>" >
+	 		<<?php echo $shell; ?> class="<?php echo $is_in_form.' '.esc_attr( $type ); ?> field-item <?php echo $class." ".$width; ?>" for="cct-<?php echo esc_attr( $type); ?>" data-options="<?php echo esc_attr( $this->serialize($options)); ?>" >
 
 			<a href="#edit-field" class="edit">Edit</a>
 			<div class="edit-shell" style="display:none;">
@@ -1129,64 +1273,71 @@ Make sure that you select who this is supposed to be.<br />
 			$type = $_POST['type'];
 		else
 			$type = 'form';
-
+		
 		$tabs = $this->get_option($type,'tabs');
+		
 
 		switch($_POST['method']) {
 
-		case "update":
-			$tabs[$_POST['index']] = $_POST['title'];
-			echo "updated";
-			break;
-
-		case "remove":
-
-			// we need to set the proper item to fields to zero as well.
-			// and move them to the bench
-			$index = $_POST['index'];
-
-			$tabs_count = count($tabs);
-
-			unset( $tabs[ $index ] );
-
-
-			$count = $index+1;
-			$fields = $this->get_option($type,'fields','tabbed-'.$count);
-			$this->delete_option($type,'fields','tabbed-'.$count);
-
-
-			if(is_array($fields)): // array was empty so nothing to move
-				$bench  = $this->get_option($type,'fields','bench');
-			// and move them to the bench
-			$bench  = array_merge($bench , $fields);
-
-			$bench = $this->update_option($type,'fields','bench', $bench);
-
-			endif;
-
-
-
-			while($count < $tabs_count):
-				$count++;
-			$fields = $this->get_option($type,'fields','tabbed-'.$count);
-
-			$minus = $count - 1;
-
-			$this->update_option($type,'fields','tabbed-'.$minus, $fields);
-
-			$fields = $this->delete_option($type,'fields','tabbed-'.$count);
-
-			endwhile;
-
-			echo "removed";
-			break;
-
-		case "add":
-			$tabs[] = $_POST['title'];
-			echo "added";
-			break;
+			case "update":
+				$tabs[$_POST['index']] = $_POST['title'];
+				echo "updated";
+				break;
+	
+			case "remove":
+	
+				// we need to set the proper item to fields to zero as well.
+				// and move them to the bench
+				$index = $_POST['index'];
+				$tabs_count = count($tabs); 
+				
+				unset( $tabs[ $index ] );
+				
+				// delete the current field
+				$count = $index+1;
+				$fields = $this->get_option($type,'fields','tabbed-'.$count);
+				$this->delete_option($type,'fields','tabbed-'.$count);
+	
+	
+				if(is_array($fields)): // array was empty so nothing to move
+					$bench  = $this->get_option($type,'fields','bench');
+					
+					// merge but don't duplicate the fields if they are there already
+					$bench  = array_merge($bench , $fields);
+					
+					// save the new banch
+					$bench = $this->update_option($type,'fields','bench', $bench);
+	
+				endif;
+				
+				
+				while($count < $tabs_count):
+					
+					$count++;
+					$fields = $this->get_option($type,'fields','tabbed-'.$count);
+	
+					$minus = $count - 1;
+					
+					$this->update_option($type,'fields','tabbed-'.$minus, $fields);
+	
+					$fields = $this->delete_option($type,'fields','tabbed-'.$count);
+		
+				endwhile;
+				
+				$tabs = array_merge($tabs); // reindexes the $tabs array
+				echo "removed";
+				break;
+	
+			case "add":
+				$tabs[] = $_POST['title'];
+				$tabs_count = count($tabs); 
+				$this->update_option($type,'fields','tabbed-'.$tabs_count, array());
+				
+				
+				echo "added";
+				break;
 		}
-
+		
 		$this->update_option($type,'tabs','normal', $tabs);
 		die();
 	}
@@ -1367,7 +1518,9 @@ Make sure that you select who this is supposed to be.<br />
 			
 			// get the option
 			$options = get_option('Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context);
-						
+			
+			
+				
 			// if we can't find one in the database
 			if(!is_array($options)):
 				$default = $this->default_options($type);
@@ -1405,7 +1558,8 @@ Make sure that you select who this is supposed to be.<br />
 						endif;
 					
 					endforeach;
-					$this->update_option($type,$fields_or_tabs,$context,$options);
+					//  why are we doing this... 
+					// $this->update_option($type,$fields_or_tabs,$context,$options);
 				endif;
 			endif; 
 				
@@ -1448,7 +1602,40 @@ Make sure that you select who this is supposed to be.<br />
 	 */
 	function delete_option($type='form',$fields_or_tabs='fields',$context='normal') {
 		unset( $this->option[$type][$fields_or_tabs][$context] );
+		
 		return delete_option( 'Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context );
+	}
+	
+	function delete_all(){
+	
+		if(current_user_can('administrator')):
+			
+			foreach( array("form","page","list") as $where):
+				// delete all the fields
+				foreach( $this->get_contexts($where) as $context):
+					$this->delete_option( $where,'fields',$context);
+				endforeach;
+				
+				// lets not forget the banch 
+				$this->delete_option( $where,'fields','bench');
+				
+				// also delete all the tabs 
+				$this->delete_option( $where,'tabs');
+				
+			endforeach;
+		
+			// finally delete the settings data 
+			delete_option('Profile_CCT_settings');
+			
+			// also delete all the taxonomies 
+			delete_option('Profile_CCT_taxonomy');
+			
+			// also the global settings 
+			if(current_user_can('manage_sites') && $_GET['delete_profile_cct_data'] == "DELETE-GLOBAL" )
+				delete_site_option('Profile_CCT_global_settings');
+			
+			wp_die('all Settings data was deleted');
+		endif;
 	}
 	/**
 	 * default_options function.
@@ -1460,8 +1647,16 @@ Make sure that you select who this is supposed to be.<br />
 	function default_options($type = 'form') {
 		
 		require(PROFILE_CCT_DIR.'class/default_options.php');
+		
+		return apply_filters( 'profile_cct_default_options', $options, $type);
+		
 	}
-
+	/**
+	 * fields_to_clone function.
+	 * fields that we are able to create dulicates out of
+	 * @access public
+	 * @return void
+	 */
 	function fields_to_clone() {
 		return apply_filters( 'profile_cct_fields_to_clone', array(
 				array( "type"=> "phone" ),

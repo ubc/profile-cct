@@ -20,7 +20,7 @@ function profile_cct_show_tabs($action,$type, $user_data = null) {
 	$profile = Profile_CCT::get_object();
 	$profile->action = $action;
 	$tabs = $profile->get_option($type,'tabs');
-	
+
 	// check if we even want to display the tabs. 
 	$display_tabs = true;
 	$count = 1;
