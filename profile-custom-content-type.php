@@ -1109,6 +1109,13 @@ Make sure that you select who this is supposed to be.<br />
 		endif;
 ?>
 	 	<div class="field-shell">
+	 	
+	 	<?php
+			if(isset($description)):
+				?><pre class="description"><?php echo $description; ?></pre><?php
+			endif;
+		?>
+	 	
 	 	<?php
 		if( isset($show_multiple) && $show_multiple ): ?>
 
@@ -1137,11 +1144,7 @@ Make sure that you select who this is supposed to be.<br />
 	 	<?php
 		endif;
 ?>
-	 	</div><?php
-		if(isset($description)):
-			?><pre class="description"><?php echo $description; ?></pre><?php
-		endif;
-		?></<?php echo $shell; ?>><?php
+	 	</div></<?php echo $shell; ?>><?php
 		if($action == "display")
 			echo $after;
 	}
