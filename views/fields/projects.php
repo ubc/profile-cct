@@ -52,15 +52,15 @@ function profile_cct_projects_field( $data, $options, $count = 0){
 	
 	echo '<div data-count="'.$count.'" class="wrap-fields">';
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-title', 'label'=>'Project Title', 'size'=>35, 'value'=>$data['project-title'], 'type'=>'text','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-description','label'=>'Project Description', 'size'=>35, 'value'=>$data['project-description'], 'type'=>'textarea','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-website', 'label'=>'Project Website', 'size'=>35, 'value'=>$data['project-website'], 'type'=>'text', 'show' => in_array("project-website",$show), 'count'=>$count ) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-title', 'label'=>'Title', 'size'=>57, 'value'=>$data['project-title'], 'type'=>'text','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-description','label'=>'Description', 'size'=>35, 'value'=>$data['project-description'], 'type'=>'textarea','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-website', 'label'=>'Website - http://', 'size'=>35, 'value'=>$data['project-website'], 'type'=>'text', 'show' => in_array("project-website",$show), 'count'=>$count ) );
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'start-date-month','label'=>'Month', 'size'=>35, 'value'=>$data['start-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type'=>'select', 'show' => in_array("start-date-month",$show),'count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'start-date-year','label'=>'Year', 'size'=>35, 'value'=>$data['start-date-year'], 'all_fields'=>$year_array, 'type'=>'select', 'show' => in_array("start-date-year",$show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'start-date-month','label'=>'Start Month', 'size'=>35, 'value'=>$data['start-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type'=>'select', 'show' => in_array("start-date-month",$show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'start-date-year','label'=>'Start Year', 'size'=>35, 'value'=>$data['start-date-year'], 'all_fields'=>$year_array, 'type'=>'select', 'show' => in_array("start-date-year",$show),'count'=>$count) );
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'end-date-month','label'=>'Month', 'size'=>35, 'value'=>$data['end-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type'=>'select', 'show' => in_array("end-date-month",$show),'count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'end-date-year','label'=>'Year', 'size'=>35, 'value'=>$data['end-date-year'], 'all_fields'=>$completion_year_array, 'type'=>'select', 'show' => in_array("end-date-year",$show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'end-date-month','label'=>'End Month', 'size'=>35, 'value'=>$data['end-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type'=>'select', 'show' => in_array("end-date-month",$show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'end-date-year','label'=>'End Year', 'size'=>35, 'value'=>$data['end-date-year'], 'all_fields'=>$completion_year_array, 'type'=>'select', 'show' => in_array("end-date-year",$show),'count'=>$count) );
 	
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-status','label'=>'Status', 'size'=>35, 'value'=>$data['project-status'], 'all_fields'=>$project_status_array, 'type'=>'select', 'show' => in_array("project-status",$show),'count'=>$count) );
 	

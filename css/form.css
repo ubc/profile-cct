@@ -82,7 +82,13 @@
 	background-image: -webkit-linear-gradient(top,#F9F9F9,#ECECEC);
 	background-image: linear-gradient(top,#F9F9F9,#ECECEC);
 }
-
+.form-builder li hr{
+	border:0;
+	height: 0;
+	border-top: 1px solid rgba(0,0,0,0.1);
+	border-bottom: 1px solid rgba(255,255,255, 0.3);
+		margin-right:20px;
+}
 .form-builder ul:after,
 .form-builder li:after,
 .form-builder li div:after {
@@ -91,6 +97,8 @@
 	height:0;
 	clear:both;
 	visibility:hidden
+
+
 }
 
 * html .form-builder li {
@@ -178,9 +186,11 @@
 
 
 /* ----- Name Field Structuure ----- */
-.form-builder .name span input {
+.form-builder .name span input,
+.form-builder .project-title input {
 	font-size:16px
 }
+
 
 /* ----- Location Field Structures ----- */
 
@@ -198,7 +208,7 @@
 .form-builder li div label,
 .form-builder li span label {
 	margin:0;
-	padding-top:3px;
+	padding:1px 0 10px;
 	clear:both;
 	font-size:85%;
 	line-height:160%;
