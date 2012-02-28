@@ -215,6 +215,13 @@
 	color:#444;
 	display:block
 }
+.form-builder li .edit-shell label{
+	padding:10px 0 1px;
+}
+.form-builder li .edit-shell div label{
+	padding:1px 0;
+}
+.form-builder li .edit-shell div input{ margin-top: 3px;}
 
 .form-builder fieldset {
 	display:block;
