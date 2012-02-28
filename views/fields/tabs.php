@@ -41,7 +41,7 @@ function profile_cct_show_tabs($action,$type, $user_data = null) {
 		<?php 
 		else: 
 			$profile_cct_tabs++;
-			?><div id="<?php echo "tab-id-".$profile_cct_tabs; ?>" ><?php 
+			?><div id="<?php echo "tab-id-".$profile_cct_tabs; ?>" class="profile-cct-shell" ><?php 
 		
 		endif; 
 		?><ul><?php 

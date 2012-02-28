@@ -396,7 +396,7 @@ class Profile_CCT {
 		$time_end = $this->microtime_float();
 		$time = $time_end - $time_start;
 
-		echo "Did nothing in $time seconds\n";
+		echo "<!-- time to render  $time seconds -->\n";
 	}
 	/**
 	 * profiles_cct_init function.
@@ -828,7 +828,10 @@ Make sure that you select who this is supposed to be.<br />
 	 */
 	function page_field_shell( $action, $user_data, $where ) {
 		$this->action = $action;
-		$contexts = $this->default_shells($where); ?><div id="page-shell"><?php
+		$contexts = $this->default_shells($where); 
+			if($action == 'edit'):
+				?><div id="page-shell"><?php
+			endif;
 		foreach($contexts as $context):
 			
 			// this is being called for tabs 
@@ -836,7 +839,7 @@ Make sure that you select who this is supposed to be.<br />
 				call_user_func('profile_cct_page_shell_'.$context,$action,$user_data);
 			else:
 
-				?><div id="<?php echo $context; ?>-shell" class="shell"><?php
+				?><div id="<?php echo $context; ?>-shell" class="profile-cct-shell"><?php
 				
 				if($action == 'edit'): ?>
 		 			<span class="description-shell"><?php echo $context; ?></span>
@@ -857,12 +860,15 @@ Make sure that you select who this is supposed to be.<br />
 
 		if($action == 'edit'): ?>
 		 			</ul>
-		 			<?php endif; ?></div><?php
+		 <?php endif; 
+		 ?></div><?php
 
 		endif;
 		endforeach;
+		if($action == 'edit'):
+				?></div><?php
+		endif;
 
-		?></div> <!-- end of page shell --><?php
 	}
 	/**
 	 * display_fields_check function.

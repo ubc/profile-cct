@@ -142,7 +142,7 @@ function profile_cct_picture_form($thumbnail_id)
 {
 	global $post;
 	$picture_options = profile_cct_get_picture_options();
-	//var_dump($picture_options);
+	
 	$iframe_width = $picture_options['width'] + 400;
 	if($thumbnail_id): ?>
 		<div id="user-avatar-display-image"><?php echo profile_cct_get_the_post_thumbnail($post_id, 'thumbnail'); ?></div>

@@ -8,10 +8,12 @@
 .inside{ position: relative; overflow: hidden; }
 .hndle span{ text-transform: capitalize; }
 /* Name */
-.name span input {
+.name span input,
+.project-title input {
 	font-size:22px;
 	padding:5px 2px 1px;
 }
+
 .field-item span{
 	float: left;
 	margin-top: 5px;
@@ -27,6 +29,12 @@
 	font-size: 11px;
 	margin-left: 2px;
 }
+.field-item hr{
+	border:0;
+	height: 0;
+	border-top: 1px solid rgba(0,0,0,0.1);
+	border-bottom: 1px solid rgba(255,255,255, 0.3);
+}
 
 
 #post-body-content  select{
@@ -37,7 +45,8 @@
 }
 #post-body-content textarea{
 	display: block;
-	height: 300px;
+	min-height: 200px;
+	min-width: 661px;
 }
 /* Address */
 .address{
@@ -138,15 +147,12 @@
 	clear: left;
 	display: block;
 	margin-top: 40px;
-	color: #CCC;
-	background-color: #CCC;
+
 }
 
 /* office hours first horizontal rule */
 .officehours div.wrap-fields:first-child hr {
-	margin-top: 0;
-	color: #CCC;
-	background-color: #CCC;
+	margin-top: 10px;
 }
 
 /*separators on profile page view have a small margin*/

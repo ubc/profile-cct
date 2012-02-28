@@ -123,7 +123,7 @@
 	
 					<?php
 		// only dispaly the editor on the Profile edit side
-		if( $this->action == 'edit' ): ?>
+		if( $this->action == 'edit' || $multiple ): ?>
 						<textarea <?php echo $size.$class.$name.$row.$cols; ?> id="<?php echo $textarea_id; ?>"><?php echo esc_html($value); ?></textarea>
 					<?php
 		else:

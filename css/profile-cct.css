@@ -27,7 +27,10 @@
 	position: relative;
 	overflow: hidden;
 }
-#page-shell .ui-tabs{
+.profile-cct-shell{
 	clear: both;
 }
 
+.profile-cct-shell h3{
+	margin-bottom: 0;
+}
