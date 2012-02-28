@@ -57,7 +57,8 @@ function profile_cct_taxonomy_display_shell(  $action, $options, $data=null ) {
 		'empty'=>'',
 		'after' =>'',
 		'text'	=>$options['label'].":",
-		'hide_label'=>true
+		'hide_label'=>true,
+		'class' => 'is-active', // highlights the taxonomies to display differently
 		);
 	
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );

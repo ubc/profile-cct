@@ -10,7 +10,8 @@
 		<ul id="bench" class="sort">
 			<?php 
 			$action = 'edit';
-			$fields = $this->get_option('list','fields','bench');		 				
+			$fields = $this->get_option('list','fields','bench');
+						
 	 		if( is_array( $fields  ) ):
 		 		foreach($fields  as $field):	 			
 		 			if( function_exists('profile_cct_'.$field['type'].'_display_shell') ):

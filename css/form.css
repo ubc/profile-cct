@@ -15,8 +15,9 @@
 .sort{
 	padding: 5px 0 0 0;
 	border: 1px dashed #EEE;
-	margin-bottom: 5px;
+	margin-bottom: 16px;
 	overflow: hidden;
+	
 }
 .sort li{
 	padding:0 0 0 20px;
@@ -56,6 +57,9 @@
 	background-image: -webkit-gradient(linear,left top,left bottom,from(#F9F9F9),to(#ECECEC));
 	background-image: -webkit-linear-gradient(top,#F9F9F9,#ECECEC);
 	background-image: linear-gradient(top,#F9F9F9,#ECECEC);
+}
+.sort .is-active .field-title{
+	color: #121212;
 }
 .form-builder li {
 	margin:0 5px 5px;
