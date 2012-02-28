@@ -1112,7 +1112,7 @@ Make sure that you select who this is supposed to be.<br />
 	 	
 	 	<?php
 			if(isset($description)):
-				?><pre class="description"><?php echo $description; ?></pre><?php
+				?><pre class="description"><?php echo htmlspecialchars($description); ?></pre><?php
 			endif;
 		?>
 	 	
