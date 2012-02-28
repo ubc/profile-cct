@@ -1074,7 +1074,7 @@ Make sure that you select who this is supposed to be.<br />
 
 		
 		if(isset($description))
-			$this->input_field( array('size'=>10, 'value'=>$description, 'class'=>'field-description','name'=>'description','label'=>'description','type'=>'textarea' , 'before_label'=>true));
+			$this->input_field( array('size'=>10, 'value'=>stripslashes($description), 'class'=>'field-description','name'=>'description','label'=>'description','type'=>'textarea' , 'before_label'=>true));
 
 		if(isset($width))
 			$this->input_field(array('type'=>'select','all_fields'=>array('full','half','one-third','two-third'), 'class'=>'field-width','value'=>$width,'name'=>'width', 'label'=>'select width','before_label'=>true));
@@ -1083,13 +1083,13 @@ Make sure that you select who this is supposed to be.<br />
 			$this->input_field( array('size'=>30, 'value'=>$text, 'class'=>'field-text','name'=>'text','label'=>'text input','type'=>'text' , 'before_label'=>true));
 
 		if(isset($before))
-			$this->input_field( array('size'=>10, 'value'=>$before, 'class'=>'field-textarea','name'=>'before','label'=>'before html','type'=>'textarea' , 'before_label'=>true));
+			$this->input_field( array('size'=>10, 'value'=>stripslashes($before), 'class'=>'field-textarea','name'=>'before','label'=>'before html','type'=>'textarea' , 'before_label'=>true));
 
 		if(isset($after))
-			$this->input_field( array('size'=>10, 'value'=>$after, 'class'=>'field-textarea','name'=>'after','label'=>'after html','type'=>'textarea' , 'before_label'=>true));
+			$this->input_field( array('size'=>10, 'value'=>stripslashes($after), 'class'=>'field-textarea','name'=>'after','label'=>'after html','type'=>'textarea' , 'before_label'=>true));
 
 		if(isset($empty))
-			$this->input_field( array('size'=>10, 'value'=>$empty, 'class'=>'field-textarea','name'=>'empty','label'=>'content to be displayed on empty','type'=>'textarea' , 'before_label'=>true));
+			$this->input_field( array('size'=>10, 'value'=>stripslashes($empty), 'class'=>'field-textarea','name'=>'empty','label'=>'content to be displayed on empty','type'=>'textarea' , 'before_label'=>true));
 
 		if(isset($url_prefix))
 			$this->input_field(array('value'=>$url_prefix, 'class'=>'field-text','name'=> 'url_prefix', 'label'=>'url prefix ( http:// )','type'=>'text', 'class'=>'field-url-prefix','before_label'=>true));
@@ -1122,7 +1122,7 @@ Make sure that you select who this is supposed to be.<br />
 	 	
 	 	<?php
 			if(isset($description)):
-				?><pre class="description"><?php echo htmlspecialchars($description); ?></pre><?php
+				?><pre class="description"><?php echo htmlspecialchars(stripslashes($description)); ?></pre><?php
 			endif;
 		?>
 	 	
