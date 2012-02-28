@@ -73,7 +73,7 @@ function profile_cct_position_display_shell( $action, $options, $data=null ) {
 		'empty'=>'',
 		'width' => 'full',
 		'after'=>'',
-		'show'=>array(),
+		'show'=>array('organization'),
 		'show_fields'=>array('organization'),
 
 		);
@@ -110,11 +110,13 @@ function profile_cct_position_display( $data, $options ){
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'position', 'type'=>'shell', 'tag'=>'div') );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'role','default_text'=>'CEO', 'value'=>$data['position'], 'type'=>'text','count'=>$count, ) );
 
-	if( empty($data['url']) ):
-		$field->display_text( array( 'field_type'=>$type, 'class'=>'org organization','separator'=>',','default_text'=>'Wayne Enterprises', 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array('organization',$show)) );
-	else:
-		$field->display_text( array( 'field_type'=>$type, 'class'=>'org organization url','separator'=>',','default_text'=>'Wayne Enterprises', 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array('organization',$show), 'tag'=> 'a', 'href'=> $data['url']) );
-			endif;
+	if( !empty($data['organization']) ):
+		if( empty($data['url']) ):
+			$field->display_text( array( 'field_type'=>$type, 'class'=>'org organization','separator'=>',','default_text'=>'Wayne Enterprises', 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array('organization',$show)) );
+		else:
+			$field->display_text( array( 'field_type'=>$type, 'class'=>'org organization url','separator'=>',','default_text'=>'Wayne Enterprises', 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array('organization',$show), 'tag'=> 'a', 'href'=> $data['url']) );
+		endif;
+	endif;
 	
 	
 	
