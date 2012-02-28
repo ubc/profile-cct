@@ -118,7 +118,7 @@
 		if ($separator)
 			echo $separator;
 	?>
-					<span <?php echo $field_id_class; ?>>
+					<span <?php echo $field_id_class.$show; ?>>
 					<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
 	
 					<?php

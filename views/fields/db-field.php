@@ -52,7 +52,7 @@ function profile_cct_db_add_meta_box($field, $context, $data, $i){
 			$field['type']."-".$i.'-'.rand(0,999), 
 			$field['label'], 
 			'profile_cct_'.$db_field['field_clone'].'_field_shell', 
-			'profile_cct', $context, 'high', 
+			'profile_cct', $context, 'core', 
 			array(
 				'options'=>$field,
 				'data'=>$data

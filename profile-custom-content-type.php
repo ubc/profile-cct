@@ -607,6 +607,13 @@ class Profile_CCT {
 		$user_data = get_post_meta($post->ID, 'profile_cct', true );
 
 		$contexts = $this->get_contexts();
+		
+		
+		remove_meta_box( 'submitdiv', 'profile_cct', 'side' );
+	
+		// remove_meta_box('submitdiv','post', 'normal'); // publish box
+		// make sure that the publish box is the stays on the top
+		// add_meta_box('submitdiv', __('Publish'), 'post_submit_meta_box', null, 'side', 'high');
 
 		if( is_array( $contexts ) ):
 
@@ -623,7 +630,7 @@ class Profile_CCT {
 						$field['type']."-".$i.'-'.rand(0,999),
 						$field['label'],
 						'profile_cct_'.$field['type'].'_field_shell',
-						'profile_cct', $context, 'high',
+						'profile_cct', $context, 'core',
 						array(
 							'options'=>$field,
 							'data'=>$user_data[ $field['type']]
@@ -640,11 +647,14 @@ class Profile_CCT {
 		remove_meta_box('authordiv', 'post', 'normal');
 		remove_meta_box('revisionsdiv', 'post', 'normal');
 		
+		
 		if (  0 < $post->ID && wp_get_post_revisions( $post->ID ) )
 			add_meta_box('revisionsdiv', __('Revisions'), 'post_revisions_meta_box', null, 'side', 'low');
 		
 		if ( is_super_admin() || current_user_can( $post_type_object->cap->edit_others_posts ) )
 			add_meta_box('authordiv', __('Author'), array($this,'post_author_meta_box'), null, 'side', 'low');
+		
+		add_meta_box('submitdiv', __('Publish'), 'post_submit_meta_box', null, 'side', 'high');
 		
 	}
 	function post_author_meta_box($post) {

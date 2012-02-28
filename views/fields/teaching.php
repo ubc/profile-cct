@@ -28,7 +28,7 @@ function profile_cct_teaching_add_meta_box($field, $context, $data, $i){
 		$field['type']."-".$i.'-'.rand(0,999), 
 		$field['label'], 
 		'profile_cct_textarea_field_shell', 
-		'profile_cct', $context, 'low', 
+		'profile_cct', $context, 'core', 
 		array(
 			'options'=>$field,
 			'data'=>$data
