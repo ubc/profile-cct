@@ -15,10 +15,10 @@ function profile_cct_courses_field_shell( $action, $options ) {
 		'type' => 'courses',
 		'label'=>'courses',
 		'description'=>'',
-		'show'=>array('course-summary','course-date-month','course-date-year'),
+		'show'=>array(),
 		'multiple'=>true,
 		'show_multiple' =>true,
-		'show_fields'=>array('course-summary','course-date-month','course-date-year'),
+		'show_fields'=>array('section-number','course-date-month','course-date-year','course-summary'),
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	
@@ -56,7 +56,7 @@ function profile_cct_courses_field( $data, $options, $count = 0 ){
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'course-name','label'=>'Course Name', 'size'=>35, 'value'=>$data['course-name'], 'type'=>'text', 'count'=>$count) );
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'teaching-unit-prefix','label'=>'Subject Code', 'size'=>4, 'value'=>$data['teaching-unit-prefix'], 'type'=>'text','count'=>$count) );
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'course-number','label'=>'Course #', 'size'=>3, 'value'=>$data['course-number'], 'type'=>'text','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'section-number','label'=>'Section #', 'size'=>3, 'value'=>$data['section-number'], 'type'=>'text','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'section-number','label'=>'Section #', 'size'=>3, 'value'=>$data['section-number'], 'type'=>'text','count'=>$count, 'show' => in_array("section-number",$show),) );
 	
 	//just added these 2, now need to make sure they actually work properly.
 	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'course-date-month','label'=>'Month', 'size'=>35, 'value'=>$data['course-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type'=>'select', 'show' => in_array("course-date-month",$show),'count'=>$count) );
