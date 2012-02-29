@@ -63,4 +63,3 @@ function profile_cct_db_add_meta_box($field, $context, $data, $i){
 	endforeach;
 	
 }
-

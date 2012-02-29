@@ -35,7 +35,9 @@ var Profile_CCT_FORM ={
 		var data = new Array();
 		jQuery('.field-item',jQuery(this)).each(function(index, value){
 			data[index] = jQuery(this).data('options');
+			
 		});
+		
 		
 		
 		var context = jQuery(this ).attr('id');
@@ -45,13 +47,14 @@ var Profile_CCT_FORM ={
 					method: 'sort',
 					context: context, 
 					data: data,
-					type: ProfileCCT.type
+					where: ProfileCCT.page
 				};
 		
 		jQuery.post(ajaxurl, data_set, function(response) {
 				
-				console.log(response);
-				Profile_CCT_FORM.hideSpinner();
+				if(response == 'sorted'){
+					Profile_CCT_FORM.hideSpinner();
+				} // TO DO WRITE THE ERROR TO THE USER... 
 		});
 	 },
 	updateLabel : function(e){
@@ -132,7 +135,7 @@ var Profile_CCT_FORM ={
 		
 	},
 	multipleShow : function(e){
-		console.log('hey');
+		
 		var el = jQuery(this);
 		el.parent().parent().parent().addClass('changed');
 		
@@ -159,14 +162,14 @@ var Profile_CCT_FORM ={
 		 
 		 var field_index = jQuery( ".field-item", parent.parent().parent() ).index( parent.parent() );
 		
-		 var data = 'action=cct_update_fields&method=update&'+serialize+'&context='+context+'&field_index='+field_index+'&type='+ProfileCCT.type;
+		 var data = 'action=cct_update_fields&method=update&'+serialize+'&context='+context+'&field_index='+field_index+'&where='+ProfileCCT.page;
 		 el.siblings('.spinner').show();		
-     	 
+     	
      	 parent.parent().data('options', serialize); // update the serealized data 
      	 // ajax updating of the field options
      	 jQuery.post(ajaxurl, data, function(response) {
 			 parent.removeClass('changed');
-			 console.log(response);
+			
 			 if(response == 'updated'){
 			 	 el.siblings('.spinner').hide();
 			 }
