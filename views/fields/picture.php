@@ -7,6 +7,9 @@ if ( !defined( 'PROFILE_CCT_FULL_WIDTH' ) )
 	
 	if ( !defined( 'PROFILE_CCT_MAX_PREVIEW_WIDTH' ) )
 	define( 'PROFILE_CCT_MAX_PREVIEW_WIDTH', 400 );
+	
+	if ( !defined( 'PROFILE_CCT_MAX_PREVIEW_HEIGHT' ) )
+	define( 'PROFILE_CCT_MAX_PREVIEW_HEIGHT', 400 );
 
 /**
  * profile_cct_picture_field_shell function.
@@ -143,10 +146,10 @@ function profile_cct_picture_form($thumbnail_id)
 	global $post;
 	$picture_options = profile_cct_get_picture_options();
 	
-	$iframe_width = $picture_options['width'] + 400;
+	$iframe_width = $picture_options['width'] + 520;
 	if($thumbnail_id): ?>
 		<div id="user-avatar-display-image"><?php echo profile_cct_get_the_post_thumbnail($post_id, 'thumbnail'); ?></div>
-		<a id="user-avatar-link" class="button thickbox" href="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=1&post_id=<?php echo $post->ID; ?>&TB_iframe=true&width=<?php echo $iframe_width; ?>&height=600" ><?php _e('Update Picture','user-avatar'); ?></a> 
+		<a id="user-avatar-link" class="button thickbox" href="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=1&post_id=<?php echo $post->ID; ?>&TB_iframe=true&width=<?php echo $iframe_width; ?>&height=520" ><?php _e('Update Picture','user-avatar'); ?></a> 
 	<?php
 		// Remove the User-Avatar button if there is no uploaded image
 		$remove_url = admin_url('post.php')."?post=".$post->ID."&action=edit&delete_avatar=true&_nononce=". wp_create_nonce('profile_cct_picture');
@@ -156,7 +159,7 @@ function profile_cct_picture_form($thumbnail_id)
 	else:
 		?>
 		<div id="user-avatar-display-image"></div>
-	<a id="user-avatar-link" class="button thickbox" href="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=1&post_id=<?php echo $post->ID; ?>&TB_iframe=true&width=<?php echo $iframe_width; ?>&height=600" title="<?php _e('Upload and Crop an Image to be Displayed','user-avatar'); ?>" ><?php _e('Add Picture','user-avatar'); ?></a> 
+	<a id="user-avatar-link" class="button thickbox" href="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=1&post_id=<?php echo $post->ID; ?>&TB_iframe=true&width=<?php echo $iframe_width; ?>&height=520" title="<?php _e('Upload and Crop an Image to be Displayed','user-avatar'); ?>" ><?php _e('Add Picture','user-avatar'); ?></a> 
 	<?php
 	endif;
 	?>
@@ -359,9 +362,10 @@ function profile_cct_picture_add_photo_step2($post_id)
 			$ratio = $preview_width / PROFILE_CCT_MAX_PREVIEW_WIDTH;
 		
 			$preview_width = $preview_width / $ratio;
-			$preview_height = $picture_options['height'] / $ratio;
+			$preview_height = min($picture_options['height'], PROFILE_CCT_MAX_PREVIEW_HEIGHT) / $ratio;
 		}else{
 			$ratio = 1;
+			$preview_height = min($picture_options['height'], PROFILE_CCT_MAX_PREVIEW_HEIGHT);
 		};
 		
 		?>
@@ -449,9 +453,14 @@ function profile_cct_picture_add_photo_step2($post_id)
 
 				if (!c.width || !c.height)
         			return;
-    
-			    var scaleX = <?php echo PROFILE_CCT_MAX_PREVIEW_WIDTH; ?> / c.width;
-			    var scaleY = <?php echo $picture_options['height'] / ( $picture_options['width'] / PROFILE_CCT_MAX_PREVIEW_WIDTH)   ?> / c.height;
+    				
+    			//Scale the picture based on either the maximum preview size or the true picture size (whichever is smaller)
+    			<?php
+    				$scale_width = min(PROFILE_CCT_MAX_PREVIEW_WIDTH, $picture_options['width']);
+    				$scale_height = min(PROFILE_CCT_MAX_PREVIEW_HEIGHT, $picture_options['height']);
+    			?>
+			    var scaleX = <?php echo $scale_width; ?> / c.width;
+			    var scaleY = <?php echo $picture_options['height'] / ( $picture_options['width'] / $scale_width)   ?> / c.height;
 				
 			    jQuery('#preview img').css({
 			        width: Math.round(scaleX * <?php echo $width; ?>),
