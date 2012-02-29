@@ -124,6 +124,7 @@ function profile_cct_address_display( $data, $options ){
 function profile_cct_list_of_countries() {
 
 	return array(
+		"",
 		"Canada",
 		"United States",
 		"United Kingdom",
