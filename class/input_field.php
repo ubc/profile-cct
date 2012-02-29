@@ -100,6 +100,7 @@
 		if($before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php }
 	?>
 					<select id="<?php echo $textarea_id; ?>" <?php echo $name; ?> >
+						<option value=""></option>
 					<?php
 		foreach($all_fields as $field): ?>
 						<option  value="<?php echo $field; ?>" <?php selected($value,$field); ?> > <?php echo $field; ?></option>
