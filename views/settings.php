@@ -43,17 +43,24 @@ if( !empty($_POST) ):
 				$role = get_role( $user );
 				
 				foreach($permission_array as $permission => $can):
-					if( isset( $this->settings_options['permissions'][$user][$permission] ) ):
+					if( isset( $this->settings_options['permissions'][$user][$permission] ) ): // does the permission exist in the settings
 						$this->settings_options['permissions'][$user][$permission] = (bool)$post_permissions[$user][$permission];
 						// add the new capability
-						if( (bool)$post_permissions[$user][$permission] ):
+						if( (bool)$post_permissions[$user][$permission] ): 
 							$role->add_cap( $permission );
-							
 						else:
   							$role->remove_cap(  $permission );
   							
   						endif;
 					endif;
+				endforeach;
+				
+			else: 
+				// admin role you can't change the default permissions for the administater
+				$role = get_role( 'administrator' );
+				// the admin gets the best permissions
+				foreach($this->settings_options['permissions']['administrator'] as $permission => $can):
+						$role->add_cap( $permission );
 				endforeach;
 				
 			endif;
