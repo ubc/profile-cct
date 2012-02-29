@@ -1159,9 +1159,14 @@ Make sure that you select who this is supposed to be.<br />
 		if( isset($show_multiple) && $show_multiple ):
 
 			$style_multiple = ( isset($multiple) && $multiple ? 'style="display: inline;"': 'style="display: none;"');
-?>
-	 	<a href="#add" <?php echo $style_multiple; ?> class="button add-multiple">Add another</a>
-	 	<?php
+
+			if($action!='edit'):
+				echo '<a href="#add" '. $style_multiple .' class="button add-multiple">Add another</a>';
+			else:
+				echo '<a href="#add" '. $style_multiple .' class="button disabled">Add another</a> <em>disabled in preview</em>';
+			endif;
+	 	
+	 
 		endif;
 ?>
 	 	</div></<?php echo $shell; ?>><?php
