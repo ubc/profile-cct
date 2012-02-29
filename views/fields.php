@@ -158,7 +158,7 @@ endif; // remove fields localy
 			
 	
 ?>
-
+<h2>Fields Builder</h2>
 <?php echo $note; ?>
 
 <h3>Available Fields</h3>
