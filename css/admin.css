@@ -49,7 +49,10 @@
 	/* width: 280px; */
 }
 #notify{
-	  height: 30px;
+	 float: left;
+    height: 30px;
+    margin-left: 230px;
+    margin-top: -43px;
 }
 #notify span{
 	display: none;
