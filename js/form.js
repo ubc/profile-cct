@@ -49,6 +49,8 @@ var Profile_CCT_FORM ={
 				};
 		
 		jQuery.post(ajaxurl, data_set, function(response) {
+				
+				console.log(response);
 				Profile_CCT_FORM.hideSpinner();
 		});
 	 },
@@ -164,6 +166,7 @@ var Profile_CCT_FORM ={
      	 // ajax updating of the field options
      	 jQuery.post(ajaxurl, data, function(response) {
 			 parent.removeClass('changed');
+			 console.log(response);
 			 if(response == 'updated'){
 			 	 el.siblings('.spinner').hide();
 			 }

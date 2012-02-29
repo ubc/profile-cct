@@ -50,6 +50,7 @@ function profile_cct_textarea_display_shell( $action, $options, $data=null  ) {
 	$default_options = array(
 		'type' => 'textarea',
 		'label'=> 'textarea',
+		'width' => 'full',
 		'hide_label'=>true,
 		'before'=>'',
 		'empty'=>'',

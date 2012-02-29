@@ -46,7 +46,7 @@ define('PROFILE_CCT_DIR', plugin_dir_path(__FILE__));
 
 require(PROFILE_CCT_DIR.'profile-taxonomies.php');
 require(PROFILE_CCT_DIR.'profile-manage-table.php');
-
+if(!class_exists('Profile_CCT')):
 class Profile_CCT {
 	static private $classobj = NULL;
 
@@ -278,15 +278,17 @@ class Profile_CCT {
 		endif;
 
 	}
+	
 	function e($data){
 		echo "<pre>";
 		var_dump($data);
 		echo "</pre>";
 
 	}
+	
 	function microtime_float() {
-    list($usec, $sec) = explode(" ", microtime());
-    return ((float)$usec + (float)$sec);
+    	list($usec, $sec) = explode(" ", microtime());
+    	return ((float)$usec + (float)$sec);
 	}
 	/**
 	 * add_menu_page function.
@@ -928,7 +930,8 @@ Make sure that you select who this is supposed to be.<br />
 		$current_fields = array();
 		foreach($contexts as $context):
 			
-			foreach($this->get_option($where,'fields',$context) as $field):
+			
+			foreach( (array)$this->get_option($where,'fields',$context) as $field):
 				
 				$current_fields[] = $field['type'];
 			endforeach;
@@ -1222,11 +1225,12 @@ Make sure that you select who this is supposed to be.<br />
 					$options[$_POST['field_index']]['url_prefix']   = $_POST['url_prefix'];
 					
 					// save the url prefix also in the settings array
-					if(!is_array($this->settings_options['data-url']))
+					if(!is_array($this->settings_options['data-url'])):
 						$this->settings_options['data-url'] = array();
 						
-					$this->settings_options['data-url'] = array_merge ($this->settings_options['data-url'], array($_POST['field_type'] => trim($_POST['url_prefix']) ));
-					update_option('Profile_CCT_settings', $this->settings_options);
+						$this->settings_options['data-url'] = array_merge ($this->settings_options['data-url'], array($_POST['field_type'] => trim($_POST['url_prefix']) ));
+						update_option('Profile_CCT_settings', $this->settings_options);
+					endif;
 					break;
 				case "page":
 				case "list":
@@ -1241,7 +1245,7 @@ Make sure that you select who this is supposed to be.<br />
 					$options[$_POST['field_index']]['seperator']  = $_POST['seperator'];
 					break;
 				}
-			echo "updated";
+			$print = "updated";
 			endif;
 			break;
 
@@ -1255,13 +1259,12 @@ Make sure that you select who this is supposed to be.<br />
 			else:
 				$options = array();
 			endif;
-			echo "sorted";
+			$print =  "sorted";
 			break;
 		}
-
 		// save the opions
 		$this->update_option($type,'fields',$context,$options);
-
+		echo $print;
 		die();
 
 	}
@@ -1715,8 +1718,10 @@ Make sure that you select who this is supposed to be.<br />
 		flush_rewrite_rules();
 		
 		// set up the permissions
-		if( is_array($field->settings_options['permissions']) )
-		$field->settings_options = $field->default_options( 'settings' );
+		if( !is_array($field->settings_options['permissions']) ) {
+			$settings_options = $field->default_options( 'settings' );
+			$field->settings_options['permissions'] = $settings_options['permissions'];
+		}
 		
 		foreach($field->settings_options['permissions'] as $user=>$permission_array):
 			$role = get_role( $user );
@@ -1748,12 +1753,10 @@ Make sure that you select who this is supposed to be.<br />
 		endforeach;
 	}
 } // end class
-
+endif;
 if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT' ) )
 	add_action( 'plugins_loaded', array( 'Profile_CCT', 'get_object' ) );
 	
-
-
 
 register_activation_hook( __FILE__, array('Profile_CCT', 'install') );
 register_deactivation_hook( __FILE__, array('Profile_CCT', 'uninstall') );
