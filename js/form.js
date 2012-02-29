@@ -75,14 +75,14 @@ var Profile_CCT_FORM ={
 	updateDescription : function(e){
 		var el = jQuery(this);
 		
+		console.log( )
 		el.parent().parent().addClass('changed');
 		setTimeout( function () {		
 			var text_label = el.val();
 			if(text_label.length+1 > 0 ) {
-				el.parents().siblings(".description").text(text_label);
+				jQuery(".description",el.parent().parent().parent()).text(text_label);
 			} else {
-				
-				el.parents().siblings(".description").text(el.attr('title'));
+				jQuery(".description",el.parent().parent().parent()).text(el.attr('title'));
 			}
 		},10);
 
