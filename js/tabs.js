@@ -31,7 +31,7 @@ var Profile_CCT_TABS ={
 				Profile_CCT_FORM.showSpinner();
 				// remove tab from form
 				var data = {
-						type:   ProfileCCT.type,
+						where:   ProfileCCT.page,
 						action: 'cct_update_tabs',
 						method: 'add',
 						title: tab_title,
@@ -78,7 +78,7 @@ var Profile_CCT_TABS ={
 			var tab_title = jQuery( this ).val();
 			var index = jQuery( "li",Profile_CCT_TABS.$tabs ).index( jQuery( this ).parent() );
 			var data = {
-					type:   ProfileCCT.type,
+					where:   ProfileCCT.page,
 					action: 'cct_update_tabs',
 					method: 'update',
 					title:  tab_title,
@@ -105,7 +105,7 @@ var Profile_CCT_TABS ={
 			var tab_title = el.val();
 			var index = jQuery( "li",Profile_CCT_TABS.$tabs ).index( jQuery( this ).parent() );
 			var data = {
-					type:   ProfileCCT.type,
+					where:   ProfileCCT.page,
 					action: 'cct_update_tabs',
 					method: 'update',
 					title:  tab_title,
@@ -140,7 +140,7 @@ var Profile_CCT_TABS ={
 			
 			// remove tab from form
 			var data = {
-					type:   ProfileCCT.type,
+					where:   ProfileCCT.page,
 					action: 'cct_update_tabs',
 					method: 'remove',
 					index:  index

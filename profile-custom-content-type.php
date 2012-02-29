@@ -359,7 +359,7 @@ class Profile_CCT {
 			wp_enqueue_script( 'profile-cct-form', WP_PLUGIN_URL . '/profile-cct/js/form.js',array('jquery','jquery-ui-sortable') );
 			wp_enqueue_script( 'profile-cct-tabs', WP_PLUGIN_URL . '/profile-cct/js/tabs.js',array('jquery','jquery-ui-tabs') );
 			wp_localize_script( 'profile-cct-form', 'ProfileCCT', array(
-					'type' => 'form'
+					'page' => 'form'
 				));
 			break;
 		case "page":
@@ -367,14 +367,14 @@ class Profile_CCT {
 			wp_enqueue_script( 'profile-cct-form', WP_PLUGIN_URL . '/profile-cct/js/form.js',array('jquery','jquery-ui-sortable') );
 			wp_enqueue_script( 'profile-cct-profile', WP_PLUGIN_URL . '/profile-cct/js/profile.js',array('jquery') );
 			wp_localize_script( 'profile-cct-form', 'ProfileCCT', array(
-					'type' => 'page'
+					'page' => 'page'
 				));
 			break;
 		case "list":
 			wp_enqueue_script( 'profile-cct-form', WP_PLUGIN_URL . '/profile-cct/js/form.js',array('jquery','jquery-ui-sortable') );
 			wp_enqueue_script( 'profile-cct-profile', WP_PLUGIN_URL . '/profile-cct/js/profile.js',array('jquery') );
 			wp_localize_script( 'profile-cct-form', 'ProfileCCT', array(
-					'type' => 'list'
+					'page' => 'list'
 				));
 			break;
 			
@@ -1048,6 +1048,7 @@ Make sure that you select who this is supposed to be.<br />
 	 */
 	function start_field( $action, $options ) {
 		extract( $options );
+		
 		// be default show the remove button
 		if( !isset($show_remove))
 			$show_remove = true;
@@ -1068,11 +1069,11 @@ Make sure that you select who this is supposed to be.<br />
 		
 		$label 		= ( (isset($this->current_form_fields) && !empty($this->current_form_fields[$type]['label'])) ? $this->current_form_fields[$type]['label'] : $label);		
 ?>
-	 		<<?php echo $shell; ?> class="<?php echo $is_in_form.' '.esc_attr( $type ); ?> field-item <?php echo $class." ".$width; ?>" for="cct-<?php echo esc_attr( $type); ?>" data-options="<?php echo esc_attr( $this->serialize($options)); ?>" >
+	 		<<?php echo $shell; ?> class="<?php echo $is_in_form.' '.esc_attr( $type ); ?> field-item <?php echo $class." ".$width; ?>" for="cct-<?php echo esc_attr( $type ); ?>" data-options="<?php echo esc_attr( $this->serialize($options)); ?>" >
 
 			<a href="#edit-field" class="edit">Edit</a>
 			<div class="edit-shell" style="display:none;">
-					<input type="hidden" name="field_type" value="<?php echo esc_attr( $type ); ?>" />
+					<input type="hidden" name="type" value="<?php echo esc_attr( $type ); ?>" />
 				<?php
 
 		if(empty($hide_label) && !$hide_label):
@@ -1199,23 +1200,23 @@ Make sure that you select who this is supposed to be.<br />
 	function update_fields() {
 		$context = $_POST['context'];
 
-		if(in_array($_POST['type'], array('form','page','list')))
-			$type = $_POST['type'];
+		if(in_array($_POST['where'], array('form','page','list')))
+			$where = $_POST['where'];
 		else
-			$type = 'form';
+			$where = 'form';
 
 		if(in_array($_POST['width'], array('full','half','one-third','two-third')))
 			$width = $_POST['width'];
 		else
 			$width = 'full';
 
-		$options = $this->get_option($type,'fields',$context);
+		$options = $this->get_option($where,'fields',$context);
 
 		switch( $_POST['method'] ){
 
 		case "update":
 			if(is_numeric($_POST['field_index'])):
-				switch($type){
+			switch($where){
 				case "form":
 					
 					$options[$_POST['field_index']]['label']   = $_POST['label'];
@@ -1228,7 +1229,7 @@ Make sure that you select who this is supposed to be.<br />
 					if(!is_array($this->settings_options['data-url'])):
 						$this->settings_options['data-url'] = array();
 						
-						$this->settings_options['data-url'] = array_merge ($this->settings_options['data-url'], array($_POST['field_type'] => trim($_POST['url_prefix']) ));
+						$this->settings_options['data-url'] = array_merge ($this->settings_options['data-url'], array($_POST['type'] => trim($_POST['url_prefix']) ));
 						update_option('Profile_CCT_settings', $this->settings_options);
 					endif;
 					break;
@@ -1262,8 +1263,9 @@ Make sure that you select who this is supposed to be.<br />
 			$print =  "sorted";
 			break;
 		}
+		
 		// save the opions
-		$this->update_option($type,'fields',$context,$options);
+		$this->update_option($where,'fields',$context,$options);
 		echo $print;
 		die();
 
@@ -1291,19 +1293,19 @@ Make sure that you select who this is supposed to be.<br />
 	 */
 	function update_tabs() {
 
-		if(in_array($_POST['type'], array('page','form')))
-			$type = $_POST['type'];
+		if(in_array($_POST['where'], array('page','form')))
+			$where = $_POST['where'];
 		else
-			$type = 'form';
+			$where = 'form';
 		
-		$tabs = $this->get_option($type,'tabs');
+		$tabs = $this->get_option($where,'tabs');
 		
 
 		switch($_POST['method']) {
 
 			case "update":
 				$tabs[$_POST['index']] = $_POST['title'];
-				echo "updated";
+				$print = "updated";
 				break;
 	
 			case "remove":
@@ -1317,18 +1319,18 @@ Make sure that you select who this is supposed to be.<br />
 				
 				// delete the current field
 				$count = $index+1;
-				$fields = $this->get_option($type,'fields','tabbed-'.$count);
-				$this->delete_option($type,'fields','tabbed-'.$count);
+				$fields = $this->get_option($where,'fields','tabbed-'.$count);
+				$this->delete_option($where,'fields','tabbed-'.$count);
 	
 	
 				if(is_array($fields)): // array was empty so nothing to move
-					$bench  = $this->get_option($type,'fields','bench');
+					$bench  = $this->get_option($where,'fields','bench');
 					
 					// merge but don't duplicate the fields if they are there already
 					$bench  = array_merge($bench , $fields);
 					
 					// save the new banch
-					$bench = $this->update_option($type,'fields','bench', $bench);
+					$bench = $this->update_option($where,'fields','bench', $bench);
 	
 				endif;
 				
@@ -1336,31 +1338,31 @@ Make sure that you select who this is supposed to be.<br />
 				while($count < $tabs_count):
 					
 					$count++;
-					$fields = $this->get_option($type,'fields','tabbed-'.$count);
+					$fields = $this->get_option($where,'fields','tabbed-'.$count);
 	
 					$minus = $count - 1;
 					
-					$this->update_option($type,'fields','tabbed-'.$minus, $fields);
+					$this->update_option($where,'fields','tabbed-'.$minus, $fields);
 	
-					$fields = $this->delete_option($type,'fields','tabbed-'.$count);
+					$fields = $this->delete_option($where,'fields','tabbed-'.$count);
 		
 				endwhile;
 				
 				$tabs = array_merge($tabs); // reindexes the $tabs array
-				echo "removed";
+				$print = "removed";
 				break;
 	
 			case "add":
 				$tabs[] = $_POST['title'];
 				$tabs_count = count($tabs); 
-				$this->update_option($type,'fields','tabbed-'.$tabs_count, array());
+				$this->update_option($where,'fields','tabbed-'.$tabs_count, array());
 				
-				
-				echo "added";
+				$print = "added";
 				break;
 		}
 		
-		$this->update_option($type,'tabs','normal', $tabs);
+		$this->update_option($where,'tabs','normal', $tabs);
+		echo $print;
 		die();
 	}
 
