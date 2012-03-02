@@ -107,7 +107,7 @@ function profile_cct_department_display( $data, $options ){
 	if( empty($data['url']) ):
 		$field->display_text( array( 'field_type'=>$type, 'default_text'=>'Finance and Technology', 'value'=>$data['department'], 'type'=>'text') );
 	else:
-		$field->display_text( array( 'field_type'=>$type, 'default_text'=>'Finance and Technology', 'value'=>$data['department'], 'type'=>'text', 'tag'=> 'a', 'href'=> $data['url'] ) );
+		$field->display_text( array( 'field_type'=>$type, 'default_text'=>'Finance and Technology', 'value'=>$data['department'], 'type'=>'text', 'tag'=> 'a', 'href'=> $field->correct_URL($data['url']) ) );
 	endif;
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 	

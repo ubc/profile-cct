@@ -117,7 +117,7 @@ function profile_cct_professionalaffiliations_display( $data, $options ){
 	if( empty($data['affiliation-website']) ):
 		$field->display_text( array( 'field_type'=>$type, 'class'=>'affiliation', 'default_text'=>'Wayne Healthcare', 'value'=>$data['affiliation'], 'type'=>'text') );
 	else:
-		$field->display_text( array( 'field_type'=>$type, 'class'=>'affiliation', 'default_text'=>'Wayne Healthcare', 'value'=>$data['affiliation'], 'type'=>'text', 'tag'=> 'a', 'href'=> $data['affiliation-website'] ) );
+		$field->display_text( array( 'field_type'=>$type, 'class'=>'affiliation', 'default_text'=>'Wayne Healthcare', 'value'=>$data['affiliation'], 'type'=>'text', 'tag'=> 'a', 'href'=> $field->correct_URL($data['affiliation-website']) ) );
 	endif;
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'affiliation-role', 'default_text'=>'public speaker', 'separator'=>',', 'value'=>$data['affiliation-role'], 'type'=>'text', 'show'=> in_array("affiliation-role",$show) ));
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'active-date-month','default_text'=>'January', 'separator'=>'member since:', 'value'=>$data['active-date-month'], 'type'=>'text', 'show'=> in_array("active-date-month",$show) ));

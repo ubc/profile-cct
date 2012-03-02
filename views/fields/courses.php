@@ -134,6 +134,6 @@ function profile_cct_courses_display( $data, $options ){
 	$field->display_text( array( 'field_type'=>$type,  'class'=>'section-number', 'default_text'=>'101','value'=>$data['section-number'], 'type'=>'text' ) );
 	$field->display_text( array( 'field_type'=>$type,  'class'=>'course-date-month', 'default_text'=>'May','value'=>$data['course-date-month'], 'type'=>'text' ) );
 	$field->display_text( array( 'field_type'=>$type,  'class'=>'course-date-year', 'default_text'=>'2012','value'=>$data['course-date-year'], 'type'=>'text' ) );
-	$field->display_text( array( 'field_type'=>$type,  'class'=>'course-summary', 'default_text'=>'Continuation of the examination of accounting as a means of measurement and as an information system for external reporting purposes.','value'=>$data['course-summary'], 'type'=>'text', 'tag'=>'span') );
+	$field->display_text( array( 'field_type'=>$type,  'class'=>'course-summary', 'content_filter'=>'the_content', 'default_text'=>'Continuation of the examination of accounting as a means of measurement and as an information system for external reporting purposes.','value'=>$data['course-summary'], 'type'=>'text', 'tag'=>'span') );
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 }
