@@ -5,7 +5,7 @@
  * Text Domain: profile_cct
  * Domain Path: /languages
  * Description: Allows administrators to manage user profiles better in order to display them on their websites
- * Author: Enej Bajgoric, CTLT
+ * Author: Enej Bajgoric, Eric Jackish, Aleksandar Arsovski, CTLT, UBC
  * Version: 1.1
  * Licence: GPLv2
  * Author URI: http://ctlt.ubc.ca
@@ -637,27 +637,28 @@ class Profile_CCT {
 			foreach( $contexts as $context ):
 
 				$fields = $this->get_option('form','fields',$context);
-			
-			foreach($fields as $field):
-				
-				// add_meta_box( $id, $title, $callback, $page, $context, $priority, $callback_args );
-				if(function_exists('profile_cct_'.$field['type'].'_field_shell')):
-					
-					add_meta_box(
-						$field['type']."-".$i.'-'.rand(0,999),
-						$field['label'],
-						'profile_cct_'.$field['type'].'_field_shell',
-						'profile_cct', $context, 'core',
-						array(
-							'options'=>$field,
-							'data'=>$user_data[ $field['type']]
-						)
-					);
-				else:
-					do_action("profile_cct_".$field['type']."_add_meta_box", $field, $context, $user_data[ $field['type']], $i);
+				if($fields):
+					foreach($fields as $field):
+						
+						// add_meta_box( $id, $title, $callback, $page, $context, $priority, $callback_args );
+						if(function_exists('profile_cct_'.$field['type'].'_field_shell')):
+							
+							add_meta_box(
+								$field['type']."-".$i.'-'.rand(0,999),
+								$field['label'],
+								'profile_cct_'.$field['type'].'_field_shell',
+								'profile_cct', $context, 'core',
+								array(
+									'options'=>$field,
+									'data'=>$user_data[ $field['type']]
+								)
+							);
+						else:
+							do_action("profile_cct_".$field['type']."_add_meta_box", $field, $context, $user_data[ $field['type']], $i);
+						endif;
+					endforeach;
 				endif;
 			endforeach;
-		endforeach;
 		endif;
 		
 		
