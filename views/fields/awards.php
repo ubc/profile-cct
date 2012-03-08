@@ -136,7 +136,7 @@ function profile_cct_awards_display( $data, $options ){
 	if( empty($data['award-website']) ):
 		$field->display_text( array( 'field_type'=>$type, 'class'=>'award-name','default_text'=>'Gotham Prize for Cancer Research', 'value'=>$data['award-name'], 'type'=>'text' ));
 	else:
-		$field->display_text( array( 'field_type'=>$type, 'class'=>'award-name','default_text'=>'Gotham Prize for Cancer Research', 'value'=>$data['award-name'], 'type'=>'text', 'tag'=> 'a', 'href'=> $data['award-website'] ) );
+		$field->display_text( array( 'field_type'=>$type, 'class'=>'award-name','default_text'=>'Gotham Prize for Cancer Research', 'value'=>$data['award-name'], 'type'=>'text', 'tag'=> 'a', 'href'=> $field->correct_URL($data['award-website']) ) );
 	endif;
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'receival-date-month','default_text'=>'November', 'value'=>$data['receival-date-month'], 'type'=>'text', 'show'=> in_array("receival-date-month",$show)) );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'receival-date-year','default_text'=>'2011', 'separator'=>',', 'value'=>$data['receival-date-year'], 'type'=>'text' ));

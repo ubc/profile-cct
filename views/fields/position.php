@@ -114,7 +114,7 @@ function profile_cct_position_display( $data, $options ){
 		if( empty($data['url']) ):
 			$field->display_text( array( 'field_type'=>$type, 'class'=>'org organization','separator'=>',','default_text'=>'Wayne Enterprises', 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array('organization',$show)) );
 		else:
-			$field->display_text( array( 'field_type'=>$type, 'class'=>'org organization url','separator'=>',','default_text'=>'Wayne Enterprises', 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array('organization',$show), 'tag'=> 'a', 'href'=> $data['url']) );
+			$field->display_text( array( 'field_type'=>$type, 'class'=>'org organization url','separator'=>',','default_text'=>'Wayne Enterprises', 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array('organization',$show), 'tag'=> 'a', 'href'=> $field->correct_URL( $data['url'] ) ) );
 		endif;
 	endif;
 	

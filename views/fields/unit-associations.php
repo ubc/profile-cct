@@ -107,7 +107,7 @@ function profile_cct_unitassociations_display( $data, $options ){
 	if( empty($data['unit-website']) ):
 		$field->display_text( array( 'field_type'=>$type, 'default_text'=>'Biotechnology', 'value'=>$data['unit'], 'type'=>'text') );
 	else:
-		$field->display_text( array( 'field_type'=>$type, 'default_text'=>'Biotechnology', 'value'=>$data['unit'], 'type'=>'text', 'tag'=> 'a', 'href'=> $data['unit-website'] ) );
+		$field->display_text( array( 'field_type'=>$type, 'default_text'=>'Biotechnology', 'value'=>$data['unit'], 'type'=>'text', 'tag'=> 'a', 'href'=> $field->correct_URL($data['unit-website']) ) );
 	endif;
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 	

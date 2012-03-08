@@ -35,8 +35,11 @@
 <p>Known for his contributions to charity, notably through his Wayne Foundation, a charity devoted to helping the victims of crime and preventing people from becoming criminals.</p>";
 		break;
 	}
-
-	$display = ( $value ? $value :$default_text);
+	
+	if( $value )
+		$display = ( $content_filter ? apply_filters( $content_filter, $value ) : esc_html($value) ); 
+	else
+		$display = $default_text;
 
 	$separator = (isset($separator) ? '<span class="'.$prepend_class.'-separator">'.$separator.'</span>': "");
 

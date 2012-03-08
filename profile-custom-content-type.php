@@ -5,7 +5,7 @@
  * Text Domain: profile_cct
  * Domain Path: /languages
  * Description: Allows administrators to manage user profiles better in order to display them on their websites
- * Author: Enej Bajgoric, CTLT
+ * Author: Enej Bajgoric, Eric Jackish, Aleksandar Arsovski, CTLT, UBC
  * Version: 1.1
  * Licence: GPLv2
  * Author URI: http://ctlt.ubc.ca
@@ -78,6 +78,8 @@ class Profile_CCT {
 
 		add_action( 'template_redirect',  array( $this,'check_freshness'));
 		add_action( 'wp_insert_post_data', array( $this,'save_post_data'),10,2);
+		
+		add_action('the_post', array( $this,'reset_filters' ), 10, 1);
 
 		add_action( 'wp_ajax_cct_update_fields', array( $this,'update_fields'));
 		add_action( 'wp_ajax_cct_update_tabs', array( $this,'update_tabs'));
@@ -106,8 +108,6 @@ class Profile_CCT {
 		// function to be executed on form admin page
 		add_action('profile_cct_form', array( $this,'form_field_shell'),10,1);
 		
-		
-
 		// function to be executed on page and list admin pages
 		add_action('profile_cct_page', array( $this,'page_field_shell'),10,3);
 		
@@ -413,9 +413,24 @@ class Profile_CCT {
 	function profiles_cct_init() {
 	
 		$this->taxonomies = get_option( 'Profile_CCT_taxonomy');
-	
 		$this->register_cpt_profile_cct();
 		$this->load_scripts_cpt_profile_cct();
+		
+	}
+	
+	/**
+	 * reset_filters function.
+	 * 
+	 * @access public
+	 * @param mixed $post
+	 * @return void
+	 */
+	function reset_filters($post) {
+				
+		if( $post->post_type == 'profile_cct')
+			remove_filter( 'the_content', 'wpautop' );
+		else
+			add_filter( 'the_content', 'wpautop'); // I hope this doesn't get added twice
 	}
 
 	/**
@@ -626,27 +641,28 @@ class Profile_CCT {
 			foreach( $contexts as $context ):
 
 				$fields = $this->get_option('form','fields',$context);
-			
-			foreach($fields as $field):
-				
-				// add_meta_box( $id, $title, $callback, $page, $context, $priority, $callback_args );
-				if(function_exists('profile_cct_'.$field['type'].'_field_shell')):
-					
-					add_meta_box(
-						$field['type']."-".$i.'-'.rand(0,999),
-						$field['label'],
-						'profile_cct_'.$field['type'].'_field_shell',
-						'profile_cct', $context, 'core',
-						array(
-							'options'=>$field,
-							'data'=>$user_data[ $field['type']]
-						)
-					);
-				else:
-					do_action("profile_cct_".$field['type']."_add_meta_box", $field, $context, $user_data[ $field['type']], $i);
+				if($fields):
+					foreach($fields as $field):
+						
+						// add_meta_box( $id, $title, $callback, $page, $context, $priority, $callback_args );
+						if(function_exists('profile_cct_'.$field['type'].'_field_shell')):
+							
+							add_meta_box(
+								$field['type']."-".$i.'-'.rand(0,999),
+								$field['label'],
+								'profile_cct_'.$field['type'].'_field_shell',
+								'profile_cct', $context, 'core',
+								array(
+									'options'=>$field,
+									'data'=>$user_data[ $field['type']]
+								)
+							);
+						else:
+							do_action("profile_cct_".$field['type']."_add_meta_box", $field, $context, $user_data[ $field['type']], $i);
+						endif;
+					endforeach;
 				endif;
 			endforeach;
-		endforeach;
 		endif;
 		
 		
@@ -725,11 +741,12 @@ Make sure that you select who this is supposed to be.<br />
 	 * @return void
 	 */
 	function save_post_data( $data, $postarr ) {
-		global $post;
+		global $post, $wp_filter;
 
 		if(!isset( $_POST["profile_cct"] ))
 			return $data;
-
+		
+		
 		$profile_cct_data_previous =  get_post_meta($postarr['ID'], 'profile_cct', true);
 
 		if(!is_array($profile_cct_data_previous))
@@ -1721,6 +1738,73 @@ Make sure that you select who this is supposed to be.<br />
 			<?php 
 		endif;
 			
+	}
+	
+	function correct_URL($address) {
+	    if (!empty($address) AND $address{0} != '#' AND
+	    strpos(strtolower($address), 'mailto:') === FALSE AND
+	    strpos(strtolower($address), 'javascript:') === FALSE)
+	    {
+	        $address = explode('/', $address);
+	        $keys = array_keys($address, '..');
+	
+	        foreach($keys AS $keypos => $key)
+	            array_splice($address, $key - ($keypos * 2 + 1), 2);
+	
+	        $address = implode('/', $address);
+	        $address = str_replace('./', '', $address);
+	       
+	        $scheme = parse_url($address);
+	       
+	        if (empty($scheme['scheme']))
+	            $address = 'http://' . $address;
+	
+	        $parts = parse_url($address);
+	        $address = strtolower($parts['scheme']) . '://';
+	
+	        if (!empty($parts['user']))
+	        {
+	            $address .= $parts['user'];
+	
+	            if (!empty($parts['pass']))
+	                $address .= ':' . $parts['pass'];
+	
+	            $address .= '@';
+	        }
+	
+	        if (!empty($parts['host']))
+	        {
+	            $host = str_replace(',', '.', strtolower($parts['host']));
+	
+	            if (strpos(ltrim($host, 'www.'), '.') === FALSE)
+	                $host .= '.com';
+	
+	            $address .= $host;
+	        }
+	
+	        if (!empty($parts['port']))
+	            $address .= ':' . $parts['port'];
+	
+	        $address .= '/';
+	
+	        if (!empty($parts['path']))
+	        {
+	            $path = trim($parts['path'], ' /\\');
+	
+	            if (!empty($path) AND strpos($path, '.') === FALSE)
+	                $path .= '/';
+	               
+	            $address .= $path;
+	        }
+	
+	        if (!empty($parts['query']))
+	            $address .= '?' . $parts['query'];
+	
+	        return $address;
+	    }
+	
+	    else
+	        return FALSE;
 	}
 	
 	function install() {
