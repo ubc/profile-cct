@@ -213,7 +213,11 @@ class Profile_CCT {
 	 * @return string
 	 */
 	private function get_plugin_data ( $value = 'Version' ) {
-
+		//$e = new Exception;
+		//var_dump($e->getTraceAsString());
+		if(!is_admin()):
+			return;
+		endif;
 		$plugin_data = get_plugin_data ( __FILE__ );
 		$plugin_value = $plugin_data[$value];
 
