@@ -32,7 +32,14 @@ Dashboard icon from http://p.yusukekamiyamane.com/ !!
 1. Extract the zip file into wp-content/plugins/ in your WordPress installation
 2. Go to plugins page to activate
 
-== Changelog ==
+== Change log ==
+
+= Version 1.1.1 =
+* Bug fixes: social fields look better
+* Appearance of professional affiliation changed
+* Renamed classed so that they are not repeated, use shell-rename
+* added the ability to sort fields now by using the page order
+* clarification of the permission fields
 
 = Version 1.1 =
 * Initial public release

@@ -111,19 +111,19 @@ endif;
 	</tbody></table>
 	
 	
-	<h3>Permissions</h3>
-	Set permissions for profile 
+	<h3>Profile Permissions</h3>
+
 	<table class="wp-list-table widefat fixed posts ">
 		<thead>
 			<tr>
 				<th>Role</th>
-				<th>Edit profile</th>
-				<th>Edit profiles </th>
-				<th>Edit others profile</th>
+				<th>Enable public profile</th>
+				<th>Manage own profiles</th>
+				<th>Manage all profiles</th>
 				<th>Publish profile</th>
 				<th>Read private profile</th>
-				<th>Delete profile</th>
-				<th>Delete others profiles</th>
+				<th>Delete own profile</th>
+				<th>Delete all profiles</th>
 			</tr>
 		</thead>		
 		<tbody id="the-list">

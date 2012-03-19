@@ -129,15 +129,12 @@ function profile_cct_social_display( $data, $options ){
 	
 	echo '<img src="' . $img_path . $social_array[$data['option']]['type'] . '.png" class="icon" />';
 	
-	$field->display_text( array( 
-		'field_type'=>$type,  
-		'class'=>'type', 
-
-		'value'=>'<strong>' . $data['option'] . '</strong>/' . $data['username'], 
-		'type'=>'text', 'href'=>str_replace('{value}',$data['username'], $user_url), 
-		'tag'=>'a', 
-	));
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'social-link', 'type'=>'shell', 'link_to'=>true,'tag'=>'a', 'href'=>str_replace('{value}',$data['username'], $user_url)) );
 	
+	$field->display_text( array( 'field_type'=>$type, 'type'=>'text', 'tag'=>'strong', 'value'=>$data['option'])  );
+	
+	$field->display_text( array( 'field_type'=>$type, 'type'=>'text', 'tag'=>'span', 'separator'=>'/', 'value'=>$data['username']) );
+	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'a','link_to'=>true) );
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 	
 }

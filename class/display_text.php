@@ -41,7 +41,7 @@
 	else
 		$display = $default_text;
 
-	$separator = (isset($separator) ? '<span class="'.$prepend_class.'-separator">'.$separator.'</span>': "");
+	$separator = (isset($separator) ? '<span class="'.$prepend_class.'-separator separator">'.$separator.'</span>': "");
 
 
 	switch($type) {

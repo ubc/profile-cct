@@ -213,8 +213,6 @@ class Profile_CCT {
 	 * @return string
 	 */
 	private function get_plugin_data ( $value = 'Version' ) {
-		//$e = new Exception;
-		//var_dump($e->getTraceAsString());
 		if(!is_admin()):
 			return;
 		endif;
@@ -467,7 +465,7 @@ class Profile_CCT {
 			'labels' => $labels,
 			'hierarchical' => false,
 			'menu_icon' => plugins_url( 'icon.png' , __FILE__ ),
-			'supports' => array( 'revisions','author'  ),
+			'supports' => array( 'revisions','author','page-attributes'),
 			'public' => true,
 			'show_ui' => true,
 			'show_in_menu' => true,
@@ -1090,7 +1088,7 @@ Make sure that you select who this is supposed to be.<br />
 		
 		$label 		= ( (isset($this->current_form_fields) && !empty($this->current_form_fields[$type]['label'])) ? $this->current_form_fields[$type]['label'] : $label);		
 ?>
-	 		<<?php echo $shell; ?> class="<?php echo $is_in_form.' '.esc_attr( $type ); ?> field-item <?php echo $class." ".$width; ?>" for="cct-<?php echo esc_attr( $type ); ?>" data-options="<?php echo esc_attr( $this->serialize($options)); ?>" >
+	 		<<?php echo $shell; ?> class="<?php echo $is_in_form.' shell-'.esc_attr( $type ); ?> field-item <?php echo $class." ".$width; ?>" for="cct-<?php echo esc_attr( $type ); ?>" data-options="<?php echo esc_attr( $this->serialize($options)); ?>" >
 
 			<a href="#edit-field" class="edit">Edit</a>
 			<div class="edit-shell" style="display:none;">

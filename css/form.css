@@ -137,6 +137,12 @@
 	float:left;
 	color:#444
 }
+.form-builder li a span{
+	color:#21759B;
+}
+.form-builder li a:hover span{
+	color: #D54E21;
+}
 .form-builder li .textarea-shell{
 	width: 96%;
 }
