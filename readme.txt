@@ -27,6 +27,8 @@ Everything can be styled with CSS
 
 Dashboard icon from http://p.yusukekamiyamane.com/ !!
 
+Social icons from http://paulrobertlloyd.com/2009/06/social_media_icons/ 
+
 == Installation ==
 
 1. Extract the zip file into wp-content/plugins/ in your WordPress installation
