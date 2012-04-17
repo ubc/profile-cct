@@ -1,4 +1,4 @@
-=== Profile Builder ===
+=== Profile CCT ===
 Contributors: enej, ejackisch, alekarsovski
 Tags: profile, user
 Requires at least: 3.2
@@ -12,8 +12,7 @@ This plugin allows for management of user public profiles with a lot of customiz
 
 In the dashboard under Profiles->Settings, administrators can:
 
-* Build a form for users to fill out, choosing which fields to include and how to arrange them, 
-	via a straightforward drag and drop interface.
+* Build a form for users to fill out, choosing which fields to include and how to arrange them, via a straightforward drag and drop interface.
 * Add taxonomies to group and filter profiles
 * Design a page to display user information
 * Design a separate list view when listing multiple users

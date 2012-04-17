@@ -345,6 +345,18 @@ function profile_cct_picture_add_photo_step2($post_id)
 
 		list($width, $height, $type, $attr) = getimagesize( $file );
 		
+		//If the image is below the minimum width or height
+		if($width < $picture_options['width'] || $height < $picture_options['height']):
+			echo "<p>The image you selected is too small. Please select an image with width at least {$picture_options['width']} and height at least {$picture_options['height']}</p>";
+			profile_cct_picture_add_photo_step1($post_id);
+			return;
+		endif;
+		//If the image is exactly the right size
+		if($width == $picture_options['width'] && $height == $picture_options['height']):
+			profile_cct_picture_add_photo_step3($post_id,  true, $id);
+			return;
+		endif;
+		
 		if ( $width > 500 ) {
 			$oitar = $width / 500;
 			$image = wp_crop_image($file, 0, 0, $width, $height, 500, $height / $oitar, false, str_replace(basename($file), 'midsize-'.basename($file), $file));
@@ -484,7 +496,7 @@ function profile_cct_picture_add_photo_step2($post_id)
  * @param mixed $uid
  * @return void
  */
-function profile_cct_picture_add_photo_step3($post_id)
+function profile_cct_picture_add_photo_step3($post_id, $no_crop=false, $attachment_id=0)
 {
 	$picture_options = profile_cct_get_picture_options();
 	
@@ -494,9 +506,19 @@ function profile_cct_picture_add_photo_step3($post_id)
 			$_POST['width'] = $_POST['width'] * $_POST['oitar'];
 			$_POST['height'] = $_POST['height'] * $_POST['oitar'];
 		}
+		
+	if($no_crop):
+		$_POST['attachment_id'] = $attachment_id;
+	endif;	
+		
 	$original = get_attached_file( $_POST['attachment_id'] );
 
-	$cropped = wp_crop_image($_POST['attachment_id'], $_POST['x1'], $_POST['y1'], $_POST['width'], $_POST['height'], $picture_options['width'], $picture_options['height']);
+	if($no_crop):
+		$cropped = wp_crop_image($_POST['attachment_id'], 0, 0, $picture_options['width'], $picture_options['height'], $picture_options['width'], $picture_options['height']);
+	else:
+		$cropped = wp_crop_image($_POST['attachment_id'], $_POST['x1'], $_POST['y1'], $_POST['width'], $_POST['height'], $picture_options['width'], $picture_options['height']);
+	endif;
+	
 	if ( is_wp_error( $cropped ) )
 			wp_die( __( 'Image could not be processed.  Please go back and try again.' ), __( 'Image Processing Error' ) );
 
