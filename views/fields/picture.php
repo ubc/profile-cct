@@ -581,20 +581,39 @@ add_action("admin_init", "profile_cct_picture_delete");
 function profile_cct_picture_delete(){
 		
 		global $pagenow;
-		
+		if(!is_numeric($_GET['post'])):
+			return;
+		endif;
 		$current_user = wp_get_current_user();
 		
+		$post = wp_get_single_post($_GET['post']);
+		$post_image_id = get_post_meta($_GET['post'], '_thumbnail_id', true);
+		
+		$post_author = $post->post_author;
 		// If user clicks the remove avatar button, in URL deleter_avatar=true
-		if( isset($_GET['delete_avatar']) && wp_verify_nonce($_GET['_nononce'], 'profile_cct_picture') && ( $_GET['u'] == $current_user->id || current_user_can('edit_users')) )
+		if( isset($_GET['delete_avatar']) && wp_verify_nonce($_GET['_nononce'], 'profile_cct_picture') && ( $post_author == $current_user->id || current_user_can('edit_users')) )
 		{
 			$user_id = $_GET['user_id'];
 			if(is_numeric($user_id))
 				$user_id = "?user_id=".$user_id;
 				
-			profile_cct_picture_delete_files($_GET['u']);
-			wp_redirect(get_option('siteurl') . '/wp-admin/'.$pagenow.$user_id);
-			
+			profile_cct_picture_delete_files($_GET['post'], $post_image_id);
+			wp_redirect(admin_url( 'post.php?post='.$_GET['post'].'&action=edit') );
+			exit;
 		}		
+}
+
+
+
+/**
+ * profile_cct_picture_delete_files function.
+ * 
+ * @access public
+ * @param $u
+ * @return void
+ */
+function profile_cct_picture_delete_files($post, $img){
+	wp_delete_attachment($img);
 }
 
 
