@@ -2,7 +2,6 @@
 	$taxonomys = get_option( 'Profile_CCT_taxonomy');
 	if(!is_array($taxonomys))
 		$taxonomys = array();
-	
 // remove Taxonomy 
 if( wp_verify_nonce($_GET['_wpnonce'], 'profile_cct_remove_taxonomy'.$_GET['remove'])){
 	if(isset($taxonomys[$_GET['remove']]))
@@ -72,11 +71,11 @@ endif;
 		<tbody>
 		<?php 
 			  $count = 0;
-			  foreach($taxonomys as $taxonomy): ?>
+			  foreach($taxonomys as $key=>$taxonomy): ?>
 		<tr <?php if($count%2) echo 'class="alternate"'; ?>>
 		<td ><?php echo $taxonomy['single']; ?> / <?php echo $taxonomy['plural']; ?>
 		<div class="row-actions">
-			<span class="trash"><a href="?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=taxonomy&remove=<?php echo $count."&_wpnonce=".wp_create_nonce('profile_cct_remove_taxonomy'.$count); ?> " class="submitdelete">Delete</a>
+			<span class="trash"><a href="?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=taxonomy&remove=<?php echo $key."&_wpnonce=".wp_create_nonce('profile_cct_remove_taxonomy'.$key); ?> " class="submitdelete">Delete</a>
 		</div>
 		</td>
 		<td><?php echo ($taxonomy['hierarchical']? "Yes": "No"); ?></td>
