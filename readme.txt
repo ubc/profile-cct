@@ -35,14 +35,16 @@ Social icons from http://paulrobertlloyd.com/2009/06/social_media_icons/
 
 == Usage ==
 
-The plugin well generate pages for individual profiles as well as for lists of people.
+The plugin will generate pages for individual profiles as well as for lists of people.
 
 For further flexibility you can use the [profilelist] shortcode to display profiles anywhere on a site.
 
-=[profilelist]=
+=[profilelist] shortcode=
+
+[profilelist] by default shows all profiles in list view format
 
 Filtering by taxonomy:
-[profilelist {taxonomyname} = "{taxonomyvalue}"]
+[profilelist {taxonomyname} = "{taxonomyvalue}"] shows profiles that meet the specified criteria
 
 You can specify multiple taxonomies to filter by, by default then only profiles that meet ALL the specified criteria will be displayed. Alternatively you can also add query="or" to the shortcode to show profiles meeting at least one of the criterias.
 
