@@ -6,7 +6,7 @@
  * Domain Path: /languages
  * Description: Allows administrators to manage user profiles better in order to display them on their websites
  * Author: Enej Bajgoric, Eric Jackish, Aleksandar Arsovski, CTLT, UBC
- * Version: 1.1.2
+ * Version: 1.1.3
  * Licence: GPLv2
  * Author URI: http://ctlt.ubc.ca
  */
@@ -68,6 +68,9 @@ class Profile_CCT {
 	 * @return void
 	 */
 	public function __construct () {
+
+		add_shortcode('profilelist', 'Profile_CCT::profile_list_shortcode');
+		add_shortcode('profile', 'Profile_CCT::profile_single_shortcode');
 
 		add_action( 'admin_menu', array( $this, 'add_menu_page' ) );
 		/* saving the post meta info */
@@ -1804,6 +1807,84 @@ Make sure that you select who this is supposed to be.<br />
 	    else
 	        return FALSE;
 	}
+	
+//SHORTCODES
+	
+	function profile_list_shortcode($atts){
+		global $wp_query;
+		$temp = $wp_query;	//Make sure we don't interfere with the current wp_query in progress
+		$tax_query = array();
+		$taxonomies = get_taxonomies();
+		foreach($atts as $key=>$att):
+			if(in_array("profile_cct_".$key, $taxonomies)):
+				
+				array_push(
+					$tax_query,
+					array(
+						'taxonomy'=>'profile_cct_'.$key,	////aaghhjjjhg forgot the taxonomies are prefixed
+						'field'=>'slug',
+						'terms'=>$att,		
+						)
+					);
+			endif;
+		endforeach;
+		
+		//Whether to OR or AND the criterias
+		if($atts['query']):	
+			$tax_query['relation'] = $atts['query'];
+		endif;
+		
+		//echo '<pre>';print_r($tax_query);
+		
+		$query = array(
+			'post_type'=>'Profile_CCT',
+			'order'=>'ASC',
+			'orderby'=>'title',
+			'tax_query'=>$tax_query,
+			'post__not_in'=>explode(",", $atts['exclude']),
+			);
+		
+		//If include is set
+		if($atts['include']):
+			$query['post__in'] = explode(",", $atts['include']);
+		endif;
+		
+		$the_query = new WP_Query($query);
+	
+		ob_start();	//we want to collect the output and return it instead of displaying it.
+		
+		if($atts['display'] == 'name'):
+			echo '<ul class="profilelist-shortcode">';
+		endif;
+		
+		while($the_query->have_posts()): $the_query->the_post();
+			if($atts['display'] == 'name'):
+				echo '<li><a href="' . get_permalink() . '">' . get_the_title() . '</a></li>';
+			elseif($atts['display'] == 'full'):
+				the_content();
+			else:
+				the_excerpt();
+			endif;
+		endwhile;
+		
+		if($atts['display'] == 'name'):
+			echo '</ul>';
+		endif;
+		
+		wp_reset_postdata();
+		$content = ob_get_contents();
+		ob_end_clean();
+		return $content;
+		$wp_query = null; $wp_query = $temp;
+	}
+	
+
+	
+	function profile_single_shortcode($atts){
+	
+	}
+
+//END SHORTCODES	
 	
 	function install() {
 		$field = Profile_CCT::get_object();
