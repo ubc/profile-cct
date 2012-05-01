@@ -37,7 +37,7 @@ Social icons from http://paulrobertlloyd.com/2009/06/social_media_icons/
 
 The plugin will generate pages for individual profiles as well as for lists of people.
 
-For further flexibility you can use the [profilelist] shortcode to display profiles anywhere on a site.
+For further flexibility you can use the [profilelist] and [profile] shortcodes to display profiles anywhere on a site.
 
 =[profilelist] shortcode=
 
@@ -54,6 +54,14 @@ use display="full" to show full profiles, or display="name" to only shows names.
 Show a specific set of people:
 [profilelist include="id, id2, id3É"]
 Displays the people with the corresponding id
+
+=[profile] shortcode=
+
+With this shortcode you can display a single profile. (This can also be accomplished with the [profilelist] shortcode with the right parameters, but this is a more straightforward option)
+
+Simply use [profile person="slug"] where slug is usually firstname-lastname.
+
+By default the full view will be shown, but you can set display="list" instead to show the list view.
 
 == Change log ==
 

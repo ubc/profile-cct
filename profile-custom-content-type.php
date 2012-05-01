@@ -1807,10 +1807,8 @@ Make sure that you select who this is supposed to be.<br />
 	}
 	
 //SHORTCODES
-	
+
 	function profile_list_shortcode($atts){
-		global $wp_query;
-		$temp = $wp_query;	//Make sure we don't interfere with the current wp_query in progress
 		$tax_query = array();
 		$taxonomies = get_taxonomies();
 		foreach($atts as $key=>$att):
@@ -1831,8 +1829,6 @@ Make sure that you select who this is supposed to be.<br />
 		if($atts['query']):	
 			$tax_query['relation'] = $atts['query'];
 		endif;
-		
-		//echo '<pre>';print_r($tax_query);
 		
 		$query = array(
 			'post_type'=>'Profile_CCT',
@@ -1872,14 +1868,32 @@ Make sure that you select who this is supposed to be.<br />
 		wp_reset_postdata();
 		$content = ob_get_contents();
 		ob_end_clean();
+
 		return $content;
-		$wp_query = null; $wp_query = $temp;
+		
 	}
 	
 
 	
 	function profile_single_shortcode($atts){
+		if(!isset($atts['person'])):
+			return 'You must specify a person';
+		endif;
 	
+		$the_query = new WP_Query('post_type=Profile_CCT&name='.$atts['person']);
+		while($the_query->have_posts()): $the_query->the_post();
+			if($atts['display'] == 'list'):
+				the_excerpt();
+			else:
+				the_content();
+			endif;
+		endwhile;
+		
+		wp_reset_postdata();
+		$content = ob_get_contents();
+		ob_end_clean();
+		return $content;
+		
 	}
 
 //END SHORTCODES	
