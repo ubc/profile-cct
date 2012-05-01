@@ -56,8 +56,18 @@ Show a specific set of people:
 Displays the people with the corresponding id
 
 == Change log ==
+
+
+= Version 1.1.4 =
+* javascript Bug fixes
+* css bug fixes
+* input fields bug fixes
+* just lots of bug fixes
+
+
 = Version 1.1.3 =
 * Added [profilelist] shortcode.
+
 
 = Version 1.1.2 =
 * Removing dead code, webscraper was implemented as db-field

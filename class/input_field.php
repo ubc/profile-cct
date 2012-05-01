@@ -4,6 +4,7 @@
 	extract( $options );
 
 	$before_label = ( isset($before_label) && $before_label ? true:false);
+	if( !isset($field_id_class) )
 	$field_id_class = ( isset($field_id)? ' class="'.$field_id.' '.$type.'-shell"': '');
 	
 	//print_r($options);

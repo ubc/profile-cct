@@ -69,11 +69,17 @@
 }
 /* add fields */
 .field-shell,
-.description,
 .add-multiple{
 	clear: both;
 	float: left;
 	margin: 10px 0 0;
+}
+.field-shell > div{
+	clear:both;
+}
+.field-shell,
+.description{
+	margin: 0;
 }
 .field-shell{
 	width: 100%;
@@ -130,6 +136,15 @@
     border-right: 1px solid #F2F2F2;
 	margin-bottom: 10px;
 }
+.picture a.button {
+    display: block;
+    line-height: 15px;
+    margin: 0 0 2px;
+    padding: 3px 10px;
+    text-align: center;
+    white-space: nowrap;
+    width: 135px;
+}
 
 /*for checkboxes to display in one line*/
 .days label {
@@ -161,6 +176,3 @@
 	margin-right: 5px;
 }
 
-.description{
-	margin-top:0 ;
-}
