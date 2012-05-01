@@ -137,6 +137,9 @@
 	float:left;
 	color:#444
 }
+.form-builder li span em{
+	color:#AAA;
+}
 .form-builder li a span{
 	color:#21759B;
 }

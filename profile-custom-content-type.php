@@ -6,7 +6,7 @@
  * Domain Path: /languages
  * Description: Allows administrators to manage user profiles better in order to display them on their websites
  * Author: Enej Bajgoric, Eric Jackish, Aleksandar Arsovski, CTLT, UBC
- * Version: 1.1.2
+ * Version: 1.1.3
  * Licence: GPLv2
  * Author URI: http://ctlt.ubc.ca
  */
@@ -1156,10 +1156,8 @@ Make sure that you select who this is supposed to be.<br />
 		?>
 	 	
 	 	<?php
-		if( isset($show_multiple) && $show_multiple ): ?>
-
-	 	<?php
-			endif;
+		if( isset($show_multiple) && $show_multiple ): ?> <?php
+		endif;
 	}
 	/**
 	 * end_field function.
@@ -1182,7 +1180,7 @@ Make sure that you select who this is supposed to be.<br />
 			if($action!='edit'):
 				echo '<a href="#add" '. $style_multiple .' class="button add-multiple">Add another</a>';
 			else:
-				echo '<a href="#add" '. $style_multiple .' class="button disabled">Add another</a> <em>disabled in preview</em>';
+				echo '<span class="add-multiple"><a href="#add" '. $style_multiple .' class="button disabled">Add another</a> <em>disabled in preview</em></span>';
 			endif;
 	 	
 	 

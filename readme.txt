@@ -34,6 +34,7 @@ Social icons from http://paulrobertlloyd.com/2009/06/social_media_icons/
 2. Go to plugins page to activate
 
 == Change log ==
+
 = Version 1.1.2 =
 * Removing dead code, webscraper was implemented as db-field
 

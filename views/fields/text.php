@@ -43,7 +43,7 @@ function profile_cct_text_field( $data, $options, $count = 0 ){
 	$field = Profile_CCT::get_object();
 	echo "<div class='wrap-fields' data-count='".$count."'>";
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'text', 'label'=>'', 'size'=>35, 'value'=>$data['text'], 'type'=>'text','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'text', 'label'=>'', 'size'=>35, 'value'=>$data['text'], 'type'=>'text','count'=>$count, 'field_id_class'=>'class="text-shell"') );
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
 	echo "</div>";
@@ -93,7 +93,7 @@ function profile_cct_text_display( $data, $options ){
 	$field = Profile_CCT::get_object();
 	
 	$default_text = apply_filters('profile_cct_default_text_'.$type, "Default Text");
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'text', 'type'=>'shell', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'single-text', 'type'=>'shell', 'tag'=>'div') );
 	$field->display_text( array( 'field_type'=>$type, 'default_text'=>$default_text, 'value'=>$data['text'], 'type'=>'text') );
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 	
