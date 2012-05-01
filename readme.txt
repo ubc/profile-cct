@@ -24,7 +24,7 @@ the form you created.
 
 Everything can be styled with CSS
 
-Dashboard icon from http://p.yusukekamiyamane.com/ !!
+Dashboard icon from http://p.yusukekamiyamane.com/ 
 
 Social icons from http://paulrobertlloyd.com/2009/06/social_media_icons/ 
 
@@ -33,7 +33,37 @@ Social icons from http://paulrobertlloyd.com/2009/06/social_media_icons/
 1. Extract the zip file into wp-content/plugins/ in your WordPress installation
 2. Go to plugins page to activate
 
+== Usage ==
+
+The plugin will generate pages for individual profiles as well as for lists of people.
+
+For further flexibility you can use the [profilelist] shortcode to display profiles anywhere on a site.
+
+=[profilelist] shortcode=
+
+[profilelist] by default shows all profiles in list view format
+
+Filtering by taxonomy:
+[profilelist {taxonomyname} = "{taxonomyvalue}"] shows profiles that meet the specified criteria
+
+You can specify multiple taxonomies to filter by, by default then only profiles that meet ALL the specified criteria will be displayed. Alternatively you can also add query="or" to the shortcode to show profiles meeting at least one of the criterias.
+
+Displaying more details:
+use display="full" to show full profiles, or display="name" to only shows names. Default behaviour shows the list view as set in the settings.
+
 == Change log ==
+
+
+= Version 1.1.4 =
+* javascript Bug fixes
+* css bug fixes
+* input fields bug fixes
+* just lots of bug fixes
+
+
+= Version 1.1.3 =
+* Added [profilelist] shortcode.
+
 
 = Version 1.1.2 =
 * Removing dead code, webscraper was implemented as db-field
