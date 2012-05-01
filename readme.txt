@@ -52,7 +52,7 @@ Displaying more details:
 use display="full" to show full profiles, or display="name" to only shows names. Default behaviour shows the list view as set in the settings.
 
 Show a specific set of people:
-[profilelist include="id, id2, id3É"]
+[profilelist include="id, id2, id3..."]
 Displays the people with the corresponding id
 
 =[profile] shortcode=
