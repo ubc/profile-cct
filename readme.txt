@@ -59,6 +59,8 @@ use display="full" to show full profiles, or display="name" to only shows names.
 * css bug fixes
 * input fields bug fixes
 * just lots of bug fixes
+* bug fix, now admin is able to change the proper author
+* bug fix shortcode is lists all the people by default
 
 
 = Version 1.1.3 =

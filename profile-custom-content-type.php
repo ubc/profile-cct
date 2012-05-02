@@ -69,8 +69,8 @@ class Profile_CCT {
 	 */
 	public function __construct () {
 
-		add_shortcode('profilelist', 'Profile_CCT::profile_list_shortcode');
-		add_shortcode('profile', 'Profile_CCT::profile_single_shortcode');
+		add_shortcode('profilelist', array( $this, 'profile_list_shortcode') );
+		add_shortcode('profile', array( $this, 'profile_single_shortcode') );
 
 		add_action( 'admin_menu', array( $this, 'add_menu_page' ) );
 		/* saving the post meta info */
@@ -615,7 +615,7 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function edit_post() {
-		global $post, $post_new_file, $pagenow, $current_user, $post_type;
+		global $post, $post_new_file, $pagenow, $current_user, $post_type_object;
 		
 		$post_new_file = '#';
 		
@@ -670,11 +670,10 @@ class Profile_CCT {
 		remove_meta_box('authordiv', 'post', 'normal');
 		remove_meta_box('revisionsdiv', 'post', 'normal');
 		
-		
 		if (  0 < $post->ID && wp_get_post_revisions( $post->ID ) )
 			add_meta_box('revisionsdiv', __('Revisions'), 'post_revisions_meta_box', null, 'side', 'low');
 		
-		if ( is_super_admin() || current_user_can( $post_type_object->cap->edit_others_posts ) )
+		if ( is_super_admin() || current_user_can( $post_type_object->cap->edit_others_posts ) || current_user_can('administrator') )
 			add_meta_box('authordiv', __('Author'), array($this,'post_author_meta_box'), null, 'side', 'low');
 		
 		add_meta_box('submitdiv', __('Publish'), 'post_submit_meta_box', null, 'side', 'high');
@@ -1840,6 +1839,7 @@ Make sure that you select who this is supposed to be.<br />
 			'orderby'=>'title',
 			'tax_query'=>$tax_query,
 			'post__not_in'=>explode(",", $atts['exclude']),
+			'posts_per_page'=>-1
 			);
 		
 		//If include is set
