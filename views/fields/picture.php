@@ -122,7 +122,7 @@ function profile_cct_picture_display(  $data, $options  ){
 	$show 	= (is_array($show) ? $show : array());
 	$href 	= ( isset($post) ? get_permalink() : "#" );
 	
-	if(isset($post)):
+	if( isset($post) ):
 		$field->display_text( array( 'field_type'=>$type, 'class'=>'', 'type'=>'shell', 'tag'=>'a','link_to'=>$link_to, 'href'=>$href ) );
 		echo profile_cct_get_the_post_thumbnail($post->ID, 'full');
 		$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'a','link_to'=>$link_to) );
@@ -643,9 +643,9 @@ function profile_cct_get_picture_options(){
  * @return
  *		Associative array of all picture related options
  */
-function profile_cct_get_the_post_thumbnail($post_id, $type){
-	if(current_theme_supports('post-thumbnails')):
-		return get_the_post_thumbnail($post_id, $type);
+function profile_cct_get_the_post_thumbnail( $post_id, $type ){
+	if( current_theme_supports( 'post-thumbnails' ) ):
+		return get_the_post_thumbnail( $post_id, $type );
 	else:
 		return "<p></p>";
 	endif;

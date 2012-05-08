@@ -32,9 +32,10 @@ function profile_cct_register_taxonomy($taxonomy){
 		'add_new_item' => __( 'Add New '.$taxonomy['single'] ),
 		'new_item_name' => __( 'New '.$taxonomy['single'].' Name' ),
 		'menu_name' => __( $taxonomy['plural'] ),
-	); 	
+	);
+	
 	// finally register the taxonomy
-	register_taxonomy('profile_cct_'.str_replace( '-','_',sanitize_title($taxonomy['single'])),array('profile_cct'), array(
+	register_taxonomy(  profile_cct_taxonomy_id( $taxonomy['single'] ) , array('profile_cct'), array(
 		'hierarchical' => $taxonomy['hierarchical']? true: false,
 		'labels' => $labels,
 		'show_ui' => true,
@@ -42,4 +43,9 @@ function profile_cct_register_taxonomy($taxonomy){
 		'rewrite' => array( 'slug' => sanitize_title($taxonomy['single']) ),
 	));
 
+}
+
+function profile_cct_taxonomy_id( $single_taxonomy ) {
+
+	return 'profile_cct_'.str_replace( '-','_',sanitize_title( $single_taxonomy )); // $taxonomy['single']))
 }

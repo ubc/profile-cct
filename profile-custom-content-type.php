@@ -42,10 +42,9 @@ if ( !defined('ABSPATH') )
 
 define('PROFILE_CCT_DIR', plugin_dir_path(__FILE__));
 
-
-
 require(PROFILE_CCT_DIR.'profile-taxonomies.php');
 require(PROFILE_CCT_DIR.'profile-manage-table.php');
+
 if(!class_exists('Profile_CCT')):
 class Profile_CCT {
 	static private $classobj = NULL;
@@ -55,6 +54,7 @@ class Profile_CCT {
 	static public  $settings_options = NULL;
 	static public  $form_fields = NULL;
 	static public  $taxonomies = NULL;
+	static public  $is_main_query = false;
 	static public  $form_field_options = NULL;
 	static public  $option     = NULL; 
 	static public  $current_form_fields = NULL; // stores the current state of the form field... the labels and if it is on the banch... 
@@ -71,14 +71,16 @@ class Profile_CCT {
 
 		add_shortcode('profilelist', array( $this, 'profile_list_shortcode') );
 		add_shortcode('profile', array( $this, 'profile_single_shortcode') );
-
+		
 		add_action( 'admin_menu', array( $this, 'add_menu_page' ) );
 		/* saving the post meta info */
 		add_action( 'edit_form_advanced', array($this, 'edit_form_advanced'));
 		add_action( 'add_meta_boxes_profile_cct', array($this, 'edit_post')); // add meta boxes
 
 		add_action( 'init',  array( $this,'profiles_cct_init'),0) ;
-
+		add_filter( 'posts_orderby', array( $this,'orderby_menu' ) );
+		add_action( 'pre_get_posts', array( $this,'pre_get_posts') );
+		
 		add_action( 'template_redirect',  array( $this,'check_freshness'));
 		add_action( 'wp_insert_post_data', array( $this,'save_post_data'),10,2);
 		
@@ -91,6 +93,8 @@ class Profile_CCT {
 		add_action( 'admin_print_styles-post.php',array( $this,'add_style_edit'));
 
 		add_action( 'admin_init',array($this,'admin_init'));
+		
+		
 
 		$this->settings_options = get_option('Profile_CCT_settings');
 
@@ -309,25 +313,37 @@ class Profile_CCT {
 			__( 'Public Profile', $this -> get_textdomain() ),
 			'edit_profile_cct', 'public_profile',
 			array( $this, 'public_profile' ) );
-		
+			
+		$order_page = add_submenu_page(
+			'edit.php?post_type=profile_cct',
+			__( 'Order Profiles', $this -> get_textdomain() ),
+			__( 'Order Profiles', $this -> get_textdomain() ),
+			'manage_options', "order_profiles",
+			array( $this, 'admin_order_page' ) );
+			
 		$page = add_submenu_page(
 			'edit.php?post_type=profile_cct',
 			__( 'Settings', $this -> get_textdomain() ),
 			__( 'Settings', $this -> get_textdomain() ),
 			'manage_options', __FILE__,
 			array( $this, 'admin_pages' ) );
-
+			
+		add_action( 'admin_print_styles-' . $order_page, array( $this, 'order_profiles_admin_styles' ) );
+		add_action( 'admin_print_scripts-' . $order_page, array( $this, 'order_profiles_admin_scripts' ) );
+				
 		add_action( 'admin_print_styles-' . $page, array( $this, 'admin_styles' ) );
 		add_action( 'admin_print_scripts-' . $page, array( $this, 'admin_scripts' ) );
+		
 
 	}
-
+	
 	function public_profile(){
 	
 		// a page asking the user to create a public profile 
 		wp_die('redirect didn\'t work');
 	}
-
+	
+	
 	/**
 	 * admin_styles function.
 	 *
@@ -398,12 +414,45 @@ class Profile_CCT {
 	 */
 	public function admin_pages() {
 		$time_start = $this->microtime_float();
-		require(PROFILE_CCT_DIR.'class/admin_pages.php');
+		require( PROFILE_CCT_DIR.'class/admin_pages.php' );
 		
 		$time_end = $this->microtime_float();
 		$time = $time_end - $time_start;
 
 		echo "<!-- time to render  $time seconds -->\n";
+	}
+	/**
+	 * admin_order_page function.
+	 * Page lets you reorder people 
+	 * @access public
+	 * @return void
+	 */
+	public function admin_order_page() {
+		
+		require( PROFILE_CCT_DIR.'class/order_profiles.php' );
+		
+	}
+	/**
+	 * order_profiles_admin_styles function.
+	 * styles for the order people page
+	 * @access public
+	 * @return void
+	 */
+	function order_profiles_admin_styles() {
+	
+		wp_enqueue_style( 'profile-cct-order', WP_PLUGIN_URL . '/profile-cct/css/order-profiles.css' );
+	
+	}
+	/**
+	 * order_profiles_admin_scripts function.
+	 * scripts for the order people page
+	 * @access public
+	 * @return void
+	 */
+	function order_profiles_admin_scripts() {
+	
+		wp_enqueue_script( 'profile-cct-order', WP_PLUGIN_URL . '/profile-cct/js/order-profiles.js',array('jquery','jquery-ui-sortable') );
+	
 	}
 	/**
 	 * profiles_cct_init function.
@@ -418,7 +467,51 @@ class Profile_CCT {
 		$this->load_scripts_cpt_profile_cct();
 		
 	}
+	/**
+	 * orderby_menu function.
+	 * 
+	 * @access public
+	 * @param mixed $orderby
+	 * @return void
+	 */
+	function orderby_menu( $orderby ) {
+		$new_orderby = 'menu_order ASC';
+		
+		if( $this->is_main_query ): // only run this if we are dealing with the main query
+			// check to see that we are on the profile taxonomies
+			if( is_array( $this->taxonomies ) ):
+			
+				foreach( $this->taxonomies as $tax ):
+				
+					if( is_tax( profile_cct_taxonomy_id( $tax['single'] ) ) )
+						return $new_orderby;
+						
+				endforeach;
+			endif;
+			// check that we are on the profile cct
+			if( is_post_type_archive('profile_cct')  )
+				return $new_orderby;
+			endif;
+			
+		return $orderby;
+	}
 	
+	/**
+	 * pre_get_posts function.
+	 * used to check that we are only doing this on the main query
+	 * shortcodes order things this way be default
+	 * @access public
+	 * @param mixed $query
+	 * @return void
+	 */
+	function pre_get_posts( $query ) {
+		
+		if( $query->is_main_query() )
+			$this->is_main_query = true;
+		else
+			$this->is_main_query = false;
+		
+	}
 	/**
 	 * reset_filters function.
 	 * 
@@ -1805,8 +1898,14 @@ Make sure that you select who this is supposed to be.<br />
 	        return FALSE;
 	}
 	
-//SHORTCODES
-
+	//SHORTCODES
+	/**
+	 * profile_list_shortcode function.
+	 * 
+	 * @access public
+	 * @param mixed $atts
+	 * @return void
+	 */
 	function profile_list_shortcode($atts){
 		$tax_query = array();
 		$taxonomies = get_taxonomies();
@@ -1874,13 +1973,21 @@ Make sure that you select who this is supposed to be.<br />
 	}
 	
 
-	
+	/**
+	 * profile_single_shortcode function.
+	 * 
+	 * @access public
+	 * @param mixed $atts
+	 * @return void
+	 */
 	function profile_single_shortcode($atts){
 		if(!isset($atts['person'])):
 			return 'You must specify a person';
 		endif;
 	
 		$the_query = new WP_Query('post_type=Profile_CCT&name='.$atts['person']);
+		ob_start();	//we want to collect the output and return it instead of displaying it.
+
 		while($the_query->have_posts()): $the_query->the_post();
 			if($atts['display'] == 'list'):
 				the_excerpt();
@@ -1895,9 +2002,16 @@ Make sure that you select who this is supposed to be.<br />
 		return $content;
 		
 	}
+	
+	
 
 //END SHORTCODES	
-	
+	/**
+	 * install function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function install() {
 		$field = Profile_CCT::get_object();
 		$field->register_cpt_profile_cct();
@@ -1924,6 +2038,12 @@ Make sure that you select who this is supposed to be.<br />
 		endforeach;
 		
 	}
+	/**
+	 * uninstall function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function uninstall() {
 		
 		// remove permissions
