@@ -65,6 +65,8 @@ By default the full view will be shown, but you can set display="list" instead t
 
 == Change log ==
 
+= Version 1.1.5 =
+* added the ability to order things using a better UI
 
 = Version 1.1.4 =
 * javascript Bug fixes
