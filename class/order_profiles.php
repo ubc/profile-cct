@@ -18,7 +18,7 @@ endif;
 	<?php echo $updated; ?>
 	<ul class="subsubsub">
 		<li class="all">Quick Sort : </li>
-		<li class="publish"><a href="#firt" id="sort-first">First Name</a> |</li>
+		<li class="publish"><a href="#first" id="sort-first">First Name</a> |</li>
 		<li class="draft"><a href="#last" id="sort-last">Last Name</a></li>
 	</ul> 
 	<div class="tablenav top">
