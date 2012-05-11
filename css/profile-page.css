@@ -93,8 +93,9 @@
 #tabs .ui-tabs-nav{
 	border-bottom: 1px solid #CCCCCC;
     padding-bottom: 0;
-    height: 30px;
+    min-height: 30px;
     margin-bottom: 10px;
+   
 }
 .ui-tabs-nav li.ui-state-active,
 .ui-tabs-nav li a:hover{
@@ -107,17 +108,19 @@
     border-style: solid;
     border-width: 1px;
     color: #AAAAAA;
-    display: inline-block;
+    display: block;
     font-size: 17px;
     line-height: 19px;
     margin: 0 6px -1px 0;
     text-decoration: none;
     text-shadow: 0 1px 0 #FFFFFF;
+    float: left;
+    
 }
 .ui-tabs-nav li a{
 	color: #AAAAAA;
 	text-decoration: none;
-	float: left;
+	display: block;
 	padding: 4px 14px 6px 14px;
 }
 .ui-tabs-nav li.ui-state-active a{

@@ -64,6 +64,9 @@ Simply use [profile person="slug"] where slug is usually firstname-lastname.
 By default the full view will be shown, but you can set display="list" instead to show the list view.
 
 == Change log ==
+= Version 1.1.7 =
+* bug fix for IE7 Tabs didn't display properly
+
 = Version 1.1.6 =
 * bug fixes, for ordering of the items
 

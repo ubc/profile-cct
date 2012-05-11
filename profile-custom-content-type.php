@@ -6,7 +6,7 @@
  * Domain Path: /languages
  * Description: Allows administrators to manage user profiles better in order to display them on their websites
  * Author: Enej Bajgoric, Eric Jackish, Aleksandar Arsovski, CTLT, UBC
- * Version: 1.1.5
+ * Version: 1.1.7
  * Licence: GPLv2
  * Author URI: http://ctlt.ubc.ca
  */
