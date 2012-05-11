@@ -5,6 +5,10 @@
 .menu_order input{
 	width:30px;
 }
+#order-arrow{
+	
+	font-weight: bold;
+}
 .profile-item{
 	position: relative;
 	overflow: hidden;
@@ -12,6 +16,9 @@
 	border-top:none;
 	padding:3px 10px 3px 10px;
 	height: 33px;
+	
+}
+.ui-sortable .profile-item{
 	cursor: move;
 }
 .name{

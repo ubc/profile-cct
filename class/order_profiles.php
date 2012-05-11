@@ -62,7 +62,7 @@ endif;
 		<th>Profile</th>
 		</tr></thead>
 	</table>
-	<div id="profile-items" class=" ui-sortable">
+	<div id="profile-items" >
 	<?php 
 	$tax_query = null;
 	foreach( $_GET as $item => $value ):
