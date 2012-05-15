@@ -48,7 +48,7 @@ if ( !empty($_POST) && check_admin_referer( 'add_profile_taxonomy','add_profile_
 			profile_cct_register_taxonomy($new_taxonomy);
 	   		flush_rewrite_rules();
 	   		
-	   		$note = "<p class='info'>Now you can add ".esc_attr($_POST['single-name'])." to the <a href=\"".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=page')."\">person page</a> or the <a href=\"".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list')."\">list view</a></p>" ;
+	   		$note = "<p class='info'>Now you can add ".esc_attr($_POST['single-name'])." to the <a href=\"".admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=page')."\">person page</a> or the <a href=\"".admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=list')."\">list view</a></p>" ;
    		endif;
    		
    	endif;
@@ -75,7 +75,7 @@ endif;
 		<tr <?php if($count%2) echo 'class="alternate"'; ?>>
 		<td ><?php echo $taxonomy['single']; ?> / <?php echo $taxonomy['plural']; ?>
 		<div class="row-actions">
-			<span class="trash"><a href="?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=taxonomy&remove=<?php echo $key."&_wpnonce=".wp_create_nonce('profile_cct_remove_taxonomy'.$key); ?> " class="submitdelete">Delete</a>
+			<span class="trash"><a href="?post_type=profile_cct&page=<?php echo PROFILE_CCT_BASENAME; ?>&view=taxonomy&remove=<?php echo $key."&_wpnonce=".wp_create_nonce('profile_cct_remove_taxonomy'.$key); ?> " class="submitdelete">Delete</a>
 		</div>
 		</td>
 		<td><?php echo ($taxonomy['hierarchical']? "Yes": "No"); ?></td>
@@ -97,7 +97,7 @@ endif;
 	<?php endif; ?>
 	<?php echo (isset($error['duplicate'])? "<br /><div class='error below-h2'><p>The <strong>".$single."</strong> ".$error['duplicate']."</p></div>": ""); ?>
 	<h3>Add Taxonomy </h3>
-	<form method="post" action="<?php echo admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=taxonomy'); ?>">
+	<form method="post" action="<?php echo admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=taxonomy'); ?>">
 		<?php wp_nonce_field( 'add_profile_taxonomy','add_profile_taxonomy_field' ); ?>
 		
 		<table class="form-table">

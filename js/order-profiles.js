@@ -18,6 +18,13 @@ var Profile_CCT_ORDER = {
 		jQuery(".menu_order_input").each(function(index, el) {
 			jQuery(el).val(index);
 		});
+		
+		if( Profile_CCT_ORDER.order == "ASC" ) {
+			Profile_CCT_ORDER.order = "DESC";
+			
+		} else {
+			Profile_CCT_ORDER.order = "ASC";
+		}
 	},
 	drawArrow: function(el){
 		
@@ -44,17 +51,17 @@ var Profile_CCT_ORDER = {
    			
 		})
 		
-		jQuery.each( listitems, function(idx, itm) { mylist.append(itm); } );
+		jQuery.each( listitems, function(idx, itm) { mylist.append(itm);  } );
 		
 		Profile_CCT_ORDER.rewriteOrder();
 	},
 	sort_AB: function( A, B ){
 		
 		if( Profile_CCT_ORDER.order == "ASC" ) {
-			Profile_CCT_ORDER.order = "DESC";
+			
 			return (A < B) ? -1 : (A > B) ? 1 : 0;
 		} else {
-			Profile_CCT_ORDER.order = "ASC";
+			
 			return (A > B) ? -1 : (A < B) ? 1 : 0;
 		}
 	},

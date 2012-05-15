@@ -137,7 +137,7 @@ var Profile_CCT_FORM ={
 		
 		var el = jQuery(this);
 		el.parent().parent().parent().addClass('changed');
-		console.log( el.parent().parent().parent() )
+		
 		var el_class = jQuery.trim(el.parent().text());
 		if(el.attr('checked'))
 		{

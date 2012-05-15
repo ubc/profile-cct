@@ -125,7 +125,7 @@ function profile_cct_social_display( $data, $options ){
 	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'social', 'type'=>'shell', 'tag'=>'div') );
 	$user_url = $social_array[$data['option']]['user_url'];
-	$img_path = plugins_url() . '/profile-cct/img/';
+	$img_path = PROFILE_CCT_DIR_URL . '/img/';
 	
 	echo '<img src="' . $img_path . $social_array[$data['option']]['type'] . '.png" class="icon" />';
 	

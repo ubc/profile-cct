@@ -2,6 +2,7 @@
 
 /* the current default settings
 */
+$note = '';
 $default_options = $this->default_options( 'settings' );
 if(	empty($this->settings_options['picture'] ) )
 	$this->settings_options['picture'] = $default_options['picture'];
@@ -24,7 +25,7 @@ if( !empty($_POST) ):
 			$picture_options = array ( 'width'=>$width, 'height'=>$height );
 			$this->settings_options['picture'] = $picture_options;
 		else:
-			echo '<div class="error settings-error"><p>Picture dimensions should be between 100x100 and 560x560</p></div>';
+			$note = '<div class="error settings-error"><p>Picture dimensions should be between 100x100 and 560x560</p></div>';
 		endif;
 		
 		$slug = trim( $_POST['slug'] );
@@ -70,18 +71,20 @@ if( !empty($_POST) ):
 		
 		//Store updated options
 		update_option('Profile_CCT_settings', $this->settings_options);
-		
+
+		$note = '<div class="updated below-h2"><p> Settings saved.</p></div>';
 		// lets flush the rules again
 		$this->register_cpt_profile_cct();
 		flush_rewrite_rules();
 	else:	//if nonce failed
-		echo '<div class="error settings-error"><p>Verification error. Try again.</p></div>';
+		$note = '<div class="error settings-error"><p>Verification error. Try again.</p></div>';
 	endif;
 endif;
 
 
 ?>
-
+<h2>Settings</h2>
+<?php echo $note; ?>
 <form method="post" action="">
 	<h3>Picture Dimensions</h3>
 	<?php wp_nonce_field( 'update_settings_nonce','update_settings_nonce_field' ); ?>	
@@ -135,7 +138,7 @@ endif;
 		</tbody>
 	</table>
 	<br />
-	<input type="submit" class="button-primary" value="<?php _e('Save Settings') ?>" />
+	<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
 </form>	
 
 

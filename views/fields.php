@@ -94,7 +94,7 @@ if ( !empty($_POST) && check_admin_referer( 'add_profile_field','add_profile_fie
 				// make sure that the new clone fields is added to the clone_fields
 				$clone_fields[] = $copy_to_local['type'];
 				
-				$note = "<p class='info'>Now you can add ". $copy_to_local['label']." Field to the <a href=\"".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=form')."\">form</a>, <a href=\"".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=page')."\">person page</a> or the <a href=\"".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list')."\">list view</a></p>";
+				$note = "<p class='info'>Now you can add ". $copy_to_local['label']." Field to the <a href=\"".admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=form')."\">form</a>, <a href=\"".admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=page')."\">person page</a> or the <a href=\"".admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=list')."\">list view</a></p>";
 			endif;
 		endif;
 		
@@ -110,7 +110,7 @@ if ( !empty($_POST) && check_admin_referer( 'add_profile_field','add_profile_fie
 	   		$clone_fields[] = $new_field['type'];
 			
 	   		$note =  
-	"<p class='info'>Now you can add ".$new_field['label']." Field to the <a href=\"".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=form')."\">form</a>, <a href=\"".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=page')."\">person page</a> or the <a href=\"".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=list')."\">list view</a></p>";
+	"<p class='info'>Now you can add ".$new_field['label']." Field to the <a href=\"".admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=form')."\">form</a>, <a href=\"".admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=page')."\">person page</a> or the <a href=\"".admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=list')."\">list view</a></p>";
 ;
    		endif;
    		
@@ -182,14 +182,14 @@ endif; // remove fields localy
 			<td ><?php echo $field['label']; ?>
 			<?php if( !in_array( $field['type'], $clone_fields ) ): ?>
 				
-				<form action="<?php echo admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=fields'); ?>" method="POST">
+				<form action="<?php echo admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=fields'); ?>" method="POST">
 				<?php wp_nonce_field( 'add_profile_field','add_profile_fields_field' ); ?>
 				<input type="hidden" name="field_type" value="<?php echo esc_attr($field['type']); ?>" />
 				<input type="submit" value="Add" class="button-primary" />
 				</form>
 			<?php else: ?>
 			<div class="row-actions">
-				<span class="trash"><a href="?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=fields&remove=<?php echo $count."&_wpnonce=".wp_create_nonce('profile_cct_remove_field'.$field['type']); ?> " class="submitdelete">Delete</a>
+				<span class="trash"><a href="?post_type=profile_cct&page=<?php echo PROFILE_CCT_BASENAME; ?>&view=fields&remove=<?php echo $count."&_wpnonce=".wp_create_nonce('profile_cct_remove_field'.$field['type']); ?> " class="submitdelete">Delete</a>
 			</div>
 			<?php endif; ?>
 			</td>
@@ -215,7 +215,7 @@ endif; // remove fields localy
 <?php endif; ?>
 	
 <h3>Create a new Field</h3>
-<form method="post" action="<?php echo admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php&view=fields'); ?>">
+<form method="post" action="<?php echo admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=fields'); ?>">
 <?php wp_nonce_field( 'add_profile_field','add_profile_fields_field' ); ?>
 
 	<table class="form-table">

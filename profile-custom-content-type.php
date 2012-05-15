@@ -6,7 +6,7 @@
  * Domain Path: /languages
  * Description: Allows administrators to manage user profiles better in order to display them on their websites
  * Author: Enej Bajgoric, Eric Jackish, Aleksandar Arsovski, CTLT, UBC
- * Version: 1.1.7
+ * Version: 1.1.8
  * Licence: GPLv2
  * Author URI: http://ctlt.ubc.ca
  */
@@ -40,10 +40,12 @@
 if ( !defined('ABSPATH') )
 	die('-1');
 
-define('PROFILE_CCT_DIR', plugin_dir_path(__FILE__));
+define( 'PROFILE_CCT_DIR_PATH', plugin_dir_path( __FILE__ ) );
+define( 'PROFILE_CCT_BASENAME', plugin_basename(__FILE__) );
+define( 'PROFILE_CCT_DIR_URL',  plugins_url( ''  , PROFILE_CCT_BASENAME ) );
 
-require(PROFILE_CCT_DIR.'profile-taxonomies.php');
-require(PROFILE_CCT_DIR.'profile-manage-table.php');
+require(PROFILE_CCT_DIR_PATH.'profile-taxonomies.php');
+require(PROFILE_CCT_DIR_PATH.'profile-manage-table.php');
 
 if(!class_exists('Profile_CCT')):
 class Profile_CCT {
@@ -202,8 +204,8 @@ class Profile_CCT {
 			wp_enqueue_style("thickbox");
 			wp_enqueue_script("thickbox");
 	
-			wp_enqueue_style( 'profile-cct-edit-post', WP_PLUGIN_URL . '/profile-cct/css/profile-page.css' );
-			wp_enqueue_script( 'profile-cct-edit-post', WP_PLUGIN_URL . '/profile-cct/js/profile-page.js',array('jquery-ui-tabs' ) );
+			wp_enqueue_style( 'profile-cct-edit-post',PROFILE_CCT_DIR_URL. '/css/profile-page.css' );
+			wp_enqueue_script( 'profile-cct-edit-post',PROFILE_CCT_DIR_URL. '/js/profile-page.js',array('jquery-ui-tabs' ) );
 			wp_localize_script( 'profile-cct-edit-post', 'profileCCTSocialArray', profile_cct_social_options());
 
 		endif;
@@ -353,19 +355,19 @@ class Profile_CCT {
 	public function admin_styles() {
 
 		// todo: this could be done with one css file
-		wp_enqueue_style( 'profile-cct-admin', WP_PLUGIN_URL . '/profile-cct/css/admin.css' );
+		wp_enqueue_style( 'profile-cct-admin',PROFILE_CCT_DIR_URL. '/css/admin.css' );
 		switch( $_GET['view'] ) {
 		case "form":
 		case "page":
 		case "list":
-			wp_enqueue_style( 'profile-cct-form', WP_PLUGIN_URL . '/profile-cct/css/form.css' );
+			wp_enqueue_style( 'profile-cct-form',PROFILE_CCT_DIR_URL. '/css/form.css' );
 			break;
 		default:
-			wp_enqueue_style( 'profile-cct-settings', WP_PLUGIN_URL . '/profile-cct/css/settings.css' );
+			wp_enqueue_style( 'profile-cct-settings',PROFILE_CCT_DIR_URL. '/css/settings.css' );
 			break;
 
 		}
-		wp_enqueue_style( 'profile-cct-general', WP_PLUGIN_URL . '/profile-cct/css/general.css' );
+		wp_enqueue_style( 'profile-cct-general',PROFILE_CCT_DIR_URL. '/css/general.css' );
 	}
 	/**
 	 * admin_scripts function.
@@ -377,30 +379,30 @@ class Profile_CCT {
 
 		switch( $_GET['view'] ) {
 		case "form":
-			wp_enqueue_script( 'profile-cct-form', WP_PLUGIN_URL . '/profile-cct/js/form.js',array('jquery','jquery-ui-sortable') );
-			wp_enqueue_script( 'profile-cct-tabs', WP_PLUGIN_URL . '/profile-cct/js/tabs.js',array('jquery','jquery-ui-tabs') );
+			wp_enqueue_script( 'profile-cct-form',PROFILE_CCT_DIR_URL. '/js/form.js',array('jquery','jquery-ui-sortable') );
+			wp_enqueue_script( 'profile-cct-tabs',PROFILE_CCT_DIR_URL. '/js/tabs.js',array('jquery','jquery-ui-tabs') );
 			wp_localize_script( 'profile-cct-form', 'ProfileCCT', array(
 					'page' => 'form'
 				));
 			break;
 		case "page":
-			wp_enqueue_script( 'profile-cct-tabs', WP_PLUGIN_URL . '/profile-cct/js/tabs.js',array('jquery','jquery-ui-tabs') );
-			wp_enqueue_script( 'profile-cct-form', WP_PLUGIN_URL . '/profile-cct/js/form.js',array('jquery','jquery-ui-sortable') );
-			wp_enqueue_script( 'profile-cct-profile', WP_PLUGIN_URL . '/profile-cct/js/profile.js',array('jquery') );
+			wp_enqueue_script( 'profile-cct-tabs',PROFILE_CCT_DIR_URL. '/js/tabs.js',array('jquery','jquery-ui-tabs') );
+			wp_enqueue_script( 'profile-cct-form',PROFILE_CCT_DIR_URL. '/js/form.js',array('jquery','jquery-ui-sortable') );
+			wp_enqueue_script( 'profile-cct-profile',PROFILE_CCT_DIR_URL. '/js/profile.js',array('jquery') );
 			wp_localize_script( 'profile-cct-form', 'ProfileCCT', array(
 					'page' => 'page'
 				));
 			break;
 		case "list":
-			wp_enqueue_script( 'profile-cct-form', WP_PLUGIN_URL . '/profile-cct/js/form.js',array('jquery','jquery-ui-sortable') );
-			wp_enqueue_script( 'profile-cct-profile', WP_PLUGIN_URL . '/profile-cct/js/profile.js',array('jquery') );
+			wp_enqueue_script( 'profile-cct-form',PROFILE_CCT_DIR_URL. '/js/form.js',array('jquery','jquery-ui-sortable') );
+			wp_enqueue_script( 'profile-cct-profile',PROFILE_CCT_DIR_URL. '/js/profile.js',array('jquery') );
 			wp_localize_script( 'profile-cct-form', 'ProfileCCT', array(
 					'page' => 'list'
 				));
 			break;
 			
 		default:
-			// wp_enqueue_script( 'profile-cct-settings', WP_PLUGIN_URL . '/profile-cct/js/settings.js' );
+			// wp_enqueue_script( 'profile-cct-settings',PROFILE_CCT_DIR_URL. '/js/settings.js' );
 			break;
 
 		}
@@ -414,7 +416,7 @@ class Profile_CCT {
 	 */
 	public function admin_pages() {
 		$time_start = $this->microtime_float();
-		require( PROFILE_CCT_DIR.'class/admin_pages.php' );
+		require( PROFILE_CCT_DIR_PATH.'class/admin_pages.php' );
 		
 		$time_end = $this->microtime_float();
 		$time = $time_end - $time_start;
@@ -429,7 +431,7 @@ class Profile_CCT {
 	 */
 	public function admin_order_page() {
 		
-		require( PROFILE_CCT_DIR.'class/order_profiles.php' );
+		require( PROFILE_CCT_DIR_PATH.'class/order_profiles.php' );
 		
 	}
 	/**
@@ -440,7 +442,7 @@ class Profile_CCT {
 	 */
 	function order_profiles_admin_styles() {
 	
-		wp_enqueue_style( 'profile-cct-order', WP_PLUGIN_URL . '/profile-cct/css/order-profiles.css' );
+		wp_enqueue_style( 'profile-cct-order',PROFILE_CCT_DIR_URL. '/css/order-profiles.css' );
 	
 	}
 	/**
@@ -451,7 +453,7 @@ class Profile_CCT {
 	 */
 	function order_profiles_admin_scripts() {
 	
-		wp_enqueue_script( 'profile-cct-order', WP_PLUGIN_URL . '/profile-cct/js/order-profiles.js',array('jquery','jquery-ui-sortable') );
+		wp_enqueue_script( 'profile-cct-order',PROFILE_CCT_DIR_URL. '/js/order-profiles.js',array('jquery','jquery-ui-sortable') );
 	
 	}
 	/**
@@ -603,7 +605,7 @@ class Profile_CCT {
 	function load_scripts_cpt_profile_cct() {
 		if(!is_admin()):
 			wp_enqueue_script('jquery-ui-tabs');
-			wp_enqueue_style( 'profile-cct', WP_PLUGIN_URL . '/profile-cct/css/profile-cct.css' );
+			wp_enqueue_style( 'profile-cct',PROFILE_CCT_DIR_URL. '/css/profile-cct.css' );
 		endif;
 		
 	}
@@ -1294,7 +1296,7 @@ Make sure that you select who this is supposed to be.<br />
 	 */
 	function input_field( $options ) {
 		
-		require(PROFILE_CCT_DIR.'class/input_field.php');
+		require(PROFILE_CCT_DIR_PATH.'class/input_field.php');
 	}
 
 	/**
@@ -1305,7 +1307,7 @@ Make sure that you select who this is supposed to be.<br />
 	 * @return void
 	 */
 	function display_text($options) {
-		require(PROFILE_CCT_DIR.'class/display_text.php');
+		require(PROFILE_CCT_DIR_PATH.'class/display_text.php');
 	}
 
 	/**
@@ -1748,8 +1750,8 @@ Make sure that you select who this is supposed to be.<br />
 	}
 	
 	function delete_all(){
-	
-		if(current_user_can('administrator')):
+		// only administator can do this… 
+		if( current_user_can('administrator') ):
 			
 			foreach( array("form","page","list") as $where):
 				// delete all the fields
@@ -1771,8 +1773,8 @@ Make sure that you select who this is supposed to be.<br />
 			// also delete all the taxonomies 
 			delete_option('Profile_CCT_taxonomy');
 			
-			// also the global settings 
-			if(current_user_can('manage_sites') && $_GET['delete_profile_cct_data'] == "DELETE-GLOBAL" )
+			// also the global settings only super admin can do this
+			if(current_user_can( 'manage_sites' ) && $_GET['delete_profile_cct_data'] == "DELETE-GLOBAL" )
 				delete_site_option('Profile_CCT_global_settings');
 			
 			wp_die('all Settings data was deleted');
@@ -1787,7 +1789,7 @@ Make sure that you select who this is supposed to be.<br />
 	 */
 	function default_options($type = 'form') {
 		
-		require(PROFILE_CCT_DIR.'class/default_options.php');
+		require(PROFILE_CCT_DIR_PATH.'class/default_options.php');
 		
 		return apply_filters( 'profile_cct_default_options', $options, $type);
 		
@@ -1808,7 +1810,7 @@ Make sure that you select who this is supposed to be.<br />
 				array( "type"=> "education" ),
 				array( "type"=> "textarea"  ),
 				array( "type"=> "text" ),
-				array( "type"=> "project" ),
+				array( "type"=> "projects" ),
 				array( "type"=> "courses" ),
 				array( "type"=> "data" )
 			));

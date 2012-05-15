@@ -196,7 +196,7 @@ function profile_cct_picture_init(){
 	wp_enqueue_style( 'wp-admin' );
 	wp_enqueue_style( 'colors' );
 	wp_enqueue_style( 'ie' );
-	wp_enqueue_style('user-avatar', plugins_url('/profile-cct/css/profile-picture.css'), 'css');
+	wp_enqueue_style('user-avatar', PROFILE_CCT_DIR_URL.'/css/profile-picture.css', 'css');
 	wp_enqueue_style('imgareaselect');
 	wp_enqueue_script('imgareaselect');
 	do_action('admin_print_styles');
