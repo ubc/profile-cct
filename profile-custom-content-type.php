@@ -2,11 +2,11 @@
 /**
  * Plugin Name: Profile Custom Content Type
  * Plugin URI:
+ * Version: 1.1.8
  * Text Domain: profile_cct
  * Domain Path: /languages
  * Description: Allows administrators to manage user profiles better in order to display them on their websites
  * Author: Enej Bajgoric, Eric Jackish, Aleksandar Arsovski, CTLT, UBC
- * Version: 1.1.8
  * Licence: GPLv2
  * Author URI: http://ctlt.ubc.ca
  */
