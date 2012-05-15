@@ -6,9 +6,9 @@
 # ./deploy.sh
 
 # main config
-PLUGINSLUG="wiki-embed"
+PLUGINSLUG="profile-custom-content-type"
 CURRENTDIR=`pwd`
-MAINFILE="WikiEmbed.php" # this should be the name of your main php file in the wordpress plugin
+MAINFILE="profile-custom-content-type.php" # this should be the name of your main php file in the wordpress plugin
 
 # git config
 GITPATH="$CURRENTDIR/" # this file should be in the base of your git repository
