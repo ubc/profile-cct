@@ -34,7 +34,12 @@ if( !empty($_POST) ):
 		else:
 			$this->settings_options['slug'] = 'person';
 		endif;
-	
+		
+		$order_by = $_POST['sort_order'];
+		if(in_array($order_by, array("manual", "first_name", "last_name", "date"))):
+			$this->settings_options['sort_order'] = $order_by;
+		endif;
+		
 		// lets deal with permissions	
 		$post_permissions = $_POST['options']['permissions'];
 		
@@ -99,6 +104,26 @@ endif;
 		<td><input type="text" size="3" name="picture_height" id="picture_height" value="<?php echo esc_attr($this->settings_options['picture']['height']); ?>" /> pixels</td>
 	</tr>
 	</tbody></table>
+	
+	
+	<h3>Sort Order</h3>
+	<table class="form-table">
+	<tbody>
+	<tr valign="top">
+		<th scope="row"><label for="slug">Field</label></th>
+		<td>
+			<select name="sort_order" id="sort_order">
+				<option value="manual" <?php selected("manual", $this->settings_options['sort_order']); ?>>Manually</option>
+				<option value="first_name" <?php selected("first_name", $this->settings_options['sort_order']); ?>>First Name</option>
+				<option value="last_name" <?php selected("last_name", $this->settings_options['sort_order']); ?>>Last Name</option>
+				<option value="date" <?php selected("date", $this->settings_options['sort_order']); ?>>Date Added</option>
+			</select><br />
+			if using manual sorting, go to <em>Profiles->Order Profiles</em> to set the order
+		</td>
+	</tr>
+
+	</tbody></table>
+	
 	
 	
 	<h3>Permalink</h3>

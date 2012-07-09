@@ -477,8 +477,9 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function orderby_menu( $orderby ) {
+	
 		$new_orderby = 'menu_order ASC';
-		
+		//$new_orderby = 'menu_order ASC';
 		if( $this->is_main_query ): // only run this if we are dealing with the main query
 			// check to see that we are on the profile taxonomies
 			if( is_array( $this->taxonomies ) ):
@@ -507,9 +508,13 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function pre_get_posts( $query ) {
-		
+
 		if( $query->is_main_query() )
 			$this->is_main_query = true;
+			//!!!!
+			//$query->query_vars['meta_key'] = 'profile_cct_last_name';
+			//$query->query_vars['orderby'] = 'meta_value';
+			//echo '<pre>';print_r($query);echo '</pre>';
 		else
 			$this->is_main_query = false;
 		
@@ -885,10 +890,11 @@ Make sure that you select who this is supposed to be.<br />
 		$data['post_excerpt'] = $excerpt;
 		$data['post_content'] = $content;
 
-		if(is_array($_POST["profile_cct"]))
+		if(is_array($_POST["profile_cct"])):
 			update_post_meta($postarr['ID'], 'profile_cct', $profile_cct_data);
-
-		return $data;
+			update_post_meta($postarr['ID'], 'profile_cct_last_name', $profile_cct_data["name"]['last']);
+		endif;
+		return $data;	
 
 	}
 	/* ============== FIELDS =============================================== */
@@ -1911,19 +1917,21 @@ Make sure that you select who this is supposed to be.<br />
 	function profile_list_shortcode($atts){
 		$tax_query = array();
 		$taxonomies = get_taxonomies();
-		foreach($atts as $key=>$att):
-			if(in_array("profile_cct_".$key, $taxonomies)):
-				
-				array_push(
-					$tax_query,
-					array(
-						'taxonomy'=>'profile_cct_'.$key,	////aaghhjjjhg forgot the taxonomies are prefixed
-						'field'=>'slug',
-						'terms'=>$att,		
-						)
-					);
-			endif;
-		endforeach;
+		if($atts):
+			foreach($atts as $key=>$att):
+				if(in_array("profile_cct_".$key, $taxonomies)):
+					
+					array_push(
+						$tax_query,
+						array(
+							'taxonomy'=>'profile_cct_'.$key,	////aaghhjjjhg forgot the taxonomies are prefixed
+							'field'=>'slug',
+							'terms'=>$att,		
+							)
+						);
+				endif;
+			endforeach;
+		endif;
 		
 		//Whether to OR or AND the criterias
 		if($atts['query']):	
@@ -1936,14 +1944,35 @@ Make sure that you select who this is supposed to be.<br />
 			'orderby'=>'title',
 			'tax_query'=>$tax_query,
 			'post__not_in'=>explode(",", $atts['exclude']),
-			'posts_per_page'=>-1
+			'posts_per_page'=>-1,
 			);
-		
+	
+	
+		if($atts['order']):
+			$query['order'] = $atts['order'];
+		endif;
+	
 		//If include is set
 		if($atts['include']):
 			$query['post__in'] = explode(",", $atts['include']);
 		endif;
 		
+		if($atts['orderby']):
+			switch($atts['orderby']){
+				case 'first_name':
+					$query['orderby'] = 'title';
+					break;
+				case 'last_name':
+					$query['meta_key']='profile_cct_'.$atts['orderby'];
+					$query['orderby'] = 'meta_value';
+					break;
+				case 'date':
+					$query['orderby'] = 'post_date';
+					break;
+			}
+			
+		endif;
+		//print_r($query);	
 		$the_query = new WP_Query($query);
 	
 		ob_start();	//we want to collect the output and return it instead of displaying it.
