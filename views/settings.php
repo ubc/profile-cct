@@ -110,7 +110,7 @@ endif;
 	<table class="form-table">
 	<tbody>
 	<tr valign="top">
-		<th scope="row"><label for="slug">Field</label></th>
+		<th scope="row"><label for="slug">Order by</label></th>
 		<td>
 			<select name="sort_order" id="sort_order">
 				<option value="manual" <?php selected("manual", $this->settings_options['sort_order']); ?>>Manually</option>

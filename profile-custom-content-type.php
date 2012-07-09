@@ -476,8 +476,11 @@ class Profile_CCT {
 	 * @param mixed $orderby
 	 * @return void
 	 */
+	 
 	function orderby_menu( $orderby ) {
-	
+		if($this->automatic_ordering)
+			return $orderby;
+			
 		$new_orderby = 'menu_order ASC';
 		//$new_orderby = 'menu_order ASC';
 		if( $this->is_main_query ): // only run this if we are dealing with the main query
@@ -508,15 +511,39 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function pre_get_posts( $query ) {
-
-		if( $query->is_main_query() )
+		
+		if( $query->is_main_query() ):
 			$this->is_main_query = true;
-			//!!!!
-			//$query->query_vars['meta_key'] = 'profile_cct_last_name';
-			//$query->query_vars['orderby'] = 'meta_value';
-			//echo '<pre>';print_r($query);echo '</pre>';
-		else
+			$this->automatic_ordering = true;
+			
+			$orderby = $this->settings_options['sort_order'];		//Default sort order
+			if(isset($_GET['orderby']))$orderby = $_GET['orderby'];	
+			
+			$query->set('order', 'asc');
+			if(isset($_GET['order']) && $_GET['order'] == "desc")$query->set('order', $_GET['order']);
+			
+			switch($orderby){
+				case 'last_name':
+					$query->set('meta_key', 'profile_cct_last_name');
+					$query->set('orderby', 'meta_value');
+					
+				break;
+				case 'first_name':
+					$query->set('orderby', 'title');
+	
+				break;
+				case 'date':
+					$query->set('orderby', 'date');
+					
+				break;
+				default:
+					$this->automatic_ordering = false; //orderby_menu function will sort profiles by their manually set order
+			}
+			
+			
+		else:
 			$this->is_main_query = false;
+		endif;
 		
 	}
 	/**
