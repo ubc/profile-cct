@@ -73,6 +73,7 @@ class Profile_CCT {
 
 		add_shortcode('profilelist', array( $this, 'profile_list_shortcode') );
 		add_shortcode('profile', array( $this, 'profile_single_shortcode') );
+		add_shortcode('profilesearch', array( $this, 'profile_search_shortcode') );
 		
 		add_action( 'admin_menu', array( $this, 'add_menu_page' ) );
 		/* saving the post meta info */
@@ -96,8 +97,8 @@ class Profile_CCT {
 
 		add_action( 'admin_init',array($this,'admin_init'));
 		
-		
-
+		add_action( 'template_redirect', array($this,'process_search'));
+		add_action( 'init', array($this, 'register_alphabet_taxonomy'));
 		$this->settings_options = get_option('Profile_CCT_settings');
 
 		$dir    = plugin_dir_path(__FILE__).'views/fields/';
@@ -478,6 +479,7 @@ class Profile_CCT {
 	 */
 	 
 	function orderby_menu( $orderby ) {
+	
 		if($this->automatic_ordering)
 			return $orderby;
 			
@@ -511,7 +513,8 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function pre_get_posts( $query ) {
-		
+		if($query->post_type != "profile_cct")return;
+
 		if( $query->is_main_query() ):
 			$this->is_main_query = true;
 			$this->automatic_ordering = true;
@@ -637,6 +640,7 @@ class Profile_CCT {
 	function load_scripts_cpt_profile_cct() {
 		if(!is_admin()):
 			wp_enqueue_script('jquery-ui-tabs');
+			wp_enqueue_script('jquery-ui-autocomplete');
 			wp_enqueue_style( 'profile-cct',PROFILE_CCT_DIR_URL. '/css/profile-cct.css' );
 		endif;
 		
@@ -921,6 +925,11 @@ Make sure that you select who this is supposed to be.<br />
 			update_post_meta($postarr['ID'], 'profile_cct', $profile_cct_data);
 			update_post_meta($postarr['ID'], 'profile_cct_last_name', $profile_cct_data["name"]['last']);
 		endif;
+		
+		$first_letter = strtolower(substr($profile_cct_data["name"]['last'], 0, 1));
+		//echo $first_letter;
+		wp_set_post_terms($postarr['ID'], $first_letter, 'profile_cct_alphabet', false);
+		
 		return $data;	
 
 	}
@@ -1968,7 +1977,7 @@ Make sure that you select who this is supposed to be.<br />
 		$query = array(
 			'post_type'=>'Profile_CCT',
 			'order'=>'ASC',
-			'orderby'=>'title',
+			'orderby'=>'menu_order',
 			'tax_query'=>$tax_query,
 			'post__not_in'=>explode(",", $atts['exclude']),
 			'posts_per_page'=>-1,
@@ -2061,7 +2070,93 @@ Make sure that you select who this is supposed to be.<br />
 		
 	}
 	
+	function get_all_names(){
+		global $wpdb;
+		$data = get_transient("profile_cct_name_list");
+		if(!$data):
+			$query = "SELECT post_title FROM $wpdb->posts WHERE post_type = 'profile_cct' AND post_status = 'publish'";
+			$data = $wpdb->get_results($query);
+			set_transient("profile_cct_name_list", $data, 60 * 60);
+		endif;
+		return $data;
+	}
 	
+	function profile_search_shortcode($atts){
+		?>
+		
+		<div class="profile-cct-search">
+			<form action="" method="get">
+				
+				<input type="text" name="s" class="profile-cct-search" />
+				<input type="hidden" name="post_type" value="profile_cct" />
+				<input type="submit" value="Search People" />
+			</form>
+		
+			<?
+			$names = array();
+			$query_results = $this->get_all_names();
+			foreach($query_results as $result):
+				$names[] = $result->post_title;
+			endforeach;
+			?>	
+			
+			<script>
+				jQuery(function() {
+					var availableTags = <?php echo json_encode($names); ?>;
+					jQuery( ".profile-cct-search" ).autocomplete({
+						source: availableTags
+					});
+				});
+			</script>
+			
+			
+			
+		</div>
+		<?
+	}
+	
+	function process_search(){
+		if(($_GET['post_type'] != 'profile_cct')):
+			return;
+		endif;
+		
+		$query = $_GET['s'];
+		
+		$page = get_page_by_title( $query, null, "profile_cct"); 
+		if(empty($page)):
+			//echo 'blargblargblarg';
+			return;
+		endif;
+		
+		$permalink = get_permalink($page->ID);
+		wp_redirect($permalink);
+		exit;
+	}
+	
+	
+	function register_alphabet_taxonomy(){
+		if(!taxonomy_exists("profile_cct_alphabet")):
+		
+		$args = array(
+			'labels' => array ( 'name' => 'Letter', 'singular_name' => 'Letter' ),
+			'rewrite' => array ( 'rewrite' => array ( 'slug' => 'letter' )), 
+			//'show_ui' => false,
+			'show_tagcloud' => false,
+			'show_in_nav_menus' => false,
+			'public' => true,
+			'query_var' => true,
+			'hierarchical' => false,
+			);
+		register_taxonomy( 'profile_cct_alphabet', 'profile_cct', $args );
+		endif;
+		
+		if(!term_exists('a', 'profile_cct')):
+			foreach(range('a','z') as $letter):
+				
+				( wp_insert_term($letter, 'profile_cct_alphabet'));
+			endforeach;
+		endif;
+	}
 
 //END SHORTCODES	
 	/**
