@@ -70,7 +70,7 @@ class Profile_CCT {
 	 * @return void
 	 */
 	public function __construct () {
-
+		remove_filter('template_redirect', 'redirect_canonical');
 		add_shortcode('profilelist', array( $this, 'profile_list_shortcode') );
 		add_shortcode('profile', array( $this, 'profile_single_shortcode') );
 		add_shortcode('profilesearch', array( $this, 'profile_search_shortcode') );
@@ -85,6 +85,7 @@ class Profile_CCT {
 		add_action( 'pre_get_posts', array( $this,'pre_get_posts') );
 		
 		add_action( 'template_redirect',  array( $this,'check_freshness'));
+		
 		add_action( 'wp_insert_post_data', array( $this,'save_post_data'),10,2);
 		
 		add_action('the_post', array( $this,'reset_filters' ), 10, 1);
@@ -863,6 +864,8 @@ Make sure that you select who this is supposed to be.<br />
 
 		endif;
 	}
+	
+	
 	/**
 	 * save_post_data function.
 	 *
@@ -926,10 +929,15 @@ Make sure that you select who this is supposed to be.<br />
 			update_post_meta($postarr['ID'], 'profile_cct_last_name', $profile_cct_data["name"]['last']);
 		endif;
 		
-		$first_letter = strtolower(substr($profile_cct_data["name"]['last'], 0, 1));
-		//echo $first_letter;
-		wp_set_post_terms($postarr['ID'], $first_letter, 'profile_cct_alphabet', false);
 		
+		//echo $first_letter;
+		
+		$first_letter = strtolower(substr($profile_cct_data["name"]['last'], 0, 1));
+		//if($first_letter && $postarr['ID']):
+			//echo $first_letter;
+			//echo $postarr['ID'];
+			( wp_set_post_terms($postarr['ID'], $first_letter, 'profile_cct_alphabet', false) );
+		//endif;
 		return $data;	
 
 	}
@@ -2129,9 +2137,10 @@ Make sure that you select who this is supposed to be.<br />
 		endif;
 		
 		$permalink = get_permalink($page->ID);
-		wp_redirect($permalink);
+		//wp_redirect($permalink);
 		exit;
 	}
+	
 	
 	
 	function register_alphabet_taxonomy(){
@@ -2139,8 +2148,13 @@ Make sure that you select who this is supposed to be.<br />
 		
 		$args = array(
 			'labels' => array ( 'name' => 'Letter', 'singular_name' => 'Letter' ),
-			'rewrite' => array ( 'rewrite' => array ( 'slug' => 'letter' )), 
-			//'show_ui' => false,
+			'rewrite' => array(
+				'slug' => 'letter',
+				'with_front' => true,
+				'feeds' => true,
+				'pages' => true
+			),
+			'show_ui' => false,
 			'show_tagcloud' => false,
 			'show_in_nav_menus' => false,
 			'public' => true,
