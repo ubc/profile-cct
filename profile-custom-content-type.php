@@ -70,7 +70,7 @@ class Profile_CCT {
 	 * @return void
 	 */
 	public function __construct () {
-		remove_filter('template_redirect', 'redirect_canonical');
+		//remove_filter('template_redirect', 'redirect_canonical');
 		add_shortcode('profilelist', array( $this, 'profile_list_shortcode') );
 		add_shortcode('profile', array( $this, 'profile_single_shortcode') );
 		add_shortcode('profilesearch', array( $this, 'profile_search_shortcode') );
@@ -2093,7 +2093,7 @@ Make sure that you select who this is supposed to be.<br />
 		?>
 		
 		<div class="profile-cct-search">
-			<form action="" method="get">
+			<form action="<?php echo get_bloginfo('siteurl'); ?>" method="get">
 				
 				<input type="text" name="s" class="profile-cct-search" />
 				<input type="hidden" name="post_type" value="profile_cct" />
@@ -2137,7 +2137,7 @@ Make sure that you select who this is supposed to be.<br />
 		endif;
 		
 		$permalink = get_permalink($page->ID);
-		//wp_redirect($permalink);
+		wp_redirect($permalink);
 		exit;
 	}
 	
