@@ -936,7 +936,7 @@ Make sure that you select who this is supposed to be.<br />
 		//if($first_letter && $postarr['ID']):
 			//echo $first_letter;
 			//echo $postarr['ID'];
-			( wp_set_post_terms($postarr['ID'], $first_letter, 'profile_cct_alphabet', false) );
+			( wp_set_post_terms($postarr['ID'], $first_letter, 'profile_cct_letter', false) );
 		//endif;
 		return $data;	
 
@@ -2144,7 +2144,7 @@ Make sure that you select who this is supposed to be.<br />
 	
 	
 	function register_alphabet_taxonomy(){
-		if(!taxonomy_exists("profile_cct_alphabet")):
+		if(!taxonomy_exists("profile_cct_letter")):
 		
 		$args = array(
 			'labels' => array ( 'name' => 'Letter', 'singular_name' => 'Letter' ),
@@ -2161,13 +2161,13 @@ Make sure that you select who this is supposed to be.<br />
 			'query_var' => true,
 			'hierarchical' => false,
 			);
-		register_taxonomy( 'profile_cct_alphabet', 'profile_cct', $args );
+		register_taxonomy( 'profile_cct_letter', 'profile_cct', $args );
 		endif;
 		
 		if(!term_exists('a', 'profile_cct')):
 			foreach(range('a','z') as $letter):
 				
-				( wp_insert_term($letter, 'profile_cct_alphabet'));
+				( wp_insert_term($letter, 'profile_cct_letter'));
 			endforeach;
 		endif;
 	}

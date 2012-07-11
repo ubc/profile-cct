@@ -2,8 +2,8 @@
 Contributors: enej, ejackisch, alekarsovski,  ctlt-dev, ubcdev
 Tags: profile, user
 Requires at least: 3.2
-Tested up to: 3.3.1
-Stable tag: 1.1.8.2
+Tested up to: 3.4.1
+Stable tag: 1.2
 
 Manage and display advanced user profiles on your website.
 
@@ -40,7 +40,7 @@ The plugin will generate pages for individual profiles as well as for lists of p
 
 For further flexibility you can use the [profilelist] and [profile] shortcodes to display profiles anywhere on a site.
 
-=[profilelist] shortcode=
+= [profilelist] shortcode =
 
 [profilelist] by default shows all profiles in list view format
 
@@ -49,6 +49,8 @@ Filtering by taxonomy:
 
 You can specify multiple taxonomies to filter by, by default then only profiles that meet ALL the specified criteria will be displayed. Alternatively you can also add query="or" to the shortcode to show profiles meeting at least one of the criterias.
 
+Filtering by letter:
+[profilelist letter="a"] returns all profiles where last name starts with letter 'a'.
 
 Ordering results:
 [profilelist orderby = orderfield] where 'orderfield' is either first_name, last_name, or date. By default it will use the manual ordering specified on the Profiles->Order Profiles page
@@ -63,7 +65,7 @@ Show a specific set of people:
 [profilelist include="id, id2, id3..."]
 Displays the people with the corresponding id
 
-=[profile] shortcode=
+= [profile] shortcode =
 
 With this shortcode you can display a single profile. (This can also be accomplished with the [profilelist] shortcode with the right parameters, but this is a more straightforward option)
 
@@ -71,7 +73,19 @@ Simply use [profile person="slug"] where slug is usually firstname-lastname.
 
 By default the full view will be shown, but you can set display="list" instead to show the list view.
 
+= [profilesearch] shortcode =
+
+Display a search box (with jquery-ui Autocomplete) to search for profiles by name
+
 == Change log ==
+= Version 1.2 =
+* added [profilesearch] shortcode
+* added automatic ordering (first name, last name, date)
+* added archive pages that filter profiles by the first letter of the last name
+* fixed a bug that may cause PHP errors when [profilelist] is called with no arguments
+* fixed image uploader to be compatible with WordPress 3.4 
+
+
 = Version 1.1.8.1 =
 * Version Number bump
 = Version 1.1.8 =
