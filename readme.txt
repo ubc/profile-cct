@@ -80,10 +80,11 @@ Display a search box (with jquery-ui Autocomplete) to search for profiles by nam
 == Change log ==
 = Version 1.2 =
 * added [profilesearch] shortcode
-* added automatic ordering (first name, last name, date)
+* added automatic ordering (first name, last name, date added) for archive pages and shortcode
 * added archive pages that filter profiles by the first letter of the last name
 * fixed a bug that may cause PHP errors when [profilelist] is called with no arguments
 * fixed image uploader to be compatible with WordPress 3.4 
+* fixed minor formatting issues
 
 
 = Version 1.1.8.1 =

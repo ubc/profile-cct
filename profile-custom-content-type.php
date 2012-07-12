@@ -2132,8 +2132,11 @@ Make sure that you select who this is supposed to be.<br />
 		
 		$page = get_page_by_title( $query, null, "profile_cct"); 
 		if(empty($page)):
-			//echo 'blargblargblarg';
 			return;
+			if(file_exists(get_stylesheet_directory().'/archive-profile_cct.php')):
+				include (get_stylesheet_directory().'/archive-profile_cct.php');
+				exit;
+			endif;
 		endif;
 		
 		$permalink = get_permalink($page->ID);
