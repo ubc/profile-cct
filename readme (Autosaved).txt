@@ -87,7 +87,6 @@ Display a search box (with jquery-ui Autocomplete) to search for profiles by nam
 * fixed image uploader to be compatible with WordPress 3.4 
 * fixed minor formatting issues
 
-
 = Version 1.1.8.1 =
 * Version Number bump
 = Version 1.1.8 =

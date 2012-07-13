@@ -99,7 +99,13 @@ class Profile_CCT {
 		add_action( 'admin_init',array($this,'admin_init'));
 		
 		add_action( 'template_redirect', array($this,'process_search'));
+		
+		//add_action( 'template_redirect', array($this,'force_profile_cct_archive_page'));
+		
 		add_action( 'init', array($this, 'register_alphabet_taxonomy'));
+		
+		add_action( 'profile_cct_display_archive_controls', array($this, 'display_archive_controls'));
+		
 		$this->settings_options = get_option('Profile_CCT_settings');
 
 		$dir    = plugin_dir_path(__FILE__).'views/fields/';
@@ -514,8 +520,8 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function pre_get_posts( $query ) {
-		if($query->post_type != "profile_cct")return;
-
+		if($query->get('post_type') != "profile_cct")return;
+		
 		if( $query->is_main_query() ):
 			$this->is_main_query = true;
 			$this->automatic_ordering = true;
@@ -2090,6 +2096,7 @@ Make sure that you select who this is supposed to be.<br />
 	}
 	
 	function profile_search_shortcode($atts){
+		ob_start();
 		?>
 		
 		<div class="profile-cct-search">
@@ -2121,6 +2128,7 @@ Make sure that you select who this is supposed to be.<br />
 			
 		</div>
 		<?
+		return ob_get_flush();
 	}
 	
 	function process_search(){
@@ -2175,6 +2183,73 @@ Make sure that you select who this is supposed to be.<br />
 		endif;
 	}
 
+
+	function display_archive_controls(){
+		global $wp_query;
+		if( $wp_query->get('post_type') != "profile_cct" )return;
+		?>
+		<div class="profile-cct-archive-controls">
+			<h6>Search By name</h6>
+			<?php $this->profile_search_shortcode(array()); ?>
+			
+			<div class="profile-cct-archive-filters" style="overflow:hidden;">
+				<h6>Filter Results</h6>
+				<form action="" method="get">
+				<?
+				$taxonomies = get_object_taxonomies("profile_cct"); //i swear this line used to be here and then disappeared.
+				foreach($taxonomies as $tax): 
+					
+					?>
+					<div style="float:left;margin-right:16px;">
+					
+					<select name="<?php echo $tax; ?>">
+								<option value="">All</option>
+							<?php foreach(get_terms($tax) as $term): ?>
+								<option value="<?php echo $term->slug;?>"><?php echo $term->name; ?></option>
+							<?php endforeach; ?>
+					</select>
+					<br />
+					<span class="small"><?php echo substr($tax, 12); /* strip off the prefix */ ?></span>
+					</div>
+					<?php 
+				endforeach; ?>	
+				
+				
+				<input type="submit" value="Apply Filters" />
+				
+				</form>
+			</div>
+			
+			
+			<div class="profile-cct-archive-letters">
+
+				<h6>Show all profiles starting with letter: </h6>
+				<ul style="list-style-type:none;margin-left:0;">
+				<?php
+					$active_letters = get_terms("profile_cct_letter");
+					$l = array();
+					foreach($active_letters as $letter):
+						$l[] = strtoupper($letter->name);
+					endforeach;
+					foreach(range('A', 'Z') as $letter): ?>
+						<li style="display:inline;">
+							<?php
+							if(!strcasecmp($_GET['profile_cct_letter'], $letter )):
+								echo '<strong>'.$letter.'</strong>';
+							elseif(in_array($letter, $l)): ?>
+								<a href="?profile_cct_letter=<?php echo $letter; ?>"><?php echo $letter; ?></a>
+							<?php else: ?>
+								<?php echo $letter; ?>
+							<?php endif; ?>
+						</li>
+					<? endforeach; ?>
+				</ul>
+			</div>
+		</div>
+		<?php
+	}
+	
+	
 //END SHORTCODES	
 	/**
 	 * install function.
