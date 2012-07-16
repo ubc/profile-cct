@@ -2205,7 +2205,8 @@ Make sure that you select who this is supposed to be.<br />
 					<select name="<?php echo $tax; ?>">
 								<option value="">All</option>
 							<?php foreach(get_terms($tax) as $term): ?>
-								<option value="<?php echo $term->slug;?>"><?php echo $term->name; ?></option>
+								<?php echo $term->slug, ' / ', $_GET[$tax], '<br />';?>
+								<option value="<?php echo $term->slug;?>" <?php selected($term->slug, $_GET[$tax]); ?>><?php echo $term->name; ?></option>
 							<?php endforeach; ?>
 					</select>
 					<br />
@@ -2237,7 +2238,7 @@ Make sure that you select who this is supposed to be.<br />
 							if(!strcasecmp($_GET['profile_cct_letter'], $letter )):
 								echo '<strong>'.$letter.'</strong>';
 							elseif(in_array($letter, $l)): ?>
-								<a href="?profile_cct_letter=<?php echo $letter; ?>"><?php echo $letter; ?></a>
+								<a href="?profile_cct_letter=<?php echo strtolower($letter); ?>"><?php echo $letter; ?></a>
 							<?php else: ?>
 								<?php echo $letter; ?>
 							<?php endif; ?>

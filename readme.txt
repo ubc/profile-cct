@@ -38,6 +38,12 @@ Social icons from http://paulrobertlloyd.com/2009/06/social_media_icons/
 
 The plugin will generate pages for individual profiles as well as for lists of people.
 
+= Archive Pages =
+
+By default you can see a list of profiles at example.com/your-site-path/person
+
+To display filtering/searching controls on the archive page you'll need to modify your taxonomy.php template and archive.php (or archive-profile_cct.php) in your theme folder and include the line <?php do_action("profile_cct_display_archive_controls"); ?> where you want the controls to appear. The plugin will function fine without this but it won't be as easy for your users to search/filter/browse profiles.
+
 For further flexibility you can use the [profilelist] and [profile] shortcodes to display profiles anywhere on a site.
 
 = [profilelist] shortcode =
@@ -82,11 +88,10 @@ Display a search box (with jquery-ui Autocomplete) to search for profiles by nam
 * added [profilesearch] shortcode
 * added automatic ordering (first name, last name, date added) for archive pages and shortcode
 * profiles can now be filtered by first letter of last name
-* added filter/search interface on archive page
+* added filter/search interface on archive page (requires minor theme modifications)
 * fixed a bug that may cause PHP errors when [profilelist] is called with no arguments
 * fixed image uploader to be compatible with WordPress 3.4 
 * fixed minor formatting issues
-
 
 = Version 1.1.8.1 =
 * Version Number bump
