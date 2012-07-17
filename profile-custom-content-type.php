@@ -2194,14 +2194,14 @@ Make sure that you select who this is supposed to be.<br />
 			<?php echo $this->profile_search_shortcode(array()); ?>
 			
 			<div class="profile-cct-archive-filters" style="overflow:hidden;">
-				<h6>Filter &amp; Order Results</h6>
+				<h6>Filter &amp; Order Profiles</h6>
 				<form action="" method="get">
 				<?
 				$taxonomies = get_object_taxonomies("profile_cct"); //i swear this line used to be here and then disappeared.
 				foreach($taxonomies as $tax): 
 					
 					?>
-					<div style="float:left;margin-right:16px;">
+					<div class="profile-cct-filter-box">
 					
 					<select name="<?php echo $tax; ?>">
 								<option value="">All</option>
@@ -2216,7 +2216,7 @@ Make sure that you select who this is supposed to be.<br />
 					<?php 
 				endforeach; ?>	
 				
-				<div style="float:left;margin-right:16px;">
+				<div class="profile-cct-filter-box">
 					<select name="orderby">
 						<option value="">Default</option>
 						<option value="first_name" <?php selected('first_name', $_GET['orderby']); ?>>First Name</option>

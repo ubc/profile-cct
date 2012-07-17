@@ -40,3 +40,7 @@
 .ui-autocomplete li{list-style-type:none;}
 * html .ui-autocomplete { width:1px; } /* without this, the menu expands to 100% in IE6 */
 
+.profile-cct-filter-box{
+	margin-right:16px;
+	float:left;
+}
