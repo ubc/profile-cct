@@ -2195,7 +2195,7 @@ Make sure that you select who this is supposed to be.<br />
 			
 			<div class="profile-cct-archive-filters" style="overflow:hidden;">
 				<h6>Filter &amp; Order Profiles</h6>
-				<form action="" method="get">
+				<form action="<?php echo get_bloginfo('siteurl'); ?>" method="get">
 				<?
 				$taxonomies = get_object_taxonomies("profile_cct"); //i swear this line used to be here and then disappeared.
 				foreach($taxonomies as $tax): 
@@ -2206,8 +2206,8 @@ Make sure that you select who this is supposed to be.<br />
 					<select name="<?php echo $tax; ?>">
 								<option value="">All</option>
 							<?php foreach(get_terms($tax) as $term): ?>
-								<?php echo $term->slug, ' / ', $_GET[$tax], '<br />';?>
-								<option value="<?php echo $term->slug;?>" <?php selected($term->slug, $_GET[$tax]); ?>><?php echo $term->name; ?></option>
+								
+								<option value="<?php echo $term->slug;?>" <?php selected($term->slug, get_query_var($tax)); ?>><?php echo $term->name; ?></option>
 							<?php endforeach; ?>
 					</select>
 					<br />
@@ -2226,11 +2226,12 @@ Make sure that you select who this is supposed to be.<br />
 					<br />
 					<span class="small">order by</small>
 				</div>
-				
+				<input type="hidden" name="post_type" value="profile_cct">
 				<input type="submit" value="Apply Filters" />
 				
 				</form>
 			</div>
+			
 			
 			
 			<div class="profile-cct-archive-letters">
@@ -2246,10 +2247,11 @@ Make sure that you select who this is supposed to be.<br />
 					foreach(range('A', 'Z') as $letter): ?>
 						<li style="display:inline;">
 							<?php
-							if(!strcasecmp($_GET['profile_cct_letter'], $letter )):
+							$current = get_query_var('profile_cct_letter');
+							if(!strcasecmp($current, $letter )):
 								echo '<strong>'.$letter.'</strong>';
 							elseif(in_array($letter, $l)): ?>
-								<a href="?profile_cct_letter=<?php echo strtolower($letter); ?>"><?php echo $letter; ?></a>
+								<a href="?post_type=profile_cct&amp;profile_cct_letter=<?php echo strtolower($letter); ?>"><?php echo $letter; ?></a>
 							<?php else: ?>
 								<?php echo $letter; ?>
 							<?php endif; ?>
