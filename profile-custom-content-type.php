@@ -2194,7 +2194,7 @@ Make sure that you select who this is supposed to be.<br />
 			<?php echo $this->profile_search_shortcode(array()); ?>
 			
 			<div class="profile-cct-archive-filters" style="overflow:hidden;">
-				<h6>Filter Results</h6>
+				<h6>Filter &amp; Order Results</h6>
 				<form action="" method="get">
 				<?
 				$taxonomies = get_object_taxonomies("profile_cct"); //i swear this line used to be here and then disappeared.
@@ -2216,6 +2216,16 @@ Make sure that you select who this is supposed to be.<br />
 					<?php 
 				endforeach; ?>	
 				
+				<div style="float:left;margin-right:16px;">
+					<select name="orderby">
+						<option value="">Default</option>
+						<option value="first_name" <?php selected('first_name', $_GET['orderby']); ?>>First Name</option>
+						<option value="last_name" <?php selected('last_name', $_GET['orderby']); ?>>Last Name</option>
+						<option value="date_added"  <?php selected('date', $_GET['orderby']); ?>>Date Added</option>
+					</select>
+					<br />
+					<span class="small">order by</small>
+				</div>
 				
 				<input type="submit" value="Apply Filters" />
 				
