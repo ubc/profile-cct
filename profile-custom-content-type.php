@@ -2090,12 +2090,13 @@ Make sure that you select who this is supposed to be.<br />
 		if(!$data):
 			$query = "SELECT post_title FROM $wpdb->posts WHERE post_type = 'profile_cct' AND post_status = 'publish'";
 			$data = $wpdb->get_results($query);
-			set_transient("profile_cct_name_list", $data, 60 * 60);
+			set_transient("profile_cct_name_list", $data, 10 * 60);
 		endif;
 		return $data;
 	}
 	
 	function profile_search_shortcode($atts){
+		//static $has_search_box = false;
 		ob_start();
 		?>
 		
@@ -2128,7 +2129,7 @@ Make sure that you select who this is supposed to be.<br />
 			
 		</div>
 		<?
-		return ob_get_flush();
+		return ob_get_clean();
 	}
 	
 	function process_search(){
@@ -2190,7 +2191,7 @@ Make sure that you select who this is supposed to be.<br />
 		?>
 		<div class="profile-cct-archive-controls">
 			<h6>Search By name</h6>
-			<?php $this->profile_search_shortcode(array()); ?>
+			<?php echo $this->profile_search_shortcode(array()); ?>
 			
 			<div class="profile-cct-archive-filters" style="overflow:hidden;">
 				<h6>Filter Results</h6>
