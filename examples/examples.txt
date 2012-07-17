@@ -1,0 +1,3 @@
+Contains example modifications to theme files to make better use of the plugin.
+
+See readme.txt in main plugin directory for more info.

@@ -33,6 +33,7 @@ Social icons from http://paulrobertlloyd.com/2009/06/social_media_icons/
 
 1. Extract the zip file into wp-content/plugins/ in your WordPress installation
 2. Go to plugins page to activate
+3. Recommended: Some minor changes to theme files (archive.php, search.php, taxonomy.php) to accommodate profile cct features (see "Usage" for details)
 
 == Usage ==
 
@@ -44,7 +45,11 @@ By default you can see a list of profiles at example.com/your-site-path/person
 
 To display filtering/searching controls on the archive page you'll need to modify your taxonomy.php template and archive.php (or archive-profile_cct.php) in your theme folder and include the line <?php do_action("profile_cct_display_archive_controls"); ?> where you want the controls to appear. The plugin will function fine without this but it won't be as easy for your users to search/filter/browse profiles.
 
-For further flexibility you can use the [profilelist] and [profile] shortcodes to display profiles anywhere on a site.
+In addition, you may want to customize the search results page for profile_cct posts and only display the_excerpt() in the loop (the_excerpt() will output the list view as set on the profile settings page)
+
+See the examples folder for examples of these theme modifications
+
+For other uses you can use the [profilelist] and [profile] shortcodes to display profiles anywhere on a site.
 
 = [profilelist] shortcode =
 
@@ -83,7 +88,24 @@ By default the full view will be shown, but you can set display="list" instead t
 
 Display a search box (with jquery-ui Autocomplete) to search for profiles by name
 
+== Screenshots ==
+
+1. Listing profiles in the dashboard
+2. A profile form for the user to fill out, fully customizable in the settings
+3. Social network links, custom taxonomies, etc
+4. Custom taxonomies for profiles can be easily set up to filter profiles by.
+5. Drag and Drop profiles around to customize how they're ordered. Alternatively they can be sorted automatically by first name, last name, date
+6. Main plugin settings screen. Tabs at the top to access various settings
+7. Settings tab containing general settings 
+8. Custom taxonomies will show up in the menu in the dashboard
+9. The Form Builder where you can set up a profile form for your users to fill out by dragging and dropping the desired fields into place
+10. Profile View Builder where you can decide what shows up on users' profile pages.
+11. List View Builder
+12. Custom fields can be added which can then be added to the form and the views
+13. Where users go to edit their profile
+
 == Change log ==
+
 = Version 1.2 =
 * added [profilesearch] shortcode
 * added automatic ordering (first name, last name, date added) for archive pages and shortcode
