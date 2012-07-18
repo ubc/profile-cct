@@ -43,7 +43,7 @@ if ( !defined('ABSPATH') )
 define( 'PROFILE_CCT_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'PROFILE_CCT_BASENAME', plugin_basename(__FILE__) );
 define( 'PROFILE_CCT_DIR_URL',  plugins_url( ''  , PROFILE_CCT_BASENAME ) );
-
+require(PROFILE_CCT_DIR_PATH.'/class/profile_widget.php');
 require(PROFILE_CCT_DIR_PATH.'profile-taxonomies.php');
 require(PROFILE_CCT_DIR_PATH.'profile-manage-table.php');
 
@@ -74,6 +74,7 @@ class Profile_CCT {
 		add_shortcode('profilelist', array( $this, 'profile_list_shortcode') );
 		add_shortcode('profile', array( $this, 'profile_single_shortcode') );
 		add_shortcode('profilesearch', array( $this, 'profile_search_shortcode') );
+		add_shortcode('profilenavigation', array( $this, 'profile_navigation_shortcode') );
 		
 		add_action( 'admin_menu', array( $this, 'add_menu_page' ) );
 		/* saving the post meta info */
@@ -2183,11 +2184,14 @@ Make sure that you select who this is supposed to be.<br />
 			endforeach;
 		endif;
 	}
+	
+	function profile_navigation_shortcode($atts){
+		echo do_action('profile_cct_display_archive_controls', true);
+	}
 
-
-	function display_archive_controls(){
+	function display_archive_controls($widget){
 		global $wp_query;
-		if( $wp_query->get('post_type') != "profile_cct" )return;
+		if( $wp_query->get('post_type') != "profile_cct" && $widget == false)return;
 		?>
 		<div class="profile-cct-archive-controls">
 		

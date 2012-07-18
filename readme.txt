@@ -25,7 +25,7 @@ the form you created.
 
 Everything can be styled with CSS
 
-Dashboard icon from http://p.yusukekamiyamane.com/ 
+Dashboard icon from http://p.yusukekamiyamane.com/  
 
 Social icons from http://paulrobertlloyd.com/2009/06/social_media_icons/ 
 
@@ -34,6 +34,9 @@ Social icons from http://paulrobertlloyd.com/2009/06/social_media_icons/
 1. Extract the zip file into wp-content/plugins/ in your WordPress installation
 2. Go to plugins page to activate
 3. Recommended: Some minor changes to theme files (archive.php, search.php, taxonomy.php) to accommodate profile cct features (see "Usage" for details)
+
+The plugin (optionally) makes use of jQuery UI tabs so you'll need to grab some CSS for that if your theme doesn't already have it and you want tabbed content on profile pages.
+See http://jqueryui.com/themeroller/ to find or create a style for the tabs
 
 == Usage ==
 
@@ -47,7 +50,11 @@ Additional information on this customization is available at http://wiki.ubc.ca/
 
 By default you can see a list of profiles on your site at example.com/your-site-path/person
 
-To display filtering/searching controls on the archive page you'll need to modify your taxonomy.php template and archive.php (or archive-profile_cct.php) in your theme folder and include the line <?php do_action("profile_cct_display_archive_controls"); ?> where you want the controls to appear. The plugin will function fine without this but it won't be as easy for your users to search/filter/browse profiles. (The controls can be customized as well on the Settings page)
+To display filtering/searching controls on the archive page you have three options:
+1. modify your taxonomy.php template and archive.php (or archive-profile_cct.php) in your theme folder and include the line <?php do_action("profile_cct_display_archive_controls"); ?> where you want the controls to appear. The plugin will function fine without this but it won't be as easy for your users to search/filter/browse profiles. (The controls can be customized as well on the Settings page)
+2. Use the Profile navigation widget. It'll include the fields you specify in the settings page.
+3. Use the [profilenavigation] shortcode.
+
 
 In addition, you may want to customize the search results page for profile_cct posts and only display the_excerpt() in the loop (the_excerpt() will output the list view as set on the profile settings page)
 
