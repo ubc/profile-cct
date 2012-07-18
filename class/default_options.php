@@ -116,6 +116,9 @@ switch($type) {
 					"width"	=>150,
 					"height"=>150,
 				),
+				"archive" => array(
+				
+				),
 				'slug' => 'person',
 				"permissions"=> array(
 					'administrator' => array(

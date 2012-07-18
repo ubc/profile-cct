@@ -39,11 +39,15 @@ Social icons from http://paulrobertlloyd.com/2009/06/social_media_icons/
 
 The plugin will generate pages for individual profiles as well as for lists of people.
 
+The profile form your users will fill out can be fully customized in Profiles->Settings, as well as how profiles are displayed on your site.
+
+Additional information on this customization is available at http://wiki.ubc.ca/Documentation:UBC_Content_Management_System/Managing_People_Profiles_and_Directories
+
 = Archive Pages =
 
-By default you can see a list of profiles at example.com/your-site-path/person
+By default you can see a list of profiles on your site at example.com/your-site-path/person
 
-To display filtering/searching controls on the archive page you'll need to modify your taxonomy.php template and archive.php (or archive-profile_cct.php) in your theme folder and include the line <?php do_action("profile_cct_display_archive_controls"); ?> where you want the controls to appear. The plugin will function fine without this but it won't be as easy for your users to search/filter/browse profiles.
+To display filtering/searching controls on the archive page you'll need to modify your taxonomy.php template and archive.php (or archive-profile_cct.php) in your theme folder and include the line <?php do_action("profile_cct_display_archive_controls"); ?> where you want the controls to appear. The plugin will function fine without this but it won't be as easy for your users to search/filter/browse profiles. (The controls can be customized as well on the Settings page)
 
 In addition, you may want to customize the search results page for profile_cct posts and only display the_excerpt() in the loop (the_excerpt() will output the list view as set on the profile settings page)
 

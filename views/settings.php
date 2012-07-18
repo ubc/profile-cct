@@ -163,7 +163,7 @@ endif;
 		<td>
 			<?php
 				foreach(get_object_taxonomies('profile_cct') as $tax): ?>
-					<input type="checkbox" name="archive[display_tax][<?php echo $tax; ?>]" id="archive_display_tax_<?php echo $tax; ?>" <?php checked($this->settings_options['archive']['display_tax'][$tax], 'on'); ?> /><label for="archive_display_tax_<?php echo $tax; ?>"><?php echo $tax; ?></label><br />
+					<input type="checkbox" name="archive[display_tax][<?php echo $tax; ?>]" id="archive_display_tax_<?php echo $tax; ?>" <?php checked($this->settings_options['archive']['display_tax'][$tax], 'on'); ?> /><label style="padding-left:6px;"for="archive_display_tax_<?php echo $tax; ?>"><?php echo substr($tax, 12); ?></label><br />
 				<?php endforeach;
 			?>
 		</td>
