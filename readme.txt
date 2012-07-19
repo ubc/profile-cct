@@ -53,7 +53,9 @@ By default you can see a list of profiles on your site at example.com/your-site-
 To display filtering/searching controls on the archive page you have three options:
 1. modify your taxonomy.php template and archive.php (or archive-profile_cct.php) in your theme folder and include the line <?php do_action("profile_cct_display_archive_controls"); ?> where you want the controls to appear. The plugin will function fine without this but it won't be as easy for your users to search/filter/browse profiles. (The controls can be customized as well on the Settings page)
 2. Use the Profile navigation widget. It'll include the fields you specify in the settings page.
-3. Use the [profilenavigation] shortcode.
+3. Use the [profilenavigation] shortcode (More info in the shortcode section of this document.
+
+**Note: Make sure you enable some navigation elements in the Profiles->Settings page under the Settings tab**
 
 
 In addition, you may want to customize the search results page for profile_cct posts and only display the_excerpt() in the loop (the_excerpt() will output the list view as set on the profile settings page)
@@ -99,6 +101,16 @@ By default the full view will be shown, but you can set display="list" instead t
 
 Display a search box (with jquery-ui Autocomplete) to search for profiles by name
 
+= [profilenavigation] shortcode =
+
+Displays profile navigation. If no parameters are supplied it'll rely on the options set in the settings page. If at least one parameter is supplied then the global settings will be ignored
+display_searchbox=true to show the search box
+display_alphabet=true to show the letter list
+display_orderby=true to show the orderby field
+display_tax="comma separated list of taxonomies" to show dropdowns to filter by those taxonomies.
+
+eg [profilenavigation display_searchbox="true" display_tax="location, position"] will show a searchbox as well as two dropdown menus to filter by the two specified taxonomies
+
 == Screenshots ==
 
 1. Listing profiles in the dashboard
@@ -121,7 +133,8 @@ Display a search box (with jquery-ui Autocomplete) to search for profiles by nam
 * added [profilesearch] shortcode
 * added automatic ordering (first name, last name, date added) for archive pages and shortcode
 * profiles can now be filtered by first letter of last name
-* added filter/search interface on archive page (requires minor theme modifications)
+* added filter/search interface on archive page
+* also added widget and shortcode to display filter/search interface
 * fixed a bug that may cause PHP errors when [profilelist] is called with no arguments
 * fixed image uploader to be compatible with WordPress 3.4 
 * fixed minor formatting issues

@@ -2186,95 +2186,137 @@ Make sure that you select who this is supposed to be.<br />
 	}
 	
 	function profile_navigation_shortcode($atts){
-		echo do_action('profile_cct_display_archive_controls', true);
+		//Parse the comma seperated display_tax attribute and turn it into an associative array
+		if($atts['display_tax']):
+			$atts['display_tax'] = explode(',', $atts['display_tax']);
+			$tax_array = array();
+			foreach($atts['display_tax'] as $tax):
+				$tax_array['profile_cct_'.trim($tax)] = true;
+			endforeach;
+			$atts['display_tax'] = $tax_array;
+		endif;
+		
+		
+		echo do_action('profile_cct_display_archive_controls', array('mode'=>'shortcode','options'=>$atts));
 	}
 
-	function display_archive_controls($widget){
+	function display_archive_controls($args){
 		global $wp_query;
-		if( $wp_query->get('post_type') != "profile_cct" && $widget == false)return;
-		?>
-		<div class="profile-cct-archive-controls">
+		//If we're neither on a profile_cct archive page nor trying to show the profilenav widget/shortcode....
+		if( $wp_query->get('post_type') != "profile_cct" && !$args['mode'] )
+			return;
 		
-			<?php if($this->settings_options['archive']['display_searchbox']): ?>
-				<h6>Search By name</h6>
-				<?php echo $this->profile_search_shortcode(array()); ?>
-			<?php  endif; ?>
+		
+		if($args['mode']!='shortcode'):
+			//If we're not using the shortcode then load the settings from the settings page
+			$options = $this->settings_options['archive'];
+		else:
+			//If we're using shortcode, first see if we have set parameters and if so use them instead
+			if(!empty($args['options'])):
+				$options = $args['options'];
+			else:
+				$options = $this->settings_options['archive'];
+			endif;
+		endif;
+		?>
+		
+		
+		<div class="profile-cct-archive-controls">
+			<?php 
 			
+			if($options['display_searchbox']):
+				echo '<h6>Search By name</h6>';
+				echo $this->profile_search_shortcode(array());
+			endif;
 			
-			<div class="profile-cct-archive-filters" style="overflow:hidden;">
-				
-				<?php if(count($this->settings_options['archive']['display_tax']) || $this->settings_options['archive']['display_orderby']): ?>
-					<h6>Filter &amp; Order Profiles</h6>
-					<form action="<?php echo get_bloginfo('siteurl'); ?>" method="get">
-					<?
-					$taxonomies = get_object_taxonomies("profile_cct"); //i swear this line used to be here and then disappeared.
-					foreach($taxonomies as $tax): 
-						if(!$this->settings_options['archive']['display_tax'][$tax])continue;	
-						?>
-						<div class="profile-cct-filter-box">	
-							<select name="<?php echo $tax; ?>">
-										<option value="">All</option>
-									<?php foreach(get_terms($tax) as $term): ?>
-										
-										<option value="<?php echo $term->slug;?>" <?php selected($term->slug, get_query_var($tax)); ?>><?php echo $term->name; ?></option>
-									<?php endforeach; ?>
-							</select>
-							<br />
-							<span class="small"><?php echo substr($tax, 12); /* strip off the prefix */ ?></span>
-						</div>
-						<?php 
-					endforeach; ?>	
-					
-					<?php if($this->settings_options['archive']['display_orderby']): ?>
-						<div class="profile-cct-filter-box">
-							<select name="orderby">
-								<option value="">Default</option>
-								<option value="first_name" <?php selected('first_name', $_GET['orderby']); ?>>First Name</option>
-								<option value="last_name" <?php selected('last_name', $_GET['orderby']); ?>>Last Name</option>
-								<option value="date_added"  <?php selected('date', $_GET['orderby']); ?>>Date Added</option>
-							</select>
-							<br />
-							<span class="small">order by</small>
-						</div>
-					<?php endif; ?>
-					
-					<input type="hidden" name="post_type" value="profile_cct">
-					<input type="submit" value="Apply Filters" />
-					
-					</form>
-				<?php endif; ?>
-			</div>
-				
+			if(count($options['display_tax']) || $options['display_orderby']): 
+				$this->display_taxonomy_navigation($options);
+			endif;
 			
-			<?php if($this->settings_options['archive']['display_alphabet']): ?>
-				<div class="profile-cct-archive-letters">
-	
-					<h6>Show all profiles starting with letter: </h6>
-					<ul style="list-style-type:none;margin-left:0;">
-					<?php
-						$active_letters = get_terms("profile_cct_letter");
-						$l = array();
-						foreach($active_letters as $letter):
-							$l[] = strtoupper($letter->name);
-						endforeach;
-						foreach(range('A', 'Z') as $letter): ?>
-							<li style="display:inline;">
-								<?php
-								$current = get_query_var('profile_cct_letter');
-								if(!strcasecmp($current, $letter )):
-									echo '<strong>'.$letter.'</strong>';
-								elseif(in_array($letter, $l)): ?>
-									<a href="?post_type=profile_cct&amp;profile_cct_letter=<?php echo strtolower($letter); ?>"><?php echo $letter; ?></a>
-								<?php else: ?>
-									<?php echo $letter; ?>
-								<?php endif; ?>
-							</li>
-						<? endforeach; ?>
-					</ul>
-				</div>
-			<?php endif; ?>
+			if($options['display_alphabet']):
+				$this->display_alphabet_navigation();
+			endif;
+			 
+			?>
 		</div>
 		<?php
+	}
+	
+	
+	function display_taxonomy_navigation($options){
+		?>
+		<div class="profile-cct-archive-filters" style="overflow:hidden;">
+			<h6>Filter &amp; Order Profiles</h6>
+			<form action="<?php echo get_bloginfo('siteurl'); ?>" method="get">
+			<?
+			$taxonomies = get_object_taxonomies("profile_cct"); //i swear this line used to be here and then disappeared.
+			foreach($taxonomies as $tax): 
+				
+				if(!$options['display_tax'][$tax])continue;	
+				?>
+				<div class="profile-cct-filter-box">	
+					<select name="<?php echo $tax; ?>">
+								<option value="">All</option>
+							<?php foreach(get_terms($tax) as $term): ?>
+								
+								<option value="<?php echo $term->slug;?>" <?php selected($term->slug, get_query_var($tax)); ?>><?php echo $term->name; ?></option>
+							<?php endforeach; ?>
+					</select>
+					<br />
+					<span class="small"><?php echo substr($tax, 12); /* strip off the prefix */ ?></span>
+				</div>
+				<?php 
+			endforeach; ?>	
+			
+			<?php if($options['display_orderby']): ?>
+				<div class="profile-cct-filter-box">
+					<select name="orderby">
+						<option value="">Default</option>
+						<option value="first_name" <?php selected('first_name', $_GET['orderby']); ?>>First Name</option>
+						<option value="last_name" <?php selected('last_name', $_GET['orderby']); ?>>Last Name</option>
+						<option value="date_added"  <?php selected('date', $_GET['orderby']); ?>>Date Added</option>
+					</select>
+					<br />
+					<span class="small">order by</small>
+				</div>
+			<?php endif; ?>
+			
+			<input type="hidden" name="post_type" value="profile_cct">
+			<input type="submit" value="Apply Filters" />
+			
+			</form>
+		</div>
+		<?
+	}
+	
+	
+	function display_alphabet_navigation(){
+		?>
+		<div class="profile-cct-archive-letters">
+			<h6>Show all profiles starting with letter: </h6>
+			<ul style="list-style-type:none;margin-left:0;">
+			<?php
+				$active_letters = get_terms("profile_cct_letter");
+				$l = array();
+				foreach($active_letters as $letter):
+					$l[] = strtoupper($letter->name);
+				endforeach;
+				foreach(range('A', 'Z') as $letter): ?>
+					<li style="display:inline;">
+						<?php
+						$current = get_query_var('profile_cct_letter');
+						if(!strcasecmp($current, $letter )):
+							echo '<strong>'.$letter.'</strong>';
+						elseif(in_array($letter, $l)): ?>
+							<a href="<?php echo get_bloginfo('siteurl'); ?>?post_type=profile_cct&amp;profile_cct_letter=<?php echo strtolower($letter); ?>"><?php echo $letter; ?></a>
+						<?php else: ?>
+							<?php echo $letter; ?>
+						<?php endif; ?>
+					</li>
+				<? endforeach; ?>
+			</ul>
+		</div>
+		<?
 	}
 	
 	

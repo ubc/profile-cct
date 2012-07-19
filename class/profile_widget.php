@@ -11,7 +11,7 @@ class Profile_CCT_widget extends WP_Widget{
 	
 	
 	function widget($args, $instance){
-		echo do_action('profile_cct_display_archive_controls', true);
+		echo do_action('profile_cct_display_archive_controls', array('mode'=>'widget'));
 	}
 	
 	
