@@ -3,7 +3,7 @@ Contributors: enej, ejackisch, alekarsovski,  ctlt-dev, ubcdev
 Tags: profile, user
 Requires at least: 3.2
 Tested up to: 3.4.1
-Stable tag: 1.2
+Stable tag: 1.2.1
 
 Manage and display advanced user profiles on your website.
 
@@ -128,6 +128,10 @@ eg [profilenavigation display_searchbox="true" display_tax="location, position"]
 13. Where users go to edit their profile
 
 == Change log ==
+
+= Version 1.2.1 =
+* Fixed bug where post formatting gets mangled sometimes
+* Fixed bug where default values sometimes show up in profile pages
 
 = Version 1.2 =
 * added [profilesearch] shortcode
