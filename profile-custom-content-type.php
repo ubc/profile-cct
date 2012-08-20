@@ -2,7 +2,7 @@
 /**
 Plugin Name: Profile Custom Content Type
 Plugin URI:
-Version: 1.1.8.2
+Version: 1.2
 Text Domain: profile_cct
 Domain Path: /languages
 Description: Allows administrators to manage user profiles better in order to display them on their websites
@@ -744,7 +744,9 @@ class Profile_CCT {
 		$mypost['post_content'] = $post->post_content;
 		$mypost['post_excerpt'] = $post->post_excerpt;
 
+		kses_remove_filters();
 		wp_update_post( $mypost );
+		kses_init_filters();
 
 	}
 	/**
@@ -887,6 +889,7 @@ Make sure that you select who this is supposed to be.<br />
 		if(!isset( $_POST["profile_cct"] ))
 			return $data;
 		
+		kses_remove_filters();
 		
 		$profile_cct_data_previous =  get_post_meta($postarr['ID'], 'profile_cct', true);
 
@@ -945,6 +948,8 @@ Make sure that you select who this is supposed to be.<br />
 			//echo $postarr['ID'];
 			( wp_set_post_terms($postarr['ID'], $first_letter, 'profile_cct_letter', false) );
 		//endif;
+		kses_init_filters();
+		
 		return $data;	
 
 	}

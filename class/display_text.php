@@ -2,9 +2,9 @@
 
 
 	extract( $options );
-
+	//var_dump($value);
 	$hide = ( isset($show) && !$show ? ' style="display:none;"': '');
-	if($this->action == 'display' && empty($value) && !in_array($type, array('end_shell','shell') ) && empty($hide) ):
+	if($this->action == 'display' && empty($value) && !in_array($type, array('end_shell','shell') ) && !empty($hide) ):
 		echo "";
 	return true;
 	endif;
@@ -35,8 +35,8 @@
 <p>Known for his contributions to charity, notably through his Wayne Foundation, a charity devoted to helping the victims of crime and preventing people from becoming criminals.</p>";
 		break;
 	}
-	
-	if( $value )
+	//var_dump( $content_filter );
+	if( $this->action == 'display' )  //!!
 		$display = ( $content_filter ? apply_filters( $content_filter, $value ) : esc_html($value) ); 
 	else
 		$display = $default_text;

@@ -72,6 +72,12 @@ function profile_cct_textarea_display( $data, $options ){
 	extract( $options );
 	$field = Profile_CCT::get_object();
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'textarea textarea','default_text'=>'lorem ipsum', 'content_filter'=>'the_content', 'value'=>$data['textarea'], 'tag'=>'div', 'type'=>'text') );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'textarea textarea','default_text'=>'lorem ipsum', 'content_filter'=>'profile_escape_html', 'value'=>$data['textarea'], 'tag'=>'div', 'type'=>'text') );
 }
 
+function profile_cct_textarea_filter( $data ) {
+	$data = wp_kses_post( $data );
+	return apply_filters('the_content', $data);
+}
+
+add_filter( 'profile_escape_html', 'profile_cct_textarea_filter');
