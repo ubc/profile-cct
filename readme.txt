@@ -3,7 +3,7 @@ Contributors: enej, ejackisch, alekarsovski,  ctlt-dev, ubcdev
 Tags: profile, user
 Requires at least: 3.2
 Tested up to: 3.4.1
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 
 Manage and display advanced user profiles on your website.
 
