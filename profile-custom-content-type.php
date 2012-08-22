@@ -487,23 +487,25 @@ class Profile_CCT {
 	function update_script(){
 		global $post;
 		$previous_version = get_option( 'profile_cct_version', 0 );
-		//echo 'new version?';
 		$this->force_refresh();
 		if( version_compare( $this->version(), $previous_version, '>' ) ):
 			update_option( 'profile_cct_version', $this->version() );
 			$query = new WP_Query('post_type=profile_cct&post_status=published&posts_per_page=-1');
+			$count = 0;
 			while($query->have_posts()) : $query->the_post();
 				$_POST['profile_cct'] = get_post_meta($post->ID, "profile_cct"); 
-				wp_update_post($post); 
+				
+				wp_update_post($post);
+				
 			endwhile; 
 
 		endif;
 	}
 	
 	function force_refresh(){
-		$this->settings_options["list_updated"] = 0;//time();
-		$this->settings_options["page_updated"] = 0;//time();
-		$this->settings_options["form_updated"] = 0;//time();
+		$this->settings_options["list_updated"] = 0;
+		$this->settings_options["page_updated"] = 0;
+		$this->settings_options["form_updated"] = 0;
 		update_option('Profile_CCT_settings', $this->settings_options);
 	}
 	
@@ -2194,7 +2196,7 @@ Make sure that you select who this is supposed to be.<br />
 				'feeds' => true,
 				'pages' => true
 			),
-			'show_ui' => false,
+			'show_ui' => true,	//todo: revert this to false
 			'show_tagcloud' => false,
 			'show_in_nav_menus' => false,
 			'public' => true,
