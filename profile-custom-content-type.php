@@ -2196,7 +2196,7 @@ Make sure that you select who this is supposed to be.<br />
 				'feeds' => true,
 				'pages' => true
 			),
-			'show_ui' => true,	//todo: revert this to false
+			'show_ui' => false
 			'show_tagcloud' => false,
 			'show_in_nav_menus' => false,
 			'public' => true,
