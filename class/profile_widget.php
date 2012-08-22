@@ -1,4 +1,4 @@
-<?
+<?php
 function profile_cct_widget_init(){
 register_widget('Profile_CCT_widget');
 }

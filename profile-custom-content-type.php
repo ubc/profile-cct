@@ -2113,28 +2113,23 @@ Make sure that you select who this is supposed to be.<br />
 				<input type="hidden" name="post_type" value="profile_cct" />
 				<input type="submit" value="Search People" />
 			</form>
-		
-			<?
+			<?php
 			$names = array();
 			$query_results = $this->get_all_names();
-			foreach($query_results as $result):
+			foreach( $query_results as $result ):
 				$names[] = $result->post_title;
 			endforeach;
 			?>	
-			
 			<script>
-				jQuery(function() {
-					var availableTags = <?php echo json_encode($names); ?>;
+				jQuery( function() {
+					var availableTags = <?php echo json_encode( $names ); ?>;
 					jQuery( ".profile-cct-search" ).autocomplete({
 						source: availableTags
 					});
 				});
 			</script>
-			
-			
-			
 		</div>
-		<?
+		<?php
 		return ob_get_clean();
 	}
 	
@@ -2253,11 +2248,12 @@ Make sure that you select who this is supposed to be.<br />
 		<div class="profile-cct-archive-filters" style="overflow:hidden;">
 			<h6>Filter &amp; Order Profiles</h6>
 			<form action="<?php echo get_bloginfo('siteurl'); ?>" method="get">
-			<?
+			<?php
 			$taxonomies = get_object_taxonomies("profile_cct"); //i swear this line used to be here and then disappeared.
 			foreach($taxonomies as $tax): 
 				
-				if(!$options['display_tax'][$tax])continue;	
+				if(!$options['display_tax'][$tax])
+				continue;	
 				?>
 				<div class="profile-cct-filter-box">	
 					<select name="<?php echo $tax; ?>">
@@ -2291,7 +2287,7 @@ Make sure that you select who this is supposed to be.<br />
 			
 			</form>
 		</div>
-		<?
+		<?php
 	}
 	
 	
@@ -2318,10 +2314,10 @@ Make sure that you select who this is supposed to be.<br />
 							<?php echo $letter; ?>
 						<?php endif; ?>
 					</li>
-				<? endforeach; ?>
+				<?php endforeach; ?>
 			</ul>
 		</div>
-		<?
+		<?php
 	}
 	
 	

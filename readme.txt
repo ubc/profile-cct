@@ -129,6 +129,9 @@ eg [profilenavigation display_searchbox="true" display_tax="location, position"]
 
 == Change log ==
 
+= Version 1.2.2 =
+* Removed php short tags
+
 = Version 1.2.1 =
 * Fixed bug where post formatting gets mangled sometimes
 * Fixed bug where default values sometimes show up in profile pages
