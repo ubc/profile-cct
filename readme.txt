@@ -130,7 +130,7 @@ eg [profilenavigation display_searchbox="true" display_tax="location, position"]
 == Change log ==
 
 = Version 1.2.2 =
-* Removed php short tags
+* Removed php short tags which caused fatal errors if they're disabled
 * Ensure profile data gets updated appropriately when plugin is updated (this process may cause a brief delay after updating if you have lots of profiles)
 
 = Version 1.2.1 =
