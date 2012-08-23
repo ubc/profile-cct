@@ -131,7 +131,7 @@ eg [profilenavigation display_searchbox="true" display_tax="location, position"]
 
 = Version 1.2.2 =
 * Removed php short tags
-* Ensure profile data gets updated appropriately when plugin is updated
+* Ensure profile data gets updated appropriately when plugin is updated (this process may cause a brief delay after updating if you have lots of profiles)
 
 = Version 1.2.1 =
 * Fixed bug where post formatting gets mangled sometimes
