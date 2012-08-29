@@ -105,7 +105,7 @@ class Profile_CCT {
 		
 		add_action( 'init', array($this, 'register_alphabet_taxonomy'));
 		
-		add_action( 'admin_init',  array( $this,'update_script'),0) ;
+		add_action( 'admin_init',  array( $this,'update_script') ) ;
 		
 		add_action( 'profile_cct_display_archive_controls', array($this, 'display_archive_controls'));
 		
@@ -487,18 +487,20 @@ class Profile_CCT {
 	function update_script(){
 		global $post;
 		$previous_version = get_option( 'profile_cct_version', 0 );
-		$this->force_refresh();
 		if( version_compare( $this->version(), $previous_version, '>' ) ):
-			update_option( 'profile_cct_version', $this->version() );
+			//echo 'Running profiles update script<br />';
+			$this->force_refresh();
+			
 			$query = new WP_Query('post_type=profile_cct&post_status=published&posts_per_page=-1');
-			$count = 0;
+			
 			while($query->have_posts()) : $query->the_post();
-				$_POST['profile_cct'] = get_post_meta($post->ID, "profile_cct"); 
-				
-				wp_update_post($post);
-				
-			endwhile; 
+			
+				//The function that hooks into save_post relies on this $_POST data being here
+				$_POST['profile_cct'] = get_post_meta($post->ID, "profile_cct", true); 
 
+				wp_update_post($post);
+			endwhile; 
+			update_option( 'profile_cct_version', $this->version() );
 		endif;
 	}
 	
@@ -916,6 +918,8 @@ Make sure that you select who this is supposed to be.<br />
 	 */
 	function save_post_data( $data, $postarr ) {
 		global $post, $wp_filter;
+		
+		
 		if(!isset( $_POST["profile_cct"] ))
 			return $data;
 		
@@ -967,14 +971,14 @@ Make sure that you select who this is supposed to be.<br />
 		if(is_array($_POST["profile_cct"])):
 			update_post_meta($postarr['ID'], 'profile_cct', $profile_cct_data);
 			update_post_meta($postarr['ID'], 'profile_cct_last_name', $profile_cct_data["name"]['last']);
+			//echo 'lname = ' . $profile_cct_data["name"]['last'];
 		endif;
 		
+	
 		
-		//echo $first_letter;
 		$first_letter = strtolower(substr($profile_cct_data["name"]['last'], 0, 1));
 		//if($first_letter && $postarr['ID']):
-			//echo $first_letter;
-			//echo $postarr['ID'];
+
 			wp_set_post_terms($postarr['ID'], $first_letter, 'profile_cct_letter', false);
 		//endif;
 		kses_init_filters();
