@@ -9,10 +9,10 @@
 	$previous_version = get_option( 'profile_cct_version', '1.1.8' );
 ?>
 	<div class="wrap">
-		<h2>Settings</h2>
+		<h2 id="profile-setting">Settings</h2>
 		
 		<?php if( version_compare( $this->version(), $previous_version, '>' )): ?>
-			<div class="update-profiles info">
+			<div class="update-profiles info" id="update-profile-shell">
 			
 			You need to update profiles so that they will run smoothly with the latest version of the plugin. <a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>
 			

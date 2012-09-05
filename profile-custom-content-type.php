@@ -2,7 +2,7 @@
 /**
 Plugin Name: Profile Custom Content Type
 Plugin URI:
-Version: 1.2.2.1
+Version: 1.2.3
 Text Domain: profile_cct
 Domain Path: /languages
 Description: Allows administrators to manage user profiles better in order to display them on their websites
@@ -10,7 +10,6 @@ Author: Enej Bajgoric, Eric Jackish, Aleksandar Arsovski, CTLT, UBC
 Licence: GPLv2
 Author URI: http://ctlt.ubc.ca
  */
-
 
 /**
  License:
@@ -495,9 +494,13 @@ class Profile_CCT {
 		endif;
 	}
 	function version_warning() {
+		global $hook_suffix;
+		
+		if( $hook_suffix != 'profile_cct_page_profile-cct/profile-custom-content-type' ):
 		echo "
             <div id='profile-cct-version-msg' class='updated fade'><p><strong>Profile Plugin</strong> requires you to update profiles by visiting the <a href='".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php')."'>Settings Page</a></p></div>
             ";
+        endif;
 	
 	}
 	function force_refresh(){
@@ -508,27 +511,35 @@ class Profile_CCT {
 	}
 	
 	function refresh_profiles() {
-		if( isset( $_POST['page']) ) {
-			
-			$page = (int)$_POST['page'];
-			
-		}else{
-			$page = 0;
-		}
+	
+		$page = ( isset( $_POST['page']) ? (int)$_POST['page'] : 0 );
 		
 		//
-		$query = new WP_Query('post_type=profile_cct&post_status=published&posts_per_page=10&paged='.$page );
+		$the_query = new WP_Query('post_type=profile_cct&post_status=published&posts_per_page=20&paged='.$page );
+		$previous_version = get_option( 'profile_cct_version', '1.1.8' );
+		// lets update the post! 
 		
-		// 
-		while($query->have_posts()) : $query->the_post();
+		$version_bump = version_compare( $this->version(), $previous_version, '>' );
+		
+		while($the_query->have_posts()) : $the_query->the_post();
+			global $post;
 			
-				//The function that hooks into save_post relies on this $_POST data being here
-				$_POST['profile_cct'] = get_post_meta($post->ID, "profile_cct", true); 
+			$this->update_profile( $post, $version_bump );
 				
-				wp_update_post( $post );
 		endwhile;
+		wp_reset_postdata();
 		
-		echo json_encode( array( 'max' => $query->max_num_pages, 'page' => $page ) );
+		if($page == $the_query->max_num_pages):
+			
+			if( $version_bump ):
+				// show notice
+				update_option('profile_cct_version', $this->version() );
+				add_action( 'admin_notices', array($this,'version_warning' ) ); 		
+			endif;
+			
+		endif;
+		
+		echo json_encode( array( 'max' => $the_query->max_num_pages, 'page' => $page ) );
 		die();
 	}
 	
@@ -575,7 +586,8 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function pre_get_posts( $query ) {
-		if($query->get('post_type') != "profile_cct")return;
+		if($query->get('post_type') != "profile_cct")
+			return;
 		
 		if( $query->is_main_query() ):
 			$this->is_main_query = true;
@@ -726,24 +738,9 @@ class Profile_CCT {
 
 			if ( have_posts() ) : while ( have_posts() ) : the_post();
 	
-					global $post;
+				global $post;
 	
 				if( $this->settings_options["list_updated"] > strtotime($post->post_modified_gmt )):
-	
-					$data = get_post_meta($post->ID, 'profile_cct', true);
-					ob_start();
-					do_action('profile_cct_page','display', $data, 'page');
-					$content = ob_get_contents();
-					ob_end_clean();
-			
-					ob_start();
-					do_action('profile_cct_page','display', $data,'list');
-					$excerpt = ob_get_contents();
-					ob_end_clean();
-			
-					$post->post_excerpt = $excerpt;
-					$post->post_content = $content;
-			
 					$this->update_profile( $post );
 				endif;
 				endwhile;
@@ -764,21 +761,6 @@ class Profile_CCT {
 	
 				if( $this->settings_options["page_updated"] > strtotime($post->post_modified_gmt )):
 		
-					$data = get_post_meta($post->ID, 'profile_cct', true);
-					ob_start();
-					do_action('profile_cct_page','display', $data, 'page');
-					$content = ob_get_contents();
-					ob_end_clean();
-			
-					ob_start();
-					do_action('profile_cct_page','display', $data,'list');
-					$excerpt = ob_get_contents();
-					ob_end_clean();
-		
-		
-					$post->post_excerpt = $excerpt;
-					$post->post_content = $content;
-			
 					$this->update_profile( $post );
 				endif;
 	
@@ -791,17 +773,38 @@ class Profile_CCT {
 		endif;
 	}
 
-	function update_profile( $post ) {
+	function update_profile( $post, $version_bump = false ) {
+		
+		$data = get_post_meta($post->ID, 'profile_cct', true);
+		
+		ob_start();
+		do_action('profile_cct_page','display', $data, 'page');
+		$mypost['post_content'] = ob_get_contents();
+		ob_end_clean();
 
+		ob_start();
+		do_action('profile_cct_page','display', $data,'list');
+		$mypost['post_excerpt'] = ob_get_contents();
+		ob_end_clean();
+
+		
 		$mypost['ID'] = $post->ID;
-
-		$mypost['post_content'] = $post->post_content;
-		$mypost['post_excerpt'] = $post->post_excerpt;
 
 		kses_remove_filters();
 		wp_update_post( $mypost );
 		kses_init_filters();
-
+		
+		if( $version_bump ):
+			// we only have to do this if we haven't update the version yet
+			update_post_meta( $post->ID, 'profile_cct_last_name', $data["name"]['last'] );
+			
+			$first_letter = strtolower( substr( $data["name"]['last'], 0, 1 ) );
+			$first_letter = ( empty($first_letter) ? '0': $first_letter );
+			// var_dump( $first_letter, $data["name"] );
+			wp_set_post_terms( $post->ID, $first_letter, 'profile_cct_letter', false);
+		endif;
+			
+		
 	}
 	/**
 	 * edit_post function.
@@ -875,19 +878,19 @@ class Profile_CCT {
 		
 	}
 	function post_author_meta_box($post) {
-	global $user_ID;
-?>
-
-Make sure that you select who this is supposed to be.<br />
-
-<label class="screen-reader-text" for="post_author_override"><?php _e('Author'); ?></label>
-<?php
-	wp_dropdown_users( array(
-		'who' => null,
-		'name' => 'post_author_override',
-		'selected' => empty($post->ID) ? $user_ID : $post->post_author,
-		'include_selected' => true
-	) );
+		global $user_ID;
+		?>
+		
+		Make sure that you select who this is supposed to be.<br />
+		
+		<label class="screen-reader-text" for="post_author_override"><?php _e('Author'); ?></label>
+		<?php
+			wp_dropdown_users( array(
+				'who' => null,
+				'name' => 'post_author_override',
+				'selected' => empty($post->ID) ? $user_ID : $post->post_author,
+				'include_selected' => true
+			) );
 	}
 	/**
 	 * edit_form_advanced function.
@@ -1000,7 +1003,7 @@ Make sure that you select who this is supposed to be.<br />
 		$first_letter = strtolower(substr($profile_cct_data["name"]['last'], 0, 1));
 		//if($first_letter && $postarr['ID']):
 
-			wp_set_post_terms($postarr['ID'], $first_letter, 'profile_cct_letter', false);
+		wp_set_post_terms($postarr['ID'], $first_letter, 'profile_cct_letter', false);
 		//endif;
 		kses_init_filters();
 		

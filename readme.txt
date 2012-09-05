@@ -3,7 +3,7 @@ Contributors: enej, ejackisch, alekarsovski,  ctlt-dev, ubcdev
 Tags: profile, user
 Requires at least: 3.2
 Tested up to: 3.4.1
-Stable tag: 1.2.2.1
+Stable tag: 1.2.2.2
 
 Manage and display advanced user profiles on your website.
 
@@ -128,6 +128,9 @@ eg [profilenavigation display_searchbox="true" display_tax="location, position"]
 13. Where users go to edit their profile
 
 == Change log ==
+= Version 1.2.3 =
+* Fixed bugs related to to updating from lower version to the latest once. 
+* implemented a way to force of the refresh of profiles. Instead of waiting for the profile to get requested. A must if you are using shortcodes instead of regular profile views.
 
 = Version 1.2.2 =
 * Removed php short tags which caused fatal errors if they're disabled

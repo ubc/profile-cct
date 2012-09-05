@@ -50,10 +50,14 @@ var Profile_CCT_FORM ={
 					where: ProfileCCT.page
 				};
 		
+	
 		jQuery.post(ajaxurl, data_set, function(response) {
 				
 				if(response == 'sorted'){
 					Profile_CCT_FORM.hideSpinner();
+					
+					Profile_CCT_Admin.show_refresh();
+					
 				} // TO DO WRITE THE ERROR TO THE USER... 
 		});
 	 },
@@ -166,11 +170,14 @@ var Profile_CCT_FORM ={
      	
      	 parent.parent().data('options', serialize); // update the serealized data 
      	 // ajax updating of the field options
+     	 
      	 jQuery.post(ajaxurl, data, function(response) {
 			 parent.removeClass('changed');
 			
 			 if(response == 'updated'){
 			 	 el.siblings('.spinner').hide();
+			 	 
+			 	 Profile_CCT_Admin.show_refresh();
 			 }
 			
 		 });

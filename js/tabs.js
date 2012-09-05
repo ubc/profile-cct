@@ -37,6 +37,7 @@ var Profile_CCT_TABS ={
 						title: tab_title,
 						index:  index
 					};
+				
 				jQuery.post(ajaxurl, data, function(response) {
 					
 					if(response == "added"){
@@ -56,6 +57,8 @@ var Profile_CCT_TABS ={
 								tolerance: 'pointer'
 						});
 						Profile_CCT_FORM.hideSpinner();
+						
+						Profile_CCT_Admin.show_refresh();
 						
 					}
 				});			
@@ -86,13 +89,15 @@ var Profile_CCT_TABS ={
 				};
 			// don't submit the vall 
 			jQuery( "#form-builder").submit(function(e){ e.preventDefault(); });
-
+			
 			jQuery.post(ajaxurl, data, function(response) {	
 					
 				if(response == "updated") {	
 					el.siblings('a').text( tab_title );
          			el.parent().removeClass('editing'); 
          			Profile_CCT_FORM.hideSpinner();
+         			
+         			Profile_CCT_Admin.show_refresh();
          		}
 			});
 		 }
@@ -118,6 +123,8 @@ var Profile_CCT_TABS ={
 					el.siblings('a').text( tab_title );
          			el.parent().removeClass('editing'); 
          			Profile_CCT_FORM.hideSpinner();
+         			
+         			Profile_CCT_Admin.show_refresh();
          		}
 			});
 
@@ -157,6 +164,8 @@ var Profile_CCT_TABS ={
 					Profile_CCT_TABS.$tabs.tabs( "remove", index );
 					
 					Profile_CCT_FORM.hideSpinner();
+					
+					Profile_CCT_Admin.show_refresh();
 					// window.location.reload();
 				}
 			});
