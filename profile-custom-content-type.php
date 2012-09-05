@@ -93,6 +93,8 @@ class Profile_CCT {
 
 		add_action( 'wp_ajax_cct_update_fields', array( $this,'update_fields'));
 		add_action( 'wp_ajax_cct_update_tabs', array( $this,'update_tabs'));
+		
+		add_action( 'wp_ajax_cct_update_profiles', array( $this,'refresh_profiles'));
 
 		add_action( 'admin_print_styles-post-new.php', array( $this,'add_style_edit'));
 		add_action( 'admin_print_styles-post.php',array( $this,'add_style_edit'));
@@ -104,7 +106,7 @@ class Profile_CCT {
 		//add_action( 'template_redirect', array($this,'force_profile_cct_archive_page'));
 		
 		add_action( 'init', array($this, 'register_alphabet_taxonomy'));
-		
+		// update the script
 		add_action( 'admin_init',  array( $this,'update_script') ) ;
 		
 		add_action( 'profile_cct_display_archive_controls', array($this, 'display_archive_controls'));
@@ -376,9 +378,7 @@ class Profile_CCT {
 		default:
 			wp_enqueue_style( 'profile-cct-settings',PROFILE_CCT_DIR_URL. '/css/settings.css' );
 			break;
-
 		}
-		wp_enqueue_style( 'profile-cct-general',PROFILE_CCT_DIR_URL. '/css/general.css' );
 	}
 	/**
 	 * admin_scripts function.
@@ -413,10 +413,12 @@ class Profile_CCT {
 			break;
 			
 		default:
-			// wp_enqueue_script( 'profile-cct-settings',PROFILE_CCT_DIR_URL. '/js/settings.js' );
-			break;
+			
+		break;
 
 		}
+		
+		wp_enqueue_script( 'profile-cct-settings',PROFILE_CCT_DIR_URL. '/js/admin.js' );
 		
 	}
 	/**
@@ -485,30 +487,49 @@ class Profile_CCT {
 	 * Check if the plugin is updated and if so resave all the data
 	 */
 	function update_script(){
-		global $post;
-		$previous_version = get_option( 'profile_cct_version', 0 );
+		// var_dump(version_compare( $this->version(), $previous_version, '>' ));
+		$previous_version = get_option( 'profile_cct_version', '1.1.8' );
 		if( version_compare( $this->version(), $previous_version, '>' ) ):
-			//echo 'Running profiles update script<br />';
-			$this->force_refresh();
-			
-			$query = new WP_Query('post_type=profile_cct&post_status=published&posts_per_page=-1');
-			
-			while($query->have_posts()) : $query->the_post();
-			
-				//The function that hooks into save_post relies on this $_POST data being here
-				$_POST['profile_cct'] = get_post_meta($post->ID, "profile_cct", true); 
-
-				wp_update_post($post);
-			endwhile; 
-			update_option( 'profile_cct_version', $this->version() );
+			// show notice
+			add_action( 'admin_notices', array($this,'version_warning' ) ); 		
 		endif;
 	}
+	function version_warning() {
+		echo "
+            <div id='profile-cct-version-msg' class='updated fade'><p><strong>Profile Plugin</strong> requires you to update profiles by visiting the <a href='".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php')."'>Settings Page</a></p></div>
+            ";
 	
+	}
 	function force_refresh(){
 		$this->settings_options["list_updated"] = 0;
 		$this->settings_options["page_updated"] = 0;
 		$this->settings_options["form_updated"] = 0;
 		update_option('Profile_CCT_settings', $this->settings_options);
+	}
+	
+	function refresh_profiles() {
+		if( isset( $_POST['page']) ) {
+			
+			$page = (int)$_POST['page'];
+			
+		}else{
+			$page = 0;
+		}
+		
+		//
+		$query = new WP_Query('post_type=profile_cct&post_status=published&posts_per_page=10&paged='.$page );
+		
+		// 
+		while($query->have_posts()) : $query->the_post();
+			
+				//The function that hooks into save_post relies on this $_POST data being here
+				$_POST['profile_cct'] = get_post_meta($post->ID, "profile_cct", true); 
+				
+				wp_update_post( $post );
+		endwhile;
+		
+		echo json_encode( array( 'max' => $query->max_num_pages, 'page' => $page ) );
+		die();
 	}
 	
 	/**
@@ -2352,6 +2373,8 @@ Make sure that you select who this is supposed to be.<br />
 		</div>
 		<?php
 	}
+	
+	
 	
 	
 //END SHORTCODES	

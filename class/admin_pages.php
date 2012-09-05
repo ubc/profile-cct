@@ -5,9 +5,21 @@
 	do_action('profile_cct_admin_pages', $type_of);
 	
 	screen_icon( 'users' );
+	
+	$previous_version = get_option( 'profile_cct_version', '1.1.8' );
 ?>
 	<div class="wrap">
 		<h2>Settings</h2>
+		
+		<?php if( version_compare( $this->version(), $previous_version, '>' )): ?>
+			<div class="update-profiles info">
+			
+			You need to update profiles so that they will run smoothly with the latest version of the plugin. <a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>
+			
+			</div>
+			
+			
+		<?php endif; ?>
 		<h3 class="nav-tab-wrapper">
 
 			<a class="nav-tab <?php if( !isset($_GET['view']) ) { echo "nav-tab-active"; } ?>"
@@ -61,4 +73,5 @@
 
 	} 
 	?>
+	<div class="profile-version">version <?php echo $previous_version; ?></div>
 	</div> <?php 

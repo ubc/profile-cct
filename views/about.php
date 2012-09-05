@@ -2,7 +2,7 @@
 
 <div class="wrap about-wrap">
 
-<h1>Welcome to Profile Builder <span style="color:#FF7F00;">BETA</span></h1>
+<h1>Welcome to Profile Builder</h1>
 
 <!-- <div class="about-text"></div> -->
 <p class="about-description">How to create your profile?</p>

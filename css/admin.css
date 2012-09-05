@@ -85,6 +85,31 @@
     width: 98%;
     clear: both;
 }
+
+.update-profiles {
+	padding: 20px 10px;
+}
+
+.profile-version{
+	clear: both;
+	margin-top: 10px;
+	color: #AAA;
+	text-align: right;
+	
+}
+#update-profiles-slider{
+	display: none;
+	overflow: hidden;
+}
+#update-profiles-slider div{
+	margin-top: 3px;
+	padding: 5px 10px 0;
+	height: 19px;
+	background: #EEE;
+}
+#update-profiles-slider.active-slider{
+	display: block;
+}
 /*
 <a class="close" href="#">x</a>
 .close{
