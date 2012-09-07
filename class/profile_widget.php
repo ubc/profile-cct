@@ -21,6 +21,6 @@ class Profile_CCT_widget extends WP_Widget{
 	
 	
 	function form($instance){
-		echo 'Customize in Profiles->Settings->Settings';
+		echo 'Customize in <a href="'. admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=settings').'" title="Profiles Settings">Profiles Settings</a>';
 	}
 }

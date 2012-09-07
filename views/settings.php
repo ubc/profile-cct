@@ -125,7 +125,7 @@ endif;
 				<option value="last_name" <?php selected("last_name", $this->settings_options['sort_order']); ?>>Last Name</option>
 				<option value="date" <?php selected("date", $this->settings_options['sort_order']); ?>>Date Added</option>
 			</select><br />
-			if using manual sorting, go to <em>Profiles->Order Profiles</em> to set the order
+			if using manual sorting, go to <a href="<?php echo admin_url('edit.php?post_type=profile_cct&page=order_profiles'); ?>" title="Order Profiles">Order Profiles</a> to set the order.
 		</td>
 	</tr>
 

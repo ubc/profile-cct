@@ -84,6 +84,7 @@ class Profile_CCT {
 		add_filter( 'posts_orderby', array( $this,'orderby_menu' ) );
 		add_action( 'pre_get_posts', array( $this,'pre_get_posts') );
 		
+		
 		add_action( 'template_redirect',  array( $this,'check_freshness'));
 		
 		add_action( 'wp_insert_post_data', array( $this,'save_post_data'),10,2);
@@ -136,6 +137,7 @@ class Profile_CCT {
 		add_action( 'wp_before_admin_bar_render', array($this, 'edit_admin_bar_render'),20 );
 
 	}
+	
 	/**
 	 * edit_admin_bar_render function.
 	 * 
@@ -480,6 +482,10 @@ class Profile_CCT {
 		$this->register_cpt_profile_cct();
 		$this->load_scripts_cpt_profile_cct();
 		
+		if( isset( $_GET['delete-version']) ):
+			delete_option( 'profile_cct_version' );
+		endif;
+		
 	}
 	
 	/**
@@ -498,7 +504,7 @@ class Profile_CCT {
 		
 		if( $hook_suffix != 'profile_cct_page_profile-cct/profile-custom-content-type' ):
 		echo "
-            <div id='profile-cct-version-msg' class='updated fade'><p><strong>Profile Plugin</strong> requires you to update profiles by visiting the <a href='".admin_url('edit.php?post_type=profile_cct&page=profile-cct/profile-custom-content-type.php')."'>Settings Page</a></p></div>
+            <div id='profile-cct-version-msg' class='updated fade'><p><strong>Profile Plugin</strong> requires you to update profiles by visiting the <a href='".admin_url( 'edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME )."'>Settings Page</a></p></div>
             ";
         endif;
 	
@@ -514,16 +520,23 @@ class Profile_CCT {
 	
 		$page = ( isset( $_POST['page']) ? (int)$_POST['page'] : 0 );
 		
+		$args = array(
+			'post_type'		=> 'profile_cct',
+			'post_status'	=> 'any',
+			'posts_per_page' => 20,
+			'orderby'		=> 'title',
+			'paged'			=> $page
+		);
 		//
-		$the_query = new WP_Query('post_type=profile_cct&post_status=published&posts_per_page=20&paged='.$page );
+		$the_query = new WP_Query( $args );
 		$previous_version = get_option( 'profile_cct_version', '1.1.8' );
 		// lets update the post! 
-		
+		// var_dump($the_query);
 		$version_bump = version_compare( $this->version(), $previous_version, '>' );
 		
 		while($the_query->have_posts()) : $the_query->the_post();
 			global $post;
-			
+			// var_dump($query);
 			$this->update_profile( $post, $version_bump );
 				
 		endwhile;
@@ -586,10 +599,12 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function pre_get_posts( $query ) {
-		if($query->get('post_type') != "profile_cct")
+		
+		if( ( $query->get('post_type') != "profile_cct" ) || is_admin() )
 			return;
 		
 		if( $query->is_main_query() ):
+		
 			$this->is_main_query = true;
 			$this->automatic_ordering = true;
 			
@@ -599,11 +614,10 @@ class Profile_CCT {
 			$query->set('order', 'asc');
 			if(isset($_GET['order']) && $_GET['order'] == "desc")$query->set('order', $_GET['order']);
 			
-			switch($orderby){
+			switch( $orderby ) {
 				case 'last_name':
-					$query->set('meta_key', 'profile_cct_last_name');
-					$query->set('orderby', 'meta_value');
-					
+					//$query->set( 'meta_key', 'profile_cct_last_name' );
+					// $query->set( 'orderby', 'meta_value' );
 				break;
 				case 'first_name':
 					$query->set('orderby', 'title');
@@ -616,8 +630,6 @@ class Profile_CCT {
 				default:
 					$this->automatic_ordering = false; //orderby_menu function will sort profiles by their manually set order
 			}
-			
-			
 		else:
 			$this->is_main_query = false;
 		endif;
@@ -774,7 +786,8 @@ class Profile_CCT {
 	}
 
 	function update_profile( $post, $version_bump = false ) {
-		
+	
+		$mypost = array();
 		$data = get_post_meta($post->ID, 'profile_cct', true);
 		
 		ob_start();
@@ -787,21 +800,24 @@ class Profile_CCT {
 		$mypost['post_excerpt'] = ob_get_contents();
 		ob_end_clean();
 
-		
+		// var_dump($data,$post,$mypost);
 		$mypost['ID'] = $post->ID;
 
 		kses_remove_filters();
 		wp_update_post( $mypost );
 		kses_init_filters();
 		
-		if( $version_bump ):
+		if( true ):
+			$last_name = ( isset($data["name"]['last']) ? $data["name"]['last'] : '0');
 			// we only have to do this if we haven't update the version yet
-			update_post_meta( $post->ID, 'profile_cct_last_name', $data["name"]['last'] );
+			update_post_meta( $post->ID, 'profile_cct_last_name', $last_name );
 			
-			$first_letter = strtolower( substr( $data["name"]['last'], 0, 1 ) );
+			$first_letter = strtolower( substr( $last_name, 0, 1 ) );
 			$first_letter = ( empty($first_letter) ? '0': $first_letter );
 			// var_dump( $first_letter, $data["name"] );
+			
 			wp_set_post_terms( $post->ID, $first_letter, 'profile_cct_letter', false);
+			// var_dump($first_letter, $last_name );
 		endif;
 			
 		
@@ -2076,7 +2092,7 @@ class Profile_CCT {
 					$query['orderby'] = 'title';
 					break;
 				case 'last_name':
-					$query['meta_key']='profile_cct_'.$atts['orderby'];
+					$query['meta_key']='profile_cct_last_name';
 					$query['orderby'] = 'meta_value';
 					break;
 				case 'date':

@@ -2,7 +2,7 @@
 
 
 	extract( $options );
-	//var_dump($value);
+	
 	$hide = ( isset($show) && !$show ? ' style="display:none;"': '');
 	if($this->action == 'display' && empty($value) && !in_array($type, array('end_shell','shell') ) && !empty($hide) ):
 		echo "";
@@ -46,9 +46,11 @@
 
 	switch($type) {
 	case 'text':
+		
 		echo $separator.' <'.$tag.' '.$id.$class.$href.$hide.'>';
 		echo $display;
 		echo "</".$tag.">";
+		
 		break;
 
 	case 'shell':

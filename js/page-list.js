@@ -5,7 +5,6 @@ var Profile_CCT_PROFILE_PAGE = {
 		jQuery( ".sort" ).sortable({
 			connectWith: ".connectedSortable",
 		}).disableSelection();
-	
 	}
 };
 

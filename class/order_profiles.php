@@ -17,9 +17,9 @@ endif;
 	<h2>Order Profiles</h2>
 	<?php echo $updated; ?>
 	<ul class="subsubsub">
-		<li class="all">Quick Sort : </li>
-		<li class="publish"><a href="#first" id="sort-first">First Name</a> |</li>
-		<li class="draft"><a href="#last" id="sort-last">Last Name</a></li>
+		<li >Quick Sort : </li>
+		<li ><a href="#first" id="sort-first">First Name</a> |</li>
+		<li ><a href="#last" id="sort-last">Last Name</a></li>
 	</ul> 
 	<div class="tablenav top">
 	<form method="get" action="<?php echo admin_url( 'edit.php' ); ?>" >
