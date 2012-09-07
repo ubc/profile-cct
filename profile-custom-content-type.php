@@ -699,8 +699,10 @@ class Profile_CCT {
 
 		$mypost['post_content'] = $post->post_content;
 		$mypost['post_excerpt'] = $post->post_excerpt;
-
+		
+		kses_remove_filters();
 		wp_update_post( $mypost );
+		kses_init_filters();
 
 	}
 	/**
@@ -841,6 +843,7 @@ Make sure that you select who this is supposed to be.<br />
 		if(!isset( $_POST["profile_cct"] ))
 			return $data;
 		
+		kses_remove_filters();
 		
 		$profile_cct_data_previous =  get_post_meta($postarr['ID'], 'profile_cct', true);
 
@@ -887,7 +890,9 @@ Make sure that you select who this is supposed to be.<br />
 
 		if(is_array($_POST["profile_cct"]))
 			update_post_meta($postarr['ID'], 'profile_cct', $profile_cct_data);
-
+		
+		kses_init_filters();
+		
 		return $data;
 
 	}
