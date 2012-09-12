@@ -20,9 +20,7 @@ function profile_cct_address_field_shell( $action, $options ) {
 		'class'=>'address'
 		);
 	
-	$options = (is_array($options) ? array_merge($default_options,$options): $default_options );
-	
-	
+	$options = ( is_array( $options ) ? array_merge( $default_options, $options ): $default_options );
 	
 	$field->start_field($action,$options);
 	
@@ -82,9 +80,9 @@ function profile_cct_address_display_shell( $action, $options, $data=null ) {
 	// don't display the address if there is nothing to display	
 	if( !$field->is_array_empty($data , array('country')) ||  $action == "edit" ):
 	
-		$field->start_field($action,$options);
+		$field->start_field( $action, $options );
 		
-		profile_cct_address_display($data,$options);
+		profile_cct_address_display( $data, $options );
 		
 		$field->end_field( $action, $options );
 	else:
@@ -97,10 +95,9 @@ function profile_cct_address_display( $data, $options ){
 	extract( $options );
 	$show = (is_array($show) ? $show : array());
 	
-
 	$field = Profile_CCT::get_object();
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'address adr', 'type'=>'shell','tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'address adr', 'type'=>'shell','tag'=>'div' ) );
 	
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'building-name','default_text'=>'Wayne Manor', 'value'=>$data['building-name'], 'type'=>'text', 'show' => in_array("building-name",$show) ) );
 	$field->display_text( array( 'field_type'=>$type, 'class'=>'room-number','default_text'=>'101', 'value'=>$data['room-number'], 'type'=>'text', 'show' => in_array("room-number",$show)) );
@@ -115,7 +112,6 @@ function profile_cct_address_display( $data, $options ){
 	
 	$field->display_text( 
 	array( 'field_type'=>$type, 'class'=>'country-name country','default_text'=>'United States', 'value'=>$data['country'], 'all_fields'=>profile_cct_list_of_countries(), 'type'=>'text', 'show' => in_array("country",$show) ,'tag'=>'div') );
-	
 	
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell','tag'=>'div') );
 

@@ -72,7 +72,7 @@ function profile_cct_text_display_shell(  $action, $options, $data=null ) {
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	
-	$field->start_field($action,$options);
+	$field->start_field( $action,$options );
 	if( $field->is_data_array( $data ) ):
 		
 		foreach($data as $item_data):
@@ -80,7 +80,7 @@ function profile_cct_text_display_shell(  $action, $options, $data=null ) {
 		endforeach;
 		
 	else:
-		profile_cct_text_display($item_data,$options);
+		profile_cct_text_display( $item_data, $options );
 	endif;
 	
 	$field->end_field( $action, $options );
@@ -93,7 +93,8 @@ function profile_cct_text_display( $data, $options ){
 	$field = Profile_CCT::get_object();
 	
 	$default_text = apply_filters('profile_cct_default_text_'.$type, "Default Text");
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'single-text', 'type'=>'shell', 'tag'=>'div') );
+	
+	$field->display_text( array( 'field_type'=>$type, 'class'=>'single-text single-text-'.$type , 'type'=>'shell', 'tag'=>'div') );
 	$field->display_text( array( 'field_type'=>$type, 'default_text'=>$default_text, 'value'=>$data['text'], 'type'=>'text') );
 	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
 	

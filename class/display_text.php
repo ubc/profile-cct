@@ -1,9 +1,9 @@
 <?php 
-
-
+	
 	extract( $options );
-
+	
 	$hide = ( isset($show) && !$show ? ' style="display:none;"': '');
+	
 	if($this->action == 'display' && empty($value) && !in_array($type, array('end_shell','shell') ) && empty($hide) ):
 		echo "";
 	return true;
@@ -16,7 +16,7 @@
 	$href = ( isset($href)? ' href="'.$href.'"': ' ');
 
 
-	$show = ( isset($show) && !$show ? false: true);
+	$show = ( isset( $show ) && !$show ? false: true);
 
 	$tag = (isset($tag) ? $tag :"span");
 
@@ -37,7 +37,7 @@
 	}
 	
 	if( $value )
-		$display = ( $content_filter ? apply_filters( $content_filter, $value ) : esc_html($value) ); 
+		$display = ( $content_filter ? apply_filters( $content_filter, $value ) : esc_html( $value ) ); 
 	else
 		$display = $default_text;
 

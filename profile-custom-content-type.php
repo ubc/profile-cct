@@ -97,28 +97,28 @@ class Profile_CCT {
 		add_action( 'admin_init',array($this,'admin_init'));
 		
 		
-
 		$this->settings_options = get_option('Profile_CCT_settings');
 
 		$dir    = plugin_dir_path(__FILE__).'views/fields/';
-
+		
 		// include all files in the fields folder
 		if ($handle = opendir($dir)) :
 			/* This is the correct way to loop over the directory. */
 			while (false !== ($file = readdir($handle))):
 				if(substr($file,0,1) != ".")
-					require($dir.$file);
+					require( $dir.$file );
 				endwhile;
 
 			closedir($handle);
 		endif;
-		add_action('profile_cct_before_page', array( $this,'recount_field'),10,1);
-		add_action('profile_cct_before_page', array( $this,'display_fields_check'),11,1);
+		
+		add_action( 'profile_cct_before_page', array( $this,'recount_field'),10,1);
+		add_action( 'profile_cct_before_page', array( $this,'display_fields_check'),11,1);
 		// function to be executed on form admin page
-		add_action('profile_cct_form', array( $this,'form_field_shell'),10,1);
+		add_action( 'profile_cct_form', array( $this,'form_field_shell'),10,1);
 		
 		// function to be executed on page and list admin pages
-		add_action('profile_cct_page', array( $this,'page_field_shell'),10,3);
+		add_action( 'profile_cct_page', array( $this,'page_field_shell'),10,3);
 		
 		// function removed the edit Public profile from everyone but the person who can really edit it
 		add_action( 'wp_before_admin_bar_render', array($this, 'edit_admin_bar_render'),20 );
@@ -161,7 +161,6 @@ class Profile_CCT {
 				) );
 			
 		endif;
-    		
     }
 
 	/**
@@ -200,7 +199,7 @@ class Profile_CCT {
 	function add_style_edit() {
 		global $current_screen;
 
-		if($current_screen->id == 'profile_cct'):
+		if( $current_screen->id == 'profile_cct' ):
 			wp_enqueue_style("thickbox");
 			wp_enqueue_script("thickbox");
 	
@@ -339,10 +338,10 @@ class Profile_CCT {
 
 	}
 	
-	function public_profile(){
+	function public_profile() {
 	
 		// a page asking the user to create a public profile 
-		wp_die('redirect didn\'t work');
+		wp_die('redirect didn\'t work'); 
 	}
 	
 	
@@ -521,7 +520,7 @@ class Profile_CCT {
 	 * @param mixed $post
 	 * @return void
 	 */
-	function reset_filters($post) {
+	function reset_filters( $post ) {
 				
 		if( $post->post_type == 'profile_cct')
 			remove_filter( 'the_content', 'wpautop' );
@@ -656,7 +655,7 @@ class Profile_CCT {
 
 		endif;
 		//
-		if(is_singular( 'profile_cct' )):
+		if( is_singular( 'profile_cct' ) ):
 			global $post;
 
 
@@ -778,12 +777,12 @@ class Profile_CCT {
 	}
 	function post_author_meta_box($post) {
 	global $user_ID;
-?>
-
-Make sure that you select who this is supposed to be.<br />
-
-<label class="screen-reader-text" for="post_author_override"><?php _e('Author'); ?></label>
-<?php
+	?>
+	
+	Make sure that you select who this is supposed to be.<br />
+	
+	<label class="screen-reader-text" for="post_author_override"><?php _e('Author'); ?></label>
+	<?php
 	wp_dropdown_users( array(
 		'who' => null,
 		'name' => 'post_author_override',
@@ -951,7 +950,7 @@ Make sure that you select who this is supposed to be.<br />
 	 */
 	function page_field_shell( $action, $user_data, $where ) {
 		$this->action = $action;
-		$contexts = $this->default_shells($where); 
+		$contexts = $this->default_shells($where);
 			if($action == 'edit'):
 				?><div id="page-shell"><?php
 			endif;
@@ -1039,7 +1038,6 @@ Make sure that you select who this is supposed to be.<br />
 	 */
 	function recount_field( $where ) {
 	
-	
 		if( !in_array( $where, array('form','page','list') ) )
 			return true;
 	
@@ -1087,16 +1085,6 @@ Make sure that you select who this is supposed to be.<br />
 			endforeach;
 		endif;
 		
-		/*
-				
-		$this->e("current fields after merge with dynamic fields");
-		$this->e($current_fields);
-		
-		$this->e("dynamic fields");
-		$this->e($all_dynamic_fields);
-		*/
-		
-		
 		// DEFAULT FIELDS NOW 
 		unset($context);
 		
@@ -1132,18 +1120,6 @@ Make sure that you select who this is supposed to be.<br />
 		// merging the default array with the dynamic one
 		$default_fields = array_merge($default_fields, $all_dynamic_fields);
 		
-		/*
-		$this->e("default fields");
-		$this->e($default_fields);
-		// all the default fields should contain the dynamic fields as well 
-		
-		
-		$this->e("default fields after merging with default fields");
-		$this->e($default_fields);
-		*/
-		
-		// $this->e("difference between current_fields and default fields");
-		
 		$different = array_diff($default_fields, $current_fields);
 		
 		unset($field);
@@ -1168,6 +1144,7 @@ Make sure that you select who this is supposed to be.<br />
 	 * @return void
 	 */
 	function start_field( $action, $options ) {
+		
 		extract( $options );
 		
 		// be default show the remove button
@@ -1214,13 +1191,13 @@ Make sure that you select who this is supposed to be.<br />
 			$this->input_field( array('size'=>30, 'value'=>$text, 'class'=>'field-text','name'=>'text','label'=>'text input','type'=>'text' , 'before_label'=>true));
 
 		if(isset($before))
-			$this->input_field( array('size'=>10, 'value'=>stripslashes($before), 'class'=>'field-textarea','name'=>'before','label'=>'before html','type'=>'textarea' , 'before_label'=>true));
+			$this->input_field( array('size'=>10, 'value'=>stripslashes( $before ), 'class'=>'field-textarea','name'=>'before','label'=>'before html','type'=>'textarea' , 'before_label'=>true));
 
 		if(isset($after))
-			$this->input_field( array('size'=>10, 'value'=>stripslashes($after), 'class'=>'field-textarea','name'=>'after','label'=>'after html','type'=>'textarea' , 'before_label'=>true));
+			$this->input_field( array('size'=>10, 'value'=>stripslashes( $after ), 'class'=>'field-textarea','name'=>'after','label'=>'after html','type'=>'textarea' , 'before_label'=>true));
 
 		if(isset($empty))
-			$this->input_field( array('size'=>10, 'value'=>stripslashes($empty), 'class'=>'field-textarea','name'=>'empty','label'=>'content to be displayed on empty','type'=>'textarea' , 'before_label'=>true));
+			$this->input_field( array('size'=>10, 'value'=>stripslashes( $empty ), 'class'=>'field-textarea','name'=>'empty','label'=>'content to be displayed on empty','type'=>'textarea' , 'before_label'=>true));
 
 		if(isset($url_prefix))
 			$this->input_field(array('value'=>$url_prefix, 'class'=>'field-text','name'=> 'url_prefix', 'label'=>'url prefix ( http:// )','type'=>'text', 'class'=>'field-url-prefix','before_label'=>true));
@@ -1289,7 +1266,7 @@ Make sure that you select who this is supposed to be.<br />
 		endif;
 ?>
 	 	</div></<?php echo $shell; ?>><?php
-		if($action == "display")
+		if( $action == "display" )
 			echo $after;
 	}
 	/**
@@ -1312,6 +1289,7 @@ Make sure that you select who this is supposed to be.<br />
 	 * @return void
 	 */
 	function display_text($options) {
+	    
 		require(PROFILE_CCT_DIR_PATH.'class/display_text.php');
 	}
 

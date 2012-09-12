@@ -2,7 +2,13 @@
 
 add_action( 'init', 'profile_cct_init_taxonomies', 10 );
 
-//create two taxonomies, genres and writers for the post type "book"
+
+/**
+ * profile_cct_init_taxonomies function.
+ * 
+ * @access public
+ * @return void
+ */
 function profile_cct_init_taxonomies() 
 {
 
@@ -13,12 +19,19 @@ function profile_cct_init_taxonomies()
 	
 	if( is_array($taxonomies) ):
 		foreach($taxonomies as $taxonomy):
-			profile_cct_register_taxonomy($taxonomy);
+			profile_cct_register_taxonomy( $taxonomy );
 		endforeach;
 	endif;
 }
 
 
+/**
+ * profile_cct_register_taxonomy function.
+ * 
+ * @access public
+ * @param mixed $taxonomy
+ * @return void
+ */
 function profile_cct_register_taxonomy($taxonomy){
 	$labels = array(
 		'name' => $taxonomy['plural'] ,
@@ -42,9 +55,15 @@ function profile_cct_register_taxonomy($taxonomy){
 		'query_var' => true,
 		'rewrite' => array( 'slug' => sanitize_title($taxonomy['single']) ),
 	));
-
 }
 
+/**
+ * profile_cct_taxonomy_id function.
+ * 
+ * @access public
+ * @param mixed $single_taxonomy
+ * @return void
+ */
 function profile_cct_taxonomy_id( $single_taxonomy ) {
 
 	return 'profile_cct_'.str_replace( '-','_',sanitize_title( $single_taxonomy )); // $taxonomy['single']))
