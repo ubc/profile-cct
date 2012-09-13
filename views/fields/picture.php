@@ -293,7 +293,7 @@ function profile_cct_picture_add_photo_step1($post_id)
 	<div id="user-avatar-step1">
 	<form enctype="multipart/form-data" id="uploadForm" method="POST" action="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=2&post_id=<?php echo $post_id; ?>" >
 			<label for="upload"><?php _e('Choose an image from your computer:','user-avatar'); ?></label><br /><input type="file" id="upload" name="uploadedfile" />
-			<input type="hidden" name="action" value="save" />
+			<!-- <input type="hidden" name="action" value="save" /> -->
 			<?php wp_nonce_field('user-avatar') ?>
 		<p class="submit"><input type="submit" value="<?php esc_attr_e('Upload'); ?>" /></p>
 	</form>

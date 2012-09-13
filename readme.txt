@@ -65,8 +65,11 @@ Simply use [profile person="slug"] where slug is usually firstname-lastname.
 By default the full view will be shown, but you can set display="list" instead to show the list view.
 
 == Change log ==
+= Version 1.1.8.2 = 
+
 = Version 1.1.8.1 =
 * Version Number bump
+
 = Version 1.1.8 =
 * made it so that you can place the plugin into which every folder. 
 * better error on settings page
