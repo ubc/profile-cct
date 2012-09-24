@@ -1,15 +1,5 @@
 <?php
-/**
-Plugin Name: Profile Custom Content Type
-Plugin URI:
-Version: 1.2.3
-Text Domain: profile_cct
-Domain Path: /languages
-Description: Allows administrators to manage user profiles better in order to display them on their websites
-Author: Enej Bajgoric, Eric Jackish, Aleksandar Arsovski, CTLT, UBC
-Licence: GPLv2
-Author URI: http://ctlt.ubc.ca
- */
+// this should be 
 
 /**
  License:
@@ -42,9 +32,12 @@ if ( !defined('ABSPATH') )
 define( 'PROFILE_CCT_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'PROFILE_CCT_BASENAME', plugin_basename(__FILE__) );
 define( 'PROFILE_CCT_DIR_URL',  plugins_url( ''  , PROFILE_CCT_BASENAME ) );
-require(PROFILE_CCT_DIR_PATH.'/class/profile_widget.php');
+require(PROFILE_CCT_DIR_PATH.'class/profile_widget.php');
 require(PROFILE_CCT_DIR_PATH.'profile-taxonomies.php');
 require(PROFILE_CCT_DIR_PATH.'profile-manage-table.php');
+
+
+
 
 if(!class_exists('Profile_CCT')):
 class Profile_CCT {
@@ -70,10 +63,7 @@ class Profile_CCT {
 	 */
 	public function __construct () {
 		//remove_filter('template_redirect', 'redirect_canonical');
-		add_shortcode('profilelist', array( $this, 'profile_list_shortcode') );
-		add_shortcode('profile', array( $this, 'profile_single_shortcode') );
-		add_shortcode('profilesearch', array( $this, 'profile_search_shortcode') );
-		add_shortcode('profilenavigation', array( $this, 'profile_navigation_shortcode') );
+		
 		
 		add_action( 'admin_menu', array( $this, 'add_menu_page' ) );
 		/* saving the post meta info */
@@ -325,22 +315,22 @@ class Profile_CCT {
 		
 		$public_profile = add_submenu_page(
 			'users.php',
-			__( 'Public Profile', $this -> get_textdomain() ),
-			__( 'Public Profile', $this -> get_textdomain() ),
+			__( 'Public Profile', 'profile-cct-td' ),
+			__( 'Public Profile', 'profile-cct-td' ),
 			'edit_profile_cct', 'public_profile',
 			array( $this, 'public_profile' ) );
 			
 		$order_page = add_submenu_page(
 			'edit.php?post_type=profile_cct',
-			__( 'Order Profiles', $this -> get_textdomain() ),
-			__( 'Order Profiles', $this -> get_textdomain() ),
+			__( 'Order Profiles', 'profile-cct-td' ),
+			__( 'Order Profiles', 'profile-cct-td' ),
 			'manage_options', "order_profiles",
 			array( $this, 'admin_order_page' ) );
 			
 		$page = add_submenu_page(
 			'edit.php?post_type=profile_cct',
-			__( 'Settings', $this -> get_textdomain() ),
-			__( 'Settings', $this -> get_textdomain() ),
+			__( 'Settings', 'profile-cct-td' ),
+			__( 'Settings', 'profile-cct-td' ),
 			'manage_options', __FILE__,
 			array( $this, 'admin_pages' ) );
 			

@@ -1,11 +1,13 @@
+
+<?php // this file could should be deleted ?>
 		<div id="poststuff" class="metabox-holder has-right-side">
 		<div id="side-info-column" class="inner-side">
 		<div class="meta-box-sortables">
 		<div id="about" class="postbox ">
 		<div class="handlediv" title="<?php _e('Click to toggle'); ?>"><br/></div>
-		<h3 class="hndle" id="about-side"><?php _e('About the plugin', $this -> get_textdomain() ) ?></h3>
+		<h3 class="hndle" id="about-side"><?php _e('About the plugin', 'profile-cct-td' ) ?></h3>
 		<div class="inside">
-		<p><?php _e('Please read more about this small plugin on github.', $this -> get_textdomain() ); ?></p>
+		<p><?php _e('Please read more about this small plugin on github.', 'profile-cct-td' ); ?></p>
 		<p>&copy; Copyright 2008 - <?php echo date('Y'); ?> <a href="http://bueltge.de">Frank B&uuml;ltge</a></p>
 		</div>
 		</div>
@@ -16,32 +18,32 @@
 		<div id="normal-sortables" class="meta-box-sortables">
 		<div id="about" class="postbox ">
 		<div class="handlediv" title="<?php _e('Click to toggle'); ?>"><br/></div>
-		<h3 class="hndle" id="menu"><?php _e('MiniMenu', $this -> get_textdomain() ) ?></h3>
+		<h3 class="hndle" id="menu"><?php _e('MiniMenu', 'profile-cct-td' ) ?></h3>
 		<div class="inside">
 		<table class="widefat" cellspacing="0">
 		<tr class="alternate">
-		<td class="row-title"><a href="#headers"><?php _e('Headers', $this -> get_textdomain() ); ?></a></td>
+		<td class="row-title"><a href="#headers"><?php _e('Headers', 'profile-cct-td' ); ?></a></td>
 		</tr>
 		<tr>
-		<td class="row-title"><a href="#header_icons"><?php _e('Header Icons', $this -> get_textdomain() ); ?></a></td>
+		<td class="row-title"><a href="#header_icons"><?php _e('Header Icons', 'profile-cct-td' ); ?></a></td>
 		</tr>
 		<tr class="alternate">
-		<td class="row-title"><a href="#buttons"><?php _e('Buttons', $this -> get_textdomain() ); ?></a></td>
+		<td class="row-title"><a href="#buttons"><?php _e('Buttons', 'profile-cct-td' ); ?></a></td>
 		</tr>
 		<tr>
-		<td class="row-title"><a href="#tables"><?php _e('Tables', $this -> get_textdomain() ); ?></a></td>
+		<td class="row-title"><a href="#tables"><?php _e('Tables', 'profile-cct-td' ); ?></a></td>
 		</tr>
 		<tr class="alternate">
-		<td class="row-title"><a href="#admin_notices"><?php _e('Admin Notices', $this -> get_textdomain() ); ?></a></td>
+		<td class="row-title"><a href="#admin_notices"><?php _e('Admin Notices', 'profile-cct-td' ); ?></a></td>
 		</tr>
 		<tr>
-		<td class="row-title"><a href="#alternative_colours"><?php _e('Alternative Colours', $this -> get_textdomain() ); ?></a></td>
+		<td class="row-title"><a href="#alternative_colours"><?php _e('Alternative Colours', 'profile-cct-td' ); ?></a></td>
 		</tr>
 		<tr class="alternate">
-		<td class="row-title"><a href="#pagination"><?php _e('Pagination', $this -> get_textdomain() ); ?></a></td>
+		<td class="row-title"><a href="#pagination"><?php _e('Pagination', 'profile-cct-td' ); ?></a></td>
 		</tr>
 		<tr>
-		<td class="row-title"><a href="#form_elements"><?php _e('Form Elements', $this -> get_textdomain() ); ?></a></td>
+		<td class="row-title"><a href="#form_elements"><?php _e('Form Elements', 'profile-cct-td' ); ?></a></td>
 		</tr>
 		</table>
 		</div>
@@ -53,16 +55,16 @@
 		</div>
 		<code>&lt;hr /&gt;</code>
 		<hr id="headers" />
-		<h3><?php _e( 'Headers', $this -> get_textdomain() ); ?></h3>
+		<h3><?php _e( 'Headers', 'profile-cct-td' ); ?></h3>
 		<h2><code>h2</code><?php echo $this -> get_plugin_data( 'Name' ) ?></h2>
 		<h3><code>h3</code><?php echo $this -> get_plugin_data( 'Name' ) ?></h3>
 		<h4><code>h4</code><?php echo $this -> get_plugin_data( 'Name' ) ?></h4>
-		<p><a class="alignright button" href="javascript:void(0);" onclick="window.scrollTo(0,0);" style="margin:3px 0 0 30px;"><?php _e('scroll to top', $this -> get_textdomain() ); ?></a><br class="clear" /></p>
+		<p><a class="alignright button" href="javascript:void(0);" onclick="window.scrollTo(0,0);" style="margin:3px 0 0 30px;"><?php _e('scroll to top', 'profile-cct-td' ); ?></a><br class="clear" /></p>
 		<code>&lt;hr /&gt;</code>
 		<hr id="header_icons" />
-		<h3><?php _e( 'Header Icons', $this -> get_textdomain() ); ?></h3>
-		<?php _e( 'php-function:' , $this -> get_textdomain() ) ?> <code>screen_icon( 'edit' );</code>
-		<?php _e( 'or via markup' , $this -> get_textdomain() ) ?>
+		<h3><?php _e( 'Header Icons', 'profile-cct-td' ); ?></h3>
+		<?php _e( 'php-function:' , 'profile-cct-td' ) ?> <code>screen_icon( 'edit' );</code>
+		<?php _e( 'or via markup' , 'profile-cct-td' ) ?>
 		<code>&lt;div id=&quot;icon-edit&quot; class=&quot;icon32&quot;&gt;&lt;/div&gt;</code>
 		<br />
 		<code>edit</code><div id="icon-edit" class="icon32"></div>
@@ -85,10 +87,10 @@
 		<br class="clear" />
 		<code>options-general</code><div id="icon-options-general" class="icon32"></div>
 		<br class="clear" />
-		<p><a class="alignright button" href="javascript:void(0);" onclick="window.scrollTo(0,0);" style="margin:3px 0 0 30px;"><?php _e('scroll to top', $this -> get_textdomain() ); ?></a><br class="clear" /></p>
+		<p><a class="alignright button" href="javascript:void(0);" onclick="window.scrollTo(0,0);" style="margin:3px 0 0 30px;"><?php _e('scroll to top', 'profile-cct-td' ); ?></a><br class="clear" /></p>
 		<code>&lt;hr /&gt;</code>
 		<hr id="buttons" />
-		<h3><?php _e( 'Buttons', $this -> get_textdomain() ); ?></h3>
+		<h3><?php _e( 'Buttons', 'profile-cct-td' ); ?></h3>
 		<code>&lt;input class=&quot;button-primary&quot; type=&quot;submit&quot; name=&quot;Example&quot; value=&quot;&lt;?php _e( 'Example Primary Button' ); ?&gt;&quot; /&gt;</code>
 		<br />
 		<input class="button-primary" type="submit" name="Example" value="<?php _e( 'Example Primary Button' ); ?>" />
@@ -100,10 +102,10 @@
 		<code>&lt;a class=&quot;button-secondary&quot; href=&quot;#&quot; title=&quot;&lt;?php _e( 'Title for Example Link Button' ); ?&gt;&quot;&gt;&lt;?php _e( 'Example Link Button' ); ?&gt;&lt;/a&gt;</code>
 		<br />
 		<a class="button-secondary" href="#" title="<?php _e( 'Title for Example Link Button' ); ?>"><?php _e( 'Example Link Button' ); ?></a>
-		<p><a class="alignright button" href="javascript:void(0);" onclick="window.scrollTo(0,0);" style="margin:3px 0 0 30px;"><?php _e('scroll to top', $this -> get_textdomain() ); ?></a><br class="clear" /></p>
+		<p><a class="alignright button" href="javascript:void(0);" onclick="window.scrollTo(0,0);" style="margin:3px 0 0 30px;"><?php _e('scroll to top', 'profile-cct-td' ); ?></a><br class="clear" /></p>
 		<code>&lt;hr /&gt;</code>
 		<hr id="tables" />
-		<h3><?php _e( 'Tables', $this -> get_textdomain() ); ?></h3>
+		<h3><?php _e( 'Tables', 'profile-cct-td' ); ?></h3>
 		<pre><code>&lt;table class=&quot;form-table&quot;&gt;
 		&lt;tr&gt;
 		&lt;th class=&quot;row-title&quot;&gt;Table header cell #1&lt;/th&gt;
@@ -125,21 +127,21 @@
 		&lt;/table&gt;</code></pre>
 		<table class="form-table">
 		<tr>
-		<th class="row-title"><?php _e( 'Table header cell #1', $this -> get_textdomain() ); ?></th>
-		<th><?php _e( 'Table header cell #2', $this -> get_textdomain() ); ?></th>
+		<th class="row-title"><?php _e( 'Table header cell #1', 'profile-cct-td' ); ?></th>
+		<th><?php _e( 'Table header cell #2', 'profile-cct-td' ); ?></th>
 		</tr>
 		<tr>
 		<tr valign="top">
-		<td scope="row"><label for="tablecell"><?php _e( 'Table data cell #1, with label', $this -> get_textdomain() ); ?></label></td>
-		<td><?php _e( 'Table Cell #2', $this -> get_textdomain() ); ?></td>
+		<td scope="row"><label for="tablecell"><?php _e( 'Table data cell #1, with label', 'profile-cct-td' ); ?></label></td>
+		<td><?php _e( 'Table Cell #2', 'profile-cct-td' ); ?></td>
 		</tr>
 		<tr valign="top" class="alternate">
-		<td scope="row"><label for="tablecell"><?php _e( 'Table Cell #3, with label and class', $this -> get_textdomain() ); ?> <code>alternate</code></label></td>
-		<td><?php _e( 'Table Cell #4', $this -> get_textdomain() ); ?></td>
+		<td scope="row"><label for="tablecell"><?php _e( 'Table Cell #3, with label and class', 'profile-cct-td' ); ?> <code>alternate</code></label></td>
+		<td><?php _e( 'Table Cell #4', 'profile-cct-td' ); ?></td>
 		</tr>
 		<tr valign="top">
-		<td scope="row"><label for="tablecell"><?php _e( 'Table Cell #5, with label', $this -> get_textdomain() ); ?></label></td>
-		<td><?php _e( 'Table Cell #6', $this -> get_textdomain() ); ?></td>
+		<td scope="row"><label for="tablecell"><?php _e( 'Table Cell #5, with label', 'profile-cct-td' ); ?></label></td>
+		<td><?php _e( 'Table Cell #6', 'profile-cct-td' ); ?></td>
 		</tr>
 		</table>
 		<br class="clear"/>
@@ -164,20 +166,20 @@
 		&lt;/table&gt;</code></pre>
 		<table class="widefat">
 		<tr>
-		<th class="row-title"><?php _e( 'Table header cell #1', $this -> get_textdomain() ); ?></th>
-		<th><?php _e( 'Table header cell #2', $this -> get_textdomain() ); ?></th>
+		<th class="row-title"><?php _e( 'Table header cell #1', 'profile-cct-td' ); ?></th>
+		<th><?php _e( 'Table header cell #2', 'profile-cct-td' ); ?></th>
 		<tr/>
 		<tr>
-		<td class="row-title"><label for="tablecell"><?php _e( 'Table Cell #1, with label', $this -> get_textdomain() ); ?></label></td>
-		<td><?php _e( 'Table Cell #2', $this -> get_textdomain() ); ?></td>
+		<td class="row-title"><label for="tablecell"><?php _e( 'Table Cell #1, with label', 'profile-cct-td' ); ?></label></td>
+		<td><?php _e( 'Table Cell #2', 'profile-cct-td' ); ?></td>
 		</tr>
 		<tr class="alternate">
-		<td class="row-title"><label for="tablecell"><?php _e( 'Table Cell #3, with label and class', $this -> get_textdomain() ); ?> <code>alternate</code></label></td>
-		<td><?php _e( 'Table Cell #4', $this -> get_textdomain() ); ?></td>
+		<td class="row-title"><label for="tablecell"><?php _e( 'Table Cell #3, with label and class', 'profile-cct-td' ); ?> <code>alternate</code></label></td>
+		<td><?php _e( 'Table Cell #4', 'profile-cct-td' ); ?></td>
 		</tr>
 		<tr>
-		<td class="row-title"><?php _e( 'Table Cell #5, without label', $this -> get_textdomain() ); ?></td>
-		<td><?php _e( 'Table Cell #6', $this -> get_textdomain() ); ?></td>
+		<td class="row-title"><?php _e( 'Table Cell #5, without label', 'profile-cct-td' ); ?></td>
+		<td><?php _e( 'Table Cell #6', 'profile-cct-td' ); ?></td>
 		</tr>
 		</table>
 		<br class="clear"/>
@@ -212,58 +214,58 @@
 		<table class="widefat">
 		<thead>
 		<tr>
-		<th class="row-title"><?php _e( 'Table header cell #1', $this -> get_textdomain() ); ?></th>
-		<th><?php _e( 'Table header cell #2', $this -> get_textdomain() ); ?></th>
+		<th class="row-title"><?php _e( 'Table header cell #1', 'profile-cct-td' ); ?></th>
+		<th><?php _e( 'Table header cell #2', 'profile-cct-td' ); ?></th>
 		</tr>
 		</thead>
 		<tbody>
 		<tr>
-		<td class="row-title"><label for="tablecell"><?php _e( 'Table Cell #1, with label', $this -> get_textdomain() ); ?></label></td>
-		<td><?php _e( 'Table Cell #2', $this -> get_textdomain() ); ?></td>
+		<td class="row-title"><label for="tablecell"><?php _e( 'Table Cell #1, with label', 'profile-cct-td' ); ?></label></td>
+		<td><?php _e( 'Table Cell #2', 'profile-cct-td' ); ?></td>
 		</tr>
 		<tr class="alternate">
-		<td class="row-title"><label for="tablecell"><?php _e( 'Table Cell #3, with label and class', $this -> get_textdomain() ); ?> <code>alternate</code></label></td>
-		<td><?php _e( 'Table Cell #4', $this -> get_textdomain() ); ?></td>
+		<td class="row-title"><label for="tablecell"><?php _e( 'Table Cell #3, with label and class', 'profile-cct-td' ); ?> <code>alternate</code></label></td>
+		<td><?php _e( 'Table Cell #4', 'profile-cct-td' ); ?></td>
 		</tr>
 		<tr>
-		<td class="row-title"><?php _e( 'Table Cell #5, without label', $this -> get_textdomain() ); ?></td>
-		<td><?php _e( 'Table Cell #6', $this -> get_textdomain() ); ?></td>
+		<td class="row-title"><?php _e( 'Table Cell #5, without label', 'profile-cct-td' ); ?></td>
+		<td><?php _e( 'Table Cell #6', 'profile-cct-td' ); ?></td>
 		</tr>
 		</tbody>
 		<tfoot>
 		<tr>
-		<th class="row-title"><?php _e( 'Table header cell #1', $this -> get_textdomain() ); ?></th>
-		<th><?php _e( 'Table header cell #2', $this -> get_textdomain() ); ?></th>
+		<th class="row-title"><?php _e( 'Table header cell #1', 'profile-cct-td' ); ?></th>
+		<th><?php _e( 'Table header cell #2', 'profile-cct-td' ); ?></th>
 		</tr>
 		</tfoot>
 		</table>
-		<p><a class="alignright button" href="javascript:void(0);" onclick="window.scrollTo(0,0);" style="margin:3px 0 0 30px;"><?php _e('scroll to top', $this -> get_textdomain() ); ?></a><br class="clear" /></p>
+		<p><a class="alignright button" href="javascript:void(0);" onclick="window.scrollTo(0,0);" style="margin:3px 0 0 30px;"><?php _e('scroll to top', 'profile-cct-td' ); ?></a><br class="clear" /></p>
 		<code>&lt;hr /&gt;</code>
 		<hr id="admin_notices" />
-		<h3><?php _e( 'Admin Notices', $this -> get_textdomain() ); ?></h3>
-		<?php _e( 'define the style via param (same as the classes) on function <code>add_settings_error()</code> or use the class inside a div', $this -> get_textdomain() ); ?>
-		<div style="width:99%; padding: 5px;" class="updated" ><p><?php _e( 'class .updated with paragraph', $this -> get_textdomain() ); ?></p></div>
-		<div style="width:99%; padding: 5px;" class="error"><?php _e( 'class .alternate without paragraph', $this -> get_textdomain() ); ?></div>
-		<div style="width:99%; padding: 5px;" class="settings-error"><?php _e( 'class .settings-error without paragraph', $this -> get_textdomain() ); ?></div>
-		<p><a class="alignright button" href="javascript:void(0);" onclick="window.scrollTo(0,0);" style="margin:3px 0 0 30px;"><?php _e('scroll to top', $this -> get_textdomain() ); ?></a><br class="clear" /></p>
+		<h3><?php _e( 'Admin Notices', 'profile-cct-td' ); ?></h3>
+		<?php _e( 'define the style via param (same as the classes) on function <code>add_settings_error()</code> or use the class inside a div', 'profile-cct-td' ); ?>
+		<div style="width:99%; padding: 5px;" class="updated" ><p><?php _e( 'class .updated with paragraph', 'profile-cct-td' ); ?></p></div>
+		<div style="width:99%; padding: 5px;" class="error"><?php _e( 'class .alternate without paragraph', 'profile-cct-td' ); ?></div>
+		<div style="width:99%; padding: 5px;" class="settings-error"><?php _e( 'class .settings-error without paragraph', 'profile-cct-td' ); ?></div>
+		<p><a class="alignright button" href="javascript:void(0);" onclick="window.scrollTo(0,0);" style="margin:3px 0 0 30px;"><?php _e('scroll to top', 'profile-cct-td' ); ?></a><br class="clear" /></p>
 		<code>&lt;hr /&gt;</code>
 		<hr id="alternative_colours" />
-		<h3><?php _e( 'Alternative Colours', $this -> get_textdomain() ); ?></h3>
-		<div style="width:99%; padding: 5px;" ><?php _e( 'without class', $this -> get_textdomain() ); ?></div>
+		<h3><?php _e( 'Alternative Colours', 'profile-cct-td' ); ?></h3>
+		<div style="width:99%; padding: 5px;" ><?php _e( 'without class', 'profile-cct-td' ); ?></div>
 		<div style="width:99%; padding: 5px;" class="alternate">.alternate</div>
 		<div style="width:99%; padding: 5px;" class="form-invalid">.form-invalid</div>
-		<p><a class="alignright button" href="javascript:void(0);" onclick="window.scrollTo(0,0);" style="margin:3px 0 0 30px;"><?php _e('scroll to top', $this -> get_textdomain() ); ?></a><br class="clear" /></p>
+		<p><a class="alignright button" href="javascript:void(0);" onclick="window.scrollTo(0,0);" style="margin:3px 0 0 30px;"><?php _e('scroll to top', 'profile-cct-td' ); ?></a><br class="clear" /></p>
 		<code>&lt;hr /&gt;</code>
 		<hr id="pagination" />
-		<h3><?php _e( 'Pagination', $this -> get_textdomain() ); ?></h3>
+		<h3><?php _e( 'Pagination', 'profile-cct-td' ); ?></h3>
 		<pre><code>&lt;div class="tablenav"&gt;
 		&lt;div class="tablenav-pages"&gt;
-		//<?php _e( 'here is your pagination code', $this -> get_textdomain() ); ?>
+		//<?php _e( 'here is your pagination code', 'profile-cct-td' ); ?>
 		&lt;/div&gt;
 		&lt;/div&gt;</code> </pre>
 		<div class="tablenav">
 		<div class="tablenav-pages">
-		<span class="displaying-num"><?php _e( 'Example Markup for n items', $this -> get_textdomain() ); ?></span>
+		<span class="displaying-num"><?php _e( 'Example Markup for n items', 'profile-cct-td' ); ?></span>
 		<a class='first-page disabled' title='Go to the first page' href='http://bueltge.de/photos/wp-admin/edit.php'>&laquo;</a>
 		<a class='prev-page disabled' title='Go to the previous page' href='http://bueltge.de/photos/wp-admin/edit.php?paged=1'>&lsaquo;</a>
 		<span class="paging-input"><input class='current-page' title='Current page' type='text' name='paged' value='1' size='1' /> of <span class='total-pages'>5</span></span>
@@ -271,10 +273,10 @@
 		<a class='last-page' title='Go to the last page' href='http://bueltge.de/photos/wp-admin/edit.php?paged=5'>&raquo;</a>
 		</div>
 		</div>
-		<p><a class="alignright button" href="javascript:void(0);" onclick="window.scrollTo(0,0);" style="margin:3px 0 0 30px;"><?php _e('scroll to top', $this -> get_textdomain() ); ?></a><br class="clear" /></p>
+		<p><a class="alignright button" href="javascript:void(0);" onclick="window.scrollTo(0,0);" style="margin:3px 0 0 30px;"><?php _e('scroll to top', 'profile-cct-td' ); ?></a><br class="clear" /></p>
 		<code>&lt;hr /&gt;</code>
 		<hr id="form_elements" />
-		<h3><?php _e( 'Form Elements', $this -> get_textdomain() ); ?></h3>
+		<h3><?php _e( 'Form Elements', 'profile-cct-td' ); ?></h3>
 		<form method="post" action="options.php">
 		<table class="form-table">
 		<tr valign="top">
@@ -313,10 +315,10 @@
 		</td>
 		</tr>
 		<tr valign="top">
-		<th scope="row">Input type text <code>.regular-text</code> <?php _e( 'with description', $this -> get_textdomain() ); ?></th>
+		<th scope="row">Input type text <code>.regular-text</code> <?php _e( 'with description', 'profile-cct-td' ); ?></th>
 		<td>
 		<input type="text" value="Example string" class="regular-text" />
-		<span class="description"><?php _e( 'Here is the description for an form element', $this -> get_textdomain() ); ?></span>
+		<span class="description"><?php _e( 'Here is the description for an form element', 'profile-cct-td' ); ?></span>
 		</td>
 		</tr>
 		<tr valign="top">
@@ -413,5 +415,5 @@
 		</tr>
 		</table>
 		</form>
-		<p><a class="alignright button" href="javascript:void(0);" onclick="window.scrollTo(0,0);" style="margin:3px 0 0 30px;"><?php _e('scroll to top', $this -> get_textdomain() ); ?></a><br class="clear" /></p>
+		<p><a class="alignright button" href="javascript:void(0);" onclick="window.scrollTo(0,0);" style="margin:3px 0 0 30px;"><?php _e('scroll to top', 'profile-cct-td' ); ?></a><br class="clear" /></p>
 		</div>
