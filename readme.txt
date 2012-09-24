@@ -65,6 +65,9 @@ Simply use [profile person="slug"] where slug is usually firstname-lastname.
 By default the full view will be shown, but you can set display="list" instead to show the list view.
 
 == Change log ==
+= Version 1.1.8.3 =
+* added the ability to order thing in the shortcode
+ 
 = Version 1.1.8.2 = 
 
 = Version 1.1.8.1 =

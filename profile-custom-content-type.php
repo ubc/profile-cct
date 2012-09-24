@@ -2,7 +2,7 @@
 /**
 Plugin Name: Profile Custom Content Type
 Plugin URI:
-Version: 1.1.8.2
+Version: 1.1.8.3
 Text Domain: profile_cct
 Domain Path: /languages
 Description: Allows administrators to manage user profiles better in order to display them on their websites
@@ -1921,7 +1921,14 @@ class Profile_CCT {
 			'post__not_in'=>explode(",", $atts['exclude']),
 			'posts_per_page'=>-1
 			);
-		
+			
+			if( isset( $atts['order'] ) ):
+				$query['order'] = $atts['order'];
+			endif;
+			if( isset( $atts['orderby'] ) ):
+				$query['orderby'] = $atts['orderby'];
+			endif;
+			
 		//If include is set
 		if($atts['include']):
 			$query['post__in'] = explode(",", $atts['include']);
