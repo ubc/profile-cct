@@ -1,7 +1,6 @@
 <?php 
 
 
-
 /**
  * Pulse_CPT class.
  */
@@ -20,7 +19,10 @@ class Pulse_CPT {
 	
 	
 	function __construct () {
-		add_action('init', array( 'Profile_CCT', 'init' ) );
+		add_action('init', array( $this, 'init' ) );
+		echo "hey--";
+		die();
+		
 	}
 	/**
 	 * init function.
@@ -31,15 +33,22 @@ class Pulse_CPT {
 	 */
 	public static function init() {
 		
-		
+		self::register_profiles();
+	
 	}
 	
 	function get_object() {
 	
 		if ( NULL === self :: $classobj )
 			self :: $classobj = new self;
-
+			
 		return self :: $classobj;
+	}
+	
+	function register_profiles() {
+		echo 'hey---';
+	
+	
 	}
 	
 	
@@ -47,5 +56,7 @@ class Pulse_CPT {
 }
 
 if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT' ) )
-	add_action( 'plugins_loaded', array( 'Profile_CCT', 'get_object' ) );
+	Profile_CCT::get_object();
+	
 
+	//add_action( 'plugins_loaded', array( 'Profile_CCT', 'get_object' ) );
