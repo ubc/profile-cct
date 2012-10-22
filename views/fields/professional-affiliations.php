@@ -1,6 +1,71 @@
 <?php 
 
-function profile_cct_professionalaffiliations_field_shell( $action, $options ) {
+Class Profile_CCT_Professionalaffiliations extends Profile_CCT_Field {
+		
+		var $default_options = array(
+			'type' => 'professionalaffiliations',
+			'label' => 'professional affiliations',
+			'description' => '',
+			
+			'show'=>array('affiliation-website','affiliation-role','active-date-month'),
+			'show_fields'=>array('affiliation-website','affiliation-role','active-date-month'),
+			
+			'multiple'=>true,
+			'show_multiple'=>true,
+		
+			'width' => 'full',
+			'before' => '',
+			'empty' => '',
+			'after' =>'',
+		);
+	
+	function field() {
+		
+		$this->input_text( array( 'field_id' => 'affiliation', 'label' => 'Affiliation', 'size'=>35 ) );
+		$this->input_text( array( 'field_id' => 'affiliation-website', 'label' => 'Website - http://', 'size'=>35 ) );
+		echo '<br class="clear" />';
+		$this->input_text( array( 'field_id' => 'affiliation-role', 'label' => 'Role', 'size'=>35 ) );
+		$this->input_select( array( 'field_id' => 'active-date-month', 'separator' => 'member since:', 'label' => 'Month', 'size'=>35, 'all_fields'=>$this->list_of_months() ) );
+		$this->input_select( array( 'field_id' => 'active-date-year', 'label' => 'Year', 'size'=>35,  'all_fields'=>$this->list_of_years() ) );
+	
+
+
+	}
+	
+	function display() {
+		
+		$this->display_shell( array( 'class' => 'professionalaffiliations' ) );
+		
+		$this->display_text( array(  'default_text' => 'bruce.wayne@wayneenterprises.com' ) );
+	
+		$this->display_end_shell();
+
+	}
+	
+	public static function shell( $options, $data ) {
+		new Profile_CCT_Professionalaffiliations( $options, $data ); 
+	}
+	
+}
+
+
+
+
+
+function profile_cct_professionalaffiliations_shell( $options, $data ) {
+	
+	Profile_CCT_Professionalaffiliations::shell( $options, $data );
+	
+}
+
+function profile_cct_professionalaffiliations_display_shell( $options, $data ) {
+	
+	Profile_CCT_Professionalaffiliations::shell( $options, $data );
+	
+}
+
+
+function profile_cct_professionalaffiliations_shellasas( $action, $options ) {
 	
 	
 	if( is_object($action) ):
@@ -14,8 +79,8 @@ function profile_cct_professionalaffiliations_field_shell( $action, $options ) {
 	$field = Profile_CCT::get_object(); // prints "Creating new instance."
 	$default_options = array(
 		'type' => 'professionalaffiliations',
-		'label'=>'professionalaffiliations',
-		'description'=>'',
+		'label' => 'professionalaffiliations',
+		'description' => '',
 		'show'=>array('affiliation-website','affiliation-role','active-date-month'),
 		'multiple'=>true,
 		'show_multiple'=>true,
@@ -50,12 +115,12 @@ function profile_cct_professionalaffiliations_field( $data, $options, $count = 0
 	
 	echo "<div class='wrap-fields' data-count='".$count."'>";
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id'=>'affiliation', 'label'=>'Affiliation', 'size'=>35, 'value'=>$data['affiliation'], 'type'=>'text','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id'=>'affiliation-website', 'label'=>'Website - http://', 'size'=>35, 'value'=>$data['affiliation-website'], 'type'=>'text','show'=>in_array('affiliation-website', $show), 'count'=>$count ));
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id' => 'affiliation', 'label' => 'Affiliation', 'size'=>35, 'value'=>$data['affiliation'], 'type' => 'text','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id' => 'affiliation-website', 'label' => 'Website - http://', 'size'=>35, 'value'=>$data['affiliation-website'], 'type' => 'text','show'=>in_array('affiliation-website', $show), 'count'=>$count ));
 	echo '<br class="clear" />';
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id'=>'affiliation-role', 'label'=>'Role', 'size'=>35, 'value'=>$data['affiliation-role'], 'type'=>'text', 'show'=>in_array('affiliation-role', $show), 'count'=>$count ));
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id'=>'active-date-month', 'separator'=>'member since:', 'label'=>'Month', 'size'=>35, 'value'=>$data['active-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type'=>'select', 'show' => in_array("active-date-month",$show),'count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id'=>'active-date-year', 'label'=>'Year', 'size'=>35, 'value'=>$data['active-date-year'], 'all_fields'=>$active_year_array, 'type'=>'select', 'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id' => 'affiliation-role', 'label' => 'Role', 'size'=>35, 'value'=>$data['affiliation-role'], 'type' => 'text', 'show'=>in_array('affiliation-role', $show), 'count'=>$count ));
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id' => 'active-date-month', 'separator' => 'member since:', 'label' => 'Month', 'size'=>35, 'value'=>$data['active-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type' => 'select', 'show' => in_array("active-date-month",$show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple, 'field_id' => 'active-date-year', 'label' => 'Year', 'size'=>35, 'value'=>$data['active-date-year'], 'all_fields'=>$active_year_array, 'type' => 'select', 'count'=>$count) );
 	
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
@@ -63,7 +128,7 @@ function profile_cct_professionalaffiliations_field( $data, $options, $count = 0
 }
 
 
-function profile_cct_professionalaffiliations_display_shell(  $action, $options, $data=null ) {
+function profile_cct_professionalaffiliations_display_shell_as(  $action, $options, $data=null ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -77,8 +142,8 @@ function profile_cct_professionalaffiliations_display_shell(  $action, $options,
 	$default_options = array(
 		'type' => 'professionalaffiliations',
 		'width' => 'full',
-		'before'=>'',
-		'empty'=>'',
+		'before' => '',
+		'empty' => '',
 		'after' =>'',
 		'show'=>array('affiliation-website','affiliation-role','active-date-month'),
 		'show_fields'=>array('affiliation-website','affiliation-role','active-date-month'),
@@ -113,16 +178,16 @@ function profile_cct_professionalaffiliations_display( $data, $options ){
 	$show = (is_array($show) ? $show : array());
 	$field = Profile_CCT::get_object();
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'professionalaffiliations', 'type'=>'shell', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'professionalaffiliations', 'type' => 'shell', 'tag' => 'div') );
 	
 	if( empty($data['affiliation-website']) ):
-		$field->display_text( array( 'field_type'=>$type, 'class'=>'affiliation', 'default_text'=>'Wayne Healthcare', 'value'=>$data['affiliation'], 'type'=>'text') );
+		$field->display_text( array( 'field_type'=>$type, 'class' => 'affiliation', 'default_text' => 'Wayne Healthcare', 'value'=>$data['affiliation'], 'type' => 'text') );
 	else:
-		$field->display_text( array( 'field_type'=>$type, 'class'=>'affiliation', 'default_text'=>'Wayne Healthcare', 'value'=>$data['affiliation'], 'type'=>'text', 'tag'=> 'a', 'href'=> $field->correct_URL($data['affiliation-website']) ) );
+		$field->display_text( array( 'field_type'=>$type, 'class' => 'affiliation', 'default_text' => 'Wayne Healthcare', 'value'=>$data['affiliation'], 'type' => 'text', 'tag'=> 'a', 'href'=> $field->correct_URL($data['affiliation-website']) ) );
 	endif;
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'affiliation-role', 'default_text'=>'public speaker', 'separator'=>',', 'value'=>$data['affiliation-role'], 'type'=>'text', 'show'=> in_array("affiliation-role",$show) ));
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'active-date-month','default_text'=>'January', 'separator'=>'member since:', 'value'=>$data['active-date-month'], 'type'=>'text', 'show'=> in_array("active-date-month",$show) ));
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'active-date-year','default_text'=>'1951', 'separator'=>',', 'value'=>$data['active-date-year'], 'type'=>'text' ));
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'affiliation-role', 'default_text' => 'public speaker', 'separator' => ',', 'value'=>$data['affiliation-role'], 'type' => 'text', 'show'=> in_array("affiliation-role",$show) ));
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'active-date-month','default_text' => 'January', 'separator' => 'member since:', 'value'=>$data['active-date-month'], 'type' => 'text', 'show'=> in_array("active-date-month",$show) ));
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'active-date-year','default_text' => '1951', 'separator' => ',', 'value'=>$data['active-date-year'], 'type' => 'text' ));
 
-	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );	
+	$field->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'div') );	
 }

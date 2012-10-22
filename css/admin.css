@@ -1,46 +1,46 @@
 .nav-tab-wrapper span{
-	font-size: 12px;
-	color:#AAA;
 	padding-right: 5px;
 	padding-left: 20px;
+	color:#AAA;
+	font-size: 12px;
 }
 #col-left{
-	/* width:625px; */
-	margin: 0;
-    overflow: hidden;
-    padding: 0;
     float: left;
+    overflow: hidden;
+	margin: 0;
+    padding: 0;
+	/* width:625px; */
 }
 #col-right{
-	width:150px;
 	float: left;
 	margin:0 10px 0 0;
+	width:150px;
 	
 }
 #col-middle{
-	max-width: 960px;
-	width: 77%;
+    float: left;
 	margin: 0;
     padding: 0;
-    float: left;
+	width: 77%;
+	max-width: 960px;
  
 }
 #col-middle #normal-shell,
 #col-middle #tabs{
-	max-width: 655px;
-    width: 68%;
 	float: left;
+    width: 68%;
+	max-width: 655px;
 }
 #tabs .ui-tabs-nav{
-	border-bottom: 1px solid #CCCCCC;
+    margin-bottom: 10px;
     padding-bottom: 0;
     height: 27px;
-    margin-bottom: 10px;
+	border-bottom: 1px solid #CCCCCC;
 }
 #col-middle #side-shell{
-	max-width: 300px;
-	width: 31%;
 	float: right;
+	width: 31%;
+	max-width: 300px;
 }
 #side-shell .form-builder{
 	/* width: 322px; */
@@ -50,30 +50,30 @@
 }
 #notify{
 	 float: left;
-    height: 30px;
-    margin-left: 230px;
     margin-top: -43px;
+    margin-left: 230px;
+    height: 30px;
 }
 #notify span{
-	display: none;
-    background-color: #FDF5D9;
-    border:1px  #FCEEC1 solid;
-    border-radius: 4px;
-    color: #404040;
-    margin-bottom: 18px;
-    padding: 7px 15px;
     position: relative;
     top:5px;
+	display: none;
+    margin-bottom: 18px;
+    padding: 7px 15px;
+    border:1px  #FCEEC1 solid;
+    border-radius: 4px;
+    background-color: #FDF5D9;
+    color: #404040;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
  }
 #notify img{
-	top:3px;
 	position: relative;
+	top:3px;
 }
 .info{
-	background: #EAF2FA;
 	padding: 5px;
 	border-radius: 4px;
+	background: #EAF2FA;
 }
 .info em{
 	font-size: 12px;
@@ -81,9 +81,9 @@
 
 .profile-cct-shell{
 	float: left;
-    max-width: 649px;
-    width: 98%;
     clear: both;
+    width: 98%;
+    max-width: 649px;
 }
 
 .update-profiles {
@@ -110,20 +110,18 @@
 #update-profiles-slider.active-slider{
 	display: block;
 }
-/*
-<a class="close" href="#">x</a>
+/* <a class="close" href="#">x</a>
 .close{
-	 position: relative;
-    top:5px;
-    left: 5px;
-	color: #000000;
-    font-size: 16px;
-    font-weight: bold;
-    line-height: 13.5px;
-    opacity: 0.2;
-    text-shadow: 0 1px 0 #FFFFFF;
-    text-decoration: none;
-}
+	 position: relative; */
+/* top:5px; */
+/* left: 5px; */
+/* color: #000000; */
+/* text-decoration: none; */
+/* text-shadow: 0 1px 0 #FFFFFF; */
+/* line-height: 13.5px; */
+/* font-weight: bold; */
+/* font-size: 16px; */
+/* opacity: 0.2; */ 
 .close:hover{
 	opacity: 0.8;
-}*/
+}

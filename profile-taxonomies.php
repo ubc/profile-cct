@@ -1,4 +1,5 @@
 <?php
+// this file is not neccesery any more
 
 add_action( 'init', 'profile_cct_init_taxonomies', 10 );
 

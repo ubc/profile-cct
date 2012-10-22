@@ -31,7 +31,7 @@ class Profile_CCT_Widget extends WP_Widget {
 	 * @return void
 	 */
 	function widget( $args, $instance ){
-		echo do_action( 'profile_cct_display_archive_controls', array('mode'=>'widget'));
+		echo do_action( 'profile_cct_display_archive_controls', array('mode' => 'widget'));
 	}
 	
 	

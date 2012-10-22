@@ -1,5 +1,5 @@
 <?php
-// this should be 
+
 
 /**
  License:
@@ -68,20 +68,21 @@ class Profile_CCT {
 		add_action( 'admin_menu', array( $this, 'add_menu_page' ) );
 		/* saving the post meta info */
 		add_action( 'edit_form_advanced', array($this, 'edit_form_advanced'));
-		add_action( 'add_meta_boxes_profile_cct', array($this, 'edit_post')); // add meta boxes
+		add_action( 'add_meta_boxes_profile_cct', array($this, 'edit_post') ); // add meta boxes
 
 		add_action( 'init',  array( $this,'profiles_cct_init'),0) ;
 		add_filter( 'posts_orderby', array( $this,'orderby_menu' ) );
 		add_action( 'pre_get_posts', array( $this,'pre_get_posts') );
 		
 		
-		add_action( 'template_redirect',  array( $this,'check_freshness'));
+		add_action( 'template_redirect',  array( $this,'check_freshness') );
 		
 		add_action( 'wp_insert_post_data', array( $this,'save_post_data'),10,2);
 		
-		add_action('the_post', array( $this,'reset_filters' ), 10, 1);
+		add_action( 'the_post', array( $this,'reset_filters' ), 10, 1);
 
 		add_action( 'wp_ajax_cct_update_fields', array( $this,'update_fields'));
+		
 		add_action( 'wp_ajax_cct_update_tabs', array( $this,'update_tabs'));
 		
 		add_action( 'wp_ajax_cct_update_profiles', array( $this,'refresh_profiles'));
@@ -103,7 +104,7 @@ class Profile_CCT {
 		
 		$this->settings_options = get_option('Profile_CCT_settings');
 
-		$dir    = plugin_dir_path(__FILE__).'views/fields/';
+		$dir    = PROFILE_CCT_DIR_PATH.'views/fields/';
 
 		// include all files in the fields folder
 		if ($handle = opendir($dir)) :
@@ -482,9 +483,9 @@ class Profile_CCT {
 	 * Check if the plugin is updated and if so resave all the data
 	 */
 	function update_script(){
-		// var_dump(version_compare( $this->version(), $previous_version, '>' ));
+		// var_dump(version_compare( PROFILE_CCT_VERSION, $previous_version, '>' ));
 		$previous_version = get_option( 'profile_cct_version', '1.1.8' );
-		if( version_compare( $this->version(), $previous_version, '>' ) ):
+		if( version_compare( PROFILE_CCT_VERSION, $previous_version, '>' ) ):
 			// show notice
 			add_action( 'admin_notices', array($this,'version_warning' ) ); 		
 		endif;
@@ -522,7 +523,7 @@ class Profile_CCT {
 		$previous_version = get_option( 'profile_cct_version', '1.1.8' );
 		// lets update the post! 
 		// var_dump($the_query);
-		$version_bump = version_compare( $this->version(), $previous_version, '>' );
+		$version_bump = version_compare( PROFILE_CCT_VERSION, $previous_version, '>' );
 		
 		while($the_query->have_posts()) : $the_query->the_post();
 			global $post;
@@ -536,7 +537,7 @@ class Profile_CCT {
 			
 			if( $version_bump ):
 				// show notice
-				update_option('profile_cct_version', $this->version() );
+				update_option('profile_cct_version', PROFILE_CCT_VERSION );
 				add_action( 'admin_notices', array($this,'version_warning' ) ); 		
 			endif;
 			
@@ -1034,9 +1035,7 @@ class Profile_CCT {
 		foreach($contexts as $context):
 			if(function_exists('profile_cct_form_shell_'.$context)):
 				call_user_func('profile_cct_form_shell_'.$context,$action,$user_data);
-			else:
-
-?>
+			else: ?>
 		 		<div id="<?php echo $context; ?>-shell">
 		 			<span class="description-shell"><?php echo $context; ?></span>
 		 			<ul class="form-builder sort" id="<?php echo $context; ?>">
@@ -1318,41 +1317,41 @@ class Profile_CCT {
 				<?php
 
 		if(empty($hide_label) && !$hide_label):
-			$this->input_field( array('size'=>30, 'value'=>$label, 'class'=>'field-label', 'name'=>'label','label'=>'label', 'type'=>'text', 'before_label'=>true ));
+			$this->input_field( array('size'=>30, 'value'=>$label, 'class' => 'field-label', 'name' => 'label','label' => 'label', 'type' => 'text', 'before_label'=>true ));
 		else:
 			?>	<input type="hidden" name="label" value="<?php echo esc_attr( $label ); ?>" /> <?php
 		endif;
 
 		
 		if(isset($description))
-			$this->input_field( array('size'=>10, 'value'=>stripslashes($description), 'class'=>'field-description','name'=>'description','label'=>'description','type'=>'textarea' , 'before_label'=>true));
+			$this->input_field( array('size'=>10, 'value'=>stripslashes($description), 'class' => 'field-description','name' => 'description','label' => 'description','type' => 'textarea' , 'before_label'=>true));
 
 		if(isset($width))
-			$this->input_field(array('type'=>'select','all_fields'=>array('full','half','one-third','two-third'), 'class'=>'field-width','value'=>$width,'name'=>'width', 'label'=>'select width','before_label'=>true));
+			$this->input_field(array('type' => 'select','all_fields'=>array('full','half','one-third','two-third'), 'class' => 'field-width','value'=>$width,'name' => 'width', 'label' => 'select width','before_label'=>true));
 
 		if(isset($text))
-			$this->input_field( array('size'=>30, 'value'=>$text, 'class'=>'field-text','name'=>'text','label'=>'text input','type'=>'text' , 'before_label'=>true));
+			$this->input_field( array('size'=>30, 'value'=>$text, 'class' => 'field-text','name' => 'text','label' => 'text input','type' => 'text' , 'before_label'=>true));
 
 		if(isset($before))
-			$this->input_field( array('size'=>10, 'value'=>stripslashes($before), 'class'=>'field-textarea','name'=>'before','label'=>'before html','type'=>'textarea' , 'before_label'=>true));
+			$this->input_field( array('size'=>10, 'value'=>stripslashes($before), 'class' => 'field-textarea','name' => 'before','label' => 'before html','type' => 'textarea' , 'before_label'=>true));
 
 		if(isset($after))
-			$this->input_field( array('size'=>10, 'value'=>stripslashes($after), 'class'=>'field-textarea','name'=>'after','label'=>'after html','type'=>'textarea' , 'before_label'=>true));
+			$this->input_field( array('size'=>10, 'value'=>stripslashes($after), 'class' => 'field-textarea','name' => 'after','label' => 'after html','type' => 'textarea' , 'before_label'=>true));
 
 		if(isset($empty))
-			$this->input_field( array('size'=>10, 'value'=>stripslashes($empty), 'class'=>'field-textarea','name'=>'empty','label'=>'content to be displayed on empty','type'=>'textarea' , 'before_label'=>true));
+			$this->input_field( array('size'=>10, 'value'=>stripslashes($empty), 'class' => 'field-textarea','name' => 'empty','label' => 'content to be displayed on empty','type' => 'textarea' , 'before_label'=>true));
 
 		if(isset($url_prefix))
-			$this->input_field(array('value'=>$url_prefix, 'class'=>'field-text','name'=> 'url_prefix', 'label'=>'url prefix ( http:// )','type'=>'text', 'class'=>'field-url-prefix','before_label'=>true));
+			$this->input_field(array('value'=>$url_prefix, 'class' => 'field-text','name'=> 'url_prefix', 'label' => 'url prefix ( http:// )','type' => 'text', 'class' => 'field-url-prefix','before_label'=>true));
 
 		if(isset($show_fields))
-			$this->input_field(array('type'=>'multiple','all_fields'=>$show_fields, 'class'=>'field-show','selected_fields'=>$show,'name'=>'show', 'label'=>'show / hide input area','before_label'=>true));
+			$this->input_field(array('type' => 'multiple','all_fields'=>$show_fields, 'class' => 'field-show','selected_fields'=>$show,'name' => 'show', 'label' => 'show / hide input area','before_label'=>true));
 
 		if(isset($show_multiple) && $show_multiple)
-			$this->input_field(array('type'=>'checkbox','name'=>'multiple', 'class'=>'field-multiple', 'field'=>'yes, allow the user to create multiple fields', 'value'=>$multiple,'label'=>'multiple','before_label'=>true));
+			$this->input_field(array('type' => 'checkbox','name' => 'multiple', 'class' => 'field-multiple', 'field' => 'yes, allow the user to create multiple fields', 'value'=>$multiple,'label' => 'multiple','before_label'=>true));
 
 		if(isset($show_link_to))
-			$this->input_field(array('type'=>'checkbox','name'=>'link_to', 'class'=>'field-multiple', 'field'=>'wrap the field with a link to the profile page', 'value'=>$link_to,'label'=>'link to profile','before_label'=>true));
+			$this->input_field(array('type' => 'checkbox','name' => 'link_to', 'class' => 'field-multiple', 'field' => 'wrap the field with a link to the profile page', 'value'=>$link_to,'label' => 'link to profile','before_label'=>true));
 		
 		
 
@@ -1808,7 +1807,7 @@ class Profile_CCT {
 			if(!isset($this->settings_options['version'][$type][$fields_or_tabs][$context])):
 				$perform_merge = true;
 			// are they less then the current version
-			elseif(  $this->version() > $this->settings_options['version'][$type][$fields_or_tabs][$context] ):
+			elseif(  PROFILE_CCT_VERSION > $this->settings_options['version'][$type][$fields_or_tabs][$context] ):
 				$perform_merge = true;
 			endif;
 			
@@ -1818,8 +1817,8 @@ class Profile_CCT {
 				$new_fields = $this->default_options('new_fields');
 				
 				// lets add the new fields in this version to the banch
-				if( is_array($new_fields[$this->version()]) ):
-					foreach( $new_fields[$this->version()] as $field) :
+				if( is_array($new_fields[PROFILE_CCT_VERSION]) ):
+					foreach( $new_fields[PROFILE_CCT_VERSION] as $field) :
 						
 						if( in_array( $type , $field['where'] ) ):
 							$options[] = $field['field'];
@@ -1849,7 +1848,7 @@ class Profile_CCT {
 	 */
 	function update_option($type='form',$fields_or_tabs='fields',$context='normal',$update) {
 		
-		$this->settings_options['version'][$type][$fields_or_tabs][$context] = $this->version();
+		$this->settings_options['version'][$type][$fields_or_tabs][$context] = PROFILE_CCT_VERSION;
 		$this->settings_options[$type.'_updated'] = time();
 		// saving of the version number
 		
@@ -1916,7 +1915,7 @@ class Profile_CCT {
 		
 		require(PROFILE_CCT_DIR_PATH.'class/default_options.php');
 		
-		return apply_filters( 'profile_cct_default_options', $options, $type);
+		return apply_filters( 'profile_cct_default_options', $options, $type );
 		
 	}
 	/**
@@ -2043,8 +2042,8 @@ class Profile_CCT {
 					array_push(
 						$tax_query,
 						array(
-							'taxonomy'=>'profile_cct_'.$key,	////aaghhjjjhg forgot the taxonomies are prefixed
-							'field'=>'slug',
+							'taxonomy' => 'profile_cct_'.$key,	////aaghhjjjhg forgot the taxonomies are prefixed
+							'field' => 'slug',
 							'terms'=>$att,		
 							)
 						);
@@ -2058,9 +2057,9 @@ class Profile_CCT {
 		endif;
 		
 		$query = array(
-			'post_type'=>'Profile_CCT',
-			'order'=>'ASC',
-			'orderby'=>'menu_order',
+			'post_type' => 'Profile_CCT',
+			'order' => 'ASC',
+			'orderby' => 'menu_order',
 			'tax_query'=>$tax_query,
 			'post__not_in'=>explode(",", $atts['exclude']),
 			'posts_per_page'=>-1,
@@ -2260,7 +2259,7 @@ class Profile_CCT {
 		endif;
 		
 		
-		echo do_action('profile_cct_display_archive_controls', array('mode'=>'shortcode','options'=>$atts));
+		echo do_action('profile_cct_display_archive_controls', array('mode' => 'shortcode','options'=>$atts));
 	}
 
 	function display_archive_controls($args){

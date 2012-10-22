@@ -1,6 +1,61 @@
-<?php
+<?php 
 
-function profile_cct_projects_field_shell( $action, $options ) {
+Class Profile_CCT_Projects extends Profile_CCT_Field {
+		
+		var $default_options = array(
+		
+			'type' => 'projects',
+			'label' => 'projects',
+			'description' => '',
+			
+			'show'=>array('project-website','start-date-month','start-date-year','end-date-month','end-date-year','project-status'),
+			'show_fields'=>array('project-website','start-date-month','start-date-year','end-date-month','end-date-year','project-status'),
+			
+			'multiple'=>true,
+			'show_multiple'=>true,
+			'width' => 'full',
+			'before' => '',
+			'empty' => '',
+			'after' =>'',
+		);
+	
+	function field() {
+		$this->input_text( array( 'field_id' => 'project-title', 'label' => 'Title', 'size'=>57 ) );
+		$this->input_textarea( array( 'field_id' => 'project-description','label' => 'Description', 'size'=>35 ) );
+		$this->input_text( array( 'field_id' => 'project-website', 'label' => 'Website - http://', 'size'=>35 ) );
+	
+		$this->input_select( array( 'field_id' => 'start-date-month','label' => 'Start Month', 'size'=>35, 'all_fields'=>$this->list_of_months() ) );
+		$this->input_select( array( 'field_id' => 'start-date-year','label' => 'Start Year', 'size'=>35, 'all_fields'=>$this->list_of_years() ) );
+	
+		$this->input_select( array( 'field_id' => 'end-date-month','label' => 'End Month', 'size'=>35, 'all_fields'=>$this->list_of_months() ) );
+		$this->input_select( array( 'field_id' => 'end-date-year','label' => 'End Year', 'size'=>35, 'all_fields'=>$this->list_of_years( 20, -20 ) ) );
+	
+		$this->input_select( array( 'field_id' => 'project-status','label' => 'Status', 'size'=>35, 'all_fields'=>$this->project_status() ) );
+
+
+	}
+	
+	function display() {
+		
+		
+	}
+	
+	public static function shell( $options, $data ) {
+		new Profile_CCT_Projects( $options, $data ); 
+	}
+	
+}
+function profile_cct_projects_shell( $options, $data ) {
+		Profile_CCT_Projects::shell( $options, $data ); 
+
+}
+
+function profile_cct_projects_display_shell( $options, $data ) {
+		Profile_CCT_Projects::shell( $options, $data ); 
+
+}
+
+function profile_cct_projects_shellasas( $action, $options ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -13,13 +68,13 @@ function profile_cct_projects_field_shell( $action, $options ) {
 	
 	$default_options = array(
 		'type' => 'projects',
-		'label'=>'projects',
-		'description'=>'',
+		'label' => 'projects',
+		'description' => '',
 		'show'=>array('project-website','start-date-month','start-date-year','end-date-month','end-date-year','project-status'),
 		'multiple'=>true,
 		'show_multiple'=>true,
 		'show_fields'=>array('project-website','start-date-month','start-date-year','end-date-month','end-date-year','project-status'),
-		'class'=>'projects'
+		'class' => 'projects'
 		);
 	
 	$options = (is_array($options) ? array_merge($default_options,$options): $default_options );
@@ -52,17 +107,17 @@ function profile_cct_projects_field( $data, $options, $count = 0){
 	
 	echo '<div data-count="'.$count.'" class="wrap-fields">';
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-title', 'label'=>'Title', 'size'=>57, 'value'=>$data['project-title'], 'type'=>'text','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-description','label'=>'Description', 'size'=>35, 'value'=>$data['project-description'], 'type'=>'textarea','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-website', 'label'=>'Website - http://', 'size'=>35, 'value'=>$data['project-website'], 'type'=>'text', 'show' => in_array("project-website",$show), 'count'=>$count ) );
+	$this->input_text( array( 'field_id' => 'project-title', 'label' => 'Title', 'size'=>57, 'value'=>$data['project-title'], 'type' => 'text','count'=>$count) );
+	$this->input_text( array( 'field_id' => 'project-description','label' => 'Description', 'size'=>35, 'value'=>$data['project-description'], 'type' => 'textarea','count'=>$count) );
+	$this->input_text( array( 'field_id' => 'project-website', 'label' => 'Website - http://', 'size'=>35, 'value'=>$data['project-website'], 'type' => 'text', 'show' => in_array("project-website",$show), 'count'=>$count ) );
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'start-date-month','label'=>'Start Month', 'size'=>35, 'value'=>$data['start-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type'=>'select', 'show' => in_array("start-date-month",$show),'count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'start-date-year','label'=>'Start Year', 'size'=>35, 'value'=>$data['start-date-year'], 'all_fields'=>$year_array, 'type'=>'select', 'show' => in_array("start-date-year",$show),'count'=>$count) );
+	$this->input_text( array( 'field_id' => 'start-date-month','label' => 'Start Month', 'size'=>35, 'value'=>$data['start-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type' => 'select', 'show' => in_array("start-date-month",$show),'count'=>$count) );
+	$this->input_text( array( 'field_id' => 'start-date-year','label' => 'Start Year', 'size'=>35, 'value'=>$data['start-date-year'], 'all_fields'=>$year_array, 'type' => 'select', 'show' => in_array("start-date-year",$show),'count'=>$count) );
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'end-date-month','label'=>'End Month', 'size'=>35, 'value'=>$data['end-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type'=>'select', 'show' => in_array("end-date-month",$show),'count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'end-date-year','label'=>'End Year', 'size'=>35, 'value'=>$data['end-date-year'], 'all_fields'=>$completion_year_array, 'type'=>'select', 'show' => in_array("end-date-year",$show),'count'=>$count) );
+	$this->input_text( array( 'field_id' => 'end-date-month','label' => 'End Month', 'size'=>35, 'value'=>$data['end-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type' => 'select', 'show' => in_array("end-date-month",$show),'count'=>$count) );
+	$this->input_text( array( 'field_id' => 'end-date-year','label' => 'End Year', 'size'=>35, 'value'=>$data['end-date-year'], 'all_fields'=>$completion_year_array, 'type' => 'select', 'show' => in_array("end-date-year",$show),'count'=>$count) );
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'project-status','label'=>'Status', 'size'=>35, 'value'=>$data['project-status'], 'all_fields'=>$project_status_array, 'type'=>'select', 'show' => in_array("project-status",$show),'count'=>$count) );
+	$this->input_text( array( 'field_id' => 'project-status','label' => 'Status', 'size'=>35, 'value'=>$data['project-status'], 'all_fields'=>$project_status_array, 'type' => 'select', 'show' => in_array("project-status",$show),'count'=>$count) );
 	
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
@@ -70,7 +125,7 @@ function profile_cct_projects_field( $data, $options, $count = 0){
 }
 
 
-function profile_cct_projects_display_shell( $action, $options, $data=null ) {
+function profile_cct_projects_display_shellasas( $action, $options, $data=null ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -85,7 +140,7 @@ function profile_cct_projects_display_shell( $action, $options, $data=null ) {
 		'type' => 'projects',
 		'width' => 'full',
 		'hide_label'=>true,
-		'before'=>'',
+		'before' => '',
 		'after' =>'',
 		'show'=>array('project-website','start-date-month','start-date-year','end-date-month','end-date-year','project-status'),
 		'show_fields'=>array('project-website','start-date-month','start-date-year','end-date-month','end-date-year','project-status')
@@ -123,21 +178,21 @@ function profile_cct_projects_display( $data, $options ){
 
 	$field = Profile_CCT::get_object();
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'projects', 'type'=>'shell','tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'projects', 'type' => 'shell','tag' => 'div') );
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'project-title','default_text'=>'Cure for Cancer', 'value'=>$data['project-title'], 'type'=>'text' ) );
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'project-description', 'content_filter'=>'profile_escape_html', 'default_text'=>'The current research at Wayne Biotech is focused on finding a cure for cancer.', 'value'=>$data['project-description'], 'type'=>'text') );
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'project-website','default_text'=>'http://wayneenterprises.biz', 'separator'=>'<br />'/*needs changing?*/, 'value'=>$data['project-website'], 'type'=>'text', 'show' => in_array("project-website",$show) ) );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'project-title','default_text' => 'Cure for Cancer', 'value'=>$data['project-title'], 'type' => 'text' ) );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'project-description', 'content_filter' => 'profile_escape_html', 'default_text' => 'The current research at Wayne Biotech is focused on finding a cure for cancer.', 'value'=>$data['project-description'], 'type' => 'text') );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'project-website','default_text' => 'http://wayneenterprises.biz', 'separator' => '<br />'/*needs changing?*/, 'value'=>$data['project-website'], 'type' => 'text', 'show' => in_array("project-website",$show) ) );
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'start-date-month','default_text'=>'January', 'value'=>$data['start-date-month'], 'type'=>'text', 'show'=> in_array("start-date-month",$show)) );
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'start-date-year','default_text'=>'2006', 'separator'=>',', 'value'=>$data['start-date-year'], 'type'=>'text', 'show'=> in_array("start-date-year",$show)) );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'start-date-month','default_text' => 'January', 'value'=>$data['start-date-month'], 'type' => 'text', 'show'=> in_array("start-date-month",$show)) );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'start-date-year','default_text' => '2006', 'separator' => ',', 'value'=>$data['start-date-year'], 'type' => 'text', 'show'=> in_array("start-date-year",$show)) );
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'end-date-month','default_text'=>'December', 'value'=>$data['end-date-month'], 'type'=>'text', 'show'=> in_array("end-date-month",$show)) );
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'end-date-year','default_text'=>'2016', 'separator'=>',', 'value'=>$data['end-date-year'], 'type'=>'text', 'show'=> in_array("end-date-year",$show)) );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'end-date-month','default_text' => 'December', 'value'=>$data['end-date-month'], 'type' => 'text', 'show'=> in_array("end-date-month",$show)) );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'end-date-year','default_text' => '2016', 'separator' => ',', 'value'=>$data['end-date-year'], 'type' => 'text', 'show'=> in_array("end-date-year",$show)) );
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'project-status','default_text'=>'Current', 'value'=>$data['project-status'], 'type'=>'text', 'show' => in_array("project-status",$show) ) );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'project-status','default_text' => 'Current', 'value'=>$data['project-status'], 'type' => 'text', 'show' => in_array("project-status",$show) ) );
 	
-	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell','tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'type' => 'end_shell','tag' => 'div') );
 
 }
 

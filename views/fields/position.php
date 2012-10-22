@@ -1,6 +1,60 @@
 <?php 
 
-function profile_cct_position_field_shell($action, $options ) {
+Class Profile_CCT_Position extends Profile_CCT_Field {
+		
+		var $default_options = array(
+			'type' => 'position',
+			'label' => 'position',
+			'description' => '',
+			
+			'show' => array(),
+			'show_fields' => array( 'organization', 'url' ),
+			
+			'multiple' => true,
+			'show_multiple' => true,
+		
+			'width' => 'full',
+			'before' => '',
+			'empty' => '',
+			'after' => '',
+		);
+	
+	function field() {
+		
+		$this->input_text( array( 'field_id' => 'position', 'label' => 'Title', 'size' => 35 )); 
+		
+		$this->input_text( array( 'field_id' => 'organization','label' => 'Organization', 'size' => 35 ) );
+		$this->input_text( array( 'field_id' => 'url', 'label' => 'Website - http://', 'size' => 35  ) );
+		
+	}
+	
+	function display() {
+		
+		
+	}
+	
+	public static function shell( $options, $data ) {
+		new Profile_CCT_Position( $options, $data ); 
+	}
+	
+}
+
+
+
+function profile_cct_position_shell( $options, $data ) {
+	
+	Profile_CCT_Position::shell( $options, $data );
+	
+}
+
+function profile_cct_position_display_shell( $options, $data ) {
+	
+	Profile_CCT_Position::shell( $options, $data );
+	
+}
+
+
+function profile_cct_position_shell_old($action, $options ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -13,8 +67,8 @@ function profile_cct_position_field_shell($action, $options ) {
 	
 	$default_options = array(
 		'type' => 'position',
-		'label'=>'position',
-		'description'=>'',
+		'label' => 'position',
+		'description' => '',
 		'show'=>array(),
 		'show_fields'=>array('organization','url'),
 		'multiple'=>true,
@@ -45,16 +99,16 @@ function profile_cct_position_field( $data, $options, $count = 0 ){
 	$show = (is_array($show) ? $show : array());
 	
 	echo "<div class='wrap-fields' data-count='".$count."'>";
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'position','label'=>'Title', 'size'=>35, 'value'=>$data['position'], 'type'=>'text','count'=>$count) ); 
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'organization','label'=>'Organization', 'size'=>35, 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array("organization",$show),'count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'url', 'label'=>'Website - http://', 'size'=>35, 'value'=>$data['url'], 'type'=>'text','count'=>$count, 'show'=>in_array('url', $show)) );
+	$this->input_text( array('field_id' => 'position','label' => 'Title', 'size'=>35, 'value'=>$data['position'], 'type' => 'text','count'=>$count) ); 
+	$this->input_text( array('field_id' => 'organization','label' => 'Organization', 'size'=>35, 'value'=>$data['organization'], 'type' => 'text', 'show'=>in_array("organization",$show),'count'=>$count) );
+	$this->input_text( array('field_id' => 'url', 'label' => 'Website - http://', 'size'=>35, 'value'=>$data['url'], 'type' => 'text','count'=>$count, 'show'=>in_array('url', $show)) );
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
 	echo "</div>";
 }
 
 
-function profile_cct_position_display_shell( $action, $options, $data=null ) {
+function profile_cct_position_display_shell_old( $action, $options, $data=null ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -67,12 +121,12 @@ function profile_cct_position_display_shell( $action, $options, $data=null ) {
 	
 	$default_options = array(
 		'type' => 'position',
-		'label'=>'position',
+		'label' => 'position',
 		'hide_label'=>true,
-		'before'=>'',
-		'empty'=>'',
+		'before' => '',
+		'empty' => '',
 		'width' => 'full',
-		'after'=>'',
+		'after' => '',
 		'show'=>array('organization'),
 		'show_fields'=>array('organization'),
 
@@ -107,20 +161,20 @@ function profile_cct_position_display( $data, $options ){
 	$field = Profile_CCT::get_object();
 	$show = (is_array($show) ? $show : array());
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'position', 'type'=>'shell', 'tag'=>'div') );
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'role','default_text'=>'CEO', 'value'=>$data['position'], 'type'=>'text','count'=>$count, ) );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'position', 'type' => 'shell', 'tag' => 'div') );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'role','default_text' => 'CEO', 'value'=>$data['position'], 'type' => 'text','count'=>$count, ) );
 
 	if( !empty($data['organization']) ):
 		if( empty($data['url']) ):
-			$field->display_text( array( 'field_type'=>$type, 'class'=>'org organization','separator'=>',','default_text'=>'Wayne Enterprises', 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array('organization',$show)) );
+			$field->display_text( array( 'field_type'=>$type, 'class' => 'org organization','separator' => ',','default_text' => 'Wayne Enterprises', 'value'=>$data['organization'], 'type' => 'text', 'show'=>in_array('organization',$show)) );
 		else:
-			$field->display_text( array( 'field_type'=>$type, 'class'=>'org organization url','separator'=>',','default_text'=>'Wayne Enterprises', 'value'=>$data['organization'], 'type'=>'text', 'show'=>in_array('organization',$show), 'tag'=> 'a', 'href'=> $field->correct_URL( $data['url'] ) ) );
+			$field->display_text( array( 'field_type'=>$type, 'class' => 'org organization url','separator' => ',','default_text' => 'Wayne Enterprises', 'value'=>$data['organization'], 'type' => 'text', 'show'=>in_array('organization',$show), 'tag'=> 'a', 'href'=> $field->correct_URL( $data['url'] ) ) );
 		endif;
 	endif;
 	
 	
 	
-	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'div') );
 
 }
 

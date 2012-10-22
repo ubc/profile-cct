@@ -1,46 +1,64 @@
 <?php 
 
-function profile_cct_courses_field_shell( $action, $options ) {
+
+Class Profile_CCT_Courses extends Profile_CCT_Field {
 	
-	if( is_object($action) ):
-		$post = $action;
-		$action = "display";
-		$data = $options['args']['data'];
-		$options = $options['args']['options'];
-	endif;
-	
-	$field = Profile_CCT::get_object(); // prints "Creating new instance."
-	
-	$default_options = array(
+	var $default_options = array(
 		'type' => 'courses',
-		'label'=>'courses',
-		'description'=>'',
-		'show'=>array(),
+		'label' => 'courses',
+		'description' => '',
+		
 		'multiple'=>true,
 		'show_multiple' =>true,
-		'show_fields'=>array('section-number','course-date-month','course-date-year','course-summary'),
-		);
-	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
-	
-	$field->start_field($action,$options);
-	
-	if( $field->is_data_array( $data ) ):
-		$count = 0;
-		foreach($data as $item_data):
-			
-			profile_cct_courses_field($item_data,$options, $count);
-			$count++;
-			
-		endforeach;
 		
-	else:
-		// this should only occure if the there is no data
-		profile_cct_courses_field($data,$options);
-	endif;
+		'show'=>array(),
+		'show_fields'=>array( 'section-number','course-date-month','course-date-year','course-summary' ),
+		
+		'before' => '',
+		'empty' => '',
+		'after' => '',
+		'width' => 'full',
 	
-	$field->end_field( $action, $options );
+	);
+	function field() {
 	
+		$this->input_text( array( 'field_id' => 'course-name','label' => 'Course Name', 'size'=>35) );
+		$this->input_text( array(  'field_id' => 'teaching-unit-prefix','label' => 'Subject Code', 'size'=>4) );
+		$this->input_text( array(  'field_id' => 'course-number','label' => 'Course #', 'size'=>3  ) );
+		$this->input_text( array(  'field_id' => 'section-number','label' => 'Section #', 'size'=>3 ) );
+		
+		$this->input_select( array( 'field_id' => 'course-date-month','label' => 'Month', 'size'=>35, 'all_fields'=> $this->list_of_months() ) );
+		$this->input_select( array( 'field_type'=>$type, 'field_id' => 'course-date-year','label' => 'Year', 'size'=>35, 'all_fields'=>$this->list_of_years() ) );
+		
+		$this->input_textarea( array( 'field_id' => 'course-summary','label' => 'Course Summary', 'size'=>35 ) );
+
+		
+	}
 	
+	function display() {
+	
+		$this->display_text( array( 'field_type'=>$type, 'class' => 'courses', 'type' => 'shell', 'tag' => 'div') );
+		$this->display_text( array( 'field_type'=>$type,  'class' => 'course-name', 'default_text' => 'Financial Accounting', 'value'=>$data['course-name'], 'type' => 'text') );
+		$this->display_text( array( 'field_type'=>$type,  'class' => 'teaching-unit-prefix', 'default_text' => 'COMM', 'separator' => ',', 'value'=>$data['teaching-unit-prefix'], 'type' => 'text') );
+		$this->display_text( array( 'field_type'=>$type,  'class' => 'course-number', 'default_text' => '450','value'=>$data['course-number'], 'type' => 'text' ) );
+		$this->display_text( array( 'field_type'=>$type,  'class' => 'section-number', 'default_text' => '101','value'=>$data['section-number'], 'type' => 'text' ) );
+		$this->display_text( array( 'field_type'=>$type,  'class' => 'course-date-month', 'default_text' => 'May','value'=>$data['course-date-month'], 'type' => 'text' ) );
+		$this->display_text( array( 'field_type'=>$type,  'class' => 'course-date-year', 'default_text' => '2012','value'=>$data['course-date-year'], 'type' => 'text' ) );
+		$this->display_text( array( 'field_type'=>$type,  'class' => 'course-summary', 'content_filter' => 'profile_escape_html', 'default_text' => 'Continuation of the examination of accounting as a means of measurement and as an information system for external reporting purposes.','value'=>$data['course-summary'], 'type' => 'text', 'tag' => 'span') );
+		$this->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'div') );
+	
+	}
+	
+	public static function shell( $options, $data ) {
+		new Profile_CCT_Courses( $options, $data ); 
+	}
+}
+
+
+function profile_cct_courses_shell( $options, $data  ) {
+	
+	Profile_CCT_Courses::shell( $options, $data ); 
+
 }
 function profile_cct_courses_field( $data, $options, $count = 0 ){
 
@@ -53,15 +71,15 @@ function profile_cct_courses_field( $data, $options, $count = 0 ){
 	$year_array = range($year_built_max, $year_built_min);
 	
 	echo "<div class='wrap-fields' data-count='".$count."'>";
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'course-name','label'=>'Course Name', 'size'=>35, 'value'=>$data['course-name'], 'type'=>'text', 'count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'teaching-unit-prefix','label'=>'Subject Code', 'size'=>4, 'value'=>$data['teaching-unit-prefix'], 'type'=>'text','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'course-number','label'=>'Course #', 'size'=>3, 'value'=>$data['course-number'], 'type'=>'text','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'section-number','label'=>'Section #', 'size'=>3, 'value'=>$data['section-number'], 'type'=>'text','count'=>$count, 'show' => in_array("section-number",$show),) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id' => 'course-name','label' => 'Course Name', 'size'=>35, 'value'=>$data['course-name'], 'type' => 'text', 'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id' => 'teaching-unit-prefix','label' => 'Subject Code', 'size'=>4, 'value'=>$data['teaching-unit-prefix'], 'type' => 'text','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id' => 'course-number','label' => 'Course #', 'size'=>3, 'value'=>$data['course-number'], 'type' => 'text','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id' => 'section-number','label' => 'Section #', 'size'=>3, 'value'=>$data['section-number'], 'type' => 'text','count'=>$count, 'show' => in_array("section-number",$show),) );
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'course-date-month','label'=>'Month', 'size'=>35, 'value'=>$data['course-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type'=>'select', 'show' => in_array("course-date-month",$show),'count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'course-date-year','label'=>'Year', 'size'=>35, 'value'=>$data['course-date-year'], 'all_fields'=>$year_array, 'type'=>'select', 'show' => in_array("course-date-year",$show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id' => 'course-date-month','label' => 'Month', 'size'=>35, 'value'=>$data['course-date-month'], 'all_fields'=>profile_cct_list_of_months(), 'type' => 'select', 'show' => in_array("course-date-month",$show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id' => 'course-date-year','label' => 'Year', 'size'=>35, 'value'=>$data['course-date-year'], 'all_fields'=>$year_array, 'type' => 'select', 'show' => in_array("course-date-year",$show),'count'=>$count) );
 
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'course-summary','label'=>'Course Summary', 'size'=>35, 'value'=>$data['extension'], 'type'=>'textarea', 'show' => in_array("course-summary",$show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id' => 'course-summary','label' => 'Course Summary', 'size'=>35, 'value'=>$data['extension'], 'type' => 'textarea', 'show' => in_array("course-summary",$show),'count'=>$count) );
 	
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
@@ -86,9 +104,9 @@ function profile_cct_courses_display_shell(  $action, $options, $data=null ) {
 	$default_options = array(
 		'type' => 'courses',
 		'label_hide'=>true,
-		'before'=>'',
-		'empty'=>'',
-		'after'=>'',
+		'before' => '',
+		'empty' => '',
+		'after' => '',
 		'width' => 'full',
 		'show'=>array('course-summary', 'course-date-month', 'course-date-year'),
 		'show_fields'=>array('course-summary','course-date-month','course-date-year'),
@@ -126,14 +144,14 @@ function profile_cct_courses_display( $data, $options ){
 	$show = (is_array($show) ? $show : array());
 	
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'courses', 'type'=>'shell', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'courses', 'type' => 'shell', 'tag' => 'div') );
 	
-	$field->display_text( array( 'field_type'=>$type,  'class'=>'course-name', 'default_text'=>'Financial Accounting', 'value'=>$data['course-name'], 'type'=>'text') );
-	$field->display_text( array( 'field_type'=>$type,  'class'=>'teaching-unit-prefix', 'default_text'=>'COMM', 'separator'=>',', 'value'=>$data['teaching-unit-prefix'], 'type'=>'text') );
-	$field->display_text( array( 'field_type'=>$type,  'class'=>'course-number', 'default_text'=>'450','value'=>$data['course-number'], 'type'=>'text' ) );
-	$field->display_text( array( 'field_type'=>$type,  'class'=>'section-number', 'default_text'=>'101','value'=>$data['section-number'], 'type'=>'text' ) );
-	$field->display_text( array( 'field_type'=>$type,  'class'=>'course-date-month', 'default_text'=>'May','value'=>$data['course-date-month'], 'type'=>'text' ) );
-	$field->display_text( array( 'field_type'=>$type,  'class'=>'course-date-year', 'default_text'=>'2012','value'=>$data['course-date-year'], 'type'=>'text' ) );
-	$field->display_text( array( 'field_type'=>$type,  'class'=>'course-summary', 'content_filter'=>'profile_escape_html', 'default_text'=>'Continuation of the examination of accounting as a means of measurement and as an information system for external reporting purposes.','value'=>$data['course-summary'], 'type'=>'text', 'tag'=>'span') );
-	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type,  'class' => 'course-name', 'default_text' => 'Financial Accounting', 'value'=>$data['course-name'], 'type' => 'text') );
+	$field->display_text( array( 'field_type'=>$type,  'class' => 'teaching-unit-prefix', 'default_text' => 'COMM', 'separator' => ',', 'value'=>$data['teaching-unit-prefix'], 'type' => 'text') );
+	$field->display_text( array( 'field_type'=>$type,  'class' => 'course-number', 'default_text' => '450','value'=>$data['course-number'], 'type' => 'text' ) );
+	$field->display_text( array( 'field_type'=>$type,  'class' => 'section-number', 'default_text' => '101','value'=>$data['section-number'], 'type' => 'text' ) );
+	$field->display_text( array( 'field_type'=>$type,  'class' => 'course-date-month', 'default_text' => 'May','value'=>$data['course-date-month'], 'type' => 'text' ) );
+	$field->display_text( array( 'field_type'=>$type,  'class' => 'course-date-year', 'default_text' => '2012','value'=>$data['course-date-year'], 'type' => 'text' ) );
+	$field->display_text( array( 'field_type'=>$type,  'class' => 'course-summary', 'content_filter' => 'profile_escape_html', 'default_text' => 'Continuation of the examination of accounting as a means of measurement and as an information system for external reporting purposes.','value'=>$data['course-summary'], 'type' => 'text', 'tag' => 'span') );
+	$field->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'div') );
 }

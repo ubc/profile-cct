@@ -1,6 +1,56 @@
 <?php 
 
-function profile_cct_textarea_field_shell($action, $options ) {
+Class Profile_CCT_Textarea extends Profile_CCT_Field {
+		
+		var $default_options = array(
+			'type' => 'textarea',
+			'label' => 'textarea',
+			'description' => '',
+		
+			'width' => 'full',
+			'before' => '',
+			'empty' => '',
+			'after' =>'',
+		);
+	
+	function field() {
+		
+		$this->input_textarea( array( 'field_id' => 'textarea', 'label' => '', 'size'=>25, 'row'=>2, 'cols'=>20 ) );
+
+	}
+	
+	function display() {
+		
+		$this->display_shell( array( 'class' => 'textarea',  'tag' => 'div' ) );
+		
+		$this->display_text( array( 'class' => 'textarea textarea','default_text' => 'lorem ipsum', 'content_filter' => 'profile_escape_html', 'tag' => 'div', 'type' => 'text') );
+		
+		$this->display_end_shell( array(  'tag' => 'div') );
+
+	}
+	
+	public static function shell( $options, $data ) {
+		new Profile_CCT_Textarea( $options, $data ); 
+	}
+	
+}
+
+
+
+function profile_cct_textarea_shell( $options, $data ) {
+	
+	Profile_CCT_Textarea::shell( $options, $data );
+	
+}
+
+function profile_cct_textarea_display_shell( $options, $data ) {
+	
+	Profile_CCT_Textarea::shell( $options, $data );
+	
+}
+
+/*
+function profile_cct_textarea_shell_old($action, $options ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -32,11 +82,11 @@ function profile_cct_textarea_field( $data, $options ){
 	extract( $options );
 	$field = Profile_CCT::get_object();
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'textarea', 'label'=>'', 'size'=>25, 'row'=>2, 'cols'=>20, 'value'=>$data['textarea'], 'type'=>'textarea') );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id' => 'textarea', 'label' => '', 'size'=>25, 'row'=>2, 'cols'=>20, 'value'=>$data['textarea'], 'type' => 'textarea') );
 
 }
 
-function profile_cct_textarea_display_shell( $action, $options, $data=null  ) {
+function profile_cct_textarea_display_shell_old( $action, $options, $data=null  ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -52,9 +102,9 @@ function profile_cct_textarea_display_shell( $action, $options, $data=null  ) {
 		'label'=> 'textarea',
 		'width' => 'full',
 		'hide_label'=>true,
-		'before'=>'',
-		'empty'=>'',
-		'after'=>''
+		'before' => '',
+		'empty' => '',
+		'after' => ''
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	
@@ -72,7 +122,7 @@ function profile_cct_textarea_display( $data, $options ){
 	extract( $options );
 	$field = Profile_CCT::get_object();
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'textarea textarea','default_text'=>'lorem ipsum', 'content_filter'=>'profile_escape_html', 'value'=>$data['textarea'], 'tag'=>'div', 'type'=>'text') );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'textarea textarea','default_text' => 'lorem ipsum', 'content_filter' => 'profile_escape_html', 'value'=>$data['textarea'], 'tag' => 'div', 'type' => 'text') );
 }
 
 function profile_cct_textarea_filter( $data ) {
@@ -81,3 +131,4 @@ function profile_cct_textarea_filter( $data ) {
 }
 
 add_filter( 'profile_escape_html', 'profile_cct_textarea_filter');
+*/

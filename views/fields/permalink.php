@@ -1,8 +1,53 @@
 <?php 
 
+Class Profile_CCT_Permalink extends Profile_CCT_Field {
+		
+		var $default_options = array(
+			'type' => 'permalink',
+			'label' => 'permalink',
+			'description' => '',
+			
+		
+			'width' => 'full',
+			'before' => '',
+			'empty' => '',
+			'after' =>'',
+			'text'	=>'more info',
+		);
+	
+	/*
+	function field() {
+		// there is no form part 
+
+	}
+	*/
+	function display() {
+		
+		$this->display_shell( array( 'class' => 'permalink',  'tag' => 'div' ) );
+		
+		$this->display_permalink( array(  'default_text' => 'bruce.wayne@wayneenterprises.com' ) );
+	
+		$this->display_end_shell( array(  'tag' => 'div') );
+
+	}
+	
+	public static function shell( $options, $data ) {
+		new Profile_CCT_Permalink( $options, $data ); 
+	}
+	
+}
 
 
-function profile_cct_permalink_display_shell(  $action, $options, $data=null ) {
+
+
+function profile_cct_permalink_display_shell( $options, $data ) {
+	
+	Profile_CCT_Permalink::shell( $options, $data );
+	
+}
+
+
+function profile_cct_permalink_display_shell_old(  $action, $options, $data=null ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -16,7 +61,7 @@ function profile_cct_permalink_display_shell(  $action, $options, $data=null ) {
 	$default_options = array(
 		'type' => 'permalink',
 		'width' => 'full',
-		'before'=>'',
+		'before' => '',
 		'after' =>'',
 		'text'	=>'more info',
 		'hide_label'=>true
@@ -45,8 +90,8 @@ function profile_cct_permalink_display( $data, $options ){
 	
 	$href = ( isset($post) ? get_permalink() : "#" );
 
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'permalink', 'type'=>'shell', 'tag'=>'div') );
-	$field->display_text( array( 'field_type'=>$type, 'default_text'=>'more info', 'value'=>$text, 'type'=>'text', 'tag'=>'a', 'href'=>$href, 'class'=>'text-input', 'title'=>'more info') );
-	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'permalink', 'type' => 'shell', 'tag' => 'div') );
+	$field->display_text( array( 'field_type'=>$type, 'default_text' => 'more info', 'value'=>$text, 'type' => 'text', 'tag' => 'a', 'href'=>$href, 'class' => 'text-input', 'title' => 'more info') );
+	$field->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'div') );
 	
 }

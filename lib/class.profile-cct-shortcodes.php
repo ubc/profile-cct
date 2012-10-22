@@ -1,7 +1,7 @@
 <?php 
 
 
-class Pulse_CPT_Shortcodes {
+class Profile_CCT_Shortcodes {
 	
 	/**
 	 * init function.
@@ -12,10 +12,10 @@ class Pulse_CPT_Shortcodes {
 	 */
 	public static function init() {
 		
-		add_shortcode( 'profilelist', 		array( 'Pulse_CPT_Shortcodes', 'profile_list_shortcode' ) );
-		add_shortcode( 'profile', 			array( 'Pulse_CPT_Shortcodes', 'profile_single_shortcode' ) );
-		add_shortcode( 'profilesearch',  	array( 'Pulse_CPT_Shortcodes', 'profile_search_shortcode' ) );
-		add_shortcode( 'profilenavigation', array( 'Pulse_CPT_Shortcodes', 'profile_navigation_shortcode' ) );
+		add_shortcode( 'profilelist', 		array( 'Profile_CCT_Shortcodes', 'profile_list_shortcode' ) );
+		add_shortcode( 'profile', 			array( 'Profile_CCT_Shortcodes', 'profile_single_shortcode' ) );
+		add_shortcode( 'profilesearch',  	array( 'Profile_CCT_Shortcodes', 'profile_search_shortcode' ) );
+		add_shortcode( 'profilenavigation', array( 'Profile_CCT_Shortcodes', 'profile_navigation_shortcode' ) );
 		
 	}
 	
@@ -37,8 +37,8 @@ class Pulse_CPT_Shortcodes {
 					array_push(
 						$tax_query,
 						array(
-							'taxonomy'=>'profile_cct_'.$key,	////aaghhjjjhg forgot the taxonomies are prefixed
-							'field'=>'slug',
+							'taxonomy' => 'profile_cct_'.$key,	////aaghhjjjhg forgot the taxonomies are prefixed
+							'field' => 'slug',
 							'terms'=>$att,		
 							)
 						);
@@ -52,9 +52,9 @@ class Pulse_CPT_Shortcodes {
 		endif;
 		
 		$query = array(
-			'post_type'=>'Profile_CCT',
-			'order'=>'ASC',
-			'orderby'=>'menu_order',
+			'post_type' => 'Profile_CCT',
+			'order' => 'ASC',
+			'orderby' => 'menu_order',
 			'tax_query'=>$tax_query,
 			'post__not_in'=>explode(",", $atts['exclude']),
 			'posts_per_page'=>-1,
@@ -179,7 +179,7 @@ class Pulse_CPT_Shortcodes {
 			</form>
 			<?php
 			$names = array();
-			$query_results = Pulse_CPT_Shortcodes::get_all_names();
+			$query_results = Profile_CCT_Shortcodes::get_all_names();
 			foreach( $query_results as $result ):
 				$names[] = $result->post_title;
 			endforeach;
@@ -199,4 +199,4 @@ class Pulse_CPT_Shortcodes {
 	
 
 }
-Pulse_CPT_Shortcodes::init();
+Profile_CCT_Shortcodes::init();

@@ -1,25 +1,153 @@
 <?php 
-if ( !defined( 'PROFILE_CCT_FULL_WIDTH' ) )
+// still lots of work to be done here
+if( !defined( 'PROFILE_CCT_FULL_WIDTH' ) )
 	define( 'PROFILE_CCT_FULL_WIDTH', 150 );
 	
-	if ( !defined( 'PROFILE_CCT_FULL_HEIGHT' ) )
+if( !defined( 'PROFILE_CCT_FULL_HEIGHT' ) )
 	define( 'PROFILE_CCT_FULL_HEIGHT', 150 );
-	
-	if ( !defined( 'PROFILE_CCT_MAX_PREVIEW_WIDTH' ) )
+
+if( !defined( 'PROFILE_CCT_MAX_PREVIEW_WIDTH' ) )
 	define( 'PROFILE_CCT_MAX_PREVIEW_WIDTH', 400 );
-	
-	if ( !defined( 'PROFILE_CCT_MAX_PREVIEW_HEIGHT' ) )
+
+if( !defined( 'PROFILE_CCT_MAX_PREVIEW_HEIGHT' ) )
 	define( 'PROFILE_CCT_MAX_PREVIEW_HEIGHT', 400 );
 
+
+
+
+Class Profile_CCT_Picture extends Profile_CCT_Field {
+		
+		var $default_options = array(
+			'type' => 'picture',
+			'label' => 'picture',
+			'description' => '',
+			
+			'link_to'	=> true,
+			'show_link_to' => true,
+		
+			'width' => 'one-third',
+			'before' => '',
+			'empty' => '',
+			'after' => '',
+		);
+	
+	function field() {
+		// show the picture
+		$this->picture();
+		// show the add button
+		$this->update_picture();
+		
+		
+	}
+	
+	function display() {
+		
+		// show the avatar 
+		$this->picture();
+	}
+	
+	function picture() {
+		global $post;
+			
+	 	// $field 	= Profile_CCT::get_object();
+	 	// $show 	= (is_array($show) ? $show : array());
+	 	// $href 	= ( isset($post) ? get_permalink() : "#" );
+	
+		if( isset( $post ) ):
+			// $field->display_text( array( 'field_type'=>$type, 'class' => '', 'type' => 'shell', 'tag' => 'a','link_to'=>$link_to, 'href'=>$href ) );
+			// $this->post_thumbnail( $post->ID, 'full' );
+			// $field->display_end_shell( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'a','link_to'=>$link_to) );
+		else:
+			global $current_user;
+	      	// get_currentuserinfo();
+			echo '<div id="user-avatar-display-image">'.get_avatar( $current_user->user_email, 150 ).'</div>';
+		endif;
+	}
+	
+	function update_picture() {
+		// create the 
+		global $post;
+	
+		$picture_options = $this->picture_options();
+	
+		$iframe_width = $picture_options['width'] + 520;
+		
+		if( empty($post) ): // in the preview ?>
+			<span class="add-multiple"><a class="button disabled" style="display: inline;" href="#add">Update Picture</a> <em>disabled in preview</em></span>
+			<?php
+			return;
+		endif;
+		$update_url = 	admin_url('admin-ajax.php').'?action=profile_cct_picture_add_photo&step=1&post_id='. $post->ID .'&TB_iframe=true&width=' .$iframe_width .'&height=520';
+		
+		// update picture 
+		if( has_post_thumbnail() ):
+			
+			
+			printf('<a id="user-avatar-link" class="button thickbox" href="%s" title="Upload and Crop an Image to be Displayed" >Update Picture</a>', $update_url);
+			
+			// Remove the User-Avatar button if there is no uploaded image
+			$remove_url = admin_url('post.php')."?post=".$post->ID."&action=edit&delete_avatar=true&_nononce=". wp_create_nonce('profile_cct_picture');
+			printf(' <a id="user-avatar-remove" class="submitdelete deleteaction" href="%s" title="Remove User Avatar Image" >Remove</a>', $remove_url );
+		
+		else: // add picture 
+			printf('<a id="user-avatar-link" class="button thickbox" href="%s" title="Upload and Crop an Image to be Displayed" >Add Picture</a>', $update_url);
+		
+		endif; ?>
+		<script type="text/javascript">
+		//<![CDATA[
+		function profile_cct_picture_refresh_image( img ) {
+		 	jQuery( '#user-avatar-display-image' ).html( img );
+		}
+		function profile_cct_add_remove_avatar_link() {
+			if( !jQuery( '#user-avatar-remove' ) ) {
+				jQuery( '#user-avatar-link' ).after( " <a href='<?php echo $remove_url; ?>' class='submitdelete'  id='user-avatar-remove' ><?php _e('Remove','user-avatar'); ?></a>")
+			}
+		}
+		//]]>
+		</script>
+	<?php
+	}
+	
+	/**
+	 * picture_options function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	function picture_options() {
+		return array( 'width' => 150, 'height' => 150 );
+	}
+	
+	/**
+	 * shell function.
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $options
+	 * @param mixed $data
+	 * @return void
+	 */
+	public static function shell( $options, $data ){
+		New Profile_CCT_Picture( $options, $data );
+	}
+	
+}
+
+function profile_cct_picture_shell( $options, $data ){
+	
+	Profile_CCT_Picture::shell( $options, $data );
+}
+
+
 /**
- * profile_cct_picture_field_shell function.
+ * profile_cct_picture_shell function.
  * 
  * @access public
  * @param mixed $action
  * @param mixed $options. (default: null)
  * @return void
  */
-function profile_cct_picture_field_shell( $action, $options=null ) {
+function profile_cct_picture_shell_old( $action, $options=null ) {
 	if(!current_theme_supports('post-thumbnails')):
 		echo '<p>Not supported by this theme</p>';
 		return;
@@ -37,9 +165,9 @@ function profile_cct_picture_field_shell( $action, $options=null ) {
 		$options = $field->form_fields['picture']; // stuff that is coming from the db
 	
 	$default_options = array(
-		'type'=>'picture',
-		'label'=>'picture',	
-		'description'=>'',
+		'type' => 'picture',
+		'label' => 'picture',	
+		'description' => '',
 		);
 		
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
@@ -67,14 +195,14 @@ function profile_cct_picture_field( $data, $options ){
 	
 	if(is_object($post)):
 		$thumbnail_id = get_post_meta( $post->ID, '_thumbnail_id', true );
-		profile_cct_picture_form($thumbnail_id);
+		profile_cct_picture_form( $thumbnail_id );
 	else:
 		profile_cct_picture_display(  $data, $options  );
 	endif;
 }
 
 
-function profile_cct_picture_display_shell( $action, $options=null, $data=null ) {
+function profile_cct_picture_display_shell_old( $action, $options=null, $data=null ) {
 	
 	if( is_object($action) ):
 		$post 		= $action;
@@ -102,7 +230,7 @@ function profile_cct_picture_display_shell( $action, $options=null, $data=null )
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
 	$field->start_field($action,$options);
 	
-	profile_cct_picture_display($data,$options);
+	profile_cct_picture_display( $data,$options );
 	
 	$field->end_field( $action, $options );
 }
@@ -123,9 +251,9 @@ function profile_cct_picture_display(  $data, $options  ){
 	$href 	= ( isset($post) ? get_permalink() : "#" );
 	
 	if( isset($post) ):
-		$field->display_text( array( 'field_type'=>$type, 'class'=>'', 'type'=>'shell', 'tag'=>'a','link_to'=>$link_to, 'href'=>$href ) );
+		$field->display_text( array( 'field_type'=>$type, 'class' => '', 'type' => 'shell', 'tag' => 'a','link_to'=>$link_to, 'href'=>$href ) );
 		echo profile_cct_get_the_post_thumbnail($post->ID, 'full');
-		$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'a','link_to'=>$link_to) );
+		$field->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'a','link_to'=>$link_to) );
 	else:
 		global $current_user;
       	get_currentuserinfo();

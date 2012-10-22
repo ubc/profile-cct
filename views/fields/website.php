@@ -1,6 +1,51 @@
 <?php 
 
-function profile_cct_website_field_shell($action,$options) {
+Class Profile_CCT_Website extends Profile_CCT_Field {
+		
+		var $default_options = array(
+			'type' => 'website',
+			'label' => 'website',
+			'description' => '',
+			
+			'multiple'=>true,
+			'show_multiple'=>true,
+		
+			'show'=>array(),
+			'show_fields'=>array('site-title'),
+			
+			'width' => 'full',
+			'before' => '',
+			'empty' => '',
+			'after' =>'',
+		);
+	
+	function field() {
+		
+		$this->input_text( array( 'field_id' => 'website', 'label' => 'Website - http://', 'size'=>35) );
+		$this->input_text( array( 'field_id' => 'site-title', 'label' => 'Site title', 'size'=>35 ) );
+	}
+	
+	function display() {
+		
+		
+	}
+	
+	public static function shell( $options, $data ) {
+		new Profile_CCT_Website( $options, $data ); 
+	}
+	
+}
+function profile_cct_website_shell( $options, $data ) {
+		Profile_CCT_Website::shell( $options, $data ); 
+
+}
+
+function profile_cct_website_display_shell( $options, $data ) {
+		Profile_CCT_Website::shell( $options, $data ); 
+
+}
+
+function profile_cct_website_shellasdas($action,$options) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -43,14 +88,14 @@ function profile_cct_website_field( $data, $options, $count = 0 ){
 	$show = (is_array($show) ? $show : array());
 	
 	echo "<div class='wrap-fields' data-count='".$count."'>";
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'website', 'label'=>'Website - http://', 'size'=>35, 'value'=>$data['website'], 'type'=>'text','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'site-title', 'label'=>'Site title', 'size'=>35, 'value'=>$data['site-title'], 'type'=>'text', 'show'=>in_array('site-title', $show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id' => 'website', 'label' => 'Website - http://', 'size'=>35, 'value'=>$data['website'], 'type' => 'text','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id' => 'site-title', 'label' => 'Site title', 'size'=>35, 'value'=>$data['site-title'], 'type' => 'text', 'show'=>in_array('site-title', $show),'count'=>$count) );
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
 	echo "</div>";
 }
 
-function profile_cct_website_display_shell( $action, $options, $data=null ) {
+function profile_cct_website_display_shellasdasd( $action, $options, $data=null ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -65,10 +110,10 @@ function profile_cct_website_display_shell( $action, $options, $data=null ) {
 		'type' => 'website',
 		'label'=> 'website',
 		'hide_label'=>true,
-		'before'=>'',
-		'empty'=>'',
+		'before' => '',
+		'empty' => '',
 		'width' => 'full',
-		'after'=>'',
+		'after' => '',
 		
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
@@ -97,8 +142,8 @@ function profile_cct_website_display( $data, $options ){
 	$field = Profile_CCT::get_object();
 	$name = (!empty($data['site-title']) ? $data['site-title'] : $data['website'] );
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'website', 'type'=>'shell', 'tag'=>'div') );
-	$field->display_text( array( 'field_type'=>$type, 'default_text'=>'http://wayneenterprises.biz', 'value'=>$name, 'type'=>'text', 'tag'=>'a', 'href'=>$field->correct_URL( $data['website'] ) ) );
-	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'website', 'type' => 'shell', 'tag' => 'div') );
+	$field->display_text( array( 'field_type'=>$type, 'default_text' => 'http://wayneenterprises.biz', 'value'=>$name, 'type' => 'text', 'tag' => 'a', 'href'=>$field->correct_URL( $data['website'] ) ) );
+	$field->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'div') );
 	
 }

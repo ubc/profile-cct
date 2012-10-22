@@ -1,6 +1,48 @@
 <?php 
 
-function profile_cct_specialization_field_shell( $action, $options ) {
+Class Profile_CCT_Specialization extends Profile_CCT_Field {
+		
+		var $default_options = array(
+			'type' => 'specialization',
+			'label' => 'specialization',
+			'description' => '',
+			
+			'multiple'=>true,
+			'show_multiple'=>true,
+			
+			'width' => 'full',
+			'before' => '',
+			'empty' => '',
+			'after' =>'',
+		);
+	
+	function field() {
+		
+		$this->input_text( array( 'field_id' => 'specialization', 'label' => '', 'size'=>35 ) );
+	}
+	
+	function display() {
+		
+		
+	}
+	
+	public static function shell( $options, $data ) {
+		new Profile_CCT_Specialization( $options, $data ); 
+	}
+	
+}
+function profile_cct_specialization_shell( $options, $data ) {
+		Profile_CCT_Specialization::shell( $options, $data ); 
+
+}
+
+function profile_cct_specialization_display_shell( $options, $data ) {
+		Profile_CCT_Specialization::shell( $options, $data ); 
+
+}
+
+
+function profile_cct_specialization_shellsdsdsd( $action, $options ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -13,8 +55,8 @@ function profile_cct_specialization_field_shell( $action, $options ) {
 	
 	$default_options = array(
 		'type' => 'specialization',
-		'label'=>'specialization',
-		'description'=>'',
+		'label' => 'specialization',
+		'description' => '',
 		'multiple'=>true,
 		'show_multiple'=>true
 		);
@@ -43,7 +85,7 @@ function profile_cct_specialization_field( $data, $options, $count = 0 ){
 	$field = Profile_CCT::get_object();
 	echo "<div class='wrap-fields' data-count='".$count."'>";
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'specialization', 'label'=>'', 'size'=>35, 'value'=>$data['specialization'], 'type'=>'text','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id' => 'specialization', 'label' => '', 'size'=>35, 'value'=>$data['specialization'], 'type' => 'text','count'=>$count) );
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';
 	echo "</div>";
@@ -52,7 +94,7 @@ function profile_cct_specialization_field( $data, $options, $count = 0 ){
 
 
 
-function profile_cct_specialization_display_shell(  $action, $options, $data=null ) {
+function profile_cct_specialization_display_shellsddsds(  $action, $options, $data=null ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -66,8 +108,8 @@ function profile_cct_specialization_display_shell(  $action, $options, $data=nul
 	$default_options = array(
 		'type' => 'specialization',
 		'width' => 'full',
-		'before'=>'',
-		'empty'=>'',
+		'before' => '',
+		'empty' => '',
 		'after' =>'',
 		'hide_label'=>true
 		);
@@ -102,8 +144,8 @@ function profile_cct_specialization_display( $data, $options ){
 	$field = Profile_CCT::get_object();
 	
 
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'specialization', 'type'=>'shell', 'tag'=>'div') );
-	$field->display_text( array( 'field_type'=>$type, 'default_text'=>'Philanthropy', 'value'=>$data['specialization'], 'type'=>'text') );
-	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'specialization', 'type' => 'shell', 'tag' => 'div') );
+	$field->display_text( array( 'field_type'=>$type, 'default_text' => 'Philanthropy', 'value'=>$data['specialization'], 'type' => 'text') );
+	$field->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'div') );
 	
 }

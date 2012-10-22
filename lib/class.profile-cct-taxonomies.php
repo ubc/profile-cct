@@ -3,9 +3,9 @@
 
 
 /**
- * Pulse_CPT class.
+ * Profile_CCT class.
  */
-class Pulse_CPT_Taxonomy {
+class Profile_CCT_Taxonomy {
 	
 	/**
 	 * init function.
@@ -20,7 +20,7 @@ class Pulse_CPT_Taxonomy {
 	
 		if( is_array( $field->taxonomies ) ):
 			foreach( $field->taxonomies as $taxonomy ):
-				profile_cct_register_taxonomy( $taxonomy );
+				Profile_CCT_Taxonomy::register_taxonomy( $taxonomy );
 			endforeach;
 		endif;
 		
@@ -34,6 +34,7 @@ class Pulse_CPT_Taxonomy {
 	 * @return void
 	 */
 	public static function register_taxonomy( $taxonomy ) {
+		
 		$labels = array(
 			'name' => $taxonomy['plural'] ,
 			'singular_name' => $taxonomy['single'],
@@ -49,7 +50,7 @@ class Pulse_CPT_Taxonomy {
 		);
 		
 		// finally register the taxonomy
-		register_taxonomy(  Pulse_CPT_Taxonomy::id( $taxonomy['single'] ) , array( 'profile_cct' ), array(
+		register_taxonomy(  Profile_CCT_Taxonomy::id( $taxonomy['single'] ) , array( 'profile_cct' ), array(
 			'hierarchical' => $taxonomy['hierarchical']? true: false,
 			'labels' => $labels,
 			'show_ui' => true,
@@ -73,4 +74,8 @@ class Pulse_CPT_Taxonomy {
 	}
 }
 // Lets Play
-Pulse_CPT_Taxonomy::init();
+if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT_Taxonomy' ) ):
+	
+	add_action( 'init', array( 'Profile_CCT_Taxonomy', 'init' ) );
+	
+endif;

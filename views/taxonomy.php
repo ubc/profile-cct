@@ -55,7 +55,7 @@ if ( !empty($_POST) && check_admin_referer( 'add_profile_taxonomy','add_profile_
 endif;
 
 ?>
-<h2>Taxonomy Builder</h2>
+<h2><img src="<?php echo PROFILE_CCT_DIR_URL; ?>/icon-large.gif" />Taxonomy Builder</h2>
 	<p><strong>Tax&middot;on&middot;o&middot;my</strong> - The classification of something, a way to group things and be able to filter them later.</p>
 	<?php echo $note; ?>
 	<h3>Current Taxonomies </h3>

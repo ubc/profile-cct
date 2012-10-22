@@ -1,23 +1,20 @@
 <?php 
 
-	$type_of = (in_array($_GET['view'], array('form','page','list'))? $_GET['view']: NULL );
+	$type_of = ( in_array($_GET['view'], array('form','page','list'))? $_GET['view']: NULL );
 
-	do_action('profile_cct_admin_pages', $type_of);
-	
-	screen_icon( 'users' );
+	do_action('profile_cct_admin_pages', $type_of );
 	
 	$previous_version = get_option( 'profile_cct_version', '1.1.8' );
 ?>
 	<div class="wrap">
 		<h2 id="profile-setting">Settings</h2>
 		
-		<?php if( version_compare( $this->version(), $previous_version, '>' )): ?>
+		<?php if( version_compare( PROFILE_CCT_VERSION, $previous_version, '>' )): ?>
 			<div class="update-profiles info" id="update-profile-shell">
 			
 			You need to update profiles so that they will run smoothly with the latest version of the plugin. <a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>
 			
 			</div>
-			
 			
 		<?php endif; ?>
 		<h3 class="nav-tab-wrapper">

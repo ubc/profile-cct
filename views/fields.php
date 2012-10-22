@@ -1,7 +1,7 @@
 <?php 
 global $blog_id;
 
-$global_settings = get_site_option('Profile_CCT_global_settings', array());
+$global_settings = get_site_option( 'Profile_CCT_global_settings', array() );
 
 // for local 
 if( !empty($this->settings_options['clone_fields']) ):

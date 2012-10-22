@@ -1,6 +1,160 @@
 <?php 
 
-function profile_cct_social_field_shell( $action, $options ) {
+Class Profile_CCT_Social extends Profile_CCT_Field {
+		
+		var $default_options = array(
+			'type' => 'social',
+			'label' => 'social',	
+			'description' => '',
+			
+			'multiple'=>true,
+			'show_multiple' =>true,
+						
+			
+			
+			'before' => '',
+			'empty' => '',
+			'after' =>'',
+		);
+	
+	function field() {
+		
+		$this->input_select( array( 'field_id' => 'option', 'label' => 'Site',  'value'=>$data['option'], 'all_fields'=>$this->social_options('label'), 'type' => 'select','count'=>$count) );
+		$this->input_text( array( 'field_id' => 'usersocial', 'label'=>$social_array_details[$data['option']]['user_url'],  'value'=>$data['usersocial'], 'all_fields'=>$social_array ) );
+
+
+	}
+	
+	function display() {
+		
+		
+		
+		$this->display_shell( array(  'class' => 'fn n', 'type' => 'shell', 'tag' => 'h2','link_to'=>$link_to, 'href'=>$href ) );
+		
+		$this->display_text( array( 'class' => 'honorific-prefix salutations','default_text' => 'Mr' ) );
+		$this->display_text( array( 'class' => 'given-social','default_text' => 'Bruce' ) );
+		$this->display_text( array( 'class' => 'additional-social middle','default_text' => 'Anthony' ) );
+		$this->display_text( array( 'class' => 'family-social','default_text' => 'Wayne' ) );
+		$this->display_text( array( 'class' => 'honorific-suffix suffix credentials','separator' => ',','default_text' => 'BCom' ) );
+		
+		$this->display_end_shell( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'h2', 'link_to'=>$link_to ) );
+	
+
+	}
+	
+	public static function shell( $options, $data ) {
+		new Profile_CCT_Social( $options, $data ); 
+	}
+	
+	
+	
+	function social_options( $what = 'all'){
+		$all = array(
+					
+					array( 	"type"=> "ubc-blog", 	
+							"label"=> "UBC Blog", 
+							"service_url" =>"http://blogs.ubc.ca/",	
+							"user_url"=> "http://blogs.ubc.ca/{value}"),
+					array( 	"type"=> "ubc-wiki", 	
+							"label"=> "UBC Wiki",
+							"service_url" =>"http://wiki.ubc.ca/",		
+							"user_url"=> "http://wiki.ubc.ca/User:{value}"),
+			 		array( 	"type"=> "twitter", 		
+			 				"label"=> "Twitter",
+			 				"service_url" =>"http://twitter.com",			
+			 				"user_url"=> "http://twitter.com/#!/{value}"),
+			 		array( 	"type"=> "facebook",		
+			 				"label"=> "Facebook",
+			 				"service_url" =>"http://www.facebook.com/",			
+			 				"user_url"=> "http://www.facebook.com/{value}" ),
+			 		array( 	"type"=> "google-plus", 	
+			 				"label"=> "Google Plus",
+			 				"service_url" =>"http://plus.google.com",		
+			 				"user_url"=> "http://plus.google.com/{value}"),
+			 		array( 	"type"=> "linked-in",	
+			 				"label"=> "Linked In",
+			 				"service_url" =>"http://www.linkedin.com/",			
+			 				"user_url"=> "http://www.linkedin.com/in/{value}" ), 
+			 		array( 	"type"=> "delicious",	
+			 				"label"=> "Delicious",
+			 				"service_url" =>"http://www.delicious.com",			
+			 				"user_url"=> "http://www.delicious.com/{value}" ),
+			 		array( 	"type"=> "picasa",		
+			 				"label"=> "Picasa",
+			 				"service_url" =>"http://picasaweb.google.com",
+			 				"user_url"=> "http://picasaweb.google.com/{value}"),
+			 		array(  "type"=> "flickr",		
+			 				"label"=> "Flickr",
+			 				"service_url" =>"",				
+			 				"user_url"=> "http://www.flickr.com/photos/{value}"),
+			 		array( 	"type"=> "tumblr",		
+			 				"label"=> "Tumblr",
+			 				"service_url" =>"http://tumblr.com",			
+			 				"user_url"=> "http://{value}.tumblr.com"), 
+			 		array( 	"type"=> "blogger",		
+			 				"label"=> "Blogger",
+			 				"service_url" =>"http://blogspot.com/",			
+			 				"user_url"=> "http://{value}.blogspot.com/"), 
+			 		array( 	"type"=> "posterous",	
+			 				"label"=> "Posterous",
+			 				"service_url" =>"http://posterous.com",	
+			 				"user_url"=> "http://{value}.posterous.com"),
+			 		array( 	"type"=> "wordpress-com",
+			 				"label"=> "WordPress.com",
+			 				"service_url" =>"http://wordpress.com",	
+			 				"user_url"=> "http://{value}.wordpress.com"),
+			 		array( 	"type"=> "youtube",		
+			 				"label"=> "YouTube",
+			 				"service_url" =>"http://youtube.com/",		
+			 				"user_url"=> "http://youtube.com/{value}"),
+			 		array( 	"type"=> "vimeo",		
+			 				"label"=> "Vimeo",
+			 				"service_url" =>"http://vimeo.com",			
+			 				"user_url"=> "http://vimeo.com/{value}"),
+			 		array( 	"type"=> "slideshare",		
+			 				"label"=> "SlideShare",
+			 				"service_url" =>"http://www.slideshare.net/",			
+			 				"user_url"=> "http://www.slideshare.net/{value}"),
+			 		);
+		switch( $what ) {
+			case 'all':
+				return $all;
+			break;
+			
+			default:
+				if( in_array( $what, array( 'type', 'label', 'service_url', 'user_url' ) ) ):
+				
+					foreach( $all as $service)
+						$build_array[] = $service[$what];
+					
+					return $build_array;
+				endif;
+				return array();
+			break;
+		}
+		
+		
+	}
+	
+}
+
+
+
+
+
+function profile_cct_social_shell( $options, $data ) {
+	
+	Profile_CCT_Social::shell( $options, $data );
+	
+}
+
+function profile_cct_social_display_shell( $options, $data ) {
+	
+	Profile_CCT_Social::shell( $options, $data );
+	
+}
+
+function profile_cct_social_shell_old( $action, $options ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -13,8 +167,8 @@ function profile_cct_social_field_shell( $action, $options ) {
 	
 	$default_options = array(
 		'type' => 'social',
-		'label'=>'social',
-		'description'=>'',
+		'label' => 'social',
+		'description' => '',
 		'multiple'=>true,
 		'show_multiple' =>true
 		);
@@ -48,8 +202,8 @@ function profile_cct_social_field( $data, $options, $count = 0 ){
 
 	
 	echo "<div class='wrap-fields wrap-social-fields' data-count='".$count."'>";
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'option', 'label'=>'Site',  'value'=>$data['option'], 'all_fields'=>$social_array, 'type'=>'select','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'username', 'label'=>$social_array_details[$data['option']]['user_url'],  'value'=>$data['username'], 'all_fields'=>$social_array, 'type'=>'text','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id' => 'option', 'label' => 'Site',  'value'=>$data['option'], 'all_fields'=>$social_array, 'type' => 'select','count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id' => 'usersocial', 'label'=>$social_array_details[$data['option']]['user_url'],  'value'=>$data['usersocial'], 'all_fields'=>$social_array, 'type' => 'text','count'=>$count) );
 	
 	
 	if($count)
@@ -59,7 +213,7 @@ function profile_cct_social_field( $data, $options, $count = 0 ){
 
 }
 
-function profile_cct_social_display_shell(  $action, $options, $data=null  ) {
+function profile_cct_social_display_shell_old(  $action, $options, $data=null  ) {
 	
 	if( is_object($action) ):
 		$post = $action;
@@ -72,11 +226,11 @@ function profile_cct_social_display_shell(  $action, $options, $data=null  ) {
 	
 	$default_options = array(
 		'type' => 'social',
-		'label'=>'social',
+		'label' => 'social',
 		
-		'before'=>'',
-		'empty'=>'',
-		'after'=>'',
+		'before' => '',
+		'empty' => '',
+		'after' => '',
 		'width' => 'full',
 		);
 	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
@@ -86,9 +240,9 @@ function profile_cct_social_display_shell(  $action, $options, $data=null  ) {
 	if($action=="edit"){
 		//default placeholder data for sample page view
 		$data = array(
-			array('option'=>'Facebook','username'=>'BruceWayne'),
-			array('option'=>'Twitter','username'=>'bwayne'),
-			array('option'=>'YouTube','username'=>'bruce'),
+			array('option' => 'Facebook','usersocial' => 'BruceWayne'),
+			array('option' => 'Twitter','usersocial' => 'bwayne'),
+			array('option' => 'YouTube','usersocial' => 'bruce'),
 		);
 	}
 	
@@ -123,19 +277,19 @@ function profile_cct_social_display( $data, $options ){
 	
 	
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'social', 'type'=>'shell', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'social', 'type' => 'shell', 'tag' => 'div') );
 	$user_url = $social_array[$data['option']]['user_url'];
 	$img_path = PROFILE_CCT_DIR_URL . '/img/';
 	
 	echo '<img src="' . $img_path . $social_array[$data['option']]['type'] . '.png" class="icon" />';
 	
-	$field->display_text( array( 'field_type'=>$type, 'class'=>'social-link', 'type'=>'shell', 'link_to'=>true,'tag'=>'a', 'href'=>str_replace('{value}',$data['username'], $user_url)) );
+	$field->display_text( array( 'field_type'=>$type, 'class' => 'social-link', 'type' => 'shell', 'link_to'=>true,'tag' => 'a', 'href'=>str_replace('{value}',$data['usersocial'], $user_url)) );
 	
-	$field->display_text( array( 'field_type'=>$type, 'type'=>'text', 'tag'=>'strong', 'value'=>$data['option'])  );
+	$field->display_text( array( 'field_type'=>$type, 'type' => 'text', 'tag' => 'strong', 'value'=>$data['option'])  );
 	
-	$field->display_text( array( 'field_type'=>$type, 'type'=>'text', 'tag'=>'span', 'separator'=>'/', 'value'=>$data['username']) );
-	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'a','link_to'=>true) );
-	$field->display_text( array( 'field_type'=>$type, 'type'=>'end_shell', 'tag'=>'div') );
+	$field->display_text( array( 'field_type'=>$type, 'type' => 'text', 'tag' => 'span', 'separator' => '/', 'value'=>$data['usersocial']) );
+	$field->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'a','link_to'=>true) );
+	$field->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'div') );
 	
 }
 
@@ -209,7 +363,7 @@ function profile_cct_social_options(){
 			 		array( 	"type"=> "slideshare",		
 			 				"label"=> "SlideShare",
 			 				"service_url" =>"http://www.slideshare.net/",			
-			 				"user_url"=> "http://www.slideshare.net//{value}"),
+			 				"user_url"=> "http://www.slideshare.net/{value}"),
 			 		);
 	}
 	

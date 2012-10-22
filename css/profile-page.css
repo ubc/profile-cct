@@ -1,3 +1,14 @@
+#icon-edit.icon32-posts-profile_cct{
+	background-image: url(../icon-32.png);
+	background-position: 0 0;
+}
+@media screen and (-webkit-min-device-pixel-ratio: 2), screen and (max--moz-device-pixel-ratio: 2) {
+	#icon-edit.icon32-posts-profile_cct{
+		background-image: url(../icon-64.png);
+		background-position: 0 0;
+		 background-size: 32px 32px;
+	}
+}
 .post-php .add-new-h2,
 .post-new-php .add-new-h2{
 	display: none;
