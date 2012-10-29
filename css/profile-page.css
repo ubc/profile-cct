@@ -18,6 +18,7 @@
 }
 .inside{ position: relative; overflow: hidden; }
 .hndle span{ text-transform: capitalize; }
+
 /* Name */
 .name span input,
 .project-title input {

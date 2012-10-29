@@ -3,6 +3,12 @@
 
 Class Profile_CCT_Department extends Profile_CCT_Field {
 	
+	/**
+	 * default_options
+	 * 
+	 * @var mixed
+	 * @access public
+	 */
 	var $default_options = array(
 		'type' => 'department',
 		'label' => 'department',
@@ -19,6 +25,13 @@ Class Profile_CCT_Department extends Profile_CCT_Field {
 		'after' =>'',
 		'width' => 'full'
 		);
+	
+	/**
+	 * field function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function field() {
 	
 		$this->input_text( array(  'multiple'=>$multiple,'field_id' => 'department', 'label' => 'Name', 'size'=>35, 'type' => 'text' ) );
@@ -26,16 +39,40 @@ Class Profile_CCT_Department extends Profile_CCT_Field {
 		$this->input_text( array(  'multiple'=>$multiple,'field_id' => 'url', 'label' => 'Website - http://', 'size'=>35 ) );
 	}
 	
+	/**
+	 * display function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function display() {
-	
-	
+		$this->display_shell( array( 'class' => 'department') );
+		$this->display_link( array(  'field_id' => 'department', 'default_text' => 'Finance and Technology', 'maybe_link' => true, 'href'=> $this->data['url'] ) );
+		$this->display_end_shell();
 	}
 	
+	/**
+	 * shell function.
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $options
+	 * @param mixed $data
+	 * @return void
+	 */
 	public static function shell($options, $data) {
 		new Profile_CCT_Department( $options, $data ); 
 	}
 }
 
+/**
+ * profile_cct_department_shell function.
+ * 
+ * @access public
+ * @param mixed $options
+ * @param mixed $data (default: null)
+ * @return void
+ */
 function profile_cct_department_shell( $options, $data = null ) {
 
 	Profile_CCT_Department::shell( $options, $data );

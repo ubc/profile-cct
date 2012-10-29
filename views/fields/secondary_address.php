@@ -1,5 +1,20 @@
 <?php 
 
+/**
+ * profile_cct_research_shell function.
+ * 
+ * @access public
+ * @param array $options (default: array())
+ * @param mixed $data (default: null)
+ * @return void
+ */
+function profile_cct_secondary_address_shell( $options = array(), $data = null ) {
+	
+	$options[ "type" ]  = 'secondary_address'; // make sure that you can't over write this
+	$options[ "label" ] = ( !empty( $options[ "label" ] ) ? $options[ "label" ] : 'Secondary Address' ); // 
+	
+	Profile_CCT_Address::shell( $options, $data );
+}
 
 /*
 function profile_cct_secondary_address_shell( $options, $data = null ) {
@@ -11,7 +26,7 @@ function profile_cct_secondary_address_shell( $options, $data = null ) {
 	Profile_CCT_Address::shell( $options, $data );
 }
 
-*/
+
 
 add_action('profile_cct_admin_pages', 'profile_cct_add_secondary_address_fields_filter', 10, 1);
 
@@ -49,3 +64,4 @@ function profile_cct_secondary_address_add_meta_box($field, $context, $data, $i)
 	);
 }
 
+*/

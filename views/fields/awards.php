@@ -13,9 +13,6 @@ Class Profile_CCT_Awards extends Profile_CCT_Field {
 			'multiple'=>true,
 			'show_multiple'=>true,
 		
-			'link_to'=>true,
-			'show_link_to' =>true,
-			
 			'width' => 'full',
 			'before' => '',
 			'empty' => '',
@@ -32,16 +29,14 @@ Class Profile_CCT_Awards extends Profile_CCT_Field {
 	
 	function display() {
 		
-		$this->display_text( array( 'field_type'=>$type, 'class' => 'awards', 'type' => 'shell', 'tag' => 'div' ) );
+		$this->display_shell( array( 'class' => 'awards'  ) );
 		
-		if( empty($data['award-website']) ):
-			$this->display_text( array( 'field_type'=>$type, 'class' => 'award-name','default_text' => 'Gotham Prize for Cancer Research', 'value'=>$data['award-name'], 'type' => 'text' ));
-		else:
-			$this->display_text( array( 'field_type'=>$type, 'class' => 'award-name','default_text' => 'Gotham Prize for Cancer Research', 'value'=>$data['award-name'], 'type' => 'text', 'tag'=> 'a', 'href'=> $field->correct_URL($data['award-website']) ) );
-		endif;
-		$this->display_text( array( 'field_type'=>$type, 'class' => 'receival-date-month','default_text' => 'November', 'value'=>$data['receival-date-month'], 'type' => 'text', 'show'=> in_array("receival-date-month",$show)) );
-		$this->display_text( array( 'field_type'=>$type, 'class' => 'receival-date-year','default_text' => '2011', 'separator' => ',', 'value'=>$data['receival-date-year'], 'type' => 'text' ));
-		$this->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'div') );
+		$this->display_link( array(  'field_id' => 'award-name', 'class' => 'award-name', 'default_text' => 'Gotham Prize for Cancer Research', 'href'=> $this->data['award-website'] ) );
+		
+		$this->display_text( array( 'field_id' => 'receival-date-month', 'class' => 'receival-date-month', 'default_text' => 'November' ) );
+		$this->display_text( array( 'field_id' => 'receival-date-year', 'class' => 'receival-date-year', 'default_text' => '2011', 'separator' => ',' ));
+		
+		$this->display_end_shell();
 
 	}
 	

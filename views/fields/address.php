@@ -17,6 +17,12 @@ Class Profile_CCT_Address extends Profile_CCT_Field {
 			'after' =>'',
 		);
 	
+	/**
+	 * field function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function field() {
 		$this->input_text( array( 'field_id' => 'building-name', 'label' => 'Building Name', 'size'=>35 ) );
 		
@@ -35,27 +41,42 @@ Class Profile_CCT_Address extends Profile_CCT_Field {
 		$this->input_select( array( 'field_id' => 'country','label' => 'Country', 'size'=>35, 'all_fields'=> $this->list_of_countries() ) );
 	}
 	
+	/**
+	 * display function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function display() {
 		
-		$this->display_shell( array('class' => 'address adr', 'tag' => 'div') );
+		$this->display_shell( array('class' => 'address adr' ) );
 		
-		$this->display_text( array( 'class' => 'building-name','default_text' => 'Wayne Manor') );
-		$this->display_text( array( 'class' => 'room-number','default_text' => '101'  ) );
+		$this->display_text( array( 'field_id' => 'building-name', 'class' => 'building-name','default_text' => 'Wayne Manor') );
+		$this->display_text( array( 'field_id' => 'room-number', 'class' => 'room-number','default_text' => '101'  ) );
 		
-		$this->display_text( array( 'class' => 'street-address street-1','default_text' => '1007 Mountain Drive' ) );
-		$this->display_text( array( 'class' => 'extended-address street-2','default_text' => '' ) );
+		$this->display_text( array( 'field_id' => 'street-1', 'class' => 'street-address street-1','default_text' => '1007 Mountain Drive','tag' => 'div'  ) );
+		$this->display_text( array( 'field_id' => 'street-2','class' => 'extended-address street-2','default_text' => '' ,'tag' => 'div') );
 		
-		$this->display_text( array( 'class' => 'locality city','default_text' => 'Gotham' ) );
-		$this->display_text( array( 'class' => 'region province','default_text' => 'Connecticut' ) );
+		$this->display_text( array( 'field_id' => 'city', 'class' => 'locality city', 'default_text' => 'Gotham', 'post_separator'=> ',' ) );
+		$this->display_text( array( 'field_id' => 'province', 'class' => 'region province', 'default_text' => 'Connecticut' ) );
 		
-		$this->display_text( array( 'class' => 'postal','default_text' => 'V1Z 2X0' ) );
+		$this->display_text( array( 'field_id' => 'postal', 'class' => 'postal', 'default_text' => 'V1Z 2X0' ) );
 		
-		$this->display_text( array( 'class' => 'country-name country','default_text' => 'United States', 'all_fields'=>$this->list_of_countries(),'tag' => 'div') );
+		$this->display_text( array( 'field_id' => 'country', 'class' => 'country-name country', 'default_text' => 'United States', 'all_fields'=>$this->list_of_countries(),'tag' => 'div') );
 		
-		$this->display_end_shell( array( 'tag' => 'div' ) );
+		$this->display_end_shell();
 
 	}
 	
+	/**
+	 * shell function.
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $options
+	 * @param mixed $data
+	 * @return void
+	 */
 	public static function shell( $options, $data ) {
 		new Profile_CCT_Address( $options, $data ); 
 	}

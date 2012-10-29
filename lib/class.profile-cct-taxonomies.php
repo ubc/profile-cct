@@ -17,23 +17,28 @@ class Profile_CCT_Taxonomy {
 	public static function init() {
 			
 		$field = Profile_CCT::get_object();
-	
+		
+		// remove some taxonomies
+		$field->taxonomies = Profile_CCT_Taxonomy::remove( $field->taxonomies );
+		
 		if( is_array( $field->taxonomies ) ):
 			foreach( $field->taxonomies as $taxonomy ):
-				Profile_CCT_Taxonomy::register_taxonomy( $taxonomy );
+				Profile_CCT_Taxonomy::register( $taxonomy );
 			endforeach;
 		endif;
 		
 	}
 	
+	
 	/**
-	 * widget_init function.
+	 * register function.
 	 * 
 	 * @access public
 	 * @static
+	 * @param mixed $taxonomy
 	 * @return void
 	 */
-	public static function register_taxonomy( $taxonomy ) {
+	public static function register( $taxonomy ) {
 		
 		$labels = array(
 			'name' => $taxonomy['plural'] ,
@@ -58,6 +63,47 @@ class Profile_CCT_Taxonomy {
 			'rewrite' => array( 'slug' => sanitize_title( $taxonomy['single'] ) ),
 		));
 
+	}
+	
+	/**
+	 * remove function.
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $taxonomies
+	 * @return void
+	 */
+	public static function remove($taxonomies) {
+		// remove taxonomies here
+		if( is_admin() && wp_verify_nonce( $_GET['_wpnonce'], 'profile_cct_remove_taxonomy'.$_GET['remove'] ) ): 
+		
+			if( isset( $taxonomies[$_GET['remove']] ) )
+				unset( $taxonomies[$_GET['remove']] );
+			
+			update_option( 'Profile_CCT_taxonomy', $field->taxonomies );
+			flush_rewrite_rules();
+			
+		endif; // end of trying to remove taxonomies 
+		return $taxonomies;
+	}
+	
+	/**
+	 * add function.
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $new_taxonomy
+	 * @param mixed $taxonomies
+	 * @return void
+	 */
+	public static function add( $new_taxonomy, $taxonomies ) {
+		$taxonomies[] = $new_taxonomy;
+   		update_option( 'Profile_CCT_taxonomy', $taxonomies );
+   		
+		Profile_CCT_Taxonomy::register( $new_taxonomy );
+   		flush_rewrite_rules();
+		return $taxonomies;
+		
 	}
 	
 	/**

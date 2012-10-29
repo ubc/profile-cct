@@ -30,6 +30,12 @@ Class Profile_CCT_Position extends Profile_CCT_Field {
 	
 	function display() {
 		
+		$this->display_shell( array(  'class' => 'position' ) );
+		$this->display_text( array( 'class' => 'role', 'default_text' => 'CEO'  ) );
+	
+		$this->display_link( array( 'field_id'=>'organization', 'class' => 'org organization','separator' => ',' ,'default_text' => 'Wayne Enterprises', 'maybe_link' => true, 'href' => $this->data['url'] ) );
+		
+		$this->display_end_shell();
 		
 	}
 	
@@ -46,7 +52,7 @@ function profile_cct_position_shell( $options, $data ) {
 	Profile_CCT_Position::shell( $options, $data );
 	
 }
-
+/*
 function profile_cct_position_display_shell( $options, $data ) {
 	
 	Profile_CCT_Position::shell( $options, $data );
@@ -178,3 +184,4 @@ function profile_cct_position_display( $data, $options ){
 
 }
 
+*/

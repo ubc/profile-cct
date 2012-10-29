@@ -1,55 +1,85 @@
 <?php 
 
 Class Profile_CCT_Textarea extends Profile_CCT_Field {
-		
-		var $default_options = array(
-			'type' => 'textarea',
-			'label' => 'textarea',
-			'description' => '',
-		
-			'width' => 'full',
-			'before' => '',
-			'empty' => '',
-			'after' =>'',
-		);
 	
+	/**
+	 * default_options
+	 * 
+	 * @var mixed
+	 * @access public
+	 */
+	var $default_options = array(
+		'type' => 'textarea',
+		'label' => 'textarea',
+		'description' => '',
+	
+		'width' => 'full',
+		'before' => '',
+		'empty' => '',
+		'after' =>'',
+	);
+	
+	/**
+	 * field function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function field() {
 		
 		$this->input_textarea( array( 'field_id' => 'textarea', 'label' => '', 'size'=>25, 'row'=>2, 'cols'=>20 ) );
 
 	}
 	
+	/**
+	 * display function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function display() {
 		
-		$this->display_shell( array( 'class' => 'textarea',  'tag' => 'div' ) );
+		$this->display_textfield( array( 'class' => 'textarea textarea','default_text' => 'lorem ipsum') );
 		
-		$this->display_text( array( 'class' => 'textarea textarea','default_text' => 'lorem ipsum', 'content_filter' => 'profile_escape_html', 'tag' => 'div', 'type' => 'text') );
-		
-		$this->display_end_shell( array(  'tag' => 'div') );
-
 	}
 	
+	/**
+	 * shell function.
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $options
+	 * @param mixed $data
+	 * @return void
+	 */
 	public static function shell( $options, $data ) {
 		new Profile_CCT_Textarea( $options, $data ); 
 	}
 	
 }
 
-
-
+/**
+ * profile_cct_textarea_shell function.
+ * 
+ * @access public
+ * @param mixed $options
+ * @param mixed $data
+ * @return void
+ */
 function profile_cct_textarea_shell( $options, $data ) {
 	
 	Profile_CCT_Textarea::shell( $options, $data );
 	
 }
 
+
+/*
+
 function profile_cct_textarea_display_shell( $options, $data ) {
 	
 	Profile_CCT_Textarea::shell( $options, $data );
 	
 }
-
-/*
 function profile_cct_textarea_shell_old($action, $options ) {
 	
 	if( is_object($action) ):

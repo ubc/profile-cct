@@ -4,10 +4,8 @@
 </div>
 <p class="info">Drag and drop the fields into place, just the way you want to. Don't forget to click the edit button for some customization. Also you don't have to click a save button. Enjoy</p>
 <div id="col-container">
-	
 	<div id="col-right">
 		<div class="col-wrap">
-		
 		<h3>Inactive Fields</h3>
 		<?php Profile_CCT_Admin::generate_profile( 'bench' ); ?>
 		<p class="info"><em>Place fields that you don't want to display above .</em> &uarr;</p>
@@ -21,5 +19,4 @@
 		<?php Profile_CCT_Admin::generate_profile( 'preview' ); ?>
 		</div>
 	</div><!-- /col-left -->
-
 </div>

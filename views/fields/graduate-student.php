@@ -1,27 +1,36 @@
 <?php
 
 Class Profile_CCT_Graduatestudent extends Profile_CCT_Field {
-		
-		var $default_options = array(
-			'type' => 'graduatestudent',
-			'label' => 'graduate student',	
-			'description' => '',
-			
-			'show'=>array( 'student-salutations','student-middle','student-credentials','student-website'),
-			'show_fields'=>array('student-salutations','student-middle','student-credentials','student-website'),
-			
-			'multiple'=>true,
-			'show_multiple'=>true,
-		
-			'link_to'=>true,
-			'show_link_to' =>true,
-			
-			'width' => 'full',
-			'before' => '',
-			'empty' => '',
-			'after' =>'',
-		);
 	
+	/**
+	 * default_options
+	 * 
+	 * @var mixed
+	 * @access public
+	 */
+	var $default_options = array(
+		'type' => 'graduatestudent',
+		'label' => 'graduate student',	
+		'description' => '',
+		
+		'show'=>array( 'student-salutations','student-middle','student-credentials','student-website'),
+		'show_fields'=>array('student-salutations','student-middle','student-credentials','student-website'),
+		
+		'multiple'=>true,
+		'show_multiple'=>true,
+	
+		'width' => 'full',
+		'before' => '',
+		'empty' => '',
+		'after' =>'',
+	);
+	
+	/**
+	 * field function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function field() {
 		$this->input_text( array( 'field_id' => 'student-salutations','label' => 'Salutations', 'size'=>2 ) );
 		$this->input_text( array( 'field_id' => 'student-first','label' => 'First', 'size'=>14 ) );
@@ -32,28 +41,57 @@ Class Profile_CCT_Graduatestudent extends Profile_CCT_Field {
 
 	}
 	
+	/**
+	 * display function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function display() {
-		/*
-		$field->display_text( array( 'field_type'=>$type, 'class' => 'graduatestudent', 'type' => 'shell', 'tag' => 'div' ) );
-		$field->display_text( array( 'field_type'=>$type, 'class' => 'honorific-prefix student-salutations','default_text' => 'Mr', 'value'=>$data['student-salutations'], 'type' => 'text' , 'show' => in_array("student-salutations",$show)) );
-		$field->display_text( array( 'field_type'=>$type, 'class' => 'student-given-name','default_text' => 'Richard', 'value'=>$data['student-first'], 'type' => 'text' ));
-		$field->display_text( array( 'field_type'=>$type, 'class' => 'additional-name student-middle','default_text' => 'John', 'value'=>$data['student-middle'], 'type' => 'text', 'show' => in_array("student-middle",$show) ));
-		$field->display_text( array( 'field_type'=>$type, 'class' => 'student-family-name','default_text' => 'Grayson', 'value'=>$data['student-last'], 'type' => 'text' ));
-		$field->display_text( array( 'field_type'=>$type, 'class' => 'honorific-suffix suffix student-credentials','separator' => ',','default_text' => 'B.S.S.', 'value'=>$data['student-credentials'],'type' => 'text', 'show' => in_array("student-credentials",$show)));
-		$field->display_text( array( 'field_type'=>$type, 'class' => 'student-website','default_text' => 'http://richardjohngrayson.com/', 'type' => 'text', 'tag' => 'a', 'href'=>$field->correct_URL($data['student-website']), 'show' => in_array("student-website",$show) ));
-		$field->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'div') );
-		*/
+		
+		$this->display_shell( array( 'class' => 'graduatestudent' ) );
+		
+		$this->display_text( array( 'field_id' => 'student-salutations', 'class' => 'honorific-prefix student-salutations','default_text' => 'Mr' ) );
+		$this->display_text( array( 'field_id' => 'student-first', 'class' => 'student-given-name','default_text' => 'Richard' ) );
+		$this->display_text( array( 'field_id' => 'student-middle', 'class' => 'additional-name student-middle','default_text' => 'John',  ) );
+		$this->display_text( array( 'field_id' => 'student-last', 'class' => 'student-family-name','default_text' => 'Grayson' ) );
+		$this->display_text( array( 'field_id' => 'student-credentials','class' => 'honorific-suffix suffix student-credentials', 'separator' => ', ', 'default_text' => 'B.S.S.' ) );
+		
+		
+		$this->display_link( array(  'field_id' => 'student-website', 'class' => 'student-website', 'default_text' => 'http://richardjohngrayson.com/'  ) );
+		
+		$this->display_end_shell();
+		
 	}
 	
+	/**
+	 * shell function.
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $options
+	 * @param mixed $data
+	 * @return void
+	 */
 	public static function shell( $options, $data ) {
 		new Profile_CCT_Graduatestudent( $options, $data ); 
 	}
 	
 }
 
+/**
+ * profile_cct_graduatestudent_shell function.
+ * 
+ * @access public
+ * @param mixed $options
+ * @param mixed $data
+ * @return void
+ */
 function profile_cct_graduatestudent_shell( $options, $data ) {
 	Profile_CCT_Graduatestudent::shell( $options, $data ); 
 }
+
+/*
 
 function profile_cct_graduatestudent_display_shell( $options, $data ) {
 	Profile_CCT_Graduatestudent::shell( $options, $data ); 
@@ -61,14 +99,7 @@ function profile_cct_graduatestudent_display_shell( $options, $data ) {
 
 
 
-/**
- * profile_cct_graduatestudent_shell function.
- * 
- * @access public
- * @param mixed $action
- * @param mixed $options. (default: null)
- * @return void
- */
+
 function profile_cct_graduatestudent_shell_old( $action, $options=null ) {
 	
 	
@@ -107,14 +138,7 @@ function profile_cct_graduatestudent_shell_old( $action, $options=null ) {
 	$field->end_field( $action, $options );
 	
 }
-/**
- * profile_cct_graduatestudent_field function.
- * 
- * @access public
- * @param mixed $data
- * @param mixed $options
- * @return void
- */
+
 function profile_cct_graduatestudent_field( $data, $options, $count = 0 ){
 	
 	extract( $options );
@@ -204,3 +228,4 @@ function profile_cct_graduatestudent_display( $data, $options ){
 	$field->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'div') );
 	
 }
+*/

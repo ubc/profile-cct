@@ -2,35 +2,52 @@
 
 Class Profile_CCT_Permalink extends Profile_CCT_Field {
 		
-		var $default_options = array(
-			'type' => 'permalink',
-			'label' => 'permalink',
-			'description' => '',
-			
+	/**
+	 * default_options
+	 * 
+	 * @var mixed
+	 * @access public
+	 */
+	var $default_options = array(
+		'type' => 'permalink',
+		'label' => 'permalink',
+		'description' => '',
 		
-			'width' => 'full',
-			'before' => '',
-			'empty' => '',
-			'after' =>'',
-			'text'	=>'more info',
-		);
+		'link_to' => true, // always link to
+		
+		'width' => 'full',
+		'before' => '',
+		'empty' => '',
+		'after' =>'',
+		'text'	=>'more info',
+	);
 	
-	/*
-	function field() {
-		// there is no form part 
-
-	}
-	*/
+	
+	/**
+	 * display function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function display() {
 		
-		$this->display_shell( array( 'class' => 'permalink',  'tag' => 'div' ) );
+		$this->display_shell( array( 'class' => 'permalink' ) );
 		
-		$this->display_permalink( array(  'default_text' => 'bruce.wayne@wayneenterprises.com' ) );
+		$this->display_text( array( 'value' => $this->text ) );
 	
-		$this->display_end_shell( array(  'tag' => 'div') );
+		$this->display_end_shell( );
 
 	}
 	
+	/**
+	 * shell function.
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $options
+	 * @param mixed $data
+	 * @return void
+	 */
 	public static function shell( $options, $data ) {
 		new Profile_CCT_Permalink( $options, $data ); 
 	}
@@ -40,13 +57,21 @@ Class Profile_CCT_Permalink extends Profile_CCT_Field {
 
 
 
+/**
+ * profile_cct_permalink_display_shell function.
+ * 
+ * @access public
+ * @param mixed $options
+ * @param mixed $data
+ * @return void
+ */
 function profile_cct_permalink_display_shell( $options, $data ) {
 	
 	Profile_CCT_Permalink::shell( $options, $data );
 	
 }
 
-
+/*
 function profile_cct_permalink_display_shell_old(  $action, $options, $data=null ) {
 	
 	if( is_object($action) ):
@@ -95,3 +120,4 @@ function profile_cct_permalink_display( $data, $options ){
 	$field->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'div') );
 	
 }
+*/

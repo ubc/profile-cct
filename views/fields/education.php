@@ -21,6 +21,13 @@ Class Profile_CCT_Education extends Profile_CCT_Field {
 		'after' => ''
 		
 	);
+	
+	/**
+	 * field function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function field() {
 		$this->input_text( array( 'field_id' => 'school', 'label' => 'School name', 'size'=>35 ) );
 		$this->input_select( array( 'field_id' => 'year', 'label' => 'Year', 'size'=>25,  'all_fields'=>$this->list_of_years() ));
@@ -29,16 +36,46 @@ Class Profile_CCT_Education extends Profile_CCT_Field {
 
 	}
 	
+	/**
+	 * display function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function display() {
 	
+		$this->display_shell( array( 'class' => 'educaton' ) );	
+		$this->display_text( array( 'field_id' => 'school', 'class' => 'school','default_text' => 'University of Gotham' ) );		
+		$this->display_text( array( 'field_id' => 'year', 'class' => 'year','default_text' => '1939', 'separator' => ',' ) );		
+		$this->display_text( array( 'field_id' => 'degree', 'class' => 'textarea bio','default_text' => 'Finance', 'separator' => ',') );
+		$this->display_text( array( 'field_id' => 'honours', 'class' => 'honors','default_text' => 'BCom', 'separator' => ',' ) );	
+		$this->display_end_shell();
 	
 	}
+	
+	/**
+	 * shell function.
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $options
+	 * @param mixed $data
+	 * @return void
+	 */
 	public static function shell( $options, $data ) {
 		new Profile_CCT_Education( $options, $data ); 
 	}
 }
 
 
+/**
+ * profile_cct_education_shell function.
+ * 
+ * @access public
+ * @param mixed $options
+ * @param mixed $data (default: null)
+ * @return void
+ */
 function  profile_cct_education_shell( $options, $data=null ) {
 	
 	Profile_CCT_Education::shell( $options, $data );

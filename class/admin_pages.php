@@ -18,7 +18,6 @@
 			
 		<?php endif; ?>
 		<h3 class="nav-tab-wrapper">
-
 			<a class="nav-tab <?php if( !isset($_GET['view']) ) { echo "nav-tab-active"; } ?>"
 				href="edit.php?post_type=profile_cct&page=<?php echo PROFILE_CCT_BASENAME; ?>">About</a>
 			<a class="nav-tab <?php if( isset($_GET['view'])  && $_GET['view'] =='settings' ) { echo "nav-tab-active"; } ?>"

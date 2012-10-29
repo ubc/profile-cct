@@ -1,4 +1,4 @@
-
+/* This file is being included on the form */
 
 
 /* ----- Field Structure ----- */
@@ -12,6 +12,7 @@
 	width:99%;
 	zoom:1;
 }
+/* Sorting */
 .sort{
 	padding: 5px 0 0 0;
 	border: 1px dashed #EEE;
@@ -87,7 +88,7 @@
 	height: 0;
 	border-top: 1px solid rgba(0,0,0,0.1);
 	border-bottom: 1px solid rgba(255,255,255, 0.3);
-		margin-right:20px;
+	margin-right:20px;
 }
 .form-builder ul:after,
 .form-builder li:after,
@@ -96,9 +97,7 @@
 	display:block;
 	height:0;
 	clear:both;
-	visibility:hidden
-
-
+	visibility:hidden;
 }
 
 * html .form-builder li {
@@ -179,7 +178,7 @@
 /* ----- Choices Field Structures ----- */
 #preview-form .form-builder li div span,
 .form-builder li div span {
-	margin:0 5px 0 0;
+	margin:0 0 0 0;
 	display:block;
 	float:left;
 }
@@ -202,17 +201,14 @@
 
 
 /* ----- Location Field Structures ----- */
-
-
-
-.form-builder .left {
+/* .form-builder .left {
 	float:left
 }
 
 .form-builder .right {
 	float:right
 }
-
+*/
 /* ----- LABELS ----- */
 .form-builder li div label,
 .form-builder li span label {
@@ -327,18 +323,26 @@
 	float: left!important;
 	clear: none!important;
 }
-.form-builder .one-third textarea,
+
 .form-builder .one-third {
 	width:170px!important;
 }
-.form-builder .two-third textarea,
-.form-builder .two-third {
-	width:380px!important;
+.form-builder .one-third textarea{
+	width: 150px;
 }
-.form-builder .half textarea,
+
+.form-builder .two-third {
+	width:380px;
+}
+.form-builder .two-third textarea{
+	widows: 360px;
+}	
 .form-builder .half {
 	width:275px!important;
 	
+}
+.form-builder .half textarea{
+	width:255px;
 }
 .form-builder .inline .field-shell{
 	width: auto;
@@ -494,6 +498,7 @@ li.ui-sortable-helper {
     overflow: hidden;
     text-indent: -99999px;
 }
+/* Bench */
 #bench{
 	background: #CCC;
 	border: 0;
@@ -521,28 +526,44 @@ li.ui-sortable-helper {
 	height: 0;
 }
 
-/* Page Fields */
+/* Page Fields and List Fields */
+#list-shell .form-builder li,
+#list-shell .form-builder .field-title,
 #page-shell .form-builder li,
 #page-shell .form-builder .field-title{
 	background: #FFF;
 }
+#list-shell .form-builder li,
 #page-shell .form-builder li{
 	border: 1px solid #FFF;
 }
+#list-shell .form-builder .ui-state-highlight,
+#list-shell .form-builder li:hover .field-title,
+#list-shell .form-builder li.hover-expanded .field-title,
+
 #page-shell .form-builder .ui-state-highlight,
 #page-shell .form-builder li:hover .field-title,
 #page-shell .form-builder li.hover-expanded .field-title{
 	background-color: #F1F1F1;
     background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
 }
+#list-shell .form-builder li.hover-expanded,
+#list-shell .form-builder li:hover,
 #page-shell .form-builder li.hover-expanded,
 #page-shell .form-builder li:hover{
 	border: 1px solid #CCC;
 }
+#list-shell .field-title,
+#list-shell .edit,
 #page-shell .field-title,
 #page-shell .edit {
 	display: none;
 }
+#list-shell .hover-expanded .field-title,
+#list-shell .hover-expanded .edit,
+#list-shell .hover .field-title,
+#list-shell .hover .edit,
+
 #page-shell .hover-expanded .field-title,
 #page-shell .hover-expanded .edit,
 #page-shell .hover .field-title,

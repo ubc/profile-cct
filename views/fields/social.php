@@ -1,54 +1,77 @@
 <?php 
 
 Class Profile_CCT_Social extends Profile_CCT_Field {
-		
-		var $default_options = array(
-			'type' => 'social',
-			'label' => 'social',	
-			'description' => '',
-			
-			'multiple'=>true,
-			'show_multiple' =>true,
-						
-			
-			
-			'before' => '',
-			'empty' => '',
-			'after' =>'',
-		);
 	
+	/**
+	 * default_options
+	 * 
+	 * @var mixed
+	 * @access public
+	 */
+	var $default_options = array(
+		'type' => 'social',
+		'label' => 'social',	
+		'description' => '',
+		
+		'multiple'=>true,
+		'show_multiple' =>true,
+					
+		
+		
+		'before' => '',
+		'empty' => '',
+		'after' =>'',
+	);
+	
+	/**
+	 * field function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function field() {
 		
-		$this->input_select( array( 'field_id' => 'option', 'label' => 'Site',  'value'=>$data['option'], 'all_fields'=>$this->social_options('label'), 'type' => 'select','count'=>$count) );
+		$this->input_select( array( 'field_id' => 'option', 'label' => 'Site',  'value'=>$data['option'], 'all_fields'=>$this->social_options( 'label' ), 'type' => 'select','count'=>$count) );
 		$this->input_text( array( 'field_id' => 'usersocial', 'label'=>$social_array_details[$data['option']]['user_url'],  'value'=>$data['usersocial'], 'all_fields'=>$social_array ) );
 
 
 	}
 	
+	/**
+	 * display function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function display() {
 		
+		$this->display_shell( array( 'class' => 'social-link' ) );
+		$this->display_social_link( array( 'field_id' => 'usersocial'  ) );
+		$this->display_end_shell();
 		
-		
-		$this->display_shell( array(  'class' => 'fn n', 'type' => 'shell', 'tag' => 'h2','link_to'=>$link_to, 'href'=>$href ) );
-		
-		$this->display_text( array( 'class' => 'honorific-prefix salutations','default_text' => 'Mr' ) );
-		$this->display_text( array( 'class' => 'given-social','default_text' => 'Bruce' ) );
-		$this->display_text( array( 'class' => 'additional-social middle','default_text' => 'Anthony' ) );
-		$this->display_text( array( 'class' => 'family-social','default_text' => 'Wayne' ) );
-		$this->display_text( array( 'class' => 'honorific-suffix suffix credentials','separator' => ',','default_text' => 'BCom' ) );
-		
-		$this->display_end_shell( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'h2', 'link_to'=>$link_to ) );
-	
-
+		// $this->display_text( array( 'field_type'=>$type, 'type' => 'text', 'tag' => 'span', 'separator' => '/', 'value'=>$data['usersocial']) );
 	}
 	
+	/**
+	 * shell function.
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $options
+	 * @param mixed $data
+	 * @return void
+	 */
 	public static function shell( $options, $data ) {
 		new Profile_CCT_Social( $options, $data ); 
 	}
 	
-	
-	
-	function social_options( $what = 'all'){
+	/**
+	 * social_options function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	function social_options( $what = 'all' ){
 		$all = array(
 					
 					array( 	"type"=> "ubc-blog", 	
@@ -138,16 +161,20 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 	
 }
 
-
-
-
-
+/**
+ * profile_cct_social_shell function.
+ * 
+ * @access public
+ * @param mixed $options
+ * @param mixed $data
+ * @return void
+ */
 function profile_cct_social_shell( $options, $data ) {
 	
 	Profile_CCT_Social::shell( $options, $data );
 	
 }
-
+/*
 function profile_cct_social_display_shell( $options, $data ) {
 	
 	Profile_CCT_Social::shell( $options, $data );
@@ -367,3 +394,4 @@ function profile_cct_social_options(){
 			 		);
 	}
 	
+*/

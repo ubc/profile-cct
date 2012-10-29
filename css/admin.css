@@ -1,9 +1,14 @@
+/**
+ * displayed in the settings
+ */
+
 .nav-tab-wrapper span{
 	padding-right: 5px;
 	padding-left: 20px;
 	color:#AAA;
 	font-size: 12px;
 }
+
 #col-left{
     float: left;
     overflow: hidden;
@@ -25,8 +30,10 @@
 	max-width: 960px;
  
 }
-#col-middle #normal-shell,
-#col-middle #tabs{
+#page-shell #header-shell,
+#page-shell #bottom-shell,
+#normal-shell,
+#tabs{
 	float: left;
     width: 68%;
 	max-width: 655px;
@@ -37,7 +44,8 @@
     height: 27px;
 	border-bottom: 1px solid #CCCCCC;
 }
-#col-middle #side-shell{
+
+#side-shell{
 	float: right;
 	width: 31%;
 	max-width: 300px;

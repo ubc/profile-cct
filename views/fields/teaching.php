@@ -1,6 +1,24 @@
 <?php 
 
 
+/**
+ * profile_cct_teaching_shell function.
+ * 
+ * @access public
+ * @param array $options (default: array())
+ * @param mixed $data (default: null)
+ * @return void
+ */
+function profile_cct_teaching_shell( $options = array(), $data = null ) {
+	
+	$options[ "type" ]  = 'teaching'; // make sure that you can't over write this
+	$options[ "label" ] = ( !empty( $options[ "label" ] ) ? $options[ "label" ] : 'Teaching' ); // 
+	
+	Profile_CCT_Textarea::shell( $options, $data );
+}
+
+
+/*
 add_action('profile_cct_admin_pages', 'profile_cct_add_teaching_fields_filter', 10, 1);
 
 add_action('profile_cct_form', 'profile_cct_add_teaching_fields_filter', 5);
@@ -37,3 +55,4 @@ function profile_cct_teaching_add_meta_box($field, $context, $data, $i){
 }
 
 
+*/

@@ -1,18 +1,16 @@
 <?php 
+
+/**
+ * profile_cct_tabs_shell function.
+ * 
+ * @access public
+ * @return void
+ */
 function profile_cct_tabs_shell(  ){
 	
 	Profile_CCT_Tabs::shell();
 }
 /*
-function profile_cct_form_shell_tabs(){
-	
-	Profile_CCT_Tabs::shell();
-}
-
-function profile_cct_page_shell_tabs( $options, $data ){
-
-	Profile_CCT_Tabs::shell();
-}
 */
 Class Profile_CCT_Tabs {
 	
@@ -80,7 +78,6 @@ Class Profile_CCT_Tabs {
 				?><div id="tabs-<?php echo $count?>"><?php 
 					if($editing): ?>
 						<input type="hidden" name="form_field[tabs][]" value="<?php echo esc_attr($tab); ?>" />
-						
 						<?php 
 						// <ul class="form-builder sort" id="tabbed-<?php echo $count">
 					endif;
@@ -92,18 +89,21 @@ Class Profile_CCT_Tabs {
 					$count++;
 				endforeach; 
 			endif;
+			
+			if( $editing ): ?>
+				<div id="add-tabshell"></div>
+			<?php else: 
 				
-				if($editing): ?>
-					<div id="add-tabshell"></div>
-				<?php else: ?>
-					<script type="text/javascript">
-						/* <![CDATA[ */
-						jQuery(document).ready(function() {
-							jQuery("#<?php echo "tab-id-".$profile_cct_tabs; ?>").tabs();
-						});
-						/* ]]> */
-					</script>
-				<?php endif; ?></div><?php 
+				// 
+				?>
+				<script type="text/javascript">
+					/* <![CDATA[ */
+					jQuery(document).ready(function() {
+						jQuery("#<?php echo "tab-id-".$profile_cct_tabs; ?>").tabs();
+					});
+					/* ]]> */
+				</script>
+			<?php endif; ?></div><?php 
 			
 		endif;
 	

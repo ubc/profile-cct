@@ -3,6 +3,12 @@
 
 Class Profile_CCT_Courses extends Profile_CCT_Field {
 	
+	/**
+	 * default_options
+	 * 
+	 * @var mixed
+	 * @access public
+	 */
 	var $default_options = array(
 		'type' => 'courses',
 		'label' => 'courses',
@@ -20,46 +26,83 @@ Class Profile_CCT_Courses extends Profile_CCT_Field {
 		'width' => 'full',
 	
 	);
-	function field() {
 	
-		$this->input_text( array( 'field_id' => 'course-name','label' => 'Course Name', 'size'=>35) );
+	/**
+	 * field function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	function field() {
+		
+		
+		
+		$this->input_text( array( 'field_id' => 'course-name','label' => 'Course Name', 'size'=>35 ) );
 		$this->input_text( array(  'field_id' => 'teaching-unit-prefix','label' => 'Subject Code', 'size'=>4) );
 		$this->input_text( array(  'field_id' => 'course-number','label' => 'Course #', 'size'=>3  ) );
 		$this->input_text( array(  'field_id' => 'section-number','label' => 'Section #', 'size'=>3 ) );
 		
 		$this->input_select( array( 'field_id' => 'course-date-month','label' => 'Month', 'size'=>35, 'all_fields'=> $this->list_of_months() ) );
-		$this->input_select( array( 'field_type'=>$type, 'field_id' => 'course-date-year','label' => 'Year', 'size'=>35, 'all_fields'=>$this->list_of_years() ) );
+		$this->input_select( array( 'field_id' => 'course-date-year','label' => 'Year', 'size'=>35, 'all_fields'=>$this->list_of_years() ) );
 		
-		$this->input_textarea( array( 'field_id' => 'course-summary','label' => 'Course Summary', 'size'=>35 ) );
+		$this->input_textarea( array( 'field_id' => 'course-summary', 'label' => 'Course Summary', 'size'=>35 ) );
 
 		
 	}
 	
+	/**
+	 * display function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function display() {
 	
-		$this->display_text( array( 'field_type'=>$type, 'class' => 'courses', 'type' => 'shell', 'tag' => 'div') );
-		$this->display_text( array( 'field_type'=>$type,  'class' => 'course-name', 'default_text' => 'Financial Accounting', 'value'=>$data['course-name'], 'type' => 'text') );
-		$this->display_text( array( 'field_type'=>$type,  'class' => 'teaching-unit-prefix', 'default_text' => 'COMM', 'separator' => ',', 'value'=>$data['teaching-unit-prefix'], 'type' => 'text') );
-		$this->display_text( array( 'field_type'=>$type,  'class' => 'course-number', 'default_text' => '450','value'=>$data['course-number'], 'type' => 'text' ) );
-		$this->display_text( array( 'field_type'=>$type,  'class' => 'section-number', 'default_text' => '101','value'=>$data['section-number'], 'type' => 'text' ) );
-		$this->display_text( array( 'field_type'=>$type,  'class' => 'course-date-month', 'default_text' => 'May','value'=>$data['course-date-month'], 'type' => 'text' ) );
-		$this->display_text( array( 'field_type'=>$type,  'class' => 'course-date-year', 'default_text' => '2012','value'=>$data['course-date-year'], 'type' => 'text' ) );
-		$this->display_text( array( 'field_type'=>$type,  'class' => 'course-summary', 'content_filter' => 'profile_escape_html', 'default_text' => 'Continuation of the examination of accounting as a means of measurement and as an information system for external reporting purposes.','value'=>$data['course-summary'], 'type' => 'text', 'tag' => 'span') );
-		$this->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'div') );
+		$this->display_shell( array( 'class' => 'courses') );
+		$this->display_text( array( 'field_id' => 'teaching-unit-prefix', 'class' => 'teaching-unit-prefix', 'default_text' => 'COMM', ) );
+		$this->display_text( array( 'field_id' => 'course-number', 'class' => 'course-number', 'default_text' => '450' ) );
+		$this->display_text( array( 'field_id' => 'section-number', 'class' => 'section-number', 'default_text' => '101' ) );
+		
+		$this->display_text( array( 'field_id' => 'course-name', 'class' => 'course-name', 'default_text' => 'Financial Accounting', 'tag' => 'strong' ) );
+		
+		$this->display_text( array( 'field_id' => 'course-date-month', 'class' => 'course-date-month', 'default_text' => 'May', 'separator' => ' -') );
+		$this->display_text( array( 'field_id' => 'course-date-year', 'class' => 'course-date-year', 'default_text' => '2012') );
+		$this->display_textfield( array(  'field_id' => 'course-summary', 'class' => 'course-summary',  'default_text' => 'Continuation of the examination of accounting as a means of measurement and as an information system for external reporting purposes.') );
+		
+		$this->display_end_shell( );
 	
 	}
 	
+	/**
+	 * shell function.
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $options
+	 * @param mixed $data
+	 * @return void
+	 */
 	public static function shell( $options, $data ) {
 		new Profile_CCT_Courses( $options, $data ); 
 	}
 }
 
 
+/**
+ * profile_cct_courses_shell function.
+ * 
+ * @access public
+ * @param mixed $options
+ * @param mixed $data
+ * @return void
+ */
 function profile_cct_courses_shell( $options, $data  ) {
 	
 	Profile_CCT_Courses::shell( $options, $data ); 
 
 }
+
+/*
 function profile_cct_courses_field( $data, $options, $count = 0 ){
 
 	extract( $options );
@@ -155,3 +198,4 @@ function profile_cct_courses_display( $data, $options ){
 	$field->display_text( array( 'field_type'=>$type,  'class' => 'course-summary', 'content_filter' => 'profile_escape_html', 'default_text' => 'Continuation of the examination of accounting as a means of measurement and as an information system for external reporting purposes.','value'=>$data['course-summary'], 'type' => 'text', 'tag' => 'span') );
 	$field->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'div') );
 }
+*/

@@ -1,46 +1,86 @@
 <?php 
 
 Class Profile_CCT_Unitassociations extends Profile_CCT_Field {
-		
-		var $default_options = array(
-			'type' => 'unitassociations',
-			'label' => 'unit associations',
-			'description' => '',
-			
-			'show'=>array('unit-website'),
-			'show_fields'=>array('unit-website'),
-			
-			'multiple'=>true,
-			'show_multiple'=>true,
-		
-			
-			
-			'width' => 'full',
-			'before' => '',
-			'empty' => '',
-			'after' =>'',
-		);
 	
+	/**
+	 * default_options
+	 * 
+	 * @var mixed
+	 * @access public
+	 */
+	var $default_options = array(
+		'type' => 'unitassociations',
+		'label' => 'unit associations',
+		'description' => '',
+		
+		'show'=>array('unit-website'),
+		'show_fields'=>array('unit-website'),
+		
+		'multiple'=>true,
+		'show_multiple'=>true,
+	
+		
+		
+		'width' => 'full',
+		'before' => '',
+		'empty' => '',
+		'after' =>'',
+	);
+	
+	/**
+	 * field function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function field() {
 		$this->input_text( array( 'field_id' => 'unit', 'label' => 'Name', 'size'=>35 ) );
 		$this->input_text( array('field_id' => 'unit-website', 'label' => 'Website - http://', 'size'=>35 ) );
 	}
 	
+	/**
+	 * display function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function display() {
 		
-		
+		$this->display_shell( array(  'class' => 'department') );
+		$this->display_text( array( 'field_id' => 'unit', 'default_text' => 'Biotechnology', 'maybe_link' => true ,'href'=> $this->data['unit-website'] ) );
+		$this->display_end_shell();
+	
 	}
 	
+	/**
+	 * shell function.
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $options
+	 * @param mixed $data
+	 * @return void
+	 */
 	public static function shell( $options, $data ) {
 		new Profile_CCT_Unitassociations( $options, $data ); 
 	}
 	
 }
+
+/**
+ * profile_cct_unitassociations_shell function.
+ * 
+ * @access public
+ * @param mixed $options
+ * @param mixed $data
+ * @return void
+ */
 function profile_cct_unitassociations_shell( $options, $data ) {
 		Profile_CCT_Unitassociations::shell( $options, $data ); 
 
 }
 
+/*
 function profile_cct_unitassociations_display_shell( $options, $data ) {
 		Profile_CCT_Unitassociations::shell( $options, $data ); 
 
@@ -158,3 +198,4 @@ function profile_cct_unitassociations_display( $data, $options ){
 	$field->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'div') );
 	
 }
+*/

@@ -2,23 +2,35 @@
 
 Class Profile_CCT_Professionalaffiliations extends Profile_CCT_Field {
 		
-		var $default_options = array(
-			'type' => 'professionalaffiliations',
-			'label' => 'professional affiliations',
-			'description' => '',
-			
-			'show'=>array('affiliation-website','affiliation-role','active-date-month'),
-			'show_fields'=>array('affiliation-website','affiliation-role','active-date-month'),
-			
-			'multiple'=>true,
-			'show_multiple'=>true,
+	/**
+	 * default_options
+	 * 
+	 * @var mixed
+	 * @access public
+	 */
+	var $default_options = array(
+		'type' => 'professionalaffiliations',
+		'label' => 'professional affiliations',
+		'description' => '',
 		
-			'width' => 'full',
-			'before' => '',
-			'empty' => '',
-			'after' =>'',
-		);
+		'show'=>array('affiliation-website','affiliation-role','active-date-month'),
+		'show_fields'=>array('affiliation-website','affiliation-role','active-date-month'),
+		
+		'multiple'=>true,
+		'show_multiple'=>true,
 	
+		'width' => 'full',
+		'before' => '',
+		'empty' => '',
+		'after' =>'',
+	);
+	
+	/**
+	 * field function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function field() {
 		
 		$this->input_text( array( 'field_id' => 'affiliation', 'label' => 'Affiliation', 'size'=>35 ) );
@@ -27,37 +39,45 @@ Class Profile_CCT_Professionalaffiliations extends Profile_CCT_Field {
 		$this->input_text( array( 'field_id' => 'affiliation-role', 'label' => 'Role', 'size'=>35 ) );
 		$this->input_select( array( 'field_id' => 'active-date-month', 'separator' => 'member since:', 'label' => 'Month', 'size'=>35, 'all_fields'=>$this->list_of_months() ) );
 		$this->input_select( array( 'field_id' => 'active-date-year', 'label' => 'Year', 'size'=>35,  'all_fields'=>$this->list_of_years() ) );
-	
-
 
 	}
 	
+	/**
+	 * display function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function display() {
 		
 		$this->display_shell( array( 'class' => 'professionalaffiliations' ) );
-		
-		$this->display_text( array(  'default_text' => 'bruce.wayne@wayneenterprises.com' ) );
-	
+		$this->display_link( array( 'field_id' => 'affiliation',  'class' => 'affiliation', 'default_text' => 'Wayne Healthcare', 'maybe_link' => true, 'href'=> $this->data['affiliation-website'], 'post_separator' => ',' ) );
+		$this->display_text( array(  'field_id' => 'affiliation-role', 'class' => 'affiliation-role', 'default_text' => 'public speaker',  'tag' => 'strong', 'post_separator' => ',' ));
+		$this->display_text( array( 'field_id' => 'active-date-month', 'class' => 'active-date-month','default_text' => 'January' ) );
+		$this->display_text( array( 'field_id' => 'active-date-year', 'field_type'=>$type, 'class' => 'active-date-year','default_text' => '1951'  ) );
 		$this->display_end_shell();
 
 	}
 	
 	public static function shell( $options, $data ) {
 		new Profile_CCT_Professionalaffiliations( $options, $data ); 
-	}
-	
+	}	
 }
 
-
-
-
-
+/**
+ * profile_cct_professionalaffiliations_shell function.
+ * 
+ * @access public
+ * @param mixed $options
+ * @param mixed $data
+ * @return void
+ */
 function profile_cct_professionalaffiliations_shell( $options, $data ) {
 	
 	Profile_CCT_Professionalaffiliations::shell( $options, $data );
 	
 }
-
+/*
 function profile_cct_professionalaffiliations_display_shell( $options, $data ) {
 	
 	Profile_CCT_Professionalaffiliations::shell( $options, $data );
@@ -191,3 +211,4 @@ function profile_cct_professionalaffiliations_display( $data, $options ){
 
 	$field->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'div') );	
 }
+*/
