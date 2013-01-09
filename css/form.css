@@ -427,10 +427,10 @@ li.ui-sortable-helper {
 .ui-statehover {
 	background: #EEE;
 }
-.edit-tab:hover {
+#page-shell .edit-tab:hover {
 	color:#D54E21;
 }
-.edit-tab {
+#page-shell .edit-tab {
 	float: right;
 	margin-top: 4px;
 	margin-left: 4px;
@@ -438,31 +438,31 @@ li.ui-sortable-helper {
 	color: #21759B;
 	font-weight: normal;
 }
-.ui-state-active .remove-tab,
-.ui-state-active .edit-tab {
-	display: block !important;
+#page-shell .ui-state-active .remove-tab,
+#page-shell .ui-state-active .edit-tab {
+	display: block;
 }
-.editing .remove-tab,
-.editing .edit-tab,
-.editing .tab-link,
-.edit-tab-input,
-.edit-tab-save,
-.edit-tab,
-.remove-tab {
-	display: none !important;
+#page-shell .editing .remove-tab,
+#page-shell .editing .edit-tab,
+#page-shell .editing .tab-link,
+#page-shell .edit-tab-input,
+#page-shell .edit-tab-save,
+#page-shell .edit-tab,
+#page-shell .remove-tab {
+	display: none;
 }
-.editing .edit-tab-input {
+#page-shell .editing .edit-tab-input {
 	width: 120px;
 	margin: 4px 4px 0;
-	display: block !important;
+	display: block;
 	float: left;
 }
-.editing .edit-tab-save {
-	display: block !important;
+#page-shell .editing .edit-tab-save {
+	display: block;
 	float: left;
 	margin: 2px 2px 0 0;
 }
-.editing {
+#page-shell .editing {
 	position: relative;
 	overflow: hidden;
 }
