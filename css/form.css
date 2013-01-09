@@ -326,17 +326,14 @@
 	float: left!important;
 	clear: none!important;
 }
-.form-builder .one-third textarea,
 .form-builder .one-third {
-	width: 30% !important;
+	width: 29% !important;
     margin: 0 !important;
 }
-.form-builder .two-third textarea,
 .form-builder .two-third {
 	width: 60% !important;
     margin: 0 !important;
 }
-.form-builder .half textarea,
 .form-builder .half {
 	width: 45% !important;
     margin: 0 !important;
