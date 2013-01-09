@@ -328,25 +328,23 @@
 }
 .form-builder .one-third textarea,
 .form-builder .one-third {
-	width:170px!important;
+	width: 30% !important;
+    margin: 0 !important;
 }
 .form-builder .two-third textarea,
 .form-builder .two-third {
-	width:380px!important;
+	width: 60% !important;
+    margin: 0 !important;
 }
 .form-builder .half textarea,
 .form-builder .half {
-	width:275px!important;
-	
+	width: 45% !important;
+    margin: 0 !important;
 }
 .form-builder .inline .field-shell {
 	width: auto;
 	display: inline;
 }
-/*.form-builder .full {
-	/* width:595px !important; 
-	width: 100%;
-}*/
 .form-builder input.small,.form-builder select.small {
 	width:25%
 }
@@ -354,7 +352,6 @@
 	width:50%
 }
 .form-builder textarea {
-	/* width:595px */
 	width: 100%;
 }
 
@@ -385,7 +382,7 @@
 li.ui-sortable-helper {
 	border:0;
 	-moz-box-shadow:0 0 5px #888;
-	-webkit-box-shadow:0 0 5px#888;
+	-webkit-box-shadow:0 0 5px #888;
 	box-shadow:0 0 5px #888;
 	opacity: .8; /* to do add opacity */
 }

@@ -25,8 +25,7 @@
     float: left;
  
 }
-#col-middle #normal-shell,
-#col-middle #tabs{
+#col-middle #normal-shell{
 	max-width: 655px;
     width: 68%;
 	float: left;
@@ -79,7 +78,8 @@
 	font-size: 12px;
 }
 
-.profile-cct-shell{
+.profile-cct-shell,
+#col-middle #tabs {
 	float: left;
     max-width: 649px;
     width: 98%;
