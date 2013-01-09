@@ -562,7 +562,7 @@ class Profile_CCT {
 			'labels' => $labels,
 			'hierarchical' => false,
 			'menu_icon' => plugins_url( 'icon.png' , __FILE__ ),
-			'supports' => array( 'revisions','author','page-attributes'),
+			'supports' => array( 'author' ),
 			'public' => true,
 			'show_ui' => true,
 			'show_in_menu' => true,
@@ -761,19 +761,13 @@ class Profile_CCT {
 				endif;
 			endforeach;
 		endif;
-		
-		
 		remove_meta_box('authordiv', 'post', 'normal');
 		remove_meta_box('revisionsdiv', 'post', 'normal');
-		
-		if (  0 < $post->ID && wp_get_post_revisions( $post->ID ) )
-			add_meta_box('revisionsdiv', __('Revisions'), 'post_revisions_meta_box', null, 'side', 'low');
 		
 		if ( is_super_admin() || current_user_can( $post_type_object->cap->edit_others_posts ) || current_user_can('administrator') )
 			add_meta_box('authordiv', __('Author'), array($this,'post_author_meta_box'), null, 'side', 'low');
 		
 		add_meta_box('submitdiv', __('Publish'), 'post_submit_meta_box', null, 'side', 'high');
-		
 	}
 	function post_author_meta_box($post) {
 	global $user_ID;
