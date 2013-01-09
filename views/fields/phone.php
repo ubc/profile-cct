@@ -1,7 +1,6 @@
 <?php 
 
-function profile_cct_phone_field_shell( $action, $options ) {
-	
+function profile_cct_phone_field_shell( $action, $options ) {	
 	if( is_object($action) ):
 		$post = $action;
 		$action = "display";
@@ -49,12 +48,12 @@ function profile_cct_phone_field( $data, $options, $count = 0 ){
 	$show = (is_array($show) ? $show : array());
 	
 	echo "<div class='wrap-fields' data-count='".$count."'>";
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'option','label'=>'Option',  'value'=>$data['option'], 'all_fields'=>profile_cct_phone_options(), 'type'=>'select') );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'option','label'=>'Option',  'value'=>$data['option'], 'all_fields'=>profile_cct_phone_options(), 'type'=>'select', 'count'=>$count) );
 	
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'tel-1','label'=>'###', 'size'=>3, 'value'=>$data['tel-1'], 'type'=>'text', 'show' => in_array("tel-1",$show),'count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'tel-2','label'=>'###', 'size'=>3, 'value'=>$data['tel-2'], 'type'=>'text','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'tel-3','label'=>'####', 'size'=>4, 'value'=>$data['tel-3'], 'type'=>'text','count'=>$count) );
-	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'extension','label'=>'extension', 'size'=>4, 'value'=>$data['extension'], 'type'=>'text', 'show' => in_array("extension",$show),'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'tel-1','label'=>'###', 'size'=>3, 'max'=>999, 'value'=>$data['tel-1'], 'type'=>'number', 'show' => in_array("tel-1",$show), 'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'tel-2','label'=>'###', 'size'=>3, 'max'=>999, 'value'=>$data['tel-2'], 'type'=>'number', 'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'tel-3','label'=>'####', 'size'=>3, 'max'=>9999, 'value'=>$data['tel-3'], 'type'=>'number', 'count'=>$count) );
+	$field->input_field( array( 'field_type'=>$type, 'multiple'=>$multiple,'field_id'=>'extension','label'=>'extension', 'size'=>4, 'max'=>9999, 'value'=>$data['extension'], 'type'=>'text', 'show' => in_array("extension",$show), 'count'=>$count) );
 	
 	if($count)
 	 			echo ' <a class="remove-fields button" href="#">Remove</a>';

@@ -31,12 +31,12 @@
 
 	<div id="col-middle">
 		<div id="preview-form" class="col-wrap">
-		<h3>Preview</h3>
-		
-		<?php
-			$data = array();
-			do_action('profile_cct_form',$action,$data,"form");
-		?>
+            <h3>Preview</h3>
+            
+            <?php
+                $data = array();
+                do_action('profile_cct_form',$action,$data,"form");
+            ?>
 		</div>
 	</div><!-- /col-left -->
 

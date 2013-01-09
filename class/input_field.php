@@ -1,6 +1,4 @@
 <?php
-
-
 	extract( $options );
 
 	$before_label = ( isset($before_label) && $before_label ? true:false);
@@ -9,41 +7,30 @@
 	
 	//print_r($options);
 	
-	$size = ( isset($size)? ' size="'.$size.'"': '');
-	$row = ( isset($row)? ' row="'.$row.'"': '');
-	$cols = ( isset($cols)? ' cols="'.$cols.'"': '');
-	$class = ( isset($class)? ' class="'.$class.'"': ' class="field text"');
-	$id = ( isset($id)? ' id="'.$id.'"': ' ');
-	$separator = (isset($separator) ? '<span class="separator">'.$separator.'</span>': "");
+	$size = ( isset($size) ? ' size="'.$size.'"' : '' );
+	$max = ( isset($max) ? ' max="'.$max.'"' : '' );
+	$row = ( isset($row) ? ' row="'.$row.'"' : '' );
+	$cols = ( isset($cols) ? ' cols="'.$cols.'"' : '' );
+	$class = ( isset($class) ? ' class="'.$class.'"' : ' class="field text"' );
+	$id = ( isset($id) ? ' id="'.$id.'"' : ' ' );
+	$separator = ( isset($separator) ? '<span class="separator">'.$separator.'</span>' : "" );
 	
 	if($type =='multiple'):
 		$name = ( isset($name)? ' name="'.$name.'[]"':  ' name="profile_cct['.$field_type.']['.$count.']['.$field_id.'][]"');
-	$textarea_id = 'profile_cct-'.$field_type.'-'.$count.'-'.$field_id;
-	$textarea_name = 'profile_cct['.$field_type.']['.$count.']['.$field_id.'][]';
+        $textarea_id = 'profile_cct-'.$field_type.'-'.$count.'-'.$field_id;
+        $textarea_name = 'profile_cct['.$field_type.']['.$count.']['.$field_id.'][]';
 	elseif($multiple):
 		$name = ( isset($name)? ' name="'.$name.'[]"':  ' name="profile_cct['.$field_type.']['.$count.']['.$field_id.']"');
-	$textarea_id = 'profile_cct-'.$field_type.'-'.$count.'-'.$field_id;
-	$textarea_name = 'profile_cct['.$field_type.']['.$count.']['.$field_id.']';
+        $textarea_id = 'profile_cct-'.$field_type.'-'.$count.'-'.$field_id;
+        $textarea_name = 'profile_cct['.$field_type.']['.$count.']['.$field_id.']';
 	else:
 		$name = ( isset($name)? ' name="'.$name.'"': ' name="profile_cct['.$field_type.']['.$field_id.']"');
-	$textarea_id = 'profile_cct-'.$field_type.'-'.$field_id;
-	$textarea_name = 'profile_cct['.$field_type.']['.$field_id.']';
+        $textarea_id = 'profile_cct-'.$field_type.'-'.$field_id;
+        $textarea_name = 'profile_cct['.$field_type.']['.$field_id.']';
 	endif;
+    
 	$show = ( isset($show) && !$show ? ' style="display:none;"': '');
 	switch($type) {
-	case 'text':
-	
-		if ($separator)
-			echo $separator;
-	?>
-		 	<span <?php echo $field_id_class.$show; ?>>
-		 		<?php if($before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php } ?>
-				<input type="text" id="<?php echo $textarea_id; ?>" <?php echo $size.$class.$name; ?> value="<?php echo esc_attr($value); ?>" id="">
-				<?php if(!$before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php } ?>
-			</span>
-			<?php
-		break;
-	
 	case 'hidden':
 	
 		if ($separator)
@@ -119,22 +106,34 @@
 	case 'textarea':
 		if ($separator)
 			echo $separator;
-	?>
-					<span <?php echo $field_id_class.$show; ?>>
-					<?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
-	
-					<?php
-		// only dispaly the editor on the Profile edit side
-		if( $this->action == 'edit' || $multiple ): ?>
-						<textarea <?php echo $size.$class.$name.$row.$cols; ?> id="<?php echo $textarea_id; ?>"><?php echo esc_html($value); ?></textarea>
-					<?php
-		else:
-			wp_editor( $value, $textarea_id, array('textarea_name'=>$textarea_name,'teeny'=>true, 'media_buttons'=>false) );
-		endif;
-		if(!$before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+        ?>
+            <span <?php echo $field_id_class.$show; ?>>
+            <?php if($before_label){ ?><label for="" ><?php echo $label; ?></label> <?php } ?>
+        <?php
+        // only display the editor on the Profile edit side
+        if( $this->action == 'edit' || $multiple ):
+            ?>
+                <textarea <?php echo $size.$class.$name.$row.$cols; ?> id="<?php echo $textarea_id; ?>"><?php echo esc_html($value); ?></textarea>
+            <?php
+        else:
+            wp_editor( $value, $textarea_id, array('textarea_name'=>$textarea_name,'teeny'=>true, 'media_buttons'=>false) );
+        endif;
+		if(!$before_label){
+            ?>
+                <label for="" ><?php echo $label; ?></label> <?php } ?>
 				</span>
-					<?php
+			<?php
 		break;
 	
-	
+	default:
+		if ($separator)
+			echo $separator;
+	?>
+		 	<span <?php echo $field_id_class.$show; ?>>
+		 		<?php if($before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php } ?>
+				<input type="<?php echo $type; ?>" id="<?php echo $textarea_id; ?>" <?php echo $max.$size.$class.$name; ?> value="<?php echo esc_attr($value); ?>">
+				<?php if(!$before_label){ ?><label for="<?php echo $textarea_id; ?>"><?php echo $label; ?></label> <?php } ?>
+			</span>
+			<?php
+		break;
 	}

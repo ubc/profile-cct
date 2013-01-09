@@ -521,7 +521,6 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function reset_filters( $post ) {
-				
 		if( $post->post_type == 'profile_cct')
 			remove_filter( 'the_content', 'wpautop' );
 		else
@@ -535,14 +534,12 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function register_cpt_profile_cct() {
-	
-		
 		if( empty($this->settings_options['slug']) ) {
 			$slug = 'person';
-		
 		} else {
 			$slug = $this->settings_options['slug'];
 		}
+        
 		$labels = array(
 			'name' => _x( 'Profiles', 'profile_cct' ),
 			'singular_name' => _x( 'Profile', 'profile_cct' ),
@@ -590,9 +587,8 @@ class Profile_CCT {
 				'delete_others_posts' =>'delete_others_profile_cct'
 			)
 		);
-
+        
 		register_post_type( 'profile_cct', $args );
-
 	}
 
 	/**
@@ -622,87 +618,70 @@ class Profile_CCT {
 				$tax[] = 'profile_cct_'.str_replace( '-','_',sanitize_title($taxonomy['single']));
 			endforeach;
 		endif;
-
+        
 		if(is_post_type_archive( 'profile_cct' ) || is_tax($tax)):
-
 			if ( have_posts() ) : while ( have_posts() ) : the_post();
-	
-					global $post;
-	
+				global $post;
+                
 				if( $this->settings_options["list_updated"] > strtotime($post->post_modified_gmt )):
-	
 					$data = get_post_meta($post->ID, 'profile_cct', true);
 					ob_start();
 					do_action('profile_cct_page','display', $data, 'page');
 					$content = ob_get_contents();
 					ob_end_clean();
-			
+                    
 					ob_start();
 					do_action('profile_cct_page','display', $data,'list');
 					$excerpt = ob_get_contents();
 					ob_end_clean();
-			
+                    
 					$post->post_excerpt = $excerpt;
 					$post->post_content = $content;
-			
+                    
 					$this->update_profile( $post );
 				endif;
 				endwhile;
-	
 			endif;
-
 			rewind_posts();
-
 		endif;
 		//
 		if( is_singular( 'profile_cct' ) ):
 			global $post;
-
-
-
+            
 			if ( have_posts() ) : while ( have_posts() ) : the_post();
 				global $post;
-	
+                
 				if( $this->settings_options["page_updated"] > strtotime($post->post_modified_gmt )):
-		
 					$data = get_post_meta($post->ID, 'profile_cct', true);
 					ob_start();
 					do_action('profile_cct_page','display', $data, 'page');
 					$content = ob_get_contents();
 					ob_end_clean();
-			
+                    
 					ob_start();
 					do_action('profile_cct_page','display', $data,'list');
 					$excerpt = ob_get_contents();
 					ob_end_clean();
-		
-		
+                    
 					$post->post_excerpt = $excerpt;
 					$post->post_content = $content;
-			
+                    
 					$this->update_profile( $post );
 				endif;
-	
 			endwhile;
-	
 			endif;
 			rewind_posts();
-
-
 		endif;
 	}
 
 	function update_profile( $post ) {
-
 		$mypost['ID'] = $post->ID;
-
 		$mypost['post_content'] = $post->post_content;
 		$mypost['post_excerpt'] = $post->post_excerpt;
-		
+        
 		kses_remove_filters();
 		wp_update_post( $mypost );
 		kses_init_filters();
-
 	}
 	/**
 	 * edit_post function.
@@ -721,22 +700,16 @@ class Profile_CCT {
 		
 		
 		$this->form_fields = get_option('Profile_CCT_form_fields');
-
+        
 		$user_data = get_post_meta($post->ID, 'profile_cct', true );
-
+        
 		$contexts = $this->get_contexts();
 		
 		
 		remove_meta_box( 'submitdiv', 'profile_cct', 'side' );
-	
-		// remove_meta_box('submitdiv','post', 'normal'); // publish box
-		// make sure that the publish box is the stays on the top
-		// add_meta_box('submitdiv', __('Publish'), 'post_submit_meta_box', null, 'side', 'high');
-
+        
 		if( is_array( $contexts ) ):
-
 			foreach( $contexts as $context ):
-
 				$fields = $this->get_option('form','fields',$context);
 				if($fields):
 					foreach($fields as $field):
