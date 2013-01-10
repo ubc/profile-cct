@@ -5,8 +5,8 @@
 	*/
 	$note = '';
 	$profile = Profile_CCT::get_object();
+    error_log(print_r($profile, TRUE));	
 	
-		
 	if( !empty($_POST) && wp_verify_nonce( $_POST['update_settings_nonce_field'], 'update_settings_nonce' ) ):
 		
 		//Validate pic options
@@ -38,7 +38,7 @@
 		// lets deal with permissions	
 		$post_permissions = $_POST['options']['permissions'];
 		
-		foreach($profile->settings['permissions'] as $user=>$permission_array):
+		foreach($profile->settings['permissions'] as $user => $permission_array):
 			if($user != 'administrator'): // don't want people changing the permissions of the admin
 				
 				$role = get_role( $user );
@@ -74,7 +74,7 @@
 
 		$note = '<div class="updated below-h2"><p> Settings saved.</p></div>';
 		// lets flush the rules again
-		$this->register_cpt_profile_cct();
+		$profile->register_cpt_profile_cct();
 		flush_rewrite_rules();
 	endif;
 
@@ -121,59 +121,57 @@
 	<h3>Profile Archive Navigation Form</h3>
 	<p>Which navigation to display on profile listing page</p>
 	<table class="form-table">
-	<tbody>
-	<tr valign="top">
-		<th scope="row"><label for="archive_display_searchbox">Show Search Box</label></th>
-		<td>
-			<input type="checkbox" name="archive[display_searchbox]" id="archive_display_searchbox" <?php checked($profile->settings['archive']['display_searchbox'], 'on'); ?> />
-		</td>
-	</tr>
-	
-	<tr valign="top">
-		<th scope="row"><label for="archive_display_alphabet">Show Alphabet Listing</label></th>
-		<td>
-			<input type="checkbox" name="archive[display_alphabet]" id="archive_display_alphabet" <?php checked($profile->settings['archive']['display_alphabet'], 'on'); ?> />
-		</td>
-	</tr>
-	
-	<tr valign="top">
-		<th scope="row"><label for="archive_display_orderby">Show Order By</label></th>
-		<td>
-			<input type="checkbox" name="archive[display_orderby]" id="archive_display_orderby" <?php checked($profile->settings['archive']['display_orderby'], 'on'); ?> />
-		</td>
-	</tr>
-	
-	<tr valign="top">
-		<th scope="row">Show Taxonomies</th>
-		<td>
-			<?php
-				foreach( get_object_taxonomies('profile_cct') as $tax): ?>
-					<input type="checkbox" name="archive[display_tax][<?php echo $tax; ?>]" id="archive_display_tax_<?php echo $tax; ?>" <?php checked($profile->settings['archive']['display_tax'][$tax], 'on'); ?> /><label style="padding-left:6px;"for="archive_display_tax_<?php echo $tax; ?>"><?php echo substr($tax, 12); ?></label><br />
-				<?php endforeach;
-			?>
-		</td>
-	</tr>
-	
-	
-
-	</tbody></table>
+        <tbody>
+            <tr valign="top">
+                <th scope="row"><label for="archive_display_searchbox">Show Search Box</label></th>
+                <td>
+                    <input type="checkbox" name="archive[display_searchbox]" id="archive_display_searchbox" <?php checked($profile->settings['archive']['display_searchbox'], 'on'); ?> />
+                </td>
+            </tr>
+            
+            <tr valign="top">
+                <th scope="row"><label for="archive_display_alphabet">Show Alphabet Listing</label></th>
+                <td>
+                    <input type="checkbox" name="archive[display_alphabet]" id="archive_display_alphabet" <?php checked($profile->settings['archive']['display_alphabet'], 'on'); ?> />
+                </td>
+            </tr>
+            
+            <tr valign="top">
+                <th scope="row"><label for="archive_display_orderby">Show Order By</label></th>
+                <td>
+                    <input type="checkbox" name="archive[display_orderby]" id="archive_display_orderby" <?php checked($profile->settings['archive']['display_orderby'], 'on'); ?> />
+                </td>
+            </tr>
+            
+            <tr valign="top">
+                <th scope="row">Show Taxonomies</th>
+                <td>
+                    <?php
+                        foreach( get_object_taxonomies('profile_cct') as $tax): ?>
+                            <input type="checkbox" name="archive[display_tax][<?php echo $tax; ?>]" id="archive_display_tax_<?php echo $tax; ?>" <?php checked($profile->settings['archive']['display_tax'][$tax], 'on'); ?> /><label style="padding-left:6px;"for="archive_display_tax_<?php echo $tax; ?>"><?php echo substr($tax, 12); ?></label><br />
+                        <?php endforeach;
+                    ?>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 	
 	
 	
 	
 	<h3>Permalink</h3>
 	<table class="form-table">
-	<tbody>
-	<tr valign="top">
-		<th scope="row"><label for="slug">Slug</label></th>
-		<td><input type="text"  name="slug" id="slug" value="<?php echo esc_attr($profile->settings['slug']); ?>" /><br />
-			By default it is set to 'person'
-		</td>
-	</tr>
+        <tbody>
+            <tr valign="top">
+                <th scope="row"><label for="slug">Slug</label></th>
+                <td><input type="text"  name="slug" id="slug" value="<?php echo esc_attr($profile->settings['slug']); ?>" /><br />
+                    By default it is set to 'person'
+                </td>
+            </tr>
+        </tbody>
+    </table>
+	
 
-	</tbody></table>
-	
-	
 	<h3>Profile Permissions</h3>
 
 	<table class="wp-list-table widefat fixed posts ">
@@ -192,7 +190,7 @@
 		<tbody id="the-list">
 				<?php 
 				$count = 0;
-				foreach( $profile->settings['permissions'] as $user=>$permission ):
+				foreach( $profile->settings['permissions'] as $user => $permission ):
 					Profile_CCT_Admin::permissions_table( $user, ($count%2), $profile->settings ); $count++;
 				endforeach; ?>
 		</tbody>

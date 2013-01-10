@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  License:
  ==============================================================================
@@ -32,14 +31,12 @@ if ( !defined('ABSPATH') )
 define( 'PROFILE_CCT_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'PROFILE_CCT_BASENAME', plugin_basename(__FILE__) );
 define( 'PROFILE_CCT_DIR_URL',  plugins_url( ''  , PROFILE_CCT_BASENAME ) );
-require(PROFILE_CCT_DIR_PATH.'class/profile_widget.php');
-require(PROFILE_CCT_DIR_PATH.'profile-taxonomies.php');
-require(PROFILE_CCT_DIR_PATH.'profile-manage-table.php');
+require( PROFILE_CCT_DIR_PATH.'class/profile_widget.php' );
+require( PROFILE_CCT_DIR_PATH.'profile-taxonomies.php' );
+require( PROFILE_CCT_DIR_PATH.'profile-manage-table.php' );
 
 
-
-
-if(!class_exists('Profile_CCT')):
+if (!class_exists('Profile_CCT')):
 class Profile_CCT {
 	static private $classobj = NULL;
 
@@ -63,33 +60,31 @@ class Profile_CCT {
 	 */
 	public function __construct () {
 		//remove_filter('template_redirect', 'redirect_canonical');
-		
-		
+        
 		add_action( 'admin_menu', array( $this, 'add_menu_page' ) );
 		/* saving the post meta info */
 		add_action( 'edit_form_advanced', array($this, 'edit_form_advanced'));
 		add_action( 'add_meta_boxes_profile_cct', array($this, 'edit_post') ); // add meta boxes
-
+        
 		add_action( 'init',  array( $this,'profiles_cct_init'),0) ;
 		add_filter( 'posts_orderby', array( $this,'orderby_menu' ) );
 		add_action( 'pre_get_posts', array( $this,'pre_get_posts') );
-		
 		
 		add_action( 'template_redirect',  array( $this,'check_freshness') );
 		
 		add_action( 'wp_insert_post_data', array( $this,'save_post_data'),10,2);
 		
 		add_action( 'the_post', array( $this,'reset_filters' ), 10, 1);
-
+        
 		add_action( 'wp_ajax_cct_update_fields', array( $this,'update_fields'));
 		
 		add_action( 'wp_ajax_cct_update_tabs', array( $this,'update_tabs'));
 		
 		add_action( 'wp_ajax_cct_update_profiles', array( $this,'refresh_profiles'));
-
+        
 		add_action( 'admin_print_styles-post-new.php', array( $this,'add_style_edit'));
 		add_action( 'admin_print_styles-post.php',array( $this,'add_style_edit'));
-
+        
 		add_action( 'admin_init',array($this,'admin_init'));
 		
 		add_action( 'template_redirect', array($this,'process_search'));
@@ -103,19 +98,20 @@ class Profile_CCT {
 		add_action( 'profile_cct_display_archive_controls', array($this, 'display_archive_controls'));
 		
 		$this->settings_options = get_option('Profile_CCT_settings');
-
-		$dir    = PROFILE_CCT_DIR_PATH.'views/fields/';
-
+        
+		$dir = PROFILE_CCT_DIR_PATH.'views/fields/';
+        
 		// include all files in the fields folder
 		if ($handle = opendir($dir)) :
 			/* This is the correct way to loop over the directory. */
-			while (false !== ($file = readdir($handle))):
-				if(substr($file,0,1) != ".")
+			while ( ($file = readdir($handle)) !== false ):
+				if( substr( $file, 0, 1 ) != "." ):
 					require($dir.$file);
-				endwhile;
-
+                endif;
+			endwhile;
 			closedir($handle);
 		endif;
+        
 		add_action('profile_cct_before_page', array( $this,'recount_field'),10,1);
 		add_action('profile_cct_before_page', array( $this,'display_fields_check'),11,1);
 		// function to be executed on form admin page
@@ -126,7 +122,6 @@ class Profile_CCT {
 		
 		// function removed the edit Public profile from everyone but the person who can really edit it
 		add_action( 'wp_before_admin_bar_render', array($this, 'edit_admin_bar_render'),20 );
-
 	}
 	
 	/**
@@ -146,16 +141,14 @@ class Profile_CCT {
     	endif;
     	
     	if(current_user_can('edit_profile_cct')) :
-    	
 	    	$wp_admin_bar->remove_menu('logout');
 	    	
-	
 	    	$wp_admin_bar->add_menu( array(
 				'parent' => 'user-actions',
 				'id'     => 'edit-public-profile',
 				'title'  => __( 'Edit Public Profile' ),
 				'href' => admin_url('users.php?page=public_profile'),
-				));
+			));
 			
 			// this shouldn't be messing with the logout 
 			$wp_admin_bar->add_menu( array(
@@ -163,10 +156,8 @@ class Profile_CCT {
 				'id'     => 'logout',
 				'title'  => __( 'Log Out' ),
 				'href'   => wp_logout_url(),
-				) );
-			
+			));
 		endif;
-    		
     }
 
 	/**
@@ -177,11 +168,11 @@ class Profile_CCT {
 	 * @return object
 	 */
 	public function get_object () {
-
-		if ( NULL === self :: $classobj )
-			self :: $classobj = new self;
-
-		return self :: $classobj;
+		if ( self::$classobj === NULL ):
+			self::$classobj = new self;
+        endif;
+            
+		return self::$classobj;
 	}
 
 	/**
@@ -193,9 +184,11 @@ class Profile_CCT {
 	public function get_textdomain() {
 		return $this->get_plugin_data( 'TextDomain' );
 	}
+    
 	public function version() {
 		return $this->get_plugin_data( 'Version' );
 	}
+    
 	/**
 	 * add_style_edit function.
 	 *
@@ -204,18 +197,17 @@ class Profile_CCT {
 	 */
 	function add_style_edit() {
 		global $current_screen;
-
+        
 		if($current_screen->id == 'profile_cct'):
 			wp_enqueue_style("thickbox");
 			wp_enqueue_script("thickbox");
-	
+            
 			wp_enqueue_style( 'profile-cct-edit-post',PROFILE_CCT_DIR_URL. '/css/profile-page.css' );
 			wp_enqueue_script( 'profile-cct-edit-post',PROFILE_CCT_DIR_URL. '/js/profile-page.js',array('jquery-ui-tabs' ) );
 			wp_localize_script( 'profile-cct-edit-post', 'profileCCTSocialArray', profile_cct_social_options());
-
 		endif;
-
 	}
+    
 	/**
 	 * return plugin comment data
 	 *
@@ -232,9 +224,10 @@ class Profile_CCT {
 		endif;
 		$plugin_data = get_plugin_data ( __FILE__ );
 		$plugin_value = $plugin_data[$value];
-
+        
 		return $plugin_value;
 	}
+    
 	/**
 	 * admin_init function.
 	 *
@@ -249,7 +242,6 @@ class Profile_CCT {
 		register_setting( 'Profile_CCT_list_page', 'Profile_CCT_list_page', array($this,'validate_list_fields')  );
 		register_setting( 'Profile_CCT_settings', 'Profile_CCT_settings' );
 		register_setting( 'Profile_CCT_taxonomy', 'Profile_CCT_taxonomy' );
-		
 		
 		if( isset( $_GET['delete_profile_cct_data']) )
 			$this->delete_all();
@@ -490,6 +482,7 @@ class Profile_CCT {
 			add_action( 'admin_notices', array($this,'version_warning' ) ); 		
 		endif;
 	}
+    
 	function version_warning() {
 		global $hook_suffix;
 		
@@ -500,6 +493,7 @@ class Profile_CCT {
         endif;
 	
 	}
+    
 	function force_refresh(){
 		$this->settings_options["list_updated"] = 0;
 		$this->settings_options["page_updated"] = 0;
@@ -2305,7 +2299,7 @@ class Profile_CCT {
 	}
 	
 	
-	function display_taxonomy_navigation($options){
+	function display_taxonomy_navigation($options) {
 		?>
 		<div class="profile-cct-archive-filters" style="overflow:hidden;">
 			<h6>Filter &amp; Order Profiles</h6>
@@ -2353,7 +2347,7 @@ class Profile_CCT {
 	}
 	
 	
-	function display_alphabet_navigation(){
+	function display_alphabet_navigation() {
 		?>
 		<div class="profile-cct-archive-letters">
 			<h6>Show all profiles starting with letter: </h6>

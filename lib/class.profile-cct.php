@@ -5,7 +5,6 @@
  * Profile_CPT class.
  */
 class Profile_CCT {
-
 	static private $classobj = NULL; // refence for itself
 	static public  $textdomain  = NULL;
 	static public  $action   = NULL;
@@ -17,6 +16,7 @@ class Profile_CCT {
 	static public  $option     = NULL; 
 	static public  $current_form_fields = NULL; // stores the current state of the form field... the labels and if it is on the banch... 
 	static public  $version;
+    
 	/**
 	 * __construct function.
 	 * 
@@ -121,43 +121,39 @@ class Profile_CCT {
 				'delete_others_posts' =>'delete_others_profile_cct'
 			)
 		);
-
+        
 		register_post_type( 'profile_cct', $args );
 	}
 	
 	function load_fields() {
-	
-
 		// include all files in the fields folder
 		if ( $handle = opendir( PROFILE_CCT_DIR_PATH . 'views/fields/' ) ) :
-			/* This is the correct way to loop over the directory. */
+			// This is the correct way to loop over the directory.
 			while ( false !== ( $file = readdir( $handle ) ) ):
 				if( substr($file,0,1) != "." )
 					if( !is_dir( PROFILE_CCT_DIR_PATH . 'views/fields/' . $file ) )
 						require( PROFILE_CCT_DIR_PATH . 'views/fields/' . $file );
 				endwhile;
-
 			closedir( $handle );
 		endif;
-	
+        
 	}
 	
 	function get_settings( $type='settings' ) {
 		
 		// if non exist get the default settings 
-		if( $settings = get_option( 'Profile_CCT_'.$type ) )
+		if( $settings = get_option( 'Profile_CCT_'.$type ) ):
 			return $settings;
-		
-		// load the default options array 
-		require( PROFILE_CCT_DIR_PATH.'default-options.php' );
-		
-		return  $option[$type];
-	
+        else:
+            return get_default_settings($type);
+        endif;
+        
 	}
 	
-	function get_defualt_settings( $type = 'settings' ) {
-		
-		
+	function get_default_settings( $type = 'settings' ) {
+        // load the default options array 
+        require( PROFILE_CCT_DIR_PATH.'default-options.php' );
+        return  $option[$type];
 	}
 	
 	/**
@@ -183,7 +179,7 @@ class Profile_CCT {
 				self::delete_option( $where,'tabs');
 				
 			endforeach;
-		
+            
 			// finally delete the settings data 
 			delete_option( 'Profile_CCT_settings' );
 			
@@ -193,10 +189,12 @@ class Profile_CCT {
 			delete_option( 'Profile_CCT_taxonomy' );
 			
 			// also the global settings only super admin can do this
-			if(current_user_can( 'manage_sites' ) && $_GET['delete_profile_cct_data'] == "DELETE-GLOBAL" )
+			if (current_user_can( 'manage_sites' ) && $_GET['delete_profile_cct_data'] == "DELETE-GLOBAL" ):
 				delete_site_option('Profile_CCT_global_settings');
+            endif;
 		endif;
 	}
+    
 	/**
 	 * install function.
 	 * gets run on plugin install
@@ -204,24 +202,25 @@ class Profile_CCT {
 	 * @access public
 	 * @return void
 	 */
-	function install() {
+    static function install() {
+        error_log('Install');
 		$field = Profile_CCT::get_object();
 		$field->register_profiles();
 		flush_rewrite_rules();
 		
 		// set up the permissions
-		if( !is_array( $field->settings_options['permissions'] ) ) {
-			$settings_options = $field->default_options( 'settings' );
-			$field->settings_options['permissions'] = $settings_options['permissions'];
+		if( !is_array( $field->settings['permissions'] ) ) {
+			$settings = $field->get_default_settings( 'settings' );
+			$field->settings['permissions'] = $settings['permissions'];
 		}
 		
-		foreach($field->settings_options['permissions'] as $user=>$permission_array):
+		foreach($field->settings['permissions'] as $user=>$permission_array):
 			$role = get_role( $user );
 			
 			foreach($permission_array as $permission => $can):
-			
+                
 				// add the new capability
-				if( $field->settings_options['permissions'][$user][$permission] ):
+				if( $field->settings['permissions'][$user][$permission] ):
 					$role->add_cap( $permission );
 				else: // or remove it
 					$role->remove_cap(  $permission );
@@ -232,19 +231,18 @@ class Profile_CCT {
 		endforeach;
 		
 	}
+    
 	/**
 	 * deactivate( function.
 	 * 
 	 * @access public
 	 * @return void
 	 */
-	function deactivate() {
-		
+	static function deactivate() {
+		error_log('Deactive');
 		// remove permissions
 		$profile = Profile_CCT::get_object();
-		$default = $profile->default_options( 'settings' );
-		
-		
+		$default = $profile->get_default_settings( 'settings' );
 		
 		foreach($default['permissions'] as $user=>$permission_array):
 			$role = get_role( $user );
@@ -253,9 +251,8 @@ class Profile_CCT {
 					$role->remove_cap(  $permission );	
 			endforeach;
 			
-			
 		endforeach;
-		$profile->delete_all_settings();
+		//$profile->delete_all_settings();
 	}
 	
 	/**
@@ -264,7 +261,7 @@ class Profile_CCT {
 	 * @access public
 	 * @return void
 	 */
-	function uninstall() {
+	static function uninstall() {
 		
 		// remove permissions
 		$profile = Profile_CCT::get_object();
@@ -280,7 +277,6 @@ class Profile_CCT {
 		return $this->version;
 	}
 	
-	
 }
 
 if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT' ) ):
@@ -289,6 +285,3 @@ if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT' ) ):
 	
 endif;
 
-register_activation_hook( __FILE__, 	array( 'Profile_CCT', 'install' 	) );
-register_deactivation_hook( __FILE__, 	array( 'Profile_CCT', 'deactivate' 	) );
-register_uninstall_hook( __FILE__, 		array( 'Profile_CCT', 'uninstall' 	) );

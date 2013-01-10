@@ -30,11 +30,10 @@ require( PROFILE_CCT_DIR_PATH . 'lib/class.profile-cct-field.php' );
 
 require( PROFILE_CCT_DIR_PATH . 'lib/class.profile-cct-widget.php' );
 require( PROFILE_CCT_DIR_PATH . 'lib/class.profile-cct-taxonomies.php' );
-/*
 
-require( PROFILE_CCT_DIR_PATH.'lib/class.profile-cct-shortcodes.php' );
+//require( PROFILE_CCT_DIR_PATH.'lib/class.profile-cct-shortcodes.php' );
 
-
-*/
-
-
+// Need to be called in the plugin's main file.
+register_activation_hook(   __FILE__,   array( 'Profile_CCT', 'install' 	) );
+register_deactivation_hook( __FILE__,   array( 'Profile_CCT', 'deactivate' 	) );
+register_uninstall_hook(    __FILE__,   array( 'Profile_CCT', 'uninstall' 	) );

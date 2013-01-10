@@ -15,7 +15,7 @@ class Profile_CCT_Taxonomy {
 	 * @return void
 	 */
 	public static function init() {
-			
+		
 		$field = Profile_CCT::get_object();
 		
 		// remove some taxonomies
@@ -39,7 +39,6 @@ class Profile_CCT_Taxonomy {
 	 * @return void
 	 */
 	public static function register( $taxonomy ) {
-		
 		$labels = array(
 			'name' => $taxonomy['plural'] ,
 			'singular_name' => $taxonomy['single'],
@@ -62,7 +61,6 @@ class Profile_CCT_Taxonomy {
 			'query_var' => true,
 			'rewrite' => array( 'slug' => sanitize_title( $taxonomy['single'] ) ),
 		));
-
 	}
 	
 	/**
@@ -103,7 +101,6 @@ class Profile_CCT_Taxonomy {
 		Profile_CCT_Taxonomy::register( $new_taxonomy );
    		flush_rewrite_rules();
 		return $taxonomies;
-		
 	}
 	
 	/**
@@ -115,7 +112,6 @@ class Profile_CCT_Taxonomy {
 	 * @return void
 	 */
 	public static function id( $single_taxonomy ) {
-	
 		return 'profile_cct_'.str_replace( '-','_',sanitize_title( $single_taxonomy ) );
 	}
 }
