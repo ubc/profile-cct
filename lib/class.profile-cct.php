@@ -93,7 +93,7 @@ class Profile_CCT {
 			'labels' => $labels,
 			'hierarchical' => false,
 			'menu_icon' => PROFILE_CCT_DIR_URL.'/icon.png',
-			'supports' => array( 'revisions','author','page-attributes'),
+			'supports' => array( 'author' ),
 			'public' => true,
 			'show_ui' => true,
 			'show_in_menu' => true,

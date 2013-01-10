@@ -642,14 +642,13 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function register_cpt_profile_cct() {
-	
 		
 		if( empty($this->settings_options['slug']) ) {
 			$slug = 'person';
-		
 		} else {
 			$slug = $this->settings_options['slug'];
 		}
+        
 		$labels = array(
 			'name' => _x( 'Profiles', 'profile_cct' ),
 			'singular_name' => _x( 'Profile', 'profile_cct' ),
@@ -697,9 +696,8 @@ class Profile_CCT {
 				'delete_others_posts' =>'delete_others_profile_cct'
 			)
 		);
-
+        
 		register_post_type( 'profile_cct', $args );
-
 	}
 
 	/**

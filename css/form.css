@@ -320,51 +320,38 @@
 .form-builder .half,
 .form-builder .one-third,
 .form-builder .two-third{
-	float: left!important;
-	clear: none!important;
+	float: left;
+	clear: none;
+    margin: 0;
 }
 
 .form-builder .one-third {
-	width:170px!important;
-}
-.form-builder .one-third textarea{
-	width: 150px;
+	width: 29%;
 }
 
 .form-builder .two-third {
-	width:380px;
+	width: 60%;
 }
-.form-builder .two-third textarea{
-	widows: 360px;
-}	
+
 .form-builder .half {
-	width:275px!important;
-	
+	width: 45%;
 }
-.form-builder .half textarea{
-	width:255px;
+
+.form-builder .field-item textarea {
+	width: 100%;
 }
-.form-builder .inline .field-shell{
+
+.form-builder .inline .field-shell {
 	width: auto;
 	display: inline;
 }
 
-/*.form-builder .full {
-	/* width:595px !important; 
-	width: 100%;
-}
-*/
 .form-builder input.small,.form-builder select.small {
 	width:25%
 }
 
 .form-builder input.medium,.form-builder select.medium {
 	width:50%
-}
-
-.form-builder textarea {
-	/* width:595px */
-	width: 100%;
 }
 
 /* ----- Action ----- */
@@ -442,10 +429,10 @@ li.ui-sortable-helper {
 .ui-statehover {
 	background: #EEE;
 }
-.edit-tab:hover{
+#tabs .edit-tab:hover {
 	color:#D54E21;
 }
-.edit-tab{
+#tabs .edit-tab {
 	float: right;
 	margin-top: 4px;
 	margin-left: 4px;
@@ -453,31 +440,31 @@ li.ui-sortable-helper {
 	color: #21759B;
 	font-weight: normal;
 }
-.ui-state-active .remove-tab,
-.ui-state-active .edit-tab{
+#tabs .ui-state-active .remove-tab,
+#tabs .ui-state-active .edit-tab{
 	display: block;
 }
-.editing .remove-tab,
-.editing .edit-tab,
-.editing .tab-link,
-.edit-tab-input,
-.edit-tab-save,
-.edit-tab,
-.remove-tab{
+#tabs .editing .remove-tab,
+#tabs .editing .edit-tab,
+#tabs .editing .tab-link,
+#tabs .edit-tab-input,
+#tabs .edit-tab-save,
+#tabs .edit-tab,
+#tabs .remove-tab {
 	display: none;
 }
-.editing .edit-tab-input{
+#tabs .editing .edit-tab-input {
 	width: 120px;
 	margin: 4px 4px 0;
 	display: block;
 	float: left;
 }
-.editing .edit-tab-save{
+#tabs .editing .edit-tab-save {
 	display: block;
 	float: left;
 	margin: 2px 2px 0 0;
 }
-.editing {
+#tabs .editing {
 	position: relative;
 	overflow: hidden;
 }
@@ -488,7 +475,7 @@ li.ui-sortable-helper {
 	border: 0;
 }
 
-.remove-tab { 
+#tabs .remove-tab { 
 	float: right; 
 	margin: 4px 4px 0 4px; 
 	cursor: pointer;

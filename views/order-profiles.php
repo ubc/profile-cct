@@ -108,15 +108,14 @@ $args = array(
                     <div class="menu_order"> 
                         <input type="text" value="<?php echo $post->menu_order; ?>" name="profile_order[<?php the_ID(); ?>][menu_order]" id="profile_order[<?php the_ID(); ?>][menu_order]" class="menu_order_input">
                     </div>
-                    <?php echo profile_cct_get_the_post_thumbnail( $post->ID, array(30,30) ); ?>
-                    
-                    <span class="name"><?php echo get_the_title(); /*echo edit_post_link( get_the_title() ) . $status;*/ ?> </span>
+                    <?php echo profile_cct_get_the_post_thumbnail( $post->ID, array(30, 30) ); ?>
+                    <span class="name"><?php echo edit_post_link( get_the_title() ) . $status; ?> </span>
                     <input type="hidden" name="profile-id" value="<?php the_ID(); ?>" id="profile-<?php the_ID(); ?>">
                 </div>
             <?php
             endwhile;
         endif;
-    
+        
         // Reset Post Data
         wp_reset_postdata();
         ?>
@@ -129,13 +128,13 @@ $args = array(
 	else:
     ?>
 	<pre>
-	Hi There, 
-	No Profiles were found. 
-	Go ahead and create at least a couple. 
-	
-	And come back here to order them. 
-	
-	See you soon.
+        Hi There, 
+        No Profiles were found. 
+        Go ahead and create at least a couple. 
+        
+        And come back here to order them. 
+        
+        See you soon.
 	</pre>
 	<?php
 	endif;

@@ -407,7 +407,7 @@ class Profile_CCT_Admin {
 	public static function edit_profile_script() {
 		global $current_screen;
         
-		if( 'profile_cct' == $current_screen->id):
+		if( 'profile_cct' == $current_screen->id ):
 			wp_enqueue_style("thickbox");
 			wp_enqueue_script("thickbox");
             
@@ -420,8 +420,8 @@ class Profile_CCT_Admin {
 	public static function edit_profile_style() {
 		global $current_screen;
         
-		if( 'profile_cct' == $current_screen->id || 'edit-profile_cct' == $current_screen->id):
-			wp_enqueue_style( 'profile-cct-edit-post',PROFILE_CCT_DIR_URL. '/css/profile-page.css' );
+		if( 'profile_cct' == $current_screen->id || 'edit-profile_cct' == $current_screen->id ):
+			wp_enqueue_style( 'profile-cct-edit-post', PROFILE_CCT_DIR_URL. '/css/profile-page.css' );
 		endif;
 	}
 
