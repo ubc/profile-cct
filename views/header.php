@@ -1,12 +1,9 @@
 <?php 
-	
 	do_action( 'profile_cct_admin_pages', Profile_CCT_Admin::$page );
-	
-	
 	?>
 	<div class="wrap">
 		<?php Profile_CCT_Admin::icon();?><h2 id="profile-setting">Settings</h2>
-	
+        
 		<?php if( version_compare( PROFILE_CCT_VERSION, Profile_CCT::version(), '>' ) ): ?>
 			<div class="update-profiles info" id="update-profile-shell">
 			
@@ -32,13 +29,10 @@
 			<a class="nav-tab <?php if( 'fields' == Profile_CCT_Admin::$page ) { echo "nav-tab-active"; } ?>"
 				href="edit.php?post_type=profile_cct&page=<?php echo PROFILE_CCT_BASEADMIN; ?>&view=fields">Fields</a>
 		</h3>
-	
 	<?php
-	
 	do_action("profile_cct_before_page", Profile_CCT_Admin::$page );
 	
 	switch( Profile_CCT_Admin::$page ) {
-	
 	case "form":	
 		require( PROFILE_CCT_DIR_PATH. "views/form.php");
 		break;
@@ -63,8 +57,7 @@
 	default:
 		require( PROFILE_CCT_DIR_PATH. "views/about.php");
 		break;
-
 	} 
 	?>
-	<div class="profile-version">version <?php echo Profile_CCT::version();  ?></div>
-	</div> <?php 
+        <div class="profile-version">version <?php echo Profile_CCT::version();  ?></div>
+	</div>

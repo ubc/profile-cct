@@ -1,14 +1,11 @@
 <?php
-
 	/** 
 	*  The current default settings
 	*/
 	$note = '';
 	$profile = Profile_CCT::get_object();
-    error_log(print_r($profile, TRUE));	
-	
+    
 	if( !empty($_POST) && wp_verify_nonce( $_POST['update_settings_nonce_field'], 'update_settings_nonce' ) ):
-		
 		//Validate pic options
 		$width = intval( $_POST['picture_width'] );
 		$height = intval( $_POST['picture_height'] );
@@ -31,7 +28,6 @@
 			$profile->settings['sort_order'] = $order_by;
 		endif;
 		
-		
 		$archive = $_POST['archive'];
 		$profile->settings['archive'] = $archive;
 		
@@ -39,8 +35,7 @@
 		$post_permissions = $_POST['options']['permissions'];
 		
 		foreach($profile->settings['permissions'] as $user => $permission_array):
-			if($user != 'administrator'): // don't want people changing the permissions of the admin
-				
+			if ($user != 'administrator'): // don't want people changing the permissions of the admin
 				$role = get_role( $user );
 				
 				foreach($permission_array as $permission => $can):
@@ -50,34 +45,29 @@
 						if( (bool)$post_permissions[$user][$permission] ): 
 							$role->add_cap( $permission );
 						else:
-  							$role->remove_cap(  $permission );
-  							
+  							$role->remove_cap( $permission );
   						endif;
 					endif;
 				endforeach;
-				
 			else: 
-				// admin role you can't change the default permissions for the administater
+				// Admin role. You can't change the default permissions for the administater
 				$role = get_role( 'administrator' );
 				// the admin gets the best permissions
 				foreach($profile->settings['permissions']['administrator'] as $permission => $can):
-						$role->add_cap( $permission );
+					$role->add_cap( $permission );
 				endforeach;
-				
 			endif;
 			
 		endforeach;
 		
-		
 		//Store updated options
-		update_option( 'Profile_CCT_settings', $profile->settings );
-
+        update_option( 'Profile_CCT_settings', $profile->settings );
+        
 		$note = '<div class="updated below-h2"><p> Settings saved.</p></div>';
 		// lets flush the rules again
 		$profile->register_cpt_profile_cct();
 		flush_rewrite_rules();
 	endif;
-
 
 ?>
 <h2>General Settings</h2>
@@ -86,17 +76,17 @@
 	<h3>Picture Dimensions</h3>
 	<?php wp_nonce_field( 'update_settings_nonce','update_settings_nonce_field' ); ?>	
 	<table class="form-table">
-	<tbody>
-	<tr valign="top">
-		<th scope="row"><label for="picture_width">Width</label></th>
-		<td><input type="text" size="3" name="picture_width" id="picture_width" value="<?php echo esc_attr($profile->settings['picture']['width']); ?>" /> pixels</td>
-	</tr>
-	<tr valign="top">
-		<th scope="row"><label for="picture_height">Height</label></th>
-		<td><input type="text" size="3" name="picture_height" id="picture_height" value="<?php echo esc_attr($profile->settings['picture']['height']); ?>" /> pixels</td>
-	</tr>
-	</tbody></table>
-	
+        <tbody>
+        <tr valign="top">
+            <th scope="row"><label for="picture_width">Width</label></th>
+            <td><input type="text" size="3" name="picture_width" id="picture_width" value="<?php echo esc_attr($profile->settings['picture']['width']); ?>" /> pixels</td>
+        </tr>
+        <tr valign="top">
+            <th scope="row"><label for="picture_height">Height</label></th>
+            <td><input type="text" size="3" name="picture_height" id="picture_height" value="<?php echo esc_attr($profile->settings['picture']['height']); ?>" /> pixels</td>
+        </tr>
+        </tbody>
+    </table>
 	
 	<h3>Sort Order</h3>
 	<table class="form-table">
@@ -113,10 +103,8 @@
 			if using manual sorting, go to <a href="<?php echo admin_url('edit.php?post_type=profile_cct&page=order_profiles'); ?>" title="Order Profiles">Order Profiles</a> to set the order.
 		</td>
 	</tr>
-
+    
 	</tbody></table>
-	
-	
 	
 	<h3>Profile Archive Navigation Form</h3>
 	<p>Which navigation to display on profile listing page</p>
@@ -156,9 +144,6 @@
         </tbody>
     </table>
 	
-	
-	
-	
 	<h3>Permalink</h3>
 	<table class="form-table">
         <tbody>
@@ -170,10 +155,8 @@
             </tr>
         </tbody>
     </table>
-	
-
+    
 	<h3>Profile Permissions</h3>
-
 	<table class="wp-list-table widefat fixed posts ">
 		<thead>
 			<tr>
@@ -189,12 +172,13 @@
 		</thead>		
 		<tbody id="the-list">
 				<?php 
-				$count = 0;
-				foreach( $profile->settings['permissions'] as $user => $permission ):
-					Profile_CCT_Admin::permissions_table( $user, ($count%2), $profile->settings ); $count++;
-				endforeach; ?>
+                    $count = 0;
+                    foreach( $profile->settings['permissions'] as $user => $permission ):
+                        Profile_CCT_Admin::permissions_table( $user, ($count%2), $profile->settings ); $count++;
+                    endforeach;
+                ?>
 		</tbody>
 	</table>
-	<br />
+	<br/>
 	<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
 </form>	

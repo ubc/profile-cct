@@ -1,13 +1,14 @@
 <?php
 
-define( 'PROFILE_CCT_BASEADMIN', plugin_basename(__FILE__ ) );
+define( 'PROFILE_CCT_BASEADMIN', plugin_basename(__FILE__) );
 /**
  * Profile_CCT class.
  */
 class Profile_CCT_Admin {
 	static public $action = 'display';
 	static public $option = NULL;
-	static public $page	  = NULL;
+	static public $page   = NULL;
+    
 	/**
 	 * init function.
 	 *
@@ -32,29 +33,29 @@ class Profile_CCT_Admin {
 	 */
 	function admin_init() {
 		// Register Settings
-		register_setting( 'Profile_CCT_settings', 	 'Profile_CCT_settings' );
-		register_setting( 'Profile_CCT_taxonomy', 	 'Profile_CCT_taxonomy' );
+		register_setting( 'Profile_CCT_settings',    'Profile_CCT_settings' );
+		register_setting( 'Profile_CCT_taxonomy',    'Profile_CCT_taxonomy' );
         
 		// These are Options
-		register_setting( 'Profile_CCT_form_fields', 'Profile_CCT_form_fields',  array( $this,'validate_form_fields' ) );
-		register_setting( 'Profile_CCT_page_fields', 'Profile_CCT_page_fields',  array( $this,'validate_page_fields' ) );
-		register_setting( 'Profile_CCT_list_page', 	 'Profile_CCT_list_page', 	 array( $this,'validate_list_fields' ) );
+		register_setting( 'Profile_CCT_form_fields', 'Profile_CCT_form_fields', array( $this, 'validate_form_fields' ) );
+		register_setting( 'Profile_CCT_page_fields', 'Profile_CCT_page_fields', array( $this, 'validate_page_fields' ) );
+		register_setting( 'Profile_CCT_list_page',   'Profile_CCT_list_page',   array( $this, 'validate_list_fields' ) );
         
 		// redirect users to their profile page and create one if it doesn't exist
 		Profile_CCT_Admin::redirect_to_public_profile();
         
 		// function to be executed on form admin page
-		add_action( 'profile_cct_form', array( 'Profile_CCT_Admin','form_field_shell'), 10 );
+		add_action( 'profile_cct_form', array( 'Profile_CCT_Admin', 'form_field_shell'), 10 );
         
 		// function to be executed on page and list admin pages
-		add_action( 'profile_cct_page', array( 'Profile_CCT_Admin','page_field_shell'), 10, 3 );
+		add_action( 'profile_cct_page', array( 'Profile_CCT_Admin', 'page_field_shell'), 10, 3 );
 		
-		add_action( 'wp_ajax_cct_update_fields', array( $this,'update_fields') );
-		add_action( 'wp_ajax_cct_update_tabs', array( $this,'update_tabs') );
-		add_action( 'wp_ajax_cct_update_profiles', array( $this,'refresh_profiles') );
+		add_action( 'wp_ajax_cct_update_fields', array( $this, 'update_fields') );
+		add_action( 'wp_ajax_cct_update_tabs', array( $this, 'update_tabs') );
+		add_action( 'wp_ajax_cct_update_profiles', array( $this, 'refresh_profiles') );
         
-		add_action( 'profile_cct_before_page', array( 'Profile_CCT_Admin' , 'recount_field'), 10, 1 );
-		add_action( 'profile_cct_before_page', array( 'Profile_CCT_Admin' , 'display_fields_check'), 11, 1 );
+		add_action( 'profile_cct_before_page', array( 'Profile_CCT_Admin', 'recount_field'), 10, 1 );
+		add_action( 'profile_cct_before_page', array( 'Profile_CCT_Admin', 'display_fields_check'), 11, 1 );
 	}
 
 	/**
@@ -66,7 +67,7 @@ class Profile_CCT_Admin {
 	function redirect_to_public_profile() {
 		global $plugin_page, $pagenow, $current_user;
         
-		if($plugin_page == 'public_profile' &&  in_array($pagenow, array('profile.php','users.php'))  ):
+		if ( $plugin_page == 'public_profile' &&  in_array($pagenow, array('profile.php','users.php')) ):
 			$arguments = array(
                 'post_type' => 'profile_cct',
                 'author'	=> $current_user->ID,
@@ -113,13 +114,12 @@ class Profile_CCT_Admin {
     	global $wp_admin_bar, $post, $current_user;
         
     	if ( 'profile_cct' == get_post_type() ):
-        
-    		 if( !( current_user_can('edit_profile_cct') && (int)$post->post_author != $current_user->ID ) && !current_user_can('edit_others_profile_cct') ):
+    		if ( !( current_user_can('edit_profile_cct') && (int)$post->post_author != $current_user->ID ) && !current_user_can('edit_others_profile_cct') ):
     			$wp_admin_bar->remove_menu('edit');
     		endif;
     	endif;
         
-    	if( current_user_can( 'edit_profile_cct' ) ) :
+    	if( current_user_can( 'edit_profile_cct' ) ):
 	    	$wp_admin_bar->remove_menu('logout');
             
 	    	$wp_admin_bar->add_menu( array(
@@ -192,46 +192,48 @@ class Profile_CCT_Admin {
 	public static function page_field_shell() {
 		$this->action = $action;
 		$contexts = Profile_CCT_Admin::default_shells();
-			if($action == 'edit'):
-				?><div id="page-shell"><?php
-			endif;
-		foreach($contexts as $context):
-
+        
+        if($action == 'edit'):
+            ?><div id="page-shell"><?php
+        endif;
+		foreach ($contexts as $context):
 			// this is being called for tabs
-			if(function_exists('profile_cct_page_shell_'.$context)):
-				call_user_func('profile_cct_page_shell_'.$context,$action,$user_data);
+			if ( function_exists('profile_cct_page_shell_'.$context) ):
+				call_user_func('profile_cct_page_shell_'.$context, $action, $user_data);
 			else:
-
-				?><div id="<?php echo $context; ?>-shell" class="profile-cct-shell"><?php
-
-				if($action == 'edit'): ?>
+				?>
+                    <div id="<?php echo $context; ?>-shell" class="profile-cct-shell">
+                    <?php if($action == 'edit'): ?>
 		 			<span class="description-shell"><?php echo $context; ?></span>
-		 			<ul class="form-builder sort" id="<?php echo $context; ?>"><?php
-		 		endif;
-
-				$fields = $this->get_option($where,'fields',$context) ;//+ $this->get_option('form','fields',$context);
-
+		 			<ul class="form-builder sort" id="<?php echo $context; ?>">
+                    <?php endif; ?>
+                <?php
+                
+				$fields = $this->get_option($where, 'fields', $context) ;//+ $this->get_option('form','fields',$context);
+                
 				if( is_array( $fields  ) ):
 					foreach($fields  as $field):
 						if( function_exists('profile_cct_'.$field['type'].'_display_shell') ):
-							call_user_func('profile_cct_'.$field['type'].'_display_shell',$action,$field,$user_data[ $field['type']]);
+							call_user_func('profile_cct_'.$field['type'].'_display_shell', $action, $field, $user_data[ $field['type']] );
 						else:
 							do_action( 'profile_cct_display_shell_'.$field['type'], $action, $field, $user_data[ $field['type'] ] );
 						endif;
 					endforeach;
 				endif;
-
-		if($action == 'edit'): ?>
-		 			</ul>
-		 <?php endif;
-		 ?></div><?php
-
+            if($action == 'edit'):
+                ?>
+                    </ul>
+                <?php endif;?>
+                </div>
+                <?php
+            endif;
+        endforeach;
+        
+        if($action == 'edit'):
+            ?>
+                </div>
+            <?php
 		endif;
-		endforeach;
-		if($action == 'edit'):
-				?></div><?php
-		endif;
-
 	}
 
 	public static function recount_field( $where ) {
@@ -509,7 +511,6 @@ class Profile_CCT_Admin {
 	 * @return void
 	 */
 	function permissions_table( $user, $alternate=false, $settings ) {
-        error_log(print_r($settings['permissions'][$user], TRUE));
 		if( is_array( $settings['permissions'][$user] ) ):
 			$disabled = ($user == 'administrator'? 'disabled' : '');
 			?>
@@ -542,7 +543,7 @@ class Profile_CCT_Admin {
 	 * @return void
 	 */
 	function order_profiles_admin_styles() {
-		wp_enqueue_style( 'profile-cct-order',PROFILE_CCT_DIR_URL. '/css/order-profiles.css' );
+		wp_enqueue_style( 'profile-cct-order', PROFILE_CCT_DIR_URL.'/css/order-profiles.css' );
 	}
     
 	/**
@@ -552,7 +553,7 @@ class Profile_CCT_Admin {
 	 * @return void
 	 */
 	function order_profiles_admin_scripts() {
-		wp_enqueue_script( 'profile-cct-order',PROFILE_CCT_DIR_URL. '/js/order-profiles.js',array('jquery','jquery-ui-sortable') );
+		wp_enqueue_script( 'profile-cct-order', PROFILE_CCT_DIR_URL.'/js/order-profiles.js', array('jquery', 'jquery-ui-sortable') );
 	}
 
 	############################################################################################################
@@ -566,7 +567,7 @@ class Profile_CCT_Admin {
 	 * @param string $context (default: 'normal')
 	 * @return void
 	 */
-	function get_option( $type='form', $fields_or_tabs='fields', $context='normal' ){
+	function get_option( $type = 'form', $fields_or_tabs = 'fields', $context = 'normal' ){
 		$profile = Profile_CCT::get_object();
 		// return the options from the array stored
 		if ( is_array( self::$option[$type][$fields_or_tabs][$context] ) ):
@@ -629,7 +630,7 @@ class Profile_CCT_Admin {
 	 * @param mixed $update
 	 * @return void
 	 */
-	function update_option( $type='form',$fields_or_tabs='fields',$context='normal',$update ) {
+	function update_option( $type='form', $fields_or_tabs='fields', $context='normal', $update ) {
 		$profile = Profile_CCT::get_object();
 		$profile->settings['version'][$type][$fields_or_tabs][$context] = PROFILE_CCT_VERSION;
 		$profile->settings[$type.'_updated'] = time();
@@ -656,7 +657,6 @@ class Profile_CCT_Admin {
         
 		return delete_option( 'Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context );
 	}
-
 
 	/**
 	 * default_options function.

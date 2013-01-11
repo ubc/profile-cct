@@ -2,7 +2,7 @@
 
 
 /**
- * Profile_CPT class.
+ * Profile_CCT class.
  */
 class Profile_CCT {
 	static private $classobj = NULL; // refence for itself
@@ -24,11 +24,11 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function __construct () {
-		
+        
 		add_action('init', array( $this, 'init' ) );
 		$this->settings 	= $this->get_settings( 'settings' );
 		$this->taxonomies 	= $this->get_settings( 'taxonomy' );
-		
+        
 	}
 	
 	/**
@@ -38,11 +38,12 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function get_object() {
-		
-		if ( NULL === self :: $classobj )
-			self :: $classobj = new self;
-			
-		return self :: $classobj;
+        
+		if ( self::$classobj === NULL ):
+			self::$classobj = new self;
+        endif;
+        
+		return self::$classobj;
 	}
 	
 	/**
@@ -67,12 +68,11 @@ class Profile_CCT {
 	 */
 	function register_profiles() {
 		
-		if( empty( $this->settings['slug'] ) ) {
+		if ( empty( $this->settings['slug'] ) ):
 			$slug = 'person';
-		
-		} else {
+		else:
 			$slug = $this->settings['slug'];
-		}
+		endif;
 		
 		$labels = array(
 			'name' => _x( 'Profiles', 'profile_cct' ),
@@ -139,8 +139,7 @@ class Profile_CCT {
         
 	}
 	
-	function get_settings( $type='settings' ) {
-		
+	function get_settings( $type = 'settings' ) {
 		// if non exist get the default settings 
 		if( $settings = get_option( 'Profile_CCT_'.$type ) ):
 			return $settings;
@@ -203,18 +202,17 @@ class Profile_CCT {
 	 * @return void
 	 */
     static function install() {
-        error_log('Install');
 		$field = Profile_CCT::get_object();
 		$field->register_profiles();
 		flush_rewrite_rules();
 		
 		// set up the permissions
-		if( !is_array( $field->settings['permissions'] ) ) {
+		if ( !is_array( $field->settings['permissions'] ) ):
 			$settings = $field->get_default_settings( 'settings' );
 			$field->settings['permissions'] = $settings['permissions'];
-		}
+		endif;
 		
-		foreach($field->settings['permissions'] as $user=>$permission_array):
+		foreach ( $field->settings['permissions'] as $user => $permission_array ):
 			$role = get_role( $user );
 			
 			foreach($permission_array as $permission => $can):
@@ -223,13 +221,14 @@ class Profile_CCT {
 				if( $field->settings['permissions'][$user][$permission] ):
 					$role->add_cap( $permission );
 				else: // or remove it
-					$role->remove_cap(  $permission );
+					$role->remove_cap( $permission );
 				endif;
 				
 			endforeach;
 			
 		endforeach;
 		
+        update_option('Profile_CCT_settings', $field->settings);
 	}
     
 	/**
@@ -239,7 +238,6 @@ class Profile_CCT {
 	 * @return void
 	 */
 	static function deactivate() {
-		error_log('Deactive');
 		// remove permissions
 		$profile = Profile_CCT::get_object();
 		$default = $profile->get_default_settings( 'settings' );
@@ -262,7 +260,6 @@ class Profile_CCT {
 	 * @return void
 	 */
 	static function uninstall() {
-		
 		// remove permissions
 		$profile = Profile_CCT::get_object();
 		$profile->deactivate();
