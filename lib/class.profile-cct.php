@@ -15,7 +15,6 @@ class Profile_CCT {
 	static public  $form_field_options = NULL; 
 	static public  $option     = NULL; 
 	static public  $current_form_fields = NULL; // stores the current state of the form field... the labels and if it is on the banch... 
-	static public  $version;
     
 	/**
 	 * __construct function.
@@ -54,6 +53,8 @@ class Profile_CCT {
 	 * @return void
 	 */
 	public function init() {
+		add_action( 'edit_form_advanced', array($this, 'edit_post_advanced'));
+		add_action( 'add_meta_boxes_profile_cct', array($this, 'edit_post'));
 		
 		$this->register_profiles();
 		$this->load_fields();
@@ -182,8 +183,6 @@ class Profile_CCT {
 			// finally delete the settings data 
 			delete_option( 'Profile_CCT_settings' );
 			
-			delete_option( 'profile_cct_version' );
-			
 			// also delete all the taxonomies 
 			delete_option( 'Profile_CCT_taxonomy' );
 			
@@ -232,7 +231,7 @@ class Profile_CCT {
 	}
     
 	/**
-	 * deactivate( function.
+	 * deactivate function.
 	 * 
 	 * @access public
 	 * @return void
@@ -250,11 +249,11 @@ class Profile_CCT {
 			endforeach;
 			
 		endforeach;
-		//$profile->delete_all_settings();
+		$profile->delete_all_settings();
 	}
 	
 	/**
-	 * deactivate( function.
+	 * uninstall function.
 	 * 
 	 * @access public
 	 * @return void
@@ -270,15 +269,239 @@ class Profile_CCT {
 
 	
 	public static function version() {
-		return get_option( 'profile_cct_version', '1.1.8' );
-		return $this->version;
+		return PROFILE_CCT_VERSION;
+	}
+    
+    
+	/**
+	 * get_contexts function.
+	 *
+	 * @access public
+	 * @param string $type. (default: 'form')
+	 * @return void
+	 */
+	function get_contexts( $type = 'form' ) {
+		$contexts = $this->default_shells( $type );
+		$id = array_search( 'tabs', $contexts );
+        
+		if( is_numeric( $id ) ):
+			$tabs = $this->get_option( $type, 'tabs' );
+            
+            if( is_array( $tabs ) ):
+                $count = 1;
+                foreach ( $tabs as $tab ):
+                    $contexts[] = "tabbed-".$count;
+                    $count++;
+                endforeach;
+            endif;
+            unset( $contexts[$id] );
+            $contexts = array_values( $contexts );
+		endif;
+        
+		return $contexts;
+	}
+
+	/**
+	 * default_shells function.
+	 *
+	 * @access public
+	 * @param string $type. (default: 'form')
+	 * @return array
+	 */
+	function default_shells( $type = 'form' ) {
+		switch ( $type ) {
+		case 'form':
+			return array( 'normal', 'side', 'tabs' );
+		case 'page':
+			return array( 'header', 'tabs', 'bottom' );
+		case 'list':
+			return array( 'normal' );
+		}
 	}
 	
+	/**
+	 * get_option function.
+	 *
+	 * @access public
+	 * @param string $type. (default: 'form')
+	 * @param string $subtype. (default: 'fields'), can be 'fields' or 'tabs'
+	 * @param string $context. (default: 'normal')
+	 * @return void
+	 */
+	function get_option( $type = 'form', $subtype = 'fields', $context = 'normal' ) {
+		if ( is_array( $this->option[$type][$subtype][$context] ) ):
+			return $this->option[$type][$subtype][$context]; // return the value from the stored options array.
+		else:
+			// Get the option using Wordpress' built-in function.
+			$options = get_option( 'Profile_CCT_'.$type.'_'.$subtype.'_'.$context );
+				
+			// Check for success. If this if statement fails, it indicates that the option is not present in the database.
+			if ( ! is_array( $options ) ):
+                //Get the default values for this option type.
+				$default = $this->default_options( $type );
+                
+				if ( $subtype == 'fields' ):
+					$options = $default[$subtype][$context];
+				else:
+					$options = $default[$subtype];
+                endif;
+			endif;
+            
+            if ( $context == 'bench' ):
+                // Check to see if the plugin has been updated since this code last ran. And if so, merge the settings.
+                $perform_merge = false;
+                if ( ! isset( $this->settings_options['version'][$type][$subtype][$context] ) ): // Is there no version setting?
+                    $perform_merge = true;
+                elseif ( $this->version() > $this->settings_options['version'][$type][$subtype][$context] ): // Is the stored version less than the current version?
+                    $perform_merge = true;
+                endif;
+                
+                // Merge the stored settings with any new settings introduced by the new version.
+                if( $perform_merge ):
+                    $new_fields = $this->default_options('new_fields');
+                    
+                    // Lets add the new fields from this version to the bench.
+                    if ( is_array($new_fields[$this->version()]) ):
+                        foreach ( $new_fields[$this->version()] as $field):
+                            if ( in_array( $type , $field['where'] ) ):
+                                $options[] = $field['field'];
+                            endif;
+                        endforeach;
+                    endif;
+                endif;
+			endif;
+		endif;
+        
+		$this->option[$type][$subtype][$context] = $options;
+		return $options;
+	}
+    
+	/**
+	 * default_options function.
+	 *
+	 * @access public
+	 * @param string $type. (default: 'form')
+	 * @return void
+	 */
+	function default_options( $type = 'form' ) {
+		require( PROFILE_CCT_DIR_PATH.'class/default_options.php' ); // $options is defined in this file.
+		return apply_filters( 'profile_cct_default_options', $options, $type );
+	}
+	
+	/**
+	 * edit_post function.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	function edit_post() {
+		global $post, $post_new_file, $pagenow, $current_user, $post_type_object;
+		$post_new_file = '#';
+		
+		if ( (int) $post->post_author != $current_user->ID && ! current_user_can( 'edit_others_profile_cct' ) ):
+			wp_die( 'You are not allow to edit this profile.' );
+		endif;
+		
+		$this->form_fields = get_option( 'Profile_CCT_form_fields' );
+		$user_data = get_post_meta( $post->ID, 'profile_cct', true );
+		
+		remove_meta_box( 'submitdiv', 'profile_cct', 'side' );
+        
+		$contexts = $this->get_contexts();
+		if ( is_array( $contexts ) ):
+			foreach ( $contexts as $context ):
+				$fields = $this->get_option( 'form', 'fields', $context );
+				if ( $fields ):
+					foreach ( $fields as $field ):
+						if ( function_exists( 'profile_cct_'.$field['type'].'_shell' ) ):
+							add_meta_box(
+								$field['type']."-".$i.'-'.rand(0,999),
+								$field['label'],
+								'profile_cct_'.$field['type'].'_shell',
+								'profile_cct', $context, 'core',
+								array(
+									'options' => $field,
+									'data' => $user_data[ $field['type']],
+								)
+							);
+						else:
+							do_action( "profile_cct_".$field['type']."_add_meta_box", $field, $context, $user_data[ $field['type']], $i );
+						endif;
+					endforeach;
+				endif;
+			endforeach;
+		endif;
+		remove_meta_box( 'authordiv', 'post', 'normal' );
+		remove_meta_box( 'revisionsdiv', 'post', 'normal' );
+		
+		if ( is_super_admin() || current_user_can( $post_type_object->cap->edit_others_posts ) || current_user_can('administrator') ):
+			add_meta_box( 'authordiv', __('Author'), array( $this, 'post_author_meta_box' ), null, 'side', 'low' );
+        endif;
+		
+		add_meta_box( 'submitdiv', __('Publish'), 'post_submit_meta_box', null, 'side', 'high' );
+	}
+    
+	/**
+	 * edit_form_advanced function.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	function edit_post_advanced() {
+		global $post;
+        
+		if( $post->post_type == "profile_cct" ):
+			$tabs = $this->get_option( 'form', 'tabs' );
+            // here we should be finding if there are even any fields in the tabs
+            ?>
+			<div id="tabs">
+				<ul>
+					<?php
+                    $count = 1;
+                    foreach( $tabs as $tab ):
+                        ?>
+                            <li><a href="#tabs-<?php echo $count; ?>" class="tab-link"><?php echo $tab; ?></a></li>
+                        <?php
+                        $count++;
+                    endforeach;
+                    ?>
+				</ul>
+				<?php
+                $count = 1;
+                foreach( $tabs  as $tab ) :
+                    ?>
+					<div id="tabs-<?php echo $count?>">
+						<?php do_meta_boxes( 'profile_cct', 'tabbed-'.$count, $post );  ?>
+					</div>
+					<?php
+                    $count++;
+                endforeach;
+                ?>
+			</div>
+			<?php
+		endif;
+	}
+    
+    function post_author_meta_box($post) {
+        global $user_ID;
+        
+        $parameters = array(
+            'who' => null,
+            'name' => 'post_author_override',
+            'selected' => empty($post->ID) ? $user_ID : $post->post_author,
+            'include_selected' => true
+        )
+        ?>
+        Make sure that you select who this is supposed to be.<br /><label class="screen-reader-text" for="post_author_override"><?php _e('Author'); ?></label>
+        <?php
+        wp_dropdown_users( $parameters );
+	}
 }
 
 if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT' ) ):
-	
 	add_action( 'plugins_loaded', array( 'Profile_CCT', 'get_object' ) );
-	
 endif;
 
+register_activation_hook(   PROFILE_CCT_BASE_FILE,   array( 'Profile_CCT', 'install'    ) );
+register_deactivation_hook( PROFILE_CCT_BASE_FILE,   array( 'Profile_CCT', 'deactivate' ) );
+register_uninstall_hook(    PROFILE_CCT_BASE_FILE,   array( 'Profile_CCT', 'uninstall'  ) );

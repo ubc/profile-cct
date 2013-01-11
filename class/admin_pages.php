@@ -11,9 +11,7 @@
 		
 		<?php if( version_compare( PROFILE_CCT_VERSION, $previous_version, '>' )): ?>
 			<div class="update-profiles info" id="update-profile-shell">
-			
-			You need to update profiles so that they will run smoothly with the latest version of the plugin. <a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>
-			
+    			You need to update profiles so that they will run smoothly with the latest version of the plugin. <a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>
 			</div>
 			
 		<?php endif; ?>

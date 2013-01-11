@@ -1,8 +1,9 @@
 <?php
 
 define( 'PROFILE_CCT_BASEADMIN', plugin_basename(__FILE__) );
+
 /**
- * Profile_CCT class.
+ * Profile_CCT_Admin class.
  */
 class Profile_CCT_Admin {
 	static public $action = 'display';
@@ -115,22 +116,22 @@ class Profile_CCT_Admin {
         
     	if ( 'profile_cct' == get_post_type() ):
     		if ( !( current_user_can('edit_profile_cct') && (int)$post->post_author != $current_user->ID ) && !current_user_can('edit_others_profile_cct') ):
-    			$wp_admin_bar->remove_menu('edit');
+    			$wp_admin_bar->remove_node('edit');
     		endif;
     	endif;
         
     	if( current_user_can( 'edit_profile_cct' ) ):
-	    	$wp_admin_bar->remove_menu('logout');
+	    	$wp_admin_bar->remove_node('logout');
             
-	    	$wp_admin_bar->add_menu( array(
+	    	$wp_admin_bar->add_node( array(
 				'parent' => 'user-actions',
 				'id'     => 'edit-public-profile',
 				'title'  => __( 'Edit Public Profile' ),
 				'href' => admin_url('users.php?page=public_profile'),
 			));
             
-			// this shouldn't be messing with the logout
-			$wp_admin_bar->add_menu( array(
+			// Remove and readd the logout button, in order to ensure, that Log Out appears at the bottom of the list.
+			$wp_admin_bar->add_node( array(
 				'parent' => 'user-actions',
 				'id'     => 'logout',
 				'title'  => __( 'Log Out' ),
@@ -828,5 +829,6 @@ class Profile_CCT_Admin {
 	}
 }
 
-if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT_Admin' ) )
+if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT_Admin' ) ):
 	add_action( 'plugins_loaded', array( 'Profile_CCT_Admin', 'init' ) );
+endif;
