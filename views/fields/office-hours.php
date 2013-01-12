@@ -34,7 +34,7 @@ Class Profile_CCT_Officehours extends Profile_CCT_Field {
 		$this->input_select( array( 'field_id' => 'start-hour', 'label' => 'Hour', 'size'=>2,  'all_fields'=>$this->list_of_hours() ) );
 		$this->input_select( array( 'field_id' => 'start-minute', 'label' => 'Minute', 'size'=>2, 'separator' => ':', 'all_fields'=>$this->list_of_minutes() ) );
 		$this->input_select( array( 'field_id' => 'start-period', 'label' => 'Period', 'size'=>2,  'all_fields'=> $this->list_of_periods() ) );
-		$this->input_select( array( 'field_id' => 'end-hour', 'label' => 'Hour', 'size'=>2,'separator' => ' – ', 'all_fields'=>$this->list_of_hours() ) );
+		$this->input_select( array( 'field_id' => 'end-hour', 'label' => 'Hour', 'size'=>2,'separator' => '  –  ', 'all_fields'=>$this->list_of_hours() ) );
 		$this->input_select( array( 'field_id' => 'end-minute', 'label' => 'Minute', 'size'=>2, 'separator' => ':', 'all_fields'=>$this->list_of_minutes() ) );
 		$this->input_select( array( 'field_id' => 'end-period', 'label' => 'Period', 'size'=>2, 'all_fields'=> $this->list_of_periods() ) );
 		$this->input_multiple( array( 'field_id' => 'days',  'selected_fields'=>$data['days'], 'all_fields'=> $this->list_of_days() ) );

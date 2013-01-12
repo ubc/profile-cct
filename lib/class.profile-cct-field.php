@@ -12,7 +12,6 @@ class Profile_CCT_Field {
 
 	var $show;			// all the once that are currently shown
 	var $show_fields;	// all the possible field that you can toggle
-
 	var $show_link_to;  // enable the functionality
 	var $link_to;		// do we offer a link to from this field
 
@@ -40,181 +39,185 @@ class Profile_CCT_Field {
 
 	var $counter = 0;
 
-
 	function __construct ( $options , $data ) {
 		$this->options = ( is_array( $options ) ? array_merge( $this->default_options, $options ): $this->default_options );
         
-		$this->action 		= ( isset( Profile_CCT_Admin::$action ) ? Profile_CCT_Admin::$action : 'edit' );
-		$this->page			= ( isset( Profile_CCT_Admin::$page ) ? Profile_CCT_Admin::$page : false );
+		$this->action        = ( isset( Profile_CCT_Admin::$action ) ? Profile_CCT_Admin::$action : 'edit' );
+		$this->page          = ( isset( Profile_CCT_Admin::$page ) ? Profile_CCT_Admin::$page : false );
         
-		$this->type 		= ( isset( $this->options['type'] )  ? $this->options['type'] : null );
-		$this->label 		= ( isset( $this->options['label'] )  ? $this->options['label'] : false );
-		$this->description 	= ( isset( $this->options['description'] )  ? $this->options['description'] : null );
+		$this->type          = ( isset( $this->options['type'] ) ? $this->options['type'] : null );
+		$this->label         = ( isset( $this->options['label'] ) ? $this->options['label'] : false );
+		$this->description   = ( isset( $this->options['description'] ) ? $this->options['description'] : null );
         
-		$this->show_link_to = ( isset( $this->options['show_link_to'] )  ? $this->options['show_link_to'] : false );
-		$this->link_to		= ( isset( $this->options['link_to'] ) && $this->options['link_to']  ? true: false );
+		$this->show_link_to  = ( isset( $this->options['show_link_to'] ) ? $this->options['show_link_to'] : false );
+		$this->link_to       = ( isset( $this->options['link_to'] ) && $this->options['link_to']  ? true: false );
         
-		$this->show 		= ( is_array( $this->options['show'] ) ? $this->options['show'] : array() ) ;
-		$this->show_fields 	= ( is_array( $this->options['show_fields'] ) ? $this->options['show_fields'] : array() ) ;
+		$this->show          = ( is_array( $this->options['show'] ) ? $this->options['show'] : array() ) ;
+		$this->show_fields   = ( is_array( $this->options['show_fields'] ) ? $this->options['show_fields'] : array() ) ;
         
-		$this->class 		= ( isset( $this->options['class'] ) ? $this->options['class'] : "" );
-		$this->hide_label 	= ( isset( $this->options['hide_label'] ) && $this->options['hide_label']  ? true: false );
+		$this->class         = ( isset( $this->options['class'] ) ? $this->options['class'] : "" );
+		$this->hide_label    = ( isset( $this->options['hide_label'] ) && $this->options['hide_label'] ? true: false );
         
-		$this->width 		= ( isset( $this->options['width'] )  ? $this->options['width'] : false );
-		$this->width 		= ( 'form' == $this->page ?  'full' : $this->width );
+		$this->width         = ( isset( $this->options['width'] ) ? $this->options['width'] : false );
+		$this->width         = ( 'form' == $this->page ? 'full' : $this->width );
         
-		$this->text			= ( isset( $this->options['text'] )  ? $this->options['text'] : false );
+		$this->text          = ( isset( $this->options['text'] ) ? $this->options['text'] : false );
         
-		$this->before		= ( isset( $this->options['before'] )  ? $this->options['before'] : false );
-		$this->after		= ( isset( $this->options['after'] )  ? $this->options['after'] : false );
-		$this->empty		= ( isset( $this->options['empty'] )  ? $this->options['empty'] : false );
+		$this->before        = ( isset( $this->options['before'] ) ? $this->options['before'] : false );
+		$this->after         = ( isset( $this->options['after'] ) ? $this->options['after'] : false );
+		$this->empty         = ( isset( $this->options['empty'] ) ? $this->options['empty'] : false );
         
-		$this->url_prefix 	= ( isset( $this->options['url_prefix'] )  ? $this->options['url_prefix'] : false );
+		$this->url_prefix    = ( isset( $this->options['url_prefix'] ) ? $this->options['url_prefix'] : false );
         
-		$this->show_multiple= ( isset( $this->options['show_multiple'] )  ? $this->options['show_multiple'] : false );
-		$this->multiple		= ( isset( $this->options['multiple'] )  ? $this->options['multiple'] : false );
+		$this->show_multiple = ( isset( $this->options['show_multiple'] ) ? $this->options['show_multiple'] : false );
+		$this->multiple      = ( isset( $this->options['multiple'] ) ? $this->options['multiple'] : false );
         
+		// start test code
+		//$this->page = 'form';
+		error_log("Page: ".Profile_CCT_Admin::$page.", ".print_r($this->page, TRUE));
+		// end test code
+		
 		$this->start_field();
-		if( 'form' != $this->page  )
+		if ( 'form' != $this->page ):
 			$this->display();
-		else
+		else:
 			$this->field();
+		endif;
 		$this->end_field();
 	}
 
 	function start_field() {
 		// lets display the start of the field to the user
 		// $is_in_form = '??'; // todo: figure out what this means
-		if( 'edit' == $this->action ): ?>
+		if ( 'edit' == $this->action ): ?>
 	 		<li class="<?php echo' shell-'.esc_attr( $this->type ); ?> field-item <?php echo $this->class." ".$this->width; ?>" for="cct-<?php echo esc_attr( $this->type ); ?>" data-options="<?php echo esc_attr( $this->serialize( $this->options ) ); ?>" >
 			<a href="#edit-field" class="edit">Edit</a>
 			<div class="edit-shell" style="display:none;">
 				<input type="hidden" name="type" value="<?php echo esc_attr( $this->type ); ?>" />
 				<?php
-				if( 'form' == $this->page ):
+				if ( 'form' == $this->page ):
 					$this->input_text( array(
-						'size'  =>30,
+						'size'  => 30,
 						'value' => $this->label,
 						'class' => 'field-label',
 						'name'  => 'label',
 						'label' => 'label',
-						'before_label' => true
+						'before_label' => true,
 					) );
 				else:
 					$this->input_hidden( array(
 						'value' => $this->label,
-						'name'  => 'label'
+						'name'  => 'label',
 					) );
 				endif;
                 
-				if( isset($this->description) && 'form' == $this->page):
+				if ( isset($this->description) && 'form' == $this->page):
 					$this->input_textarea( array(
-						'size'  =>10,
-						'value' => $this->description,
-						'class' => 'field-description',
-						'name'  => 'description',
-						'label' => 'description' ,
-						'before_label' => true
+						'size'         => 10,
+						'value'        => $this->description,
+						'class'        => 'field-description',
+						'name'         => 'description',
+						'label'        => 'description' ,
+						'before_label' => true,
 					) );
 				endif;
 				
-				if( $this->width && 'form' != $this->page ):
+				if ( $this->width && 'form' != $this->page ):
 					$this->input_select( array(
-						'all_fields'  => array('full','half','one-third','two-third'),
-						'class' => 'field-width',
-						'value' => $this->width,
-						'name'  => 'width',
-						'label' => 'select width',
-						'before_label' => true
+						'all_fields'   => array('full', 'half', 'one-third', 'two-third'),
+						'class'        => 'field-width',
+						'value'        => $this->width,
+						'name'         => 'width',
+						'label'        => 'select width',
+						'before_label' => true,
 					) );
 				endif;
                 
-				if( $this->text && 'form' != $this->page ):
+				if ( $this->text && 'form' != $this->page ):
 					$this->input_text( array(
-						'size'  => 30,
-						'value' => $this->text,
-						'class' => 'field-text',
-						'label' => 'text input',
-						'before_label' => true
+						'size'         => 30,
+						'value'        => $this->text,
+						'class'        => 'field-text',
+						'label'        => 'text input',
+						'before_label' => true,
 					) );
 				endif;
 				
-				if( isset($this->before) && 'form' != $this->page ):
+				if ( isset($this->before) && 'form' != $this->page ):
 					$this->input_textarea( array(
-						'size'  => 10,
-						'value' => $this->before,
-						'class' => 'field-textarea',
-						'name'  => 'before',
-						'label' => 'before html',
-						'before_label' =>true
+						'size'         => 10,
+						'value'        => $this->before,
+						'class'        => 'field-textarea',
+						'name'         => 'before',
+						'label'        => 'before html',
+						'before_label' => true,
 					) );
 				endif;
                 
-				if( isset($this->after) && 'form' != $this->page ):
+				if ( isset($this->after) && 'form' != $this->page ):
 					$this->input_textarea( array(
-						'size'  => 10,
-						'value' => $this->after,
-						'class' => 'field-textarea',
-						'name'  => 'after',
-						'label' => 'after html',
-						'before_label' => true
+						'size'         => 10,
+						'value'        => $this->after,
+						'class'        => 'field-textarea',
+						'name'         => 'after',
+						'label'        => 'after html',
+						'before_label' => true,
 					) );
 				endif;
                 
-				if( isset( $this->empty) && 'form' != $this->page ): //
+				if ( isset( $this->empty) && 'form' != $this->page ): //
 					$this->input_textarea( array(
-						'size'  => 10,
-						'value' => $empty,
-						'class' => 'field-textarea',
-						'name'  => 'empty',
-						'label' => 'content to be displayed on empty',
-						'before_label' =>true
+						'size'         => 10,
+						'value'        => $empty,
+						'class'        => 'field-textarea',
+						'name'         => 'empty',
+						'label'        => 'content to be displayed on empty',
+						'before_label' => true,
 					) );
 				endif;
                 
-				if( $this->url_prefix && 'form' != $this->page ): // needed for the data field
+				if ( $this->url_prefix && 'form' != $this->page ): // needed for the data field
 					$this->input_text( array(
-						'value' => $this->url_prefix,
-						'class' => 'field-url-prefix',
-						'name'  => 'url_prefix',
-						'label' => 'url prefix ( http:// )',
-						'before_label' =>true
+						'value'        => $this->url_prefix,
+						'class'        => 'field-url-prefix',
+						'name'         => 'url_prefix',
+						'label'        => 'url prefix ( http:// )',
+						'before_label' => true,
 					) );
 				endif;
                 
-				if( $this->show_fields  ):
+				if ( $this->show_fields  ):
 					$this->input_multiple( array(
-						'all_fields' => $this->show_fields,
-						'class' => 'field-show',
+						'all_fields'      => $this->show_fields,
+						'class'           => 'field-show',
 						'selected_fields' => $this->show,
-						'name'  => 'show',
-						'label' => 'show / hide input area',
-						'before_label' => true
+						'name'            => 'show',
+						'label'           => 'show / hide input area',
+						'before_label'    => true,
 					) );
 				endif;
                 
-				if( $this->show_multiple && 'form' == $this->page ):
+				if ( $this->show_multiple && 'form' == $this->page ):
 					$this->input_checkbox( array(
-						'name'  => 'multiple',
-						'class' => 'field-multiple',
-						'value' => $this->multiple,
-						'sub_label' => 'yes, allow the user to create multiple fields',
-						'label' => 'multiple',
-						'before_label' =>true
+						'name'            => 'multiple',
+						'class'           => 'field-multiple',
+						'value'           => $this->multiple,
+						'sub_label'       => 'yes, allow the user to create multiple fields',
+						'label'           => 'multiple',
+						'before_label'    => true,
 					) );
 				endif;
                 
-				if( $this->show_link_to && 'form' != $this->page ):
+				if ( $this->show_link_to && 'form' != $this->page ):
 					$this->input_checkbox( array(
-						'name' => 'link_to',
-						'class' => 'field-multiple',
-						'value' => $this->link_to,
-						'label' => 'link to profile',
-						'sub_label' => 'wrap the field with a link to the profile page',
-						'before_label' =>true ,
+						'name'         => 'link_to',
+						'class'        => 'field-multiple',
+						'value'        => $this->link_to,
+						'label'        => 'link to profile',
+						'sub_label'    => 'wrap the field with a link to the profile page',
+						'before_label' => true ,
 					) );
 				endif;
-                
 				?>
 				<input type="button" value="Save" class="button save-field-settings" />
 				<span class="spinner" style="display:none;"><img src="<?php echo admin_url('/images/wpspin_light.gif'); ?>" alt="spinner" /> saving...</span>
@@ -228,20 +231,20 @@ class Profile_CCT_Field {
 			?>
 		 	<div class="field-shell field-shell-<?php echo $this->type; ?>">
 			<?php
-			if( isset( $this->description ) ):
+			if ( isset( $this->description ) ):
 				printf('<pre class="description">%s</pre>' ,esc_html( $description )  );
             endif;
 	}
 
 	function end_field() {
-		$shell_tag  = ( $this->action == 'edit'? 'li' : 'div');
+		$shell_tag  = ( $this->action == 'edit' ? 'li' : 'div');
         
 		if( $this->show_multiple ):
-			$style_multiple = ( $this->multiple ? 'style="display: inline;"': 'style="display: none;"' );
+			$style_multiple = ( $this->multiple ? 'style="display: inline;"' : 'style="display: none;"' );
             
-			if(  'edit' == $this->action && 'form' == Profile_CCT_Admin::$page ):
+			if ( 'edit' == $this->action && 'form' == Profile_CCT_Admin::$page ):
 				echo '<span class="add-multiple"><a href="#add" '. $style_multiple .' class="button disabled">Add another</a> <em>disabled in preview</em></span>';
-			elseif( $this->multiple && !in_array( Profile_CCT_Admin::$page, array('page', 'list') ) ):
+			elseif ( $this->multiple && !in_array( Profile_CCT_Admin::$page, array('page', 'list') ) ):
 				echo '<a href="#add" class="button add-multiple">Add another</a>'; // todo: make it work without js
 			endif;
 		endif; ?>
@@ -301,7 +304,7 @@ class Profile_CCT_Field {
 		$this->input_label_before( $id, $label, $before_label );
         
 		// need to change the name in this case
-		$selected_fields = (is_array( $selected_fields ) ? $selected_fields : array());
+		$selected_fields = is_array( $selected_fields ) ? $selected_fields : array();
         
 		foreach( $all_fields as $field ):
 			$this->input_checkbox_raw( in_array( $field, $selected_fields ), $field_attr, $field,  $field ); // produces the checkbox
@@ -320,10 +323,10 @@ class Profile_CCT_Field {
 	 */
 	function input_checkbox( $attr ) {
 		extract( $this->field_attr( $attr, 'checkbox' ) );
-		printf("<div %s>", $field_shell_attr );
+		printf( "<div %s>", $field_shell_attr );
 		$this->input_label_before( $id, $label, $before_label );
         
-		$this->input_checkbox_raw($value, $field_attr, $sub_label ); // produces the checkbox
+		$this->input_checkbox_raw( $value, $field_attr, $sub_label ); // produces the checkbox
         
 		$this->input_label_after( $id, $label, $before_label );
 		echo "</div>";
@@ -349,7 +352,7 @@ class Profile_CCT_Field {
 		<select id="<?php echo $id; ?>" <?php echo $name; ?> >
 			<option value=""></option><!-- this gives us an emty field if the user doesn't select anything -->
             <?php 
-			foreach( $all_fields as $field):
+			foreach ( $all_fields as $field ):
 				printf('<option value="%s" %s>%s</option>', $field, selected( $value, $field , false ), $field );
 			endforeach;
             ?>
@@ -369,14 +372,14 @@ class Profile_CCT_Field {
 	 */
 	function input_textarea( $attr ) {
 		extract( $this->field_attr( $attr, 'textarea' ) );
-		printf("<span %s>",$field_shell_attr);
+		printf( "<span %s>", $field_shell_attr );
 		$this->input_label_before( $id, $label, $before_label );
         
 		// only dispaly the editor on the Profile edit side
 		if( 'edit' == $this->action || $this->multiple ): ?>
 			<textarea <?php echo $field_attr; ?>><?php echo esc_html( $value ); ?></textarea> <?php
 		else:
-			wp_editor( $value, $id, array( 'textarea_name' => $name,'teeny' =>true, 'media_buttons' =>false ) );
+			wp_editor( $value, $id, array( 'textarea_name' => $name, 'teeny' => true, 'media_buttons' => false ) );
 		endif;
         
 		$this->input_label_after( $id, $label, $before_label );
@@ -407,8 +410,8 @@ class Profile_CCT_Field {
 	 * @param mixed $before_label
 	 * @return void
 	 */
-	function input_label_after( $id, $label, $before_label ){
-		if ( !$before_label ):
+	function input_label_after( $id, $label, $after_label ){
+		if ( !$after_label ):
 			$this->input_label( $id, $label);
         endif;
     }
@@ -484,32 +487,34 @@ class Profile_CCT_Field {
 		   	$attr['post_separator'];
 	    */
 	    extract( $attr );
+		//error_log("Display Text, Stage 1 (".$this->action.", ".$value.")");
 		
-		 $default_text = ('lorem ipsum' == $default_text ? '<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et tempor lorem. Nam eget sapien sit amet risus porttitor pellentesque. Sed vestibulum tellus et quam faucibus vel tristique metus sagittis. Integer neque justo, suscipit sit amet lobortis eu, aliquet imperdiet sapien. Morbi id tellus quis nisl tempor semper.</p>
-
-<p>Nunc sed diam sit amet augue venenatis scelerisque quis eu ante. Cras mattis auctor turpis, non congue nibh auctor at. Nulla libero ante, dapibus a tristique eu, semper ac odio. Nulla ultrices dui et velit eleifend congue. Mauris vel mauris eu justo lobortis semper. Duis lacinia faucibus nibh, ac sodales leo condimentum id. Suspendisse commodo mattis dui, eu rutrum sapien vehicula a. Proin iaculis sollicitudin lacus vitae commodo. </p> ' : $default_text);
-	   
-	    $class_attr = ( isset($class) ? 'class="'.$class.'" ' : '' );
-	    $tag	= ( isset($tag) ? $tag : 'span' );
-	    
-	    $value = ( isset($value) ? $value : $this->data[$field_id] );
-	    $display	= ( 'edit' == $this->action ? $default_text :  $value );
+		$backup_default = '<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et tempor lorem. Nam eget sapien sit amet risus porttitor pellentesque. Sed vestibulum tellus et quam faucibus vel tristique metus sagittis. Integer neque justo, suscipit sit amet lobortis eu, aliquet imperdiet sapien. Morbi id tellus quis nisl tempor semper.</p><p>Nunc sed diam sit amet augue venenatis scelerisque quis eu ante. Cras mattis auctor turpis, non congue nibh auctor at. Nulla libero ante, dapibus a tristique eu, semper ac odio. Nulla ultrices dui et velit eleifend congue. Mauris vel mauris eu justo lobortis semper. Duis lacinia faucibus nibh, ac sodales leo condimentum id. Suspendisse commodo mattis dui, eu rutrum sapien vehicula a. Proin iaculis sollicitudin lacus vitae commodo.</p>';
+		$default_text = ('lorem ipsum' == $default_text ? $backup_default : $default_text);
+		
+	    $class_attr  = ( isset($class) ? 'class="'.$class.'" ' : '' );
+	    $tag         = ( isset($tag) ? $tag : 'span' );
+		
+	    $value       = ( isset($value) ? $value : $this->data[$field_id] );
+	    $display     = ( 'edit' == $this->action ? $default_text : $value );
 	  
-	    $href_attr = ( isset($href) ? 'href="'.$href.'" ' : '' );
-	    $id   = '';
-	    
-	    if( !empty( $display ) ):
+	    $href_attr   = ( isset($href) ? 'href="'.$href.'" ' : '' );
+	    $id          = '';
+		
+		//if( ! empty( $display ) ):
+			//error_log("Display Text, Stage 2");
 	    	$this->display_separator( $attr );
-			echo ' <'.$tag.' '.$class_attr.$href_attr.'>'.$display."</".$tag.">";
+			echo " <".$tag." ".$class_attr.$href_attr.">".$display."</".$tag.">";
 			$this->display_separator( array( 'separator' => $post_separator, 'class' => $class ) );
-		endif;
+		//endif;
 	}
 	
 	function display_separator( $attr ) {
         extract( $attr );
-		$separator	= ( isset( $separator ) ? '<span class="'.$class.'-separator separator">'.$separator.'</span>' : '' );
+		$separator = ( isset( $separator ) ? '<span class="'.$class.'-separator separator">'.$separator.'</span>' : '' );
 		echo $separator;
 	}
+	
 	/**
 	 * display_email function.
 	 * 
@@ -518,7 +523,7 @@ class Profile_CCT_Field {
 	 * @return void
 	 */
 	function display_email( $attr ) {
-		if( empty( $attr['mailto'] ) ):
+		if ( empty( $attr['mailto'] ) ):
 			$attr['mailto'] = ( 'edit' == $this->action ? $attr['default_text'] : $this->data[$attr['field_id']] );
         endif;
 		
@@ -600,9 +605,7 @@ class Profile_CCT_Field {
 		$needed_attr['id']  = ( isset( $attr['field_id'] ) && $attr['field_id'] ? $attr['field_id'] : 'profile-cct-'.$this->type.'-'.$field_type.'-'.$this->counter ); // todo: show warning
         
 		if( $field_type =='multiple' ):
-        
 			$name = ( isset($attr['name'])? ' name="'.$attr['name'].'[]"':  ' name="profile_cct['.$this->type.']['.$count.']['.$needed_attr['id'].'][]"');
-            
 		//	$textarea_id = 'profile_cct-'.$this->type.'-'.$count.'-'.$needed_attr['id'];
 		//	$textarea_name = 'profile_cct['.$this->type.']['.$count.']['.$needed_attr['id'].'][]';
 		elseif( $this->multiple ):
@@ -700,7 +703,6 @@ class Profile_CCT_Field {
 	 * @return void
 	 */
 	function list_of_years($start = 3, $end = -40 ) {
-
 		return range( date("Y")+$start, date("Y")+$end );
 	}
 
@@ -721,9 +723,7 @@ class Profile_CCT_Field {
 	 * @return void
 	 */
 	function list_of_hours() {
-
-	return range(1, 12);
-		$period_array = array('AM','PM');
+		return range(1, 12);
 	}
 
 	/**
@@ -733,9 +733,7 @@ class Profile_CCT_Field {
 	 * @return void
 	 */
 	function list_of_minutes(){
-
 		return array_merge( array('00','05'), range(10,55,5) );
-
 	}
 
 	/**
@@ -756,13 +754,14 @@ class Profile_CCT_Field {
 	 */
 	function phone_options(){
 		return array(
-					"phone",
-					"work phone",
-					"mobile",
-					"fax",
-					"work fax",
-					"pager",
-					"other");
+			"phone",
+			"work phone",
+			"mobile",
+			"fax",
+			"work fax",
+			"pager",
+			"other",
+		);
 	}
     
 	function project_status(){

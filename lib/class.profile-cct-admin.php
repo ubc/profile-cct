@@ -438,8 +438,9 @@ class Profile_CCT_Admin {
 	 */
 	public function admin_pages() {
 		Profile_CCT_Admin::$action = 'edit';
-        
 		Profile_CCT_Admin::$page = ( in_array( $_GET['view'], array('form', 'page', 'list', 'taxonomy', 'fields', 'settings') ) ? $_GET['view'] : 'about' );
+        
+        error_log("Admin Page: ".Profile_CCT_Admin::$page);
         
 		// the header file determins what other files should be loaded here
 		require( PROFILE_CCT_DIR_PATH.'views/header.php' );

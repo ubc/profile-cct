@@ -363,7 +363,7 @@ class Profile_CCT {
                     // Lets add the new fields from this version to the bench.
                     if ( is_array($new_fields[$this->version()]) ):
                         foreach ( $new_fields[$this->version()] as $field):
-                            if ( in_array( $type , $field['where'] ) ):
+                            if ( in_array( $type, $field['where'] ) ):
                                 $options[] = $field['field'];
                             endif;
                         endforeach;
@@ -413,28 +413,28 @@ class Profile_CCT {
 				$fields = $this->get_option( 'form', 'fields', $context );
 				if ( $fields ):
 					foreach ( $fields as $field ):
-						if ( function_exists( 'profile_cct_'.$field['type'].'_shell' ) ):
-							add_meta_box(
-								$field['type']."-".$i.'-'.rand(0,999),
-								$field['label'],
-								'profile_cct_'.$field['type'].'_shell',
-								'profile_cct', $context, 'core',
-								array(
-									'options' => $field,
-									'data' => $user_data[ $field['type']],
-								)
-							);
+                        $callback = 'profile_cct_'.$field['type'].'_shell';
+						if ( function_exists( $callback ) ):
+                            $id = $field['type']."-".$i.'-'.rand(0, 999);
+                            $title = $field['label'];
+                            $post_type = 'profile_cct';
+                            $priority = 'core';
+                            $callback_args = array(
+                                'options' => $field,
+                                'data' => $user_data[$field['type']],
+                            );
+                            
+							add_meta_box( $id, $title, $callback, $post_type, $context, $priority, $callback_args );
 						else:
-							do_action( "profile_cct_".$field['type']."_add_meta_box", $field, $context, $user_data[ $field['type']], $i );
+							do_action( "profile_cct_".$field['type']."_add_meta_box", $field, $context, $user_data[$field['type']], $i );
 						endif;
 					endforeach;
 				endif;
 			endforeach;
 		endif;
 		remove_meta_box( 'authordiv', 'post', 'normal' );
-		remove_meta_box( 'revisionsdiv', 'post', 'normal' );
 		
-		if ( is_super_admin() || current_user_can( $post_type_object->cap->edit_others_posts ) || current_user_can('administrator') ):
+		if ( is_super_admin() || current_user_can( $post_type_object->cap->edit_others_posts ) || current_user_can( 'administrator' ) ):
 			add_meta_box( 'authordiv', __('Author'), array( $this, 'post_author_meta_box' ), null, 'side', 'low' );
         endif;
 		
