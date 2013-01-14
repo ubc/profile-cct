@@ -74,7 +74,7 @@ class Profile_CCT_Field {
         
 		// start test code
 		//$this->page = 'form';
-		error_log("Page: ".Profile_CCT_Admin::$page.", ".print_r($this->page, TRUE));
+		//error_log("Page: ".Profile_CCT_Admin::$page.", ".print_r($this->page, TRUE));
 		// end test code
 		
 		$this->start_field();

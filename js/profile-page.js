@@ -13,7 +13,7 @@ var Profile_CCT_PAGE = {
 		jQuery(".add-multiple").live('click', Profile_CCT_PAGE.clearSocialLabel);
 		
 		// placed right after tb_show call
-		if(typeof window.tb_remove == 'function') {
+		if (typeof window.tb_remove == 'function') {
 			window.tb_remove = function() {
 				// replace the previous function with the new one
 				jQuery("#TB_window").fadeOut("fast",function() {
@@ -26,19 +26,18 @@ var Profile_CCT_PAGE = {
 	},
     
 	startTabs: function () {
-		if(Profile_CCT_PAGE.tabs_shell) {
+		if (Profile_CCT_PAGE.tabs_shell) {
 			Profile_CCT_PAGE.tabs_shell = jQuery( "#tabs" );
 		}
 		
 		Profile_CCT_PAGE.tabs_shell.tabs();
-		
 	},
 	
-	addFields : function(e) {
+	addFields: function(e) {
 		e.preventDefault();
 		var link = jQuery(this);
         
-		if(link.prev().children('div').hasClass('days')) {
+		if (link.prev().children('div').hasClass('days')) {
 			var days_case = true;
 		}
         
@@ -56,7 +55,7 @@ var Profile_CCT_PAGE = {
 		copy.insertBefore( link );
 		
 		// add the remove link unless there is none
-		if ( !link.prev().children('a.remove-fields').length ) {
+		if ( ! link.prev().children('a.remove-fields').length ) {
 			link.prev().append('<a href="#" class="remove-fields button">Remove</a>');
 		}
 		
@@ -64,7 +63,7 @@ var Profile_CCT_PAGE = {
 			link.prev().append('<hr />');
 		}
 		
-		link.prev().data('count',count+1);
+		link.prev().data('count', count+1);
 		
 		link.prev().find('input,select,textarea,label').each(function(index, value) {
 			var new_count = jQuery(this).parent().parent().data('count');
@@ -73,9 +72,9 @@ var Profile_CCT_PAGE = {
 			var id = jQuery(this).attr('id');
 			var labelFor = jQuery(this).attr('for');
 			
-			var new_name="";
-			var new_id="";
-			var new_labelFor="";
+			var new_name = "";
+			var new_id = "";
+			var new_labelFor = "";
 			
 			if (name !== undefined) {
 				new_name = name.replace(count, new_count);
@@ -87,22 +86,24 @@ var Profile_CCT_PAGE = {
 				new_labelFor = labelFor.replace(count, new_count);
 			}
 			
-			if( jQuery(this).attr('type') == 'checkbox' ) {
-				jQuery(this).attr('name',new_name).attr('checked',false);
+			if ( jQuery(this).attr('type') == 'checkbox' ) {
+				jQuery(this).attr('name', new_name).attr('checked', false);
 				
-				if(new_id!="")
-					jQuery(this).attr('id',new_id);
-					
-				if(new_labelFor!="")
-					jQuery(this).attr('for',new_labelFor);
+				if (new_id != "") {
+					jQuery(this).attr('id', new_id);
+				}
+				if (new_labelFor!="") {
+					jQuery(this).attr('for', new_labelFor);
+				}
 			} else {
-				jQuery(this).attr('name',new_name).val('');
+				jQuery(this).attr('name', new_name).val('');
 				
-				if(new_id!="")
-					jQuery(this).attr('id',new_id);
-					
-				if(new_labelFor!="")
-					jQuery(this).attr('for',new_labelFor);
+				if (new_id != "") {
+					jQuery(this).attr('id', new_id);
+				}
+				if (new_labelFor != "") {
+					jQuery(this).attr('for', new_labelFor);
+				}
 			}
 			
 		});
@@ -118,12 +119,12 @@ var Profile_CCT_PAGE = {
 	},
 	
 	
-	updateSocialLabel: function(e){
+	updateSocialLabel: function(e) {
 		var value = jQuery(this).val();
 		jQuery(this).parent().next().children("label").text(socialArray[value].user_url);
 	},
 	
-	clearSocialLabel: function(e){
+	clearSocialLabel: function(e) {
 		jQuery(this).prev().children(".username").children("label").text("");
 	}
 	
@@ -133,6 +134,6 @@ jQuery(document).ready(Profile_CCT_PAGE.onReady);
 
 var socialOptions = profileCCTSocialArray;
 var socialArray = new Array();
-for(var i = 0; i < socialOptions.length; i++) {
-	 socialArray[socialOptions[i].label] = socialOptions[i];
+for (var i = 0; i < socialOptions.length; i++) {
+	socialArray[socialOptions[i].label] = socialOptions[i];
 }

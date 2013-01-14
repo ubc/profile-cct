@@ -27,33 +27,33 @@ var Profile_CCT_FORM = {
 		jQuery(".edit","#form-name").click(Profile_CCT_FORM.editField);
 	},
     
-	updateSort: function(event, ui) { 
+	updateSort: function(event, ui) {
 		Profile_CCT_FORM.showSpinner();
 		
 		var data = new Array();
-		jQuery('.field-item',jQuery(this)).each(function(index, value){
+		jQuery(this).find('.field-item').each(function(index, value) {
 			data[index] = jQuery(this).data('options');
 		});
 		
-		var context = jQuery(this ).attr('id');
+		var context = jQuery(this).attr('id');
 		
 		var data_set = {	
             action: 'cct_update_fields',
             method: 'sort',
-            context: context, 
+            context: context,
             data: data,
-            where: ProfileCCT.page
+            where: ProfileCCT.page,
         };
 		
 		jQuery.post(ajaxurl, data_set, function(response) {		
-            if(response == 'sorted'){
+            if (response == 'sorted') {
                 Profile_CCT_FORM.hideSpinner();
                 Profile_CCT_Admin.show_refresh();
-            } // TO DO WRITE THE ERROR TO THE USER... 
+            } // TODO: write the error to the user...
 		});
 	},
     
-	updateLabel: function(e){
+	updateLabel: function(e) {
 		var el = jQuery(this);
 		
 		el.parent().parent().addClass('changed');
@@ -68,7 +68,7 @@ var Profile_CCT_FORM = {
 		}, 10);
 	},
     
-	updateDescription: function(e){
+	updateDescription: function(e) {
 		var el = jQuery(this);
 		
 		el.parent().parent().addClass('changed');
@@ -82,7 +82,7 @@ var Profile_CCT_FORM = {
 		}, 10);
 	},
 	
-	updateUrlPrefix: function(e){
+	updateUrlPrefix: function(e) {
 		var el = jQuery(this);
 		el.parent().parent().addClass('changed');
 		setTimeout( function() {		
@@ -91,17 +91,17 @@ var Profile_CCT_FORM = {
 		}, 10);
 	},
 	
-	updateTextarea: function(e){
+	updateTextarea: function(e) {
 		jQuery(this).parent().parent().addClass('changed');
 	},
     
-	updateText: function(e){
+	updateText: function(e) {
 		var el = jQuery(this);
 		el.parent().parent().addClass('changed');
-		setTimeout( function() {		
+		setTimeout(function() {		
 			var text_label = el.val();
 			
-			if (text_label.length+1 > 0 ) {
+			if ( text_label.length+1 > 0 ) {
 				jQuery(".text-input", el.parent().parent().parent() ).text(text_label);
 			} else {
 				jQuery(".text-input", el.parent().parent().parent()).text(el.attr('title'));
@@ -109,21 +109,21 @@ var Profile_CCT_FORM = {
 		}, 10);
 	},
     
-	updateShow: function(e){
+	updateShow: function(e) {
 		var el = jQuery(this);
 		el.parent().parent().parent().addClass('changed');
 		
 		var el_class = jQuery.trim(el.parent().text());
 		if (el.attr('checked')) {
-			jQuery('.'+el_class,el.parent().parent().parent().parent()).show();
-			jQuery('.'+el_class+'-separator',el.parent().parent().parent().parent()).show();
+			jQuery( '.'+el_class, el.parent().parent().parent().parent() ).show();
+			jQuery( '.'+el_class+'-separator', el.parent().parent().parent().parent() ).show();
 		} else {
-			jQuery('.'+el_class,el.parent().parent().parent().parent()).hide();
-			jQuery('.'+el_class+'-separator',el.parent().parent().parent().parent()).hide();
+			jQuery( '.'+el_class, el.parent().parent().parent().parent() ).hide();
+			jQuery( '.'+el_class+'-separator', el.parent().parent().parent().parent() ).hide();
 		}
 	},
     
-	multipleShow: function(e){
+	multipleShow: function(e) {
 		var el = jQuery(this);
 		el.parent().parent().parent().addClass('changed');
 		
@@ -135,7 +135,7 @@ var Profile_CCT_FORM = {
 		}
 	},
     
-	updateField: function(e){
+	updateField: function(e) {
 		e.preventDefault();
 		
 		var el = jQuery(this);
@@ -156,9 +156,8 @@ var Profile_CCT_FORM = {
      	// ajax updating of the field options
      	 
      	jQuery.post(ajaxurl, data, function(response) {
-		parent.removeClass('changed');
-			
-			if(response == 'updated'){
+			parent.removeClass('changed');
+			if (response == 'updated') {
 			 	el.siblings('.spinner').hide();
 			 	
 			 	Profile_CCT_Admin.show_refresh();
@@ -166,7 +165,7 @@ var Profile_CCT_FORM = {
 		});
     },
     
-	editField : function(e) {
+	editField: function(e) {
 		e.preventDefault();
 		var el = jQuery(this);
 		var parent = el.parent();
@@ -175,7 +174,7 @@ var Profile_CCT_FORM = {
 			el.text('Close'); 
 		} else {
 			if (el.siblings('div.edit-shell').hasClass('changed'))
-			if ( confirm("There are some unsaved chages \n Would you like to save them?") ){
+			if ( confirm("There are some unsaved chages \n Would you like to save them?") ) {
 				el.siblings("div.edit-shell").find('.save-field-settings').trigger('click');	
 			}
 			el.text('Edit'); 
@@ -183,11 +182,11 @@ var Profile_CCT_FORM = {
 		el.siblings("div.edit-shell").toggle();	
 	},
     
-	showSpinner: function(){
+	showSpinner: function() {
 		jQuery('#spinner').show();
 	},
     
-	hideSpinner: function(){
+	hideSpinner: function() {
 		jQuery('#spinner').hide();
 	},
 };
