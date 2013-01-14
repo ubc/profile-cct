@@ -70,7 +70,7 @@ var Profile_CCT_TABS = {
 		jQuery(this).parent().addClass('editing');
 	},
     
-	updateTab: function (e) {
+	updateTab: function(e) {
 		if (e.keyCode == 13) { // keyCode 13 is equivalent to the enter key.
 			Profile_CCT_FORM.showSpinner();
             
@@ -99,12 +99,12 @@ var Profile_CCT_TABS = {
         }
 	},
     
-	saveTab : function(e){
+	saveTab: function(e) {
 		Profile_CCT_FORM.showSpinner();
         // you pressed enter
-        var el = jQuery( this ).siblings('.edit-tab-input');
+        var el = jQuery(this).siblings('.edit-tab-input');
         var tab_title = el.val();
-        var index = jQuery( "li", Profile_CCT_TABS.$tabs ).index( jQuery( this ).parent() );
+        var index = jQuery( "li", Profile_CCT_TABS.$tabs ).index( jQuery(this).parent() );
         var data = {
             where:  ProfileCCT.page,
             action: 'cct_update_tabs',
@@ -113,8 +113,8 @@ var Profile_CCT_TABS = {
             index:  index
         };
         
-        jQuery.post(ajaxurl, data, function(response) {	
-            if(response == "updated") {	
+        jQuery.post(ajaxurl, data, function(response) {
+            if (response == "updated") {	
                 el.siblings('a').text( tab_title );
                 el.parent().removeClass('editing'); 
                 Profile_CCT_FORM.hideSpinner();
@@ -127,7 +127,7 @@ var Profile_CCT_TABS = {
 	removeTab: function(e) {
         var $tablist = jQuery( ".tab-link", Profile_CCT_TABS.$tabs );
         
-        /*if($tablist.length <= 1 ) {
+        /*if ($tablist.length <= 1 ) {
             alert("Sorry, but you can't remove the last tab");
             return false;
         }*/

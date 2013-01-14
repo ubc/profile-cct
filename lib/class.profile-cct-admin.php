@@ -898,6 +898,65 @@ class Profile_CCT_Admin {
 		error_log("Die");
 		die();
 	}
+	
+	/**
+	 * An Ajax functon used to save tabs.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	function update_tabs() {
+		$where = in_array( $_POST['where'], array('page', 'form') ) ? $_POST['where'] : 'form';
+		$tabs = self::get_option($where, 'tabs');
+		
+		switch ( $_POST['method'] ) {
+		case "update":
+			$tabs[$_POST['index']] = $_POST['title'];
+			$print = "updated";
+			break;
+		case "remove":
+			// We need to set the proper item's fields to zero as well, and move them to the bench.
+			$index = $_POST['index'];
+			$tabs_count = count($tabs);
+			
+			unset( $tabs[ $index ] );
+			
+			// Delete the current field
+			$count = $index + 1;
+			$fields = self::get_option($where, 'fields', 'tabbed-'.$count);
+			self::delete_option($where, 'fields', 'tabbed-'.$count);
+			
+			if ( is_array($fields) ): // Array was empty, so there is nothing to move
+				$bench = self::get_option($where, 'fields', 'bench');
+				$bench = array_merge($bench, $fields); // Merge but don't duplicate the fields if they are already there.
+				$bench = self::update_option($where, 'fields', 'bench', $bench); // Save the new bench.
+			endif;
+			
+			while ($count < $tabs_count):
+				$count++;
+				$fields = self::get_option($where, 'fields', 'tabbed-'.$count);
+				
+				$previous = $count - 1;
+				self::update_option($where, 'fields', 'tabbed-'.$previous, $fields);
+				
+				$fields = self::delete_option($where, 'fields', 'tabbed-'.$count);
+			endwhile;
+			
+			$tabs = array_merge($tabs); // Reindex the $tabs array.
+			$print = "removed";
+			break;
+		case "add":
+			$tabs[] = $_POST['title'];
+			$tabs_count = count($tabs); 
+			self::update_option($where, 'fields', 'tabbed-'.$tabs_count, array());
+			$print = "added";
+			break;
+		}
+		
+		self::update_option($where, 'tabs', 'normal', $tabs);
+		echo $print;
+		die();
+	}
 }
 
 if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT_Admin' ) ):
