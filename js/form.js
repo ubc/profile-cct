@@ -102,9 +102,9 @@ var Profile_CCT_FORM = {
 			var text_label = el.val();
 			
 			if ( text_label.length+1 > 0 ) {
-				jQuery(".text-input", el.parent().parent().parent() ).text(text_label);
+				jQuery( ".text-input", el.parent().parent().parent() ).text(text_label);
 			} else {
-				jQuery(".text-input", el.parent().parent().parent()).text(el.attr('title'));
+				jQuery( ".text-input", el.parent().parent().parent() ).text(el.attr('title'));
 			}
 		}, 10);
 	},
@@ -129,37 +129,45 @@ var Profile_CCT_FORM = {
 		
 		var el_class = jQuery.trim(el.parent().text());
 		if (el.attr('checked')) {
-			jQuery('.add-multiple',el.parent().parent().parent().parent()).show();
+			jQuery( '.add-multiple', el.parent().parent().parent().parent() ).show();
 		} else {
-			jQuery('.add-multiple',el.parent().parent().parent().parent()).hide();
+			jQuery( '.add-multiple', el.parent().parent().parent().parent() ).hide();
 		}
 	},
     
 	updateField: function(e) {
 		e.preventDefault();
 		
-		var el = jQuery(this);
-		var parent = el.parent();
-        
+		var element = jQuery(this);
+		var parent = element.parent();
 		parent.wrap('<form />');
-		var serialize = el.parent().parent().serialize();
+		var serialize = element.parent().parent().serialize();
 		parent.unwrap();
 		
+		//var data = 'action=cct_update_fields&method=update&'+serialize+'&context='+context+'&field_index='+field_index+'&where='+ProfileCCT.page;
+		
 		var context = parent.parent().parent().attr('id');
-		
 		var field_index = jQuery( ".field-item", parent.parent().parent() ).index( parent.parent() );
+		var data_set = {	
+            action: 'cct_update_fields',
+            method: 'update',
+            context: context,
+            field_index: field_index,
+            where: ProfileCCT.page,
+			//multiple: 1, //TODO: placeholder
+        };
+		data_set = jQuery.param(data_set)+"&"+serialize;
 		
-		var data = 'action=cct_update_fields&method=update&'+serialize+'&context='+context+'&field_index='+field_index+'&where='+ProfileCCT.page;
-		el.siblings('.spinner').show();		
+		element.siblings('.spinner').show();		
      	
-     	parent.parent().data('options', serialize); // update the serealized data 
-     	// ajax updating of the field options
-     	 
-     	jQuery.post(ajaxurl, data, function(response) {
-			parent.removeClass('changed');
+     	parent.parent().data('options', serialize); // update the serialized data 
+     	
+		// Ajax updating of the field options
+     	jQuery.post(ajaxurl, data_set, function(response) {
 			if (response == 'updated') {
-			 	el.siblings('.spinner').hide();
-			 	
+				parent.removeClass('changed');
+			 	element.siblings('.spinner').hide();
+				element.parent().siblings('.edit').trigger("click");
 			 	Profile_CCT_Admin.show_refresh();
 			}
 		});
@@ -170,16 +178,18 @@ var Profile_CCT_FORM = {
 		var el = jQuery(this);
 		var parent = el.parent();
 		
-		if ( el.text() == 'Edit') {
+		if ( el.text() == 'Edit' ) {
 			el.text('Close'); 
 		} else {
-			if (el.siblings('div.edit-shell').hasClass('changed'))
-			if ( confirm("There are some unsaved chages \n Would you like to save them?") ) {
-				el.siblings("div.edit-shell").find('.save-field-settings').trigger('click');	
+			if (el.siblings('div.edit-shell').hasClass('changed')) {
+				if ( confirm("There are some unsaved chages.\nWould you like to save them?") ) {
+					el.siblings("div.edit-shell").find('.save-field-settings').trigger('click');	
+				}
 			}
-			el.text('Edit'); 
+			
+			el.text('Edit');
 		}
-		el.siblings("div.edit-shell").toggle();	
+		el.siblings(".edit-shell").toggle();
 	},
     
 	showSpinner: function() {

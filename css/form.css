@@ -356,10 +356,13 @@
 
 /* ----- Action ----- */
 .form-builder li .edit {
-	float:right;
-	padding:5px 10px;
-	font-size:10px;
-	margin:0;
+	float: right;
+	padding: 5px 10px;
+	font-size: 10px;
+	margin: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
 

@@ -25,7 +25,11 @@ var Profile_CCT_Admin = {
 		var data = {
 			action: 'cct_update_profiles',
 			page: page
-		};
+		};	
+		
+		jQuery('#update-profile-shell').fadeOut('slow', function() {
+			jQuery(this).remove();
+		});
 		
 		jQuery.post(ajaxurl, data, function(result) {
 			var percent = Math.floor( ( result['page']/result['max'] ) * 100 );
@@ -33,19 +37,18 @@ var Profile_CCT_Admin = {
 			
 			if ( result['max'] > result['page'] ) {
 				Profile_CCT_Admin.update_profiles( result['page'] + 1 );
-				// make it hard to leave this page and inturup the process 
-				jQuery(window).bind('beforeunload', function(){
-    				return "If you leave this page the profile updating process will be interupted. Do yo want to continou? ";
-    				});
+				// Warn about leaving this page and interrupting the process. 
+				jQuery(window).bind('beforeunload', function() {
+    				return "Warning! If you leave this page the profile updating process will be interrupted. Do yo want to continue?";
+    			});
 			} else {
 				Profile_CCT_Admin.update_slider( percent, '<strong>Done!</strong> All profiles are updated!' );
-				
 				jQuery(window).unbind("beforeunload");
-				// when we move the mouse we can hide the stuff
+				
+				// When the mouse is moved, then hide the completion message.
 				jQuery(window).mousemove(function(event) {
 					jQuery(window).unbind('mousemove');
-					jQuery('#update-profiles-slider,#update-profile-shell').delay(2000).fadeOut('slow', function() {
-    					// Animation complete.
+					jQuery('#update-profiles-slider').delay(2000).fadeOut('slow', function() {
     					jQuery(this).remove();
  					});
  				});	
@@ -53,7 +56,7 @@ var Profile_CCT_Admin = {
 		}, 'json' );	
 	},
     
-	update_slider : function( percent, message ) {
+	update_slider: function( percent, message ) {
 		jQuery('#update-profiles-slider').addClass('active-slider').html("<div style='width:"+percent+"%'>"+message+"</div>");
 	},
 }

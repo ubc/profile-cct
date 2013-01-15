@@ -23,11 +23,9 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function __construct () {
-        
 		add_action('init', array( $this, 'init' ) );
 		$this->settings 	= $this->get_settings( 'settings' );
 		$this->taxonomies 	= $this->get_settings( 'taxonomy' );
-        
 	}
 	
 	/**
@@ -37,7 +35,6 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function get_object() {
-        
 		if ( self::$classobj === NULL ):
 			self::$classobj = new self;
         endif;
@@ -58,7 +55,6 @@ class Profile_CCT {
 		
 		$this->register_profiles();
 		$this->load_fields();
-		
 	}
 	
 	/**
@@ -68,7 +64,6 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function register_profiles() {
-		
 		if ( empty( $this->settings['slug'] ) ):
 			$slug = 'person';
 		else:
@@ -106,21 +101,21 @@ class Profile_CCT {
 			'query_var' => true,
 			'can_export' => true,
 			'rewrite' => array(
-				'slug' => $slug,
+				'slug'       => $slug,
 				'with_front' => true,
-				'feeds' => true,
-				'pages' => true
+				'feeds'      => true,
+				'pages'      => true,
 			),
 			'capabilities' => array(
-				'edit_post' => 			'edit_profile_cct', // used for has public profile
-				'edit_posts' => 		'edit_profiles_cct',
-				'edit_others_posts' => 	'edit_others_profile_cct',
-				'publish_posts' => 		'publish_profile_cct',
-				'read_post' => 			'read_profile_cct',
-				'read_private_posts' => 'read_private_profile_cct',
-				'delete_post' => 		'delete_profile_cct',
-				'delete_others_posts' =>'delete_others_profile_cct'
-			)
+				'edit_post'           => 'edit_profile_cct', // used for has public profile
+				'edit_posts'          => 'edit_profiles_cct',
+				'edit_others_posts'   => 'edit_others_profile_cct',
+				'publish_posts'       => 'publish_profile_cct',
+				'read_post'           => 'read_profile_cct',
+				'read_private_posts'  => 'read_private_profile_cct',
+				'delete_post'         => 'delete_profile_cct',
+				'delete_others_posts' => 'delete_others_profile_cct',
+			),
 		);
         
 		register_post_type( 'profile_cct', $args );
@@ -137,23 +132,21 @@ class Profile_CCT {
 				endwhile;
 			closedir( $handle );
 		endif;
-        
 	}
 	
 	function get_settings( $type = 'settings' ) {
 		// if non exist get the default settings 
-		if( $settings = get_option( 'Profile_CCT_'.$type ) ):
+		if ( $settings = get_option( 'Profile_CCT_'.$type ) ):
 			return $settings;
         else:
             return get_default_settings($type);
         endif;
-        
 	}
 	
 	function get_default_settings( $type = 'settings' ) {
         // load the default options array 
         require( PROFILE_CCT_DIR_PATH.'default-options.php' );
-        return  $option[$type];
+        return $option[$type];
 	}
 	
 	/**
@@ -164,19 +157,18 @@ class Profile_CCT {
 	 */
 	function delete_all_settings(){
 		// only administator can do this… 
-		if( current_user_can('administrator') ):
-			
-			foreach( array("form","page","list") as $where):
+		if ( current_user_can('administrator') ):
+			foreach ( array("form","page","list") as $where):
 				// delete all the fields
-				foreach( self::get_contexts( $where ) as $context ):
-					self::delete_option( $where,'fields',$context);
+				foreach ( self::get_contexts( $where ) as $context ):
+					self::delete_option( $where, 'fields', $context );
 				endforeach;
 				
 				// lets not forget the banch 
-				self::delete_option( $where,'fields','bench');
+				self::delete_option( $where, 'fields', 'bench' );
 				
 				// also delete all the tabs 
-				self::delete_option( $where,'tabs');
+				self::delete_option( $where, 'tabs' );
 				
 			endforeach;
             
@@ -227,7 +219,7 @@ class Profile_CCT {
 			
 		endforeach;
 		
-        update_option('Profile_CCT_settings', $field->settings);
+        update_option( 'Profile_CCT_settings', $field->settings );
 	}
     
 	/**
@@ -241,14 +233,14 @@ class Profile_CCT {
 		$profile = Profile_CCT::get_object();
 		$default = $profile->get_default_settings( 'settings' );
 		
-		foreach($default['permissions'] as $user=>$permission_array):
+		foreach ( $default['permissions'] as $user => $permission_array ):
 			$role = get_role( $user );
 			
-			foreach($permission_array as $permission => $can):
-					$role->remove_cap(  $permission );	
+			foreach ( $permission_array as $permission => $can ):
+				$role->remove_cap( $permission );	
 			endforeach;
-			
 		endforeach;
+		
 		$profile->delete_all_settings();
 	}
 	
@@ -266,12 +258,10 @@ class Profile_CCT {
 		
 		// also delete all the users info
 	}
-
 	
 	public static function version() {
 		return PROFILE_CCT_VERSION;
 	}
-    
     
 	/**
 	 * get_contexts function.
@@ -284,10 +274,10 @@ class Profile_CCT {
 		$contexts = $this->default_shells( $type );
 		$id = array_search( 'tabs', $contexts );
         
-		if( is_numeric( $id ) ):
+		if ( is_numeric( $id ) ):
 			$tabs = $this->get_option( $type, 'tabs' );
             
-            if( is_array( $tabs ) ):
+            if ( is_array( $tabs ) ):
                 $count = 1;
                 foreach ( $tabs as $tab ):
                     $contexts[] = "tabbed-".$count;
@@ -362,7 +352,7 @@ class Profile_CCT {
                     
                     // Lets add the new fields from this version to the bench.
                     if ( is_array($new_fields[$this->version()]) ):
-                        foreach ( $new_fields[$this->version()] as $field):
+                        foreach ( $new_fields[$this->version()] as $field ):
                             if ( in_array( $type, $field['where'] ) ):
                                 $options[] = $field['field'];
                             endif;
@@ -450,7 +440,7 @@ class Profile_CCT {
 	function edit_post_advanced() {
 		global $post;
         
-		if( $post->post_type == "profile_cct" ):
+		if ( $post->post_type == "profile_cct" ):
 			$tabs = $this->get_option( 'form', 'tabs' );
             // here we should be finding if there are even any fields in the tabs
             ?>
@@ -458,7 +448,7 @@ class Profile_CCT {
 				<ul>
 					<?php
                     $count = 1;
-                    foreach( $tabs as $tab ):
+                    foreach ( $tabs as $tab ):
                         ?>
                             <li><a href="#tabs-<?php echo $count; ?>" class="tab-link"><?php echo $tab; ?></a></li>
                         <?php
@@ -468,7 +458,7 @@ class Profile_CCT {
 				</ul>
 				<?php
                 $count = 1;
-                foreach( $tabs  as $tab ) :
+                foreach ( $tabs  as $tab ) :
                     ?>
 					<div id="tabs-<?php echo $count?>">
 						<?php do_meta_boxes( 'profile_cct', 'tabbed-'.$count, $post );  ?>

@@ -1,48 +1,31 @@
 <?php 
-// still lots of work to be done here
-if( !defined( 'PROFILE_CCT_FULL_WIDTH' ) )
-	define( 'PROFILE_CCT_FULL_WIDTH', 150 );
-	
-if( !defined( 'PROFILE_CCT_FULL_HEIGHT' ) )
-	define( 'PROFILE_CCT_FULL_HEIGHT', 150 );
+// Still lots of work to be done here
 
-if( !defined( 'PROFILE_CCT_MAX_PREVIEW_WIDTH' ) )
-	define( 'PROFILE_CCT_MAX_PREVIEW_WIDTH', 400 );
-
-if( !defined( 'PROFILE_CCT_MAX_PREVIEW_HEIGHT' ) )
-	define( 'PROFILE_CCT_MAX_PREVIEW_HEIGHT', 400 );
-
-
-
+if ( !defined( 'PROFILE_CCT_FULL_WIDTH'         ) ) define( 'PROFILE_CCT_FULL_WIDTH',         150 );
+if ( !defined( 'PROFILE_CCT_FULL_HEIGHT'        ) ) define( 'PROFILE_CCT_FULL_HEIGHT',        150 );
+if ( !defined( 'PROFILE_CCT_MAX_PREVIEW_WIDTH'  ) ) define( 'PROFILE_CCT_MAX_PREVIEW_WIDTH',  400 );
+if ( !defined( 'PROFILE_CCT_MAX_PREVIEW_HEIGHT' ) ) define( 'PROFILE_CCT_MAX_PREVIEW_HEIGHT', 400 );
 
 Class Profile_CCT_Picture extends Profile_CCT_Field {
-		
-		var $default_options = array(
-			'type' => 'picture',
-			'label' => 'picture',
-			'description' => '',
-			
-			'link_to'	=> true,
-			'show_link_to' => true,
-		
-			'width' => 'one-third',
-			'before' => '',
-			'empty' => '',
-			'after' => '',
-		);
+	
+	var $default_options = array(
+		'type' => 'picture',
+		'label' => 'picture',
+		'description' => '',
+		'link_to'	=> true,
+		'show_link_to' => true,
+		'width' => 'one-third',
+		'before' => '',
+		'empty' => '',
+		'after' => '',
+	);
 	
 	function field() {
-		// show the picture
 		$this->picture();
-		// show the add button
 		$this->update_picture();
-		
-		
 	}
 	
 	function display() {
-		
-		// show the avatar 
 		$this->picture();
 	}
 	
@@ -69,11 +52,10 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		global $post;
 	
 		$picture_options = $this->picture_options();
-	
 		$iframe_width = $picture_options['width'] + 520;
 		
 		if( empty($post) ): // in the preview ?>
-			<span class="add-multiple"><a class="button disabled" style="display: inline;" href="#add">Update Picture</a> <em>disabled in preview</em></span>
+			<span class="add-multiple"><a class="button disabled" disabled="disabled" style="display: inline;" href="#add">Update Picture</a> <em>disabled in preview</em></span>
 			<?php
 			return;
 		endif;
