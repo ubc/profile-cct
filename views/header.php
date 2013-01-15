@@ -2,15 +2,40 @@
 	do_action( 'profile_cct_admin_pages', Profile_CCT_Admin::$page );
 	?>
 	<div class="wrap">
-		<?php Profile_CCT_Admin::icon();?><h2 id="profile-setting">Settings</h2>
-        
-		<?php if( version_compare( PROFILE_CCT_VERSION, Profile_CCT::version(), '>' ) ): ?>
+		<?php Profile_CCT_Admin::icon();?>
+		<h2 id="profile-setting">Settings</h2>
+		
+		<?php if ( version_compare( PROFILE_CCT_VERSION, Profile_CCT::version(), '>' ) ): ?>
 			<div class="update-profiles info" id="update-profile-shell">
-			
-			You need to update profiles so that they will run smoothly with the latest version of the plugin. <a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>
-			
+				You need to update profiles so that they will run smoothly with the latest version of the plugin.
+				<a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>
 			</div>
-			
+		<?php elseif ( false !== ( $where = get_transient('Profile_CCT_needs_refresh') ) ): ?>
+			<?php
+				$where = array_keys($where);
+				$where_out = "";
+				$has = "has";
+				
+				if ( ! is_array($where) ):
+					$where_out = $where;
+				elseif ( count($where) > 1 ):
+					$count = count($where);
+					$where[$count-1] = "and ".$where[$count-1];
+					if ($count > 2):
+						$where_out = implode(", ", $where);
+					else:
+						$where_out = implode(" ", $where);
+					endif;
+					$has = "have";
+				else:
+					$where_out = $where[0];
+				endif;
+				
+			?>
+			<div id="update-profile-shell" class="update-profiles info">
+				The profile <?php echo $where_out." ".$has; ?> changed.
+				<a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>
+			</div>
 		<?php endif; ?>
 		<h3 class="nav-tab-wrapper">
 			<a class="nav-tab <?php if( !isset($_GET['view']) ) { echo "nav-tab-active"; } ?>"

@@ -31,7 +31,6 @@ class Profile_CCT_Phone extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function field() {
-        error_log("Create Phone Shell Stage 3B");
 		$this->input_select( array( 'field_id' => 'option','label' => 'Option', 'all_fields' => $this->phone_options() ) );
 		$this->input_text( array( 'field_id' => 'tel-1','label' => '###', 'size' => 3 ) );
 		$this->input_text( array( 'field_id' => 'tel-2','label' => '###', 'size' => 3 ) );
@@ -46,7 +45,6 @@ class Profile_CCT_Phone extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-        error_log("Create Phone Shell Stage 3A");
 		$this->display_shell( array( 'class' => 'telephone tel') );
 		$this->display_text( array( 'field_id' => 'option', 'class' => 'type', 'default_text' => 'Work', 'post_separator' => ':' ) );
 		$this->display_text( array( 'field_id' => 'tel-1', 'class' => 'tel-1', 'default_text' => '735', 'post_separator' => '-' ) );
@@ -66,7 +64,6 @@ class Profile_CCT_Phone extends Profile_CCT_Field {
 	 * @return void
 	 */
 	public static function shell( $options, $data ) {
-        error_log("Create Phone Shell Stage 2");
 		new Profile_CCT_Phone( $options, $data ); 
 	}
 	
@@ -81,7 +78,6 @@ class Profile_CCT_Phone extends Profile_CCT_Field {
  * @return void
  */
 function profile_cct_phone_shell( $options, $data ) {
-    error_log("Create Phone Shell Stage 1");
 	Profile_CCT_Phone::shell( $options, $data ); 
 }
 

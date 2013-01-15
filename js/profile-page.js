@@ -118,7 +118,6 @@ var Profile_CCT_PAGE = {
 		//link.prev().children('hr').remove();
 	},
 	
-	
 	updateSocialLabel: function(e) {
 		var value = jQuery(this).val();
 		jQuery(this).parent().next().children("label").text(socialArray[value].user_url);
@@ -126,8 +125,7 @@ var Profile_CCT_PAGE = {
 	
 	clearSocialLabel: function(e) {
 		jQuery(this).prev().children(".username").children("label").text("");
-	}
-	
+	},
 };
 
 jQuery(document).ready(Profile_CCT_PAGE.onReady);

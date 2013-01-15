@@ -5,12 +5,12 @@
 	$note = '';
 	$profile = Profile_CCT::get_object();
     
-	if( !empty($_POST) && wp_verify_nonce( $_POST['update_settings_nonce_field'], 'update_settings_nonce' ) ):
+	if ( !empty($_POST) && wp_verify_nonce( $_POST['update_settings_nonce_field'], 'update_settings_nonce' ) ):
 		//Validate pic options
 		$width = intval( $_POST['picture_width'] );
 		$height = intval( $_POST['picture_height'] );
-		if( $width >= 100 && $width <= 560 && $height >= 100 && $height <= 560):
-			$picture_options = array ( 'width'=>$width, 'height'=>$height );
+		if ( $width >= 100 && $width <= 560 && $height >= 100 && $height <= 560 ):
+			$picture_options = array( 'width' => $width, 'height' => $height );
 			$profile->settings['picture'] = $picture_options;
 		else:
 			$note = '<div class="error settings-error"><p>Picture dimensions should be between 100x100 and 560x560</p></div>';
@@ -34,15 +34,15 @@
 		// lets deal with permissions	
 		$post_permissions = $_POST['options']['permissions'];
 		
-		foreach($profile->settings['permissions'] as $user => $permission_array):
+		foreach ( $profile->settings['permissions'] as $user => $permission_array ):
 			if ($user != 'administrator'): // don't want people changing the permissions of the admin
 				$role = get_role( $user );
 				
-				foreach($permission_array as $permission => $can):
-					if( isset( $profile->settings['permissions'][$user][$permission] ) ): // does the permission exist in the settings
+				foreach ( $permission_array as $permission => $can ):
+					if ( isset( $profile->settings['permissions'][$user][$permission] ) ): // does the permission exist in the settings
 						$profile->settings['permissions'][$user][$permission] = (bool)$post_permissions[$user][$permission];
 						// add the new capability
-						if( (bool)$post_permissions[$user][$permission] ): 
+						if ( (bool) $post_permissions[$user][$permission] ): 
 							$role->add_cap( $permission );
 						else:
   							$role->remove_cap( $permission );
@@ -53,11 +53,10 @@
 				// Admin role. You can't change the default permissions for the administater
 				$role = get_role( 'administrator' );
 				// the admin gets the best permissions
-				foreach($profile->settings['permissions']['administrator'] as $permission => $can):
+				foreach ( $profile->settings['permissions']['administrator'] as $permission => $can ):
 					$role->add_cap( $permission );
 				endforeach;
 			endif;
-			
 		endforeach;
 		
 		//Store updated options

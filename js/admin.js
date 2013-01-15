@@ -7,17 +7,23 @@ var Profile_CCT_Admin = {
     
 	prep: function( where ) {
 		var html = 'The profile '+where+' has changed. <a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>';
-		if ( ! jQuery('#update-profile-shell').length ) {
-			jQuery('#profile-setting').after('<div id="update-profile-shell" class="update-profiles info">'+html+'</div>');
-		} else { 
+		if (jQuery('#update-profile-shell').length ) { //ie. #update-profile-shell already exists.
 			jQuery('#update-profile-shell').html(html);
+		} else { 
+			jQuery('#profile-setting').after('<div id="update-profile-shell" class="update-profiles info">'+html+'</div>');
 		}
 	},
 	
 	show_refresh: function() {
 		if ( ProfileCCT.page != 'form' ){
 			Profile_CCT_Admin.prep(ProfileCCT.page);
-			Profile_CCT_Admin.ready();		
+			Profile_CCT_Admin.ready();
+			
+			jQuery.post(ajaxurl, {
+				action: 'cct_needs_refresh',
+				where: ProfileCCT.page,
+				needs_refresh: 1,
+			});
 		}
 	},
     
@@ -42,6 +48,11 @@ var Profile_CCT_Admin = {
     				return "Warning! If you leave this page the profile updating process will be interrupted. Do yo want to continue?";
     			});
 			} else {
+				jQuery.post(ajaxurl, {
+					action: 'cct_needs_refresh',
+					needs_refresh: 0,
+				});
+				
 				Profile_CCT_Admin.update_slider( percent, '<strong>Done!</strong> All profiles are updated!' );
 				jQuery(window).unbind("beforeunload");
 				

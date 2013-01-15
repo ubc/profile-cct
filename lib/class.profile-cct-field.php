@@ -75,7 +75,6 @@ class Profile_CCT_Field {
 				if ( 'form' == $this->page ):
 					$this->input_text( array(
 						'name'         => 'label',
-						'size'         => 30,
 						'class'        => 'field-label',
 						'label'        => 'label',
 						'before_label' => true,
@@ -324,7 +323,7 @@ class Profile_CCT_Field {
 		printf( "<span %s>", $attr['field_shell_attr'] );
 		$this->input_label_before( $attr['id'], $attr['label'], $attr['before_label'] );
 		?>
-		<select id="<?php echo $attr['id']; ?>" <?php echo $attr['name']; ?> >
+		<select <?php echo $attr['field_attr']; ?> >
 			<option value=""></option><!-- this gives us an emty field if the user doesn't select anything -->
             <?php 
 			foreach ( $attr['all_fields'] as $field ):
@@ -555,9 +554,9 @@ class Profile_CCT_Field {
 	 * @return void
 	 */
 	function field_attr( $attr, $field_type ) {
-		$count = 0;
+		$count = 0; //???
 		
-		echo ( isset( $attr['separator'] ) ? '<span class="separator">'.esc_html( $attr['separator'] ).'</span>' : '' );
+		echo( isset( $attr['separator'] ) ? '<span class="separator">'.esc_html( $attr['separator'] ).'</span>' : '' );
         
 		$show = ( isset( $attr['field_id'] ) && ! in_array( $attr['field_id'], $this->show ) && in_array( $attr['field_id'], $this->show_fields )  ? ' style="display:none;"' : '' );  // should this field be displayed
         
@@ -574,22 +573,23 @@ class Profile_CCT_Field {
 		$needed_attr['sub_label']        = ( isset( $attr['sub_label'] )       ? $attr['sub_label']       : '' );
         
 		if ( $field_type == 'multiple' ):
-			$name = ( isset($attr['name']) ? ' name="'.$attr['name'].'[]"' : ' name="profile_cct['.$this->type.']['.$count.']['.$needed_attr['id'].'][]"');
+			$name = ( isset($attr['name']) ? ' name="'.$attr['name'].'[]"' : ' name="profile_cct['.$this->type.']['.$count.']['.$needed_attr['id'].'][]"' );
 		elseif ( $this->multiple ):
-			$name = ( isset($attr['name']) ? ' name="'.$attr['name'].'"' : ' name="profile_cct['.$this->type.']['.$count.']['.$needed_attr['id'].']"');
+			$name = ( isset($attr['name']) ? ' name="'.$attr['name'].'"'   : ' name="profile_cct['.$this->type.']['.$count.']['.$needed_attr['id'].']"' );
 		else:
-			$name = ( isset($attr['name']) ? ' name="'.$attr['name'].'"' : ' name="profile_cct['.$this->type.']['.$needed_attr['id'].']"');
+			$name = ( isset($attr['name']) ? ' name="'.$attr['name'].'"'   : ' name="profile_cct['.$this->type.']['.$needed_attr['id'].']"' );
 		endif;
 		
-		$size  = ( isset( $attr['size']  ) ? ' size="'. $attr['size'].	'" ' : '');
-		$row   = ( isset( $attr['row']   ) ? ' row="'.  $attr['row'].	'" ' : '');
-		$cols  = ( isset( $attr['cols']  ) ? ' cols="'. $attr['cols'].	'" ' : '');
-		$class = ( isset( $attr['class'] ) ? ' class="'.$attr['class'].	'" ' : ' class="field text"' );
+		$id    = ( isset( $needed_attr['id'] ) ? ' size="'. $needed_attr['id'].'" ' : ''                    );
+		$size  = ( isset( $attr['size']      ) ? ' size="'. $attr['size'].'" '      : ''                    );
+		$row   = ( isset( $attr['row']       ) ? ' row="'.  $attr['row'].'" '       : ''                    );
+		$cols  = ( isset( $attr['cols']      ) ? ' cols="'. $attr['cols'].'" '      : ''                    );
+		$class = ( isset( $attr['class']     ) ? ' class="'.$attr['class'].'" '     : ' class="field text"' );
         
-		$needed_attr['field_attr'] = 'id="'.$needed_attr['id'].'" '.$name.$class.$row.$cols.$size.' ';
+		$needed_attr['field_attr'] = $id.$name.$class.$row.$cols.$size.' ';
         
 		$this->counter++;
-        
+		
     	return $needed_attr;
 	}
     

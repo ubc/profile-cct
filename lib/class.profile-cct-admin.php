@@ -40,7 +40,10 @@ class Profile_CCT_Admin {
 		register_setting( 'Profile_CCT_form_fields', 'Profile_CCT_form_fields', array( __CLASS__, 'validate_form_fields' ) );
 		register_setting( 'Profile_CCT_page_fields', 'Profile_CCT_page_fields', array( __CLASS__, 'validate_page_fields' ) );
 		register_setting( 'Profile_CCT_list_page',   'Profile_CCT_list_page',   array( __CLASS__, 'validate_list_fields' ) );
-        
+		
+		
+		register_setting( 'Profile_CCT_list_page',   'Profile_CCT_list_page',   array( __CLASS__, 'validate_list_fields' ) );
+		
 		// redirect users to their profile page and create one if it doesn't exist
 		Profile_CCT_Admin::redirect_to_public_profile();
         
@@ -53,6 +56,7 @@ class Profile_CCT_Admin {
 		add_action( 'wp_ajax_cct_update_fields',   array( __CLASS__, 'update_fields' ) );
 		add_action( 'wp_ajax_cct_update_tabs',     array( __CLASS__, 'update_tabs' ) );
 		add_action( 'wp_ajax_cct_update_profiles', array( __CLASS__, 'refresh_profiles' ) );
+		add_action( 'wp_ajax_cct_needs_refresh',   array( __CLASS__, 'set_profiles_need_refresh' ) );
         
 		add_action( 'profile_cct_before_page',     array( __CLASS__, 'recount_field' ), 10, 1 );
 		add_action( 'profile_cct_before_page',     array( __CLASS__, 'display_fields_check' ), 11, 1 );
@@ -242,7 +246,7 @@ class Profile_CCT_Admin {
 		$contexts = Profile_CCT_Admin::get_contexts($where);
         
 		// CURRENT FIELDS
-		// all the fields that are there
+		// All the fields that are there.
 		$current_fields = array();
 		foreach ( $contexts as $context ):
 			foreach ( (array) Profile_CCT_Admin::get_option($where, 'fields', $context) as $field ):
@@ -250,7 +254,7 @@ class Profile_CCT_Admin {
 			endforeach;
 		endforeach;
         
-		// don't forget the banch field
+		// don't forget the bench fields.
 		foreach ( Profile_CCT_Admin::get_option($where, 'fields', 'bench') as $field ):
 			$current_fields[] = $field['type'];
 		endforeach;
@@ -630,7 +634,32 @@ class Profile_CCT_Admin {
         
 		return update_option( 'Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context, $update );
 	}
-    
+	
+	/**
+	 * Sets whether the plugin's profiles need to be updated or not.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	static function set_profiles_need_refresh() {
+		if ( isset($_POST['needs_refresh']) ):
+			$key = 'Profile_CCT_needs_refresh';
+			//$value = $_POST['where'];
+			$expiration = 3*DAY_IN_SECONDS; //Expires in 3 days.
+			
+			if ( $_POST['needs_refresh'] ):
+				$value = get_transient('Profile_CCT_needs_refresh');
+				error_log("Initial: ".print_r($value, TRUE));
+				$value[$_POST['where']] = 1;
+				error_log("After: ".print_r($value, TRUE));
+				
+				set_transient( $key, $value, $expiration );
+			else:
+				delete_transient( $key );
+			endif;
+		endif;
+	}
+	
 	/**
 	 * delete_option function.
 	 *
@@ -818,7 +847,6 @@ class Profile_CCT_Admin {
 	 * @return void
 	 */
 	static function update_fields() {
-		error_log('Update Fields');
 		$context = $_POST['context'];
 		
 		if ( in_array($_POST['where'], array('form', 'page', 'list')) ):
@@ -834,8 +862,6 @@ class Profile_CCT_Admin {
 		endif;
 		
 		$options = self::get_option($where, 'fields', $context);
-		
-		error_log(print_r($_POST, TRUE));
 		
 		switch ( $_POST['method'] ):
 		case "update":
