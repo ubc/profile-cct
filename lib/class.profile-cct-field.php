@@ -65,7 +65,6 @@ class Profile_CCT_Field {
 
 	function start_field() {
 		// lets display the start of the field to the user
-		// $is_in_form = '??'; // todo: figure out what this means
 		if ( 'edit' == $this->action ): ?>
 	 		<li class="<?php echo' shell-'.esc_attr( $this->type ); ?> field-item <?php echo $this->class." ".$this->width; ?>" for="cct-<?php echo esc_attr( $this->type ); ?>" data-options="<?php echo esc_attr( $this->serialize( $this->options ) ); ?>" >
 			<a href="#edit-field" class="edit">Edit</a>
@@ -141,7 +140,7 @@ class Profile_CCT_Field {
 					) );
 				endif;
                 
-				if ( isset( $this->empty) && 'form' != $this->page ): //
+				if ( isset( $this->empty) && 'form' != $this->page ):
 					$this->input_textarea( array(
 						'name'         => 'empty',
 						'size'         => 10,
@@ -199,21 +198,29 @@ class Profile_CCT_Field {
 				<span class="spinner" style="display:none;"><img src="<?php echo admin_url('/images/wpspin_light.gif'); ?>" alt="spinner" /> saving...</span>
 			</div>
 		 	<label class="field-title"><?php echo $this->label; ?></label>
-		 	<?php
-			else: // display the
-				echo $this->before;
-				?><div class="<?php echo esc_attr( $this->type ); ?> field-item <?php echo $this->class." ".$this->width; ?>"><?php
-			endif;
+		<?php
+		else:
+			echo $this->before;
 			?>
-		 	<div class="field-shell field-shell-<?php echo $this->type; ?>">
+			<div class="<?php echo esc_attr( $this->type ); ?> field-item <?php echo $this->class." ".$this->width; ?>">
 			<?php
-			if ( isset( $this->description ) ):
-				printf('<pre class="description">%s</pre>' ,esc_html( $description )  );
-            endif;
+		endif;
+		?>
+		<div class="field-shell field-shell-<?php echo $this->type; ?>">
+		<?php
+		if ( isset( $this->description ) ):
+			printf('<pre class="description">%s</pre>' ,esc_html( $description )  );
+		endif;
+		?>
+		<div class="field">
+		<?php
 	}
 
 	function end_field() {
 		$shell_tag  = ( $this->action == 'edit' ? 'li' : 'div');
+		?>
+		</div>
+		<?php
         
 		if ( $this->show_multiple ):
 			$style_multiple = ( $this->multiple ? 'style="display: inline;"' : 'style="display: none;"' );
@@ -221,7 +228,7 @@ class Profile_CCT_Field {
 			if ( 'edit' == $this->action && 'form' == Profile_CCT_Admin::$page ):
 				echo '<span class="add-multiple" '. $style_multiple .'><a href="#add" class="button disabled" disabled="disabled">Add another</a> <em>disabled in preview</em></span>';
 			elseif ( $this->multiple && !in_array( Profile_CCT_Admin::$page, array('page', 'list') ) ):
-				echo '<a href="#add" class="button add-multiple">Add another</a>'; // todo: make it work without js
+				echo '<a href="#add" class="button add-multiple">Add another</a>';
 			endif;
 		endif;
 		?>

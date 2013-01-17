@@ -24,21 +24,46 @@ Class Profile_CCT_Address extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function field() {
-		$this->input_text( array( 'field_id' => 'building-name', 'label' => 'Building Name', 'size'=>35 ) );
-		
-		$this->input_text( array( 'field_id' => 'room-number','label' => 'Room Number', 'size'=>35 ) );
-		
-		$this->input_text( array( 'field_id' => 'street-1','label' => 'Street Address', 'size'=>74 ) );
-		
-		$this->input_text( array( 'field_id' => 'street-2','label' => 'Address Line 2', 'size'=>74 ) );
-		
-		$this->input_text( array( 'field_id' => 'city','label' => 'City', 'size'=>35 ) );
-		
-		$this->input_text( array( 'field_id' => 'province','label' => 'Province / State /  Region', 'size'=>35 ) );
-		
-		$this->input_text( array( 'field_id' => 'postal','label' => 'Postal / Zip Code', 'size'=>35 ) );
-		
-		$this->input_select( array( 'field_id' => 'country','label' => 'Country', 'size'=>35, 'all_fields'=> $this->list_of_countries() ) );
+		$this->input_text( array(
+			'field_id' => 'building-name',
+			'label'    => 'Building Name',
+			'size'     => 35,
+		) );
+		$this->input_text( array(
+			'field_id' => 'room-number',
+			'label'    => 'Room Number',
+			'size'     => 35,
+		) );
+		$this->input_text( array(
+			'field_id' => 'street-1',
+			'label'    => 'Street Address',
+			'size'     => 74,
+		) );
+		$this->input_text( array(
+			'field_id' => 'street-2',
+			'label'    => 'Address Line 2',
+			'size'     => 74,
+		) );
+		$this->input_text( array(
+			'field_id' => 'city',
+			'label'    => 'City',
+			'size'     => 35,
+		) );
+		$this->input_text( array(
+			'field_id' => 'province',
+			'label'    => 'Province / State /  Region',
+			'size'     => 35 ) );
+		$this->input_text( array(
+			'field_id' => 'postal',
+			'label'    => 'Postal / Zip Code',
+			'size'     => 35,
+		) );
+		$this->input_select( array(
+			'field_id'   => 'country',
+			'label'      => 'Country',
+			'size'       => 35,
+			'all_fields' => $this->list_of_countries(),
+		) );
 	}
 	
 	/**

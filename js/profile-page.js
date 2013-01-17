@@ -1,16 +1,16 @@
 var Profile_CCT_PAGE = {
-	tabs_shell : 0,
+	tabs_shell: 0,
 	
-	onReady : function() {
+	onReady: function() {
 		// tabs
-		Profile_CCT_PAGE.tabs_shell = jQuery( "#tabs" );
+		Profile_CCT_PAGE.tabs_shell = jQuery("#tabs");
 		Profile_CCT_PAGE.startTabs();
 		
-		//jQuery('.hide-if-js',Profile_CCT_PAGE.tabs_shell).removeClass('hide-if-js'); // this helps with showing the meta boxes 
+		//jQuery('.hide-if-js', Profile_CCT_PAGE.tabs_shell).removeClass('hide-if-js'); // this helps with showing the meta boxes 
 		jQuery('.add-multiple').click(Profile_CCT_PAGE.addFields);
-		jQuery('.remove-fields').live('click',Profile_CCT_PAGE.removeFields);
+		jQuery('.remove-fields').live( 'click', Profile_CCT_PAGE.removeFields );
 		jQuery(".wrap-social-fields select").live('change', Profile_CCT_PAGE.updateSocialLabel);
-		jQuery(".add-multiple").live('click', Profile_CCT_PAGE.clearSocialLabel);
+		jQuery(".add-multiple").live( 'click', Profile_CCT_PAGE.clearSocialLabel );
 		
 		// placed right after tb_show call
 		if (typeof window.tb_remove == 'function') {
@@ -36,36 +36,26 @@ var Profile_CCT_PAGE = {
 	addFields: function(e) {
 		e.preventDefault();
 		var link = jQuery(this);
-        
-		if (link.prev().children('div').hasClass('days')) {
-			var days_case = true;
+		var field = link.prev();
+        //var days_case = field.children('div').hasClass('days');
+		var count = field.data('count');
+		
+		//if (days_case) field.children('hr').remove();
+		var copy = field.clone();
+		//if (days_case) field.append('<hr />');
+		
+		// Add the remove link unless there are none.
+		if ( ! field.children('a.remove-fields').length ) {
+			copy.append('<a href="#" class="remove-fields button">Remove</a>');
 		}
-        
-		var count = link.prev().data('count');
 		
-		if (days_case) {
-			link.prev().children('hr').remove();
-		}
-		
-		var copy = link.prev().clone();
-		
-		if (days_case) {
-			link.prev().append('<hr />');
-        }
 		copy.insertBefore( link );
 		
-		// add the remove link unless there is none
-		if ( ! link.prev().children('a.remove-fields').length ) {
-			link.prev().append('<a href="#" class="remove-fields button">Remove</a>');
-		}
+		//if (days_case) field.append('<hr />');
 		
-		if (days_case) {
-			link.prev().append('<hr />');
-		}
+		field.data('count', count+1);
 		
-		link.prev().data('count', count+1);
-		
-		link.prev().find('input,select,textarea,label').each(function(index, value) {
+		copy.find('input,select,textarea,label').each(function(index, value) {
 			var new_count = jQuery(this).parent().parent().data('count');
 			
 			var name = jQuery(this).attr('name');
@@ -82,7 +72,7 @@ var Profile_CCT_PAGE = {
 			
 			if (id !== undefined) {
 				new_id = id.replace(count, new_count);
-			} else if (labelFor !== undefined){
+			} else if (labelFor !== undefined) {
 				new_labelFor = labelFor.replace(count, new_count);
 			}
 			
@@ -92,7 +82,7 @@ var Profile_CCT_PAGE = {
 				if (new_id != "") {
 					jQuery(this).attr('id', new_id);
 				}
-				if (new_labelFor!="") {
+				if (new_labelFor != "") {
 					jQuery(this).attr('for', new_labelFor);
 				}
 			} else {
@@ -107,15 +97,11 @@ var Profile_CCT_PAGE = {
 			}
 			
 		});
-		//if(link.prev().find('.remove-fields'))
-		
 	},
 	
 	removeFields: function(e) {
 		e.preventDefault();
-		var link = jQuery(this);
-		link.parent().remove();
-		//link.prev().children('hr').remove();
+		jQuery(this).parent().remove();
 	},
 	
 	updateSocialLabel: function(e) {
