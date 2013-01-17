@@ -5,48 +5,44 @@
 
 	// Add taxonomy
 	if ( !empty($_POST) && check_admin_referer( 'add_profile_taxonomy','add_profile_taxonomy_field' ) ) :
-		
 		$error = array();
-		
-		$hierarchical = ( is_numeric( $_POST['hierarchical'] )? $_POST['hierarchical'] : 0 );
-		
+		$hierarchical = ( is_numeric( $_POST['hierarchical'] ) ? $_POST['hierarchical'] : 0 );
 		$plural = trim( strip_tags( $_POST['plural-name'] ) );
 		
-		if(empty( $plural ))
+		if (empty( $plural )):
 			$error['plural'] = "Please fill out the plural name";
+		endif;
 		
 		$single = trim(strip_tags ($_POST['single-name']));
-		if(empty( $single ))
+		if (empty( $single )):
 			$error['single'] = "Please fill out the single name";
+		endif;
 		
-		if( empty($error) ):
+		if ( empty($error) ):
 			// since there are no errors add the taxonomy 
-			$new_taxonomy = array( 'plural'=>$plural, 'single' => $single, 'hierarchical' => $hierarchical );
+			$new_taxonomy = array( 'plural' => $plural, 'single' => $single, 'hierarchical' => $hierarchical );
 			
-			foreach( $taxonomies as $taxonomy ):
-				if( $taxonomy == $new_taxonomy ):
+			foreach ( $taxonomies as $taxonomy ):
+				if ( $taxonomy == $new_taxonomy ):
 					$error['duplicate'] = "Taxonomy already exists";
 					break 1;
 				endif;
 			endforeach;
 			
-			if( empty( $error ) ): // ready to add the taxonomy
-
+			if ( empty( $error ) ): // ready to add the taxonomy
 				$taxonomies = Profile_CCT_Taxonomy::add( $new_taxonomy, $taxonomies );
-		   		
 		   		$note = "<p class='info'>Now you can add ".esc_attr($_POST['single-name'])." to the <a href=\"".admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASEADMIN.'&view=page')."\">person page</a> or the <a href=\"".admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASEADMIN.'&view=list')."\">list view</a></p>" ;
 	   		endif;
-	   		
 	   	endif;
-	   	
 	endif;
-
 ?>
 <h2>Taxonomy Builder</h2>
 	<p><strong>Tax&middot;on&middot;o&middot;my</strong> - The classification of something, a way to group things and be able to filter them later.</p>
 	<?php echo $note; ?>
 	<h3>Current Taxonomies </h3>
-	<?php if(is_array($taxonomies) && !empty($taxonomies)) : ?>
+	<?php if (is_array($taxonomies) && !empty($taxonomies)): ?>
+	<pre>
+	</pre>
 		<table class="widefat">
 			<thead>
 			<tr>
@@ -54,18 +50,24 @@
 				<th>Hierarchical</th>
 			</tr>
 			</thead>
-			
 			<tbody>
 			<?php 
-				  $count = 0;
-				  foreach($taxonomies as $key=>$taxonomy): ?>
-					<tr <?php if($count%2) echo 'class="alternate"'; ?>>
-					<td ><?php echo $taxonomy['single']; ?> / <?php echo $taxonomy['plural']; ?>
-					<div class="row-actions">
-						<span class="trash"><a href="?post_type=profile_cct&page=<?php echo PROFILE_CCT_BASEADMIN; ?>&view=taxonomy&remove=<?php echo $key."&_wpnonce=".wp_create_nonce('profile_cct_remove_taxonomy'.$key); ?> " class="submitdelete">Delete</a>
-					</div>
+				$count = 0;
+				foreach ( $taxonomies as $key => $taxonomy ):
+					$taxonomy_id = Profile_CCT_Taxonomy::id($taxonomy['single']);
+					?>
+					<tr <?php if ($count%2) echo 'class="alternate"'; ?>>
+					<td >
+						<a href="<?php echo admin_url("/edit-tags.php?taxonomy=".$taxonomy_id."&post_type=profile_cct"); ?>">
+							<?php echo $taxonomy['single']; ?> / <?php echo $taxonomy['plural']; ?>
+						</a>
+						<div class="row-actions">
+							<span><a href="<?php echo admin_url("/edit-tags.php?taxonomy=".$taxonomy_id."&post_type=profile_cct"); ?>">Edit</a>
+							 | 
+							<span class="trash"><a href="?post_type=profile_cct&page=<?php echo PROFILE_CCT_BASEADMIN; ?>&view=taxonomy&remove=<?php echo $key."&_wpnonce=".wp_create_nonce('profile_cct_remove_taxonomy'.$key); ?> " class="submitdelete">Delete</a>
+						</div>
 					</td>
-					<td><?php echo ( $taxonomy['hierarchical']? "Yes": "No" ); ?></td>
+					<td><?php echo( $taxonomy['hierarchical'] ? "Yes": "No" ); ?></td>
 					</tr>
 				<?php 
 				  $count++;

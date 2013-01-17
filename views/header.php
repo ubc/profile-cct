@@ -14,7 +14,7 @@
 			<?php
 				$where = array_keys($where);
 				$where_out = "";
-				$has = "has";
+				$has = "layout has";
 				
 				if ( ! is_array($where) ):
 					$where_out = $where;
@@ -26,14 +26,14 @@
 					else:
 						$where_out = implode(" ", $where);
 					endif;
-					$has = "have";
+					$has = "layouts have";
 				else:
 					$where_out = $where[0];
 				endif;
 				
 			?>
 			<div id="update-profile-shell" class="update-profiles info">
-				The profile <?php echo $where_out." ".$has; ?> changed.
+				The profile <?php echo $where_out." ".$has; ?> been changed.
 				<a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>
 			</div>
 		<?php endif; ?>

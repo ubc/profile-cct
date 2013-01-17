@@ -6,7 +6,7 @@ var Profile_CCT_Admin = {
 	},
     
 	prep: function( where ) {
-		var html = 'The profile '+where+' has changed. <a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>';
+		var html = 'The profile '+where+' layout has been changed. <a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>';
 		if (jQuery('#update-profile-shell').length ) { //ie. #update-profile-shell already exists.
 			jQuery('#update-profile-shell').html(html);
 		} else { 

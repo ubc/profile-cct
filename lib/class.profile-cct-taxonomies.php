@@ -1,7 +1,4 @@
 <?php 
-
-
-
 /**
  * Profile_CCT class.
  */
@@ -112,12 +109,10 @@ class Profile_CCT_Taxonomy {
 	 * @return void
 	 */
 	public static function id( $single_taxonomy ) {
-		return 'profile_cct_'.str_replace( '-','_',sanitize_title( $single_taxonomy ) );
+		return 'profile_cct_'.str_replace( '-', '_', sanitize_title( $single_taxonomy ) );
 	}
 }
-// Lets Play
-if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT_Taxonomy' ) ):
-	
+
+if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT_Taxonomy' ) ):	
 	add_action( 'init', array( 'Profile_CCT_Taxonomy', 'init' ) );
-	
 endif;

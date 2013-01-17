@@ -198,7 +198,7 @@ class Profile_CCT_Admin {
             ?><div id="page-shell"><?php
         endif;
 		foreach ( $contexts as $context ):
-			// this is being called for tabs
+			// This is being called for tabs
 			if ( function_exists('profile_cct_page_shell_'.$context) ):
 				call_user_func('profile_cct_page_shell_'.$context, $action, $user_data);
 			else:
@@ -644,15 +644,11 @@ class Profile_CCT_Admin {
 	static function set_profiles_need_refresh() {
 		if ( isset($_POST['needs_refresh']) ):
 			$key = 'Profile_CCT_needs_refresh';
-			//$value = $_POST['where'];
 			$expiration = 3*DAY_IN_SECONDS; //Expires in 3 days.
 			
 			if ( $_POST['needs_refresh'] ):
-				$value = get_transient('Profile_CCT_needs_refresh');
-				error_log("Initial: ".print_r($value, TRUE));
+				$value = get_transient( $key );
 				$value[$_POST['where']] = 1;
-				error_log("After: ".print_r($value, TRUE));
-				
 				set_transient( $key, $value, $expiration );
 			else:
 				delete_transient( $key );
@@ -840,6 +836,69 @@ class Profile_CCT_Admin {
 		);
 	}
 	
+	static function refresh_profiles() {
+		$page = ( isset( $_POST['page'] ) ? (int) $_POST['page'] : 0 );
+		
+		$args = array(
+			'post_type'		=> 'profile_cct',
+			'post_status'	=> 'any',
+			'posts_per_page' => 20,
+			'orderby'		=> 'title',
+			'paged'			=> $page,
+		);
+		
+		$the_query = new WP_Query( $args );
+		$previous_version = get_option( PROFILE_CCT_SETTING_VERSION, "1.1.8" );
+		$version_bump = version_compare( PROFILE_CCT_VERSION, $previous_version, '>' );
+		
+		while ( $the_query->have_posts() ):
+			$the_query->the_post();
+			global $post;
+			self::update_profile( $post, $version_bump );
+		endwhile;
+		
+		wp_reset_postdata();
+		
+		if ( $page == $the_query->max_num_pages ):
+			if ( $version_bump ):
+				update_option( PROFILE_CCT_SETTING_VERSION, PROFILE_CCT_VERSION );
+			endif;
+		endif;
+		
+		echo json_encode( array( 'max' => $the_query->max_num_pages, 'page' => $page ) );
+		die();
+	}
+
+	static function update_profile( $post, $version_bump = false ) {
+		$mypost = array();
+		$data = get_post_meta( $post->ID, 'profile_cct', true );
+		
+		ob_start();
+		do_action( 'profile_cct_page', 'display', $data, 'page' );
+		$mypost['post_content'] = ob_get_contents();
+		ob_end_clean();
+		
+		ob_start();
+		do_action( 'profile_cct_page', 'display', $data, 'list' );
+		$mypost['post_excerpt'] = ob_get_contents();
+		ob_end_clean();
+		
+		$mypost['ID'] = $post->ID;
+		
+		kses_remove_filters();
+		wp_update_post( $mypost );
+		kses_init_filters();
+		
+		if ( $version_bump ):
+			$last_name = ( isset($data["name"]['last']) ? $data["name"]['last'] : '0' );
+			update_post_meta( $post->ID, 'profile_cct_last_name', $last_name );
+			
+			$first_letter = strtolower( substr( $last_name, 0, 1 ) );
+			$first_letter = ( empty($first_letter) ? '0' : $first_letter );
+			wp_set_post_terms( $post->ID, $first_letter, 'profile_cct_letter', false );
+		endif;
+	}
+	
 	/**
 	 * add_field function.
 	 * function return by ajax to be displayed
@@ -849,13 +908,13 @@ class Profile_CCT_Admin {
 	static function update_fields() {
 		$context = $_POST['context'];
 		
-		if ( in_array($_POST['where'], array('form', 'page', 'list')) ):
+		if ( in_array( $_POST['where'], array('form', 'page', 'list') ) ):
 			$where = $_POST['where'];
 		else:
 			$where = 'form';
 		endif;
 		
-		if ( in_array($_POST['width'], array('full', 'half', 'one-third', 'two-third')) ):
+		if ( in_array( $_POST['width'], array('full', 'half', 'one-third', 'two-third') ) ):
 			$width = $_POST['width'];
 		else:
 			$width = 'full';
@@ -872,10 +931,9 @@ class Profile_CCT_Admin {
 					$options[$_POST['field_index']]['description'] = $_POST['description'];
 					$options[$_POST['field_index']]['show']        = $_POST['show'];
 					$options[$_POST['field_index']]['multiple']    = isset($_POST['multiple']) && $_POST['multiple'] ? $_POST['multiple'] : 0;
-					//TODO: Figure out what the url_prefix is.
 					$options[$_POST['field_index']]['url_prefix']  = $_POST['url_prefix'];
 					
-					// save the url prefix also in the settings array
+					// Save the url prefix also in the settings array.
 					if ( ! is_array( Profile_CCT::$settings['data-url'] ) ):
 						Profile_CCT::$settings['data-url'] = array();
 						Profile_CCT::$settings['data-url'] = array_merge( Profile_CCT::$settings['data-url'], array( $_POST['type'] => trim($_POST['url_prefix']) ) );
@@ -914,7 +972,6 @@ class Profile_CCT_Admin {
 		// Save the options
 		self::update_option($where, 'fields', $context, $options);
 		echo $print;
-		error_log("Die");
 		die();
 	}
 	
