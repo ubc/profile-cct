@@ -403,6 +403,7 @@ class Profile_CCT {
 				$fields = $this->get_option( 'form', 'fields', $context );
 				if ( $fields ):
 					foreach ( $fields as $field ):
+						$data = ( isset( $user_data[$field['type']] ) ? $user_data[$field['type']] : null );
                         $callback = 'profile_cct_'.$field['type'].'_shell';
 						if ( function_exists( $callback ) ):
                             $id = $field['type']."-".$i.'-'.rand(0, 999);
@@ -411,12 +412,12 @@ class Profile_CCT {
                             $priority = 'core';
                             $callback_args = array(
                                 'options' => $field,
-                                'data' => $user_data[$field['type']],
+                                'data' => $data,
                             );
                             
 							add_meta_box( $id, $title, $callback, $post_type, $context, $priority, $callback_args );
 						else:
-							do_action( "profile_cct_".$field['type']."_add_meta_box", $field, $context, $user_data[$field['type']], $i );
+							do_action( "profile_cct_".$field['type']."_add_meta_box", $field, $context, $data, $i );
 						endif;
 					endforeach;
 				endif;

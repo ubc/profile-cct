@@ -55,10 +55,10 @@ class Profile_CCT_Field {
 		$this->multiple      = ( isset( $this->options['multiple'] ) ? $this->options['multiple'] : false );
 		
 		$this->start_field();
-		if ( 'form' != $this->page ):
-			$this->display();
-		else:
+		if ( 'form' == $this->page || false == $this->page ):
 			$this->field();
+		else:
+			$this->display();
 		endif;
 		$this->end_field();
 	}
@@ -457,15 +457,15 @@ class Profile_CCT_Field {
 		
 	    $value       = ( isset($attr['value']) ? $attr['value'] : $this->data[$field_id] );
 	    $display     = ( 'edit' == $this->action ? $default_text : $attr['value'] );
-	  
+		
 	    $href_attr   = ( isset($attr['href']) ? 'href="'.$attr['href'].'" ' : '' );
 	    $id          = '';
 		
-		//if( ! empty( $display ) ):
+		if ( ! empty($display) ):
 	    	$this->display_separator( $attr );
 			echo " <".$tag." ".$class_attr.$href_attr.">".$display."</".$tag.">";
 			$this->display_separator( array( 'separator' => $attr['post_separator'], 'class' => $attr['class'] ) );
-		//endif;
+		endif;
 	}
 	
 	function display_separator( $attr ) {
@@ -580,7 +580,7 @@ class Profile_CCT_Field {
 			$name = ( isset($attr['name']) ? ' name="'.$attr['name'].'"'   : ' name="profile_cct['.$this->type.']['.$needed_attr['id'].']"' );
 		endif;
 		
-		$id    = ( isset( $needed_attr['id'] ) ? ' size="'. $needed_attr['id'].'" ' : ''                    );
+		$id    = ( isset( $needed_attr['id'] ) ? ' id="'.   $needed_attr['id'].'" ' : ''                    );
 		$size  = ( isset( $attr['size']      ) ? ' size="'. $attr['size'].'" '      : ''                    );
 		$row   = ( isset( $attr['row']       ) ? ' row="'.  $attr['row'].'" '       : ''                    );
 		$cols  = ( isset( $attr['cols']      ) ? ' cols="'. $attr['cols'].'" '      : ''                    );

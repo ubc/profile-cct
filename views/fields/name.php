@@ -1,7 +1,6 @@
 <?php
 /**
  *
- *
  */
 Class Profile_CCT_Name extends Profile_CCT_Field {
     /**
@@ -47,11 +46,32 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
     function display() {
 		$this->display_shell( array( 'class' => 'fn n', 'tag' => 'h2' ) );
 		
-		$this->display_text( array( 'field_id' => 'salutations', 'class' => 'honorific-prefix salutations', 'default_text' => 'Mr' ) );
-		$this->display_text( array( 'field_id' => 'first', 'class' => 'given-name', 'default_text' => 'Bruce' ) );
-		$this->display_text( array( 'field_id' => 'middle', 'class' => 'additional-name middle', 'default_text' => 'Anthony' ) );
-		$this->display_text( array( 'field_id' => 'last', 'class' => 'family-name', 'default_text' => 'Wayne' ) );
-		$this->display_text( array( 'field_id' => 'credentials', 'class' => 'honorific-suffix suffix credentials', 'separator' => ',', 'default_text' => 'BCom' ) );
+		$this->display_text( array(
+			'field_id'     => 'salutations',
+			'class'        => 'honorific-prefix salutations',
+			'default_text' => 'Mr',
+		) );
+		$this->display_text( array(
+			'field_id'     => 'first',
+			'class'        => 'given-name',
+			'default_text' => 'Bruce',
+		) );
+		$this->display_text( array(
+			'field_id'     => 'middle',
+			'class'        => 'additional-name middle',
+			'default_text' => 'Anthony'
+		) );
+		$this->display_text( array(
+			'field_id'     => 'last',
+			'class'        => 'family-name',
+			'default_text' => 'Wayne'
+		) );
+		$this->display_text( array(
+			'field_id'     => 'credentials',
+			'class'        => 'honorific-suffix suffix credentials',
+			'separator'    => ',',
+			'default_text' => 'BCom'
+		) );
 		
 		$this->display_end_shell( array( 'tag' => 'h2' ) );
     }
@@ -62,9 +82,9 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
 }
 
 function profile_cct_name_shell( $options, $data ) {
-
     Profile_CCT_Name::shell( $options, $data );
 }
+
 /*
 function profile_cct_name_display_shell( $options, $data ) {
 
