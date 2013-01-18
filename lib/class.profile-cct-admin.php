@@ -40,8 +40,6 @@ class Profile_CCT_Admin {
 		register_setting( 'Profile_CCT_form_fields', 'Profile_CCT_form_fields', array( __CLASS__, 'validate_form_fields' ) );
 		register_setting( 'Profile_CCT_page_fields', 'Profile_CCT_page_fields', array( __CLASS__, 'validate_page_fields' ) );
 		register_setting( 'Profile_CCT_list_page',   'Profile_CCT_list_page',   array( __CLASS__, 'validate_list_fields' ) );
-		
-		
 		register_setting( 'Profile_CCT_list_page',   'Profile_CCT_list_page',   array( __CLASS__, 'validate_list_fields' ) );
 		
 		// redirect users to their profile page and create one if it doesn't exist
@@ -60,6 +58,8 @@ class Profile_CCT_Admin {
         
 		add_action( 'profile_cct_before_page',     array( __CLASS__, 'recount_field' ), 10, 1 );
 		add_action( 'profile_cct_before_page',     array( __CLASS__, 'display_fields_check' ), 11, 1 );
+		
+		add_action( 'wp_insert_post_data',         array( __CLASS__, 'save_post_data'), 10, 2 );
 	}
 
 	/**
@@ -154,12 +154,11 @@ class Profile_CCT_Admin {
 	public static function form_field_shell() {
 		// the default contexts normal, side, and tabs
 		$contexts = Profile_CCT_Admin::default_shells();
-
 		foreach ($contexts as $context):
 			if ( function_exists( 'profile_cct_form_shell_'.$context ) ):
 				call_user_func( 'profile_cct_form_shell_'.$context );
 			else:
-?>
+				?>
 		 		<div id="<?php echo $context; ?>-shell">
 		 			<span class="description-shell"><?php echo $context; ?></span>
 		 			<ul class="form-builder sort" id="<?php echo $context; ?>">
@@ -175,7 +174,8 @@ class Profile_CCT_Admin {
 							endif;
 						endforeach;
 					endif;
-					?></ul>
+					?>
+					</ul>
 		 		</div>
 		 		<?php
 			endif;
@@ -836,6 +836,81 @@ class Profile_CCT_Admin {
 		);
 	}
 	
+	/**
+	 * save_post_data function.
+	 *
+	 * @access public
+	 * @param mixed $data
+	 * @param mixed $postarr
+	 * @return void
+	 */
+	function save_post_data( $data, $postarr ) {
+		global $post, $wp_filter;
+		
+		if ( ! isset( $_POST["profile_cct"] )):
+			return $data;
+		endif;
+		
+		kses_remove_filters();
+		
+		$profile_cct_data_previous =  get_post_meta($postarr['ID'], 'profile_cct', true);
+		
+		if ( ! is_array($profile_cct_data_previous)):
+			$profile_cct_data_previous = array();
+		endif;
+		
+		$profile_cct_data = ( is_array($_POST["profile_cct"]) ? array_merge( $profile_cct_data_previous, $_POST["profile_cct"] ) : $profile_cct_data_previous );
+		
+		// save the name of the person as the title
+		if ( is_array( $profile_cct_data["name"]) || !empty($profile_cct_data["name"]) ):
+			$data['post_title'] = $profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last'];
+			$data['post_name'] = sanitize_title($profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last']);
+		else:
+			$userdata = get_userdata($data['post_author']);
+			$data['post_title'] = $userdata->user_nicename;
+			$data['post_name'] = sanitize_title($userdata->user_nicename);
+		endif;
+		
+		if ( is_array( $profile_cct_data["name"]) || !empty($profile_cct_data["name"]) ):
+			$data['post_title'] = $profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last'];
+		else:
+			$userdata = get_userdata($data['post_author']);
+			$data['post_title'] = $userdata->user_nicename;
+		endif;
+		
+		//Ensure there is no slug conflict
+		$data['post_name'] = wp_unique_post_slug( $data['post_name'], $postarr['ID'], 'publish', 'profile_cct', 0 );
+		
+		ob_start();
+		do_action( 'profile_cct_page', 'display', $profile_cct_data, 'page' );
+		$content = ob_get_contents();
+		ob_end_clean();
+		
+		ob_start();
+		do_action( 'profile_cct_page', 'display', $profile_cct_data, 'list' );
+		$excerpt = ob_get_contents();
+		ob_end_clean();
+		
+		$data['post_excerpt'] = $excerpt;
+		$data['post_content'] = $content;
+		
+		if ( is_array($_POST["profile_cct"]) ):
+			error_log("Updating");
+			update_post_meta( $postarr['ID'], 'profile_cct', $profile_cct_data );
+			update_post_meta( $postarr['ID'], 'profile_cct_last_name', $profile_cct_data["name"]['last'] );
+		endif;
+		
+		$first_letter = strtolower(substr($profile_cct_data["name"]['last'], 0, 1));
+		wp_set_post_terms($postarr['ID'], $first_letter, 'profile_cct_letter', false);
+		
+		kses_init_filters();
+		
+		error_log("==== SAVE CHECK ====");
+		error_log(print_r(get_post_meta( $postarr['ID'], 'profile_cct' ), TRUE));
+		
+		return $data;	
+	}
+	
 	static function refresh_profiles() {
 		$page = ( isset( $_POST['page'] ) ? (int) $_POST['page'] : 0 );
 		
@@ -870,6 +945,8 @@ class Profile_CCT_Admin {
 	}
 
 	static function update_profile( $post, $version_bump = false ) {
+		error_log("Updating Profile ".$post['ID']." (Version Bump? $version_bump)");
+		error_log(print_r($post, TRUE));
 		$mypost = array();
 		$data = get_post_meta( $post->ID, 'profile_cct', true );
 		

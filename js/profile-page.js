@@ -22,6 +22,11 @@ var Profile_CCT_PAGE = {
 			}
 		}
 		
+		//Disables metabox sorting on the profile editing page.
+		/*$('.meta-box-sortables').sortable({
+			disabled: true
+		});*/
+		
 		jQuery('.wp-editor-area').closest('.meta-box-sortables').removeClass('meta-box-sortables');
 	},
     
@@ -39,6 +44,8 @@ var Profile_CCT_PAGE = {
 		var field = link.prev();
         //var days_case = field.children('div').hasClass('days');
 		var count = field.data('count');
+		if (count == undefined) count = 0;
+		var new_count = count + 1;
 		
 		//if (days_case) field.children('hr').remove();
 		var copy = field.clone();
@@ -53,11 +60,10 @@ var Profile_CCT_PAGE = {
 		
 		//if (days_case) field.append('<hr />');
 		
-		field.data('count', count+1);
+		copy.data('count', new_count);
+		//copy.attr('data-count', new_count);
 		
 		copy.find('input,select,textarea,label').each(function(index, value) {
-			var new_count = jQuery(this).parent().parent().data('count');
-			
 			var name = jQuery(this).attr('name');
 			var id = jQuery(this).attr('id');
 			var labelFor = jQuery(this).attr('for');

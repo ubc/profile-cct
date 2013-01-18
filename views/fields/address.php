@@ -1,21 +1,16 @@
 <?php 
-
-
 Class Profile_CCT_Address extends Profile_CCT_Field {
-		
-		var $default_options = array(
-			'type' => 'address',
-			'label'=> 'address',
-			'description' => '',
-			
-			'show'=> array( 'building-name','room-number','street-1','street-2','city','postal','province','country' ),
-			'show_fields'=> array( 'building-name','room-number','street-1','street-2','city','postal','province','country' ),
-			
-			'width' => 'full',
-			'before' => '',
-			'empty' => '',
-			'after' =>'',
-		);
+	var $default_options = array(
+		'type'        => 'address',
+		'label'       => 'address',
+		'description' => '',
+		'show'        => array( 'building-name', 'room-number', 'street-1', 'street-2', 'city', 'postal', 'province', 'country' ),
+		'show_fields' => array( 'building-name', 'room-number', 'street-1', 'street-2', 'city', 'postal', 'province', 'country' ),
+		'width'       => 'full',
+		'before'      => '',
+		'empty'       => '',
+		'after'       => '',
+	);
 	
 	/**
 	 * field function.
@@ -52,17 +47,17 @@ Class Profile_CCT_Address extends Profile_CCT_Field {
 		$this->input_text( array(
 			'field_id' => 'province',
 			'label'    => 'Province / State /  Region',
-			'size'     => 35 ) );
-		$this->input_text( array(
-			'field_id' => 'postal',
-			'label'    => 'Postal / Zip Code',
 			'size'     => 35,
 		) );
 		$this->input_select( array(
 			'field_id'   => 'country',
 			'label'      => 'Country',
-			'size'       => 35,
 			'all_fields' => $this->list_of_countries(),
+		) );
+		$this->input_text( array(
+			'field_id' => 'postal',
+			'label'    => 'Postal / Zip Code',
+			'size'     => 35,
 		) );
 	}
 	
@@ -73,24 +68,55 @@ Class Profile_CCT_Address extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		
 		$this->display_shell( array('class' => 'address adr' ) );
 		
-		$this->display_text( array( 'field_id' => 'building-name', 'class' => 'building-name','default_text' => 'Wayne Manor') );
-		$this->display_text( array( 'field_id' => 'room-number', 'class' => 'room-number','default_text' => '101'  ) );
-		
-		$this->display_text( array( 'field_id' => 'street-1', 'class' => 'street-address street-1','default_text' => '1007 Mountain Drive','tag' => 'div'  ) );
-		$this->display_text( array( 'field_id' => 'street-2','class' => 'extended-address street-2','default_text' => '' ,'tag' => 'div') );
-		
-		$this->display_text( array( 'field_id' => 'city', 'class' => 'locality city', 'default_text' => 'Gotham', 'post_separator'=> ',' ) );
-		$this->display_text( array( 'field_id' => 'province', 'class' => 'region province', 'default_text' => 'Connecticut' ) );
-		
-		$this->display_text( array( 'field_id' => 'postal', 'class' => 'postal', 'default_text' => 'V1Z 2X0' ) );
-		
-		$this->display_text( array( 'field_id' => 'country', 'class' => 'country-name country', 'default_text' => 'United States', 'all_fields'=>$this->list_of_countries(),'tag' => 'div') );
+		$this->display_text( array(
+			'field_id'     => 'building-name',
+			'class'        => 'building-name',
+			'default_text' => 'Wayne Manor',
+		) );
+		$this->display_text( array(
+			'field_id'     => 'room-number',
+			'class'        => 'room-number',
+			'default_text' => '101',
+		) );
+		$this->display_text( array(
+			'field_id'     => 'street-1',
+			'class'        => 'street-address street-1',
+			'default_text' => '1007 Mountain Drive',
+			'tag'          => 'div',
+		) );
+		$this->display_text( array(
+			'field_id'     => 'street-2',
+			'class'        => 'extended-address street-2',
+			'default_text' => '',
+			'tag'          => 'div',
+		) );
+		$this->display_text( array(
+			'field_id'       => 'city',
+			'class'          => 'locality city',
+			'default_text'   => 'Gotham',
+			'post_separator' => ',',
+		) );
+		$this->display_text( array(
+			'field_id'     => 'province',
+			'class'        => 'region province',
+			'default_text' => 'Connecticut',
+		) );
+		$this->display_text( array(
+			'field_id'     => 'postal',
+			'class'        => 'postal',
+			'default_text' => 'V1Z 2X0',
+		) );
+		$this->display_text( array(
+			'field_id'     => 'country',
+			'class'        => 'country-name country',
+			'default_text' => 'United States',
+			'all_fields'   => $this->list_of_countries(),
+			'tag'          => 'div',
+		) );
 		
 		$this->display_end_shell();
-
 	}
 	
 	/**
@@ -105,9 +131,7 @@ Class Profile_CCT_Address extends Profile_CCT_Field {
 	public static function shell( $options, $data ) {
 		new Profile_CCT_Address( $options, $data ); 
 	}
-	
 }
-
 
 /**
  * profile_cct_address_shell function.
@@ -118,11 +142,8 @@ Class Profile_CCT_Address extends Profile_CCT_Field {
  * @return void
  */
 function profile_cct_address_shell( $options, $data = null ) {
-
 	Profile_CCT_Address::shell( $options, $data );
 }
-
-
 
 /**
  * profile_cct_address_display_shell function.
@@ -134,8 +155,6 @@ function profile_cct_address_shell( $options, $data = null ) {
  * @return void
  */
 function profile_cct_address_display_shell( $options, $data=null ) {
-			
 	Profile_CCT_Address::shell( $options, $data );
-	
 }
 

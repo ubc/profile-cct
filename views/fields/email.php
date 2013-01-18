@@ -9,17 +9,15 @@ Class Profile_CCT_Email extends Profile_CCT_Field {
 	 * @access public
 	 */
 	var $default_options = array(
-		'type' => 'email',
-		'label' => 'email',
-		'description' => '',
-					
-		'multiple'=>true,
-		'show_multiple'=>true,
-	
-		'width' => 'full',
-		'before' => '',
-		'empty' => '',
-		'after' =>'',
+		'type'          => 'email',
+		'label'         => 'email',
+		'description'   => '',
+		'multiple'      => true,
+		'show_multiple' => true,
+		'width'         => 'full',
+		'before'        => '',
+		'empty'         => '',
+		'after'         => '',
 	);
 	
 	/**
@@ -29,9 +27,11 @@ Class Profile_CCT_Email extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function field() {
-		
-		$this->input_text( array( 'field_id' => 'email', 'label' => '', 'size'=>35 ) );
-
+		$this->input_text( array(
+			'field_id' => 'email',
+			'label'    => '',
+			'size'     => 35,
+		) );
 	}
 	
 	/**
@@ -41,12 +41,14 @@ Class Profile_CCT_Email extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		
 		$this->display_shell( array( 'class' => 'email') );
-		$this->display_email( array( 'field_id' => 'email', 'default_text' => 'bruce.wayne@wayneenterprises.com' ) );
-	
+		
+		$this->display_email( array(
+			'field_id'     => 'email',
+			'default_text' => 'bruce.wayne@wayneenterprises.com',
+		) );
+		
 		$this->display_end_shell();
-
 	}
 	
 	/**
@@ -63,7 +65,6 @@ Class Profile_CCT_Email extends Profile_CCT_Field {
 	}
 }
 
-
 /**
  * profile_cct_email_shell function.
  * 
@@ -73,13 +74,8 @@ Class Profile_CCT_Email extends Profile_CCT_Field {
  * @return void
  */
 function profile_cct_email_shell( $options, $data ) {
-	
 	Profile_CCT_Email::shell( $options, $data );
-	
 }
-
-
-
 
 /*
 function profile_cct_email_display_shell( $options, $data ) {

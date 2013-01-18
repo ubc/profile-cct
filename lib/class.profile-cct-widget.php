@@ -1,26 +1,19 @@
 <?php 
-
-
-
-
-
 /**
  * Profile_CCT_Widget class.
  * 
  * @extends WP_Widget
  */
 class Profile_CCT_Widget extends WP_Widget {
-		
 	/**
 	 * profile_cct_widget function.
 	 * 
 	 * @access public
 	 * @return void
 	 */
-	function profile_cct_widget(){
+	function profile_cct_widget() {
 		parent::__construct( false, 'Profile Navigation' );
 	}
-	
 	
 	/**
 	 * widget function.
@@ -30,10 +23,9 @@ class Profile_CCT_Widget extends WP_Widget {
 	 * @param mixed $instance
 	 * @return void
 	 */
-	function widget( $args, $instance ){
-		echo do_action( 'profile_cct_display_archive_controls', array('mode' => 'widget'));
+	function widget( $args, $instance ) {
+		echo do_action( 'profile_cct_display_archive_controls', array('mode' => 'widget') );
 	}
-	
 	
 	/**
 	 * update function.

@@ -10,17 +10,17 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
      * @access public
      */
     var $default_options = array(
-		'type' => 'name',
-		'label' => 'name',
-		'description' => '',
-		'show' => array( 'salutations', 'middle', 'credentials' ),
-		'show_fields' => array( 'salutations', 'middle', 'credentials' ),
-		'width' => 'two-third',
-		'link_to' => true,
+		'type'         => 'name',
+		'label'        => 'name',
+		'description'  => '',
+		'show'         => array( 'salutations', 'middle', 'credentials' ),
+		'show_fields'  => array( 'salutations', 'middle', 'credentials' ),
+		'width'        => 'two-third',
+		'link_to'      => true,
 		'show_link_to' => true,
-		'before' => '',
-		'empty' => '',
-		'after' => '',
+		'before'       => '',
+		'empty'        => '',
+		'after'        => '',
     );
 	
     /**
@@ -30,11 +30,31 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
      * @return void
      */
     function field() {
-		$this->input_text( array( 'field_id' => 'salutations', 'label' => 'Salutations', 'size' => 2 ) );
-		$this->input_text( array( 'field_id' => 'first', 'label' => 'First', 'size' => 13 ) );
-		$this->input_text( array( 'field_id' => 'middle', 'label' => 'Middle', 'size' => 3 ) );
-		$this->input_text( array( 'field_id' => 'last', 'label' => 'Last', 'size' => 17 ) );
-		$this->input_text( array( 'field_id' => 'credentials', 'label' => 'Credentials', 'size' => 7 ) );
+		$this->input_text( array(
+			'field_id' => 'salutations',
+			'label'    => 'Salutations',
+			'size'     => 2,
+		) );
+		$this->input_text( array(
+			'field_id' => 'first',
+			'label'    => 'First',
+			'size'     => 13,
+		) );
+		$this->input_text( array(
+			'field_id' => 'middle',
+			'label'    => 'Middle',
+			'size'     => 3,
+		) );
+		$this->input_text( array(
+			'field_id' => 'last',
+			'label'    => 'Last',
+			'size'     => 17,
+		) );
+		$this->input_text( array(
+			'field_id' => 'credentials',
+			'label'    => 'Credentials',
+			'size'     => 7,
+		) );
     }
 	
     /**
@@ -59,18 +79,18 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
 		$this->display_text( array(
 			'field_id'     => 'middle',
 			'class'        => 'additional-name middle',
-			'default_text' => 'Anthony'
+			'default_text' => 'Anthony',
 		) );
 		$this->display_text( array(
 			'field_id'     => 'last',
 			'class'        => 'family-name',
-			'default_text' => 'Wayne'
+			'default_text' => 'Wayne',
 		) );
 		$this->display_text( array(
 			'field_id'     => 'credentials',
 			'class'        => 'honorific-suffix suffix credentials',
 			'separator'    => ',',
-			'default_text' => 'BCom'
+			'default_text' => 'BCom',
 		) );
 		
 		$this->display_end_shell( array( 'tag' => 'h2' ) );

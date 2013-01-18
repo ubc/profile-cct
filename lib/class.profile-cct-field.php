@@ -23,13 +23,14 @@ class Profile_CCT_Field {
 	var $show_multiple; // does the field have the option to be replicated
 	var $multiple;      // if the field should be replicated
 
-	// data
-	var $data;
-
 	// action
 	var $action;        // are we currently creating the form or displaying it
-	var $options; 	// save all the options again
-	var $counter = 0;
+	var $options;       // save all the options again
+	var $field_counter    = 0;
+	var $fieldset_counter = 0;
+	
+	// data
+	var $data;
 
 	function __construct ( $options , $data ) {
 		$this->options       = ( is_array( $options ) ? array_merge( $this->default_options, $options ): $this->default_options );
@@ -53,10 +54,32 @@ class Profile_CCT_Field {
 		$this->url_prefix    = ( isset( $this->options['url_prefix'] ) ? $this->options['url_prefix'] : false );
 		$this->show_multiple = ( isset( $this->options['show_multiple'] ) ? $this->options['show_multiple'] : false );
 		$this->multiple      = ( isset( $this->options['multiple'] ) ? $this->options['multiple'] : false );
+		$this->data          = $data['args']['data'];
 		
 		$this->start_field();
 		if ( 'form' == $this->page || false == $this->page ):
-			$this->field();
+			if ( $this->multiple && isset( $data['args']['data'] ) ):
+				$first = true;
+				foreach ( $data['args']['data'] as $this->data ):
+					?>
+					<div class="field" data-count="<?php echo $this->fieldset_counter; ?>">
+					<?php
+					$this->field();
+					if ($first == false):
+						?>
+						<a href="#" class="remove-fields button">Remove</a>
+						<?php
+					else:
+						$first = false;
+					endif;
+					?>
+					</div>
+					<?php
+					$this->fieldset_counter++;
+				endforeach;
+			else:
+				$this->field();
+			endif;
 		else:
 			$this->display();
 		endif;
@@ -209,25 +232,19 @@ class Profile_CCT_Field {
 		<div class="field-shell field-shell-<?php echo $this->type; ?>">
 		<?php
 		if ( isset( $this->description ) ):
-			printf('<pre class="description">%s</pre>' ,esc_html( $description )  );
+			printf( '<pre class="description">%s</pre>', esc_html($description) );
 		endif;
-		?>
-		<div class="field">
-		<?php
 	}
 
 	function end_field() {
 		$shell_tag  = ( $this->action == 'edit' ? 'li' : 'div');
-		?>
-		</div>
-		<?php
         
 		if ( $this->show_multiple ):
 			$style_multiple = ( $this->multiple ? 'style="display: inline;"' : 'style="display: none;"' );
             
 			if ( 'edit' == $this->action && 'form' == Profile_CCT_Admin::$page ):
 				echo '<span class="add-multiple" '. $style_multiple .'><a href="#add" class="button disabled" disabled="disabled">Add another</a> <em>disabled in preview</em></span>';
-			elseif ( $this->multiple && !in_array( Profile_CCT_Admin::$page, array('page', 'list') ) ):
+			elseif ( $this->multiple && ! in_array( Profile_CCT_Admin::$page, array('page', 'list') ) ):
 				echo '<a href="#add" class="button add-multiple">Add another</a>';
 			endif;
 		endif;
@@ -457,16 +474,13 @@ class Profile_CCT_Field {
 	 */
 	function display_text( $attr ) {
 		$backup_default = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et tempor lorem. Nam eget sapien sit amet risus porttitor pellentesque. Sed vestibulum tellus et quam faucibus vel tristique metus sagittis. Integer neque justo, suscipit sit amet lobortis eu, aliquet imperdiet sapien. Morbi id tellus quis nisl tempor semper.</p><p>Nunc sed diam sit amet augue venenatis scelerisque quis eu ante. Cras mattis auctor turpis, non congue nibh auctor at. Nulla libero ante, dapibus a tristique eu, semper ac odio. Nulla ultrices dui et velit eleifend congue. Mauris vel mauris eu justo lobortis semper. Duis lacinia faucibus nibh, ac sodales leo condimentum id. Suspendisse commodo mattis dui, eu rutrum sapien vehicula a. Proin iaculis sollicitudin lacus vitae commodo.</p>';
-		$default_text = ( 'lorem ipsum' == $attr['default_text'] ? $backup_default : $attr['default_text'] );
-		
-	    $class_attr  = ( isset($attr['class']) ? 'class="'.$attr['class'].'" ' : '' );
-	    $tag         = ( isset($attr['tag']) ? $attr['tag'] : 'span' );
-		
-	    $value       = ( isset($attr['value']) ? $attr['value'] : $this->data[$field_id] );
-	    $display     = ( 'edit' == $this->action ? $default_text : $attr['value'] );
-		
-	    $href_attr   = ( isset($attr['href']) ? 'href="'.$attr['href'].'" ' : '' );
-	    $id          = '';
+		$default_text   = ( 'lorem ipsum' == $attr['default_text'] ? $backup_default : $attr['default_text'] );
+	    $class_attr     = ( isset($attr['class']) ? 'class="'.$attr['class'].'" ' : '' );
+	    $tag            = ( isset($attr['tag']) ? $attr['tag'] : 'span' );
+	    $value          = ( isset($attr['value']) ? $attr['value'] : $this->data[$field_id] );
+	    $display        = ( 'edit' == $this->action ? $default_text : $attr['value'] );
+	    $href_attr      = ( isset($attr['href']) ? 'href="'.$attr['href'].'" ' : '' );
+	    $id             = '';
 		
 		if ( ! empty($display) ):
 	    	$this->display_separator( $attr );
@@ -561,30 +575,27 @@ class Profile_CCT_Field {
 	 * @return void
 	 */
 	function field_attr( $attr, $field_type ) {
-		$count = 0; //???
-		
 		echo( isset( $attr['separator'] ) ? '<span class="separator">'.esc_html( $attr['separator'] ).'</span>' : '' );
         
-		$show = ( isset( $attr['field_id'] ) && ! in_array( $attr['field_id'], $this->show ) && in_array( $attr['field_id'], $this->show_fields )  ? ' style="display:none;"' : '' );  // should this field be displayed
+		$show = ( isset( $attr['field_id'] ) && ! in_array( $attr['field_id'], $this->show ) && in_array( $attr['field_id'], $this->show_fields )  ? ' style="display:none;"' : '' ); // should this field be displayed
         
 		// Things to be returned
-		$needed_attr['id']               = ( isset( $attr['field_id'] ) && $attr['field_id'] ? $attr['field_id'] : 'profile-cct-'.$this->type.'-'.$field_type.'-'.$this->counter ); // todo: show warning
+		$needed_attr['id']               = ( isset( $attr['field_id'] ) && $attr['field_id'] ? $attr['field_id'] : 'profile-cct-'.$this->type.'-'.$field_type.'-'.$this->field_counter ); // todo: show warning
 		$needed_attr['before_label']     = ( isset( $attr['before_label'] ) && $attr['before_label'] ? true : false );
 		$needed_attr['field_shell_attr'] = ( isset( $attr['field_id'] )        ? ' class="'.$attr['field_id'].' '.$field_type.'-shell"' : '' ) . $show;
-		$needed_attr['value']            = ( isset( $attr['value'] )           ? $attr['value']           : '' );
 		$needed_attr['label']            = ( isset( $attr['label'] )		   ? $attr['label']           : '' );
 		$needed_attr['sub_label']        = ( isset( $attr['sub_label'] )	   ? $attr['sub_label']       : '' );
 		$needed_attr['name']             = ( isset( $attr['name'] )            ? $attr['name']            : '' );
 		$needed_attr['all_fields']       = ( isset( $attr['all_fields'] )	   ? $attr['all_fields']      : '' );
-		$needed_attr['selected_fields']  = ( isset( $attr['selected_fields'] ) ? $attr['selected_fields'] : '' );;
+		$needed_attr['selected_fields']  = ( isset( $attr['selected_fields'] ) ? $attr['selected_fields'] : '' );
 		$needed_attr['sub_label']        = ( isset( $attr['sub_label'] )       ? $attr['sub_label']       : '' );
-        
-		if ( $field_type == 'multiple' ):
-			$name = ( isset($attr['name']) ? ' name="'.$attr['name'].'[]"' : ' name="profile_cct['.$this->type.']['.$count.']['.$needed_attr['id'].'][]"' );
-		elseif ( $this->multiple ):
-			$name = ( isset($attr['name']) ? ' name="'.$attr['name'].'"'   : ' name="profile_cct['.$this->type.']['.$count.']['.$needed_attr['id'].']"' );
+		
+		if ( isset( $attr['value'] ) && $attr['value'] != '' ):
+			$needed_attr['value'] = $attr['value'];
+		elseif ( isset( $this->data[$needed_attr['id']] ) ):
+			$needed_attr['value'] = $this->data[$needed_attr['id']];
 		else:
-			$name = ( isset($attr['name']) ? ' name="'.$attr['name'].'"'   : ' name="profile_cct['.$this->type.']['.$needed_attr['id'].']"' );
+			$needed_attr['value'] = '';
 		endif;
 		
 		$id    = ( isset( $needed_attr['id'] ) ? ' id="'.   $needed_attr['id'].'" ' : ''                    );
@@ -593,9 +604,17 @@ class Profile_CCT_Field {
 		$cols  = ( isset( $attr['cols']      ) ? ' cols="'. $attr['cols'].'" '      : ''                    );
 		$class = ( isset( $attr['class']     ) ? ' class="'.$attr['class'].'" '     : ' class="field text"' );
         
+		if ( $field_type == 'multiple' ):
+			$name = ( isset($attr['name']) ? ' name="'.$attr['name'].'[]"' : ' name="profile_cct['.$this->type.']['.$this->fieldset_counter.']['.$needed_attr['id'].'][]"' );
+		elseif ( $this->multiple ):
+			$name = ( isset($attr['name']) ? ' name="'.$attr['name'].'"'   : ' name="profile_cct['.$this->type.']['.$this->fieldset_counter.']['.$needed_attr['id'].']"' );
+		else:
+			$name = ( isset($attr['name']) ? ' name="'.$attr['name'].'"'   : ' name="profile_cct['.$this->type.']['.$needed_attr['id'].']"' );
+		endif;
+        
 		$needed_attr['field_attr'] = $id.$name.$class.$row.$cols.$size.' ';
         
-		$this->counter++;
+		$this->field_counter++;
 		
     	return $needed_attr;
 	}
@@ -620,7 +639,7 @@ class Profile_CCT_Field {
 			"September",
 			"October",
 			"November",
-			"December"
+			"December",
 		);
 	}
 
@@ -651,7 +670,7 @@ class Profile_CCT_Field {
 	 * @return void
 	 */
 	function list_of_hours() {
-		return range(1, 12);
+		return range( 1, 12 );
 	}
 
 	/**
@@ -660,7 +679,7 @@ class Profile_CCT_Field {
 	 * @access public
 	 * @return void
 	 */
-	function list_of_minutes(){
+	function list_of_minutes() {
 		return array_merge( array('00', '05'), range(10, 55, 5) );
 	}
 
@@ -680,7 +699,7 @@ class Profile_CCT_Field {
 	 * @access public
 	 * @return void
 	 */
-	function phone_options(){
+	function phone_options() {
 		return array(
 			"phone",
 			"work phone",
@@ -692,7 +711,7 @@ class Profile_CCT_Field {
 		);
 	}
     
-	function project_status(){
+	function project_status() {
 		return array( 'Planning', 'Current', 'Completed' );
 	}
 

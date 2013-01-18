@@ -3,7 +3,6 @@
  * Profile_CCT class.
  */
 class Profile_CCT_Taxonomy {
-	
 	/**
 	 * init function.
 	 * 
@@ -12,20 +11,18 @@ class Profile_CCT_Taxonomy {
 	 * @return void
 	 */
 	public static function init() {
-		
 		$field = Profile_CCT::get_object();
 		
 		// remove some taxonomies
 		$field->taxonomies = Profile_CCT_Taxonomy::remove( $field->taxonomies );
 		
-		if( is_array( $field->taxonomies ) ):
-			foreach( $field->taxonomies as $taxonomy ):
+		if ( is_array( $field->taxonomies ) ):
+			foreach ( $field->taxonomies as $taxonomy ):
 				Profile_CCT_Taxonomy::register( $taxonomy );
 			endforeach;
 		endif;
 		
 	}
-	
 	
 	/**
 	 * register function.
@@ -37,26 +34,26 @@ class Profile_CCT_Taxonomy {
 	 */
 	public static function register( $taxonomy ) {
 		$labels = array(
-			'name' => $taxonomy['plural'] ,
-			'singular_name' => $taxonomy['single'],
-			'search_items' =>  __( 'Search '.$taxonomy['plural'] ),
-			'all_items' => __( 'All '.$taxonomy['plural'] ),
-			'parent_item' => __( 'Parent '.$taxonomy['single'] ),
+			'name'              => $taxonomy['plural'] ,
+			'singular_name'     => $taxonomy['single'],
+			'search_items'      => __( 'Search '.$taxonomy['plural'] ),
+			'all_items'         => __( 'All '.$taxonomy['plural'] ),
+			'parent_item'       => __( 'Parent '.$taxonomy['single'] ),
 			'parent_item_colon' => __( 'Parent '.$taxonomy['single'].":" ),
-			'edit_item' => __( 'Edit '.$taxonomy['single'] ), 
-			'update_item' => __( 'Update '.$taxonomy['single'] ),
-			'add_new_item' => __( 'Add New '.$taxonomy['single'] ),
-			'new_item_name' => __( 'New '.$taxonomy['single'].' Name' ),
-			'menu_name' => __( $taxonomy['plural'] ),
+			'edit_item'         => __( 'Edit '.$taxonomy['single'] ), 
+			'update_item'       => __( 'Update '.$taxonomy['single'] ),
+			'add_new_item'      => __( 'Add New '.$taxonomy['single'] ),
+			'new_item_name'     => __( 'New '.$taxonomy['single'].' Name' ),
+			'menu_name'         => __( $taxonomy['plural'] ),
 		);
 		
 		// finally register the taxonomy
 		register_taxonomy(  Profile_CCT_Taxonomy::id( $taxonomy['single'] ) , array( 'profile_cct' ), array(
-			'hierarchical' => $taxonomy['hierarchical']? true: false,
-			'labels' => $labels,
-			'show_ui' => true,
-			'query_var' => true,
-			'rewrite' => array( 'slug' => sanitize_title( $taxonomy['single'] ) ),
+			'hierarchical' => $taxonomy['hierarchical'] ? true : false,
+			'labels'       => $labels,
+			'show_ui'      => true,
+			'query_var'    => true,
+			'rewrite'      => array( 'slug' => sanitize_title( $taxonomy['single'] ) ),
 		));
 	}
 	
@@ -69,16 +66,16 @@ class Profile_CCT_Taxonomy {
 	 * @return void
 	 */
 	public static function remove($taxonomies) {
-		// remove taxonomies here
-		if( is_admin() && wp_verify_nonce( $_GET['_wpnonce'], 'profile_cct_remove_taxonomy'.$_GET['remove'] ) ): 
-		
-			if( isset( $taxonomies[$_GET['remove']] ) )
+		// Try to remove taxonomies.
+		if ( is_admin() && wp_verify_nonce( $_GET['_wpnonce'], 'profile_cct_remove_taxonomy'.$_GET['remove'] ) ): 
+			if ( isset( $taxonomies[$_GET['remove']] ) ):
 				unset( $taxonomies[$_GET['remove']] );
+			endif;
 			
 			update_option( 'Profile_CCT_taxonomy', $field->taxonomies );
 			flush_rewrite_rules();
-			
-		endif; // end of trying to remove taxonomies 
+		endif;
+		
 		return $taxonomies;
 	}
 	

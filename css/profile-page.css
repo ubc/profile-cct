@@ -185,7 +185,7 @@
     width: 135px;
 }
 
-/*for checkboxes to display in one line*/
+/* For checkboxes to display in one line */
 .days label {
 	display: inline;
 	margin-right: 10px;
@@ -196,7 +196,7 @@
 	margin-bottom: 0px;
 }
 
-/* office hours horizontal rules */
+/* Office hours horizontal rules */
 .officehours div.wrap-fields hr {
 	clear: left;
 	display: block;
@@ -204,12 +204,12 @@
 
 }
 
-/* office hours first horizontal rule */
+/* Office hours first horizontal rule */
 .officehours div.wrap-fields:first-child hr {
 	margin-top: 10px;
 }
 
-/*separators on profile page view have a small margin*/
+/* Separators on profile page view have a small margin. */
 .separator {
 	margin-left: 5px;
 	margin-right: 5px;

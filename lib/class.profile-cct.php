@@ -1,6 +1,4 @@
 <?php 
-
-
 /**
  * Profile_CCT class.
  */
@@ -388,12 +386,18 @@ class Profile_CCT {
 		global $post, $post_new_file, $pagenow, $current_user, $post_type_object;
 		$post_new_file = '#';
 		
+		//error_log("Edit");
+		//error_log(print_r($post, TRUE));
+		
 		if ( (int) $post->post_author != $current_user->ID && ! current_user_can( 'edit_others_profile_cct' ) ):
 			wp_die( 'You are not allow to edit this profile.' );
 		endif;
 		
 		$this->form_fields = get_option( 'Profile_CCT_form_fields' );
 		$user_data = get_post_meta( $post->ID, 'profile_cct', true );
+		
+		//error_log("==== LOADING ====");
+		//error_log(print_r($user_data, TRUE));
 		
 		remove_meta_box( 'submitdiv', 'profile_cct', 'side' );
         
@@ -404,6 +408,10 @@ class Profile_CCT {
 				if ( $fields ):
 					foreach ( $fields as $field ):
 						$data = ( isset( $user_data[$field['type']] ) ? $user_data[$field['type']] : null );
+						
+						//error_log("==== ".$field['type']." ====");
+						//error_log(print_r($data, TRUE));
+						
                         $callback = 'profile_cct_'.$field['type'].'_shell';
 						if ( function_exists( $callback ) ):
                             $id = $field['type']."-".$i.'-'.rand(0, 999);
@@ -423,12 +431,11 @@ class Profile_CCT {
 				endif;
 			endforeach;
 		endif;
-		remove_meta_box( 'authordiv', 'post', 'normal' );
 		
+		remove_meta_box( 'authordiv', 'post', 'normal' );
 		if ( is_super_admin() || current_user_can( $post_type_object->cap->edit_others_posts ) || current_user_can( 'administrator' ) ):
 			add_meta_box( 'authordiv', __('Author'), array( $this, 'post_author_meta_box' ), null, 'side', 'low' );
         endif;
-		
 		add_meta_box( 'submitdiv', __('Publish'), 'post_submit_meta_box', null, 'side', 'high' );
 	}
     
@@ -487,6 +494,8 @@ class Profile_CCT {
         <?php
         wp_dropdown_users( $parameters );
 	}
+	
+	
 }
 
 if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT' ) ):
