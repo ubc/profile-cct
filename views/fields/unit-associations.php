@@ -1,7 +1,5 @@
 <?php 
-
 Class Profile_CCT_Unitassociations extends Profile_CCT_Field {
-	
 	/**
 	 * default_options
 	 * 
@@ -9,22 +7,17 @@ Class Profile_CCT_Unitassociations extends Profile_CCT_Field {
 	 * @access public
 	 */
 	var $default_options = array(
-		'type' => 'unitassociations',
-		'label' => 'unit associations',
-		'description' => '',
-		
-		'show'=>array('unit-website'),
-		'show_fields'=>array('unit-website'),
-		
-		'multiple'=>true,
-		'show_multiple'=>true,
-	
-		
-		
-		'width' => 'full',
-		'before' => '',
-		'empty' => '',
-		'after' =>'',
+		'type'          => 'unitassociations',
+		'label'         => 'unit associations',
+		'description'   => '',
+		'show'          => array('unit-website'),
+		'show_fields'   => array('unit-website'),
+		'multiple'      => true,
+		'show_multiple' => true,
+		'width'         => 'full',
+		'before'        => '',
+		'empty'         => '',
+		'after'         => '',
 	);
 	
 	/**
@@ -34,8 +27,16 @@ Class Profile_CCT_Unitassociations extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function field() {
-		$this->input_text( array( 'field_id' => 'unit', 'label' => 'Name', 'size'=>35 ) );
-		$this->input_text( array('field_id' => 'unit-website', 'label' => 'Website - http://', 'size'=>35 ) );
+		$this->input_text( array(
+			'field_id' => 'unit',
+			'label'    => 'Name',
+			'size'     => 35,
+		) );
+		$this->input_text( array(
+			'field_id' => 'unit-website',
+			'label'    => 'Website - http://',
+			'size'     => 35
+		) );
 	}
 	
 	/**
@@ -45,11 +46,14 @@ Class Profile_CCT_Unitassociations extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		
-		$this->display_shell( array(  'class' => 'department') );
-		$this->display_text( array( 'field_id' => 'unit', 'default_text' => 'Biotechnology', 'maybe_link' => true ,'href'=> $this->data['unit-website'] ) );
+		$this->display_shell( array( 'class' => 'department') );
+		$this->display_text( array(
+			'field_id' => 'unit',
+			'default_text' => 'Biotechnology',
+			'maybe_link' => true,
+			'href'=> $this->data['unit-website'],
+		) );
 		$this->display_end_shell();
-	
 	}
 	
 	/**
@@ -64,7 +68,6 @@ Class Profile_CCT_Unitassociations extends Profile_CCT_Field {
 	public static function shell( $options, $data ) {
 		new Profile_CCT_Unitassociations( $options, $data ); 
 	}
-	
 }
 
 /**
@@ -76,8 +79,7 @@ Class Profile_CCT_Unitassociations extends Profile_CCT_Field {
  * @return void
  */
 function profile_cct_unitassociations_shell( $options, $data ) {
-		Profile_CCT_Unitassociations::shell( $options, $data ); 
-
+	Profile_CCT_Unitassociations::shell( $options, $data ); 
 }
 
 /*

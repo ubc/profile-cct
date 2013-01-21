@@ -9,9 +9,8 @@
  * @return void
  */
 function profile_cct_secondary_address_shell( $options = array(), $data = null ) {
-	
 	$options[ "type" ]  = 'secondary_address'; // make sure that you can't over write this
-	$options[ "label" ] = ( !empty( $options[ "label" ] ) ? $options[ "label" ] : 'Secondary Address' ); // 
+	$options[ "label" ] = ( !empty( $options[ "label" ] ) ? $options[ "label" ] : 'Secondary Address' );
 	
 	Profile_CCT_Address::shell( $options, $data );
 }

@@ -1,7 +1,5 @@
 <?php 
-
 Class Profile_CCT_Specialization extends Profile_CCT_Field {
-	
 	/**
 	 * default_options
 	 * 
@@ -9,17 +7,15 @@ Class Profile_CCT_Specialization extends Profile_CCT_Field {
 	 * @access public
 	 */
 	var $default_options = array(
-		'type' => 'specialization',
-		'label' => 'specialization',
-		'description' => '',
-		
-		'multiple'=>true,
-		'show_multiple'=>true,
-		
-		'width' => 'full',
-		'before' => '',
-		'empty' => '',
-		'after' =>'',
+		'type'          => 'specialization',
+		'label'         => 'specialization',
+		'description'   => '',
+		'multiple'      => true,
+		'show_multiple' => true,
+		'width'         => 'full',
+		'before'        => '',
+		'empty'         => '',
+		'after'         => '',
 	);
 	
 	/**
@@ -29,8 +25,11 @@ Class Profile_CCT_Specialization extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function field() {
-		
-		$this->input_text( array( 'field_id' => 'specialization', 'label' => '', 'size'=>35 ) );
+		$this->input_text( array(
+			'field_id' => 'specialization',
+			'label'    => '',
+			'size'     => 35,
+		) );
 	}
 	
 	/**
@@ -40,11 +39,12 @@ Class Profile_CCT_Specialization extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		
 		$this->display_shell( array( 'class' => 'specialization' ) );
-		$this->display_text( array( 'field_id' => 'specialization', 'default_text' => 'Philanthropy' ) );
+		$this->display_text( array(
+			'field_id' => 'specialization',
+			'default_text' => 'Philanthropy',
+		) );
 		$this->display_end_shell();
-		
 	}
 	
 	/**
@@ -59,7 +59,6 @@ Class Profile_CCT_Specialization extends Profile_CCT_Field {
 	public static function shell( $options, $data ) {
 		new Profile_CCT_Specialization( $options, $data ); 
 	}
-	
 }
 
 /**

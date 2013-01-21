@@ -151,9 +151,11 @@ class Profile_CCT_Admin {
 	 * @static
 	 * @return void
 	 */
+	//TODO: Determine if this function is ever called.
 	public static function form_field_shell() {
-		// the default contexts normal, side, and tabs
-		$contexts = Profile_CCT_Admin::default_shells();
+		error_log("Called form_field_shell");
+		$contexts = self::default_shells();
+		
 		foreach ($contexts as $context):
 			if ( function_exists( 'profile_cct_form_shell_'.$context ) ):
 				call_user_func( 'profile_cct_form_shell_'.$context );
@@ -180,7 +182,6 @@ class Profile_CCT_Admin {
 		 		<?php
 			endif;
 		endforeach;
-
 	}
 
 	/**
@@ -190,42 +191,53 @@ class Profile_CCT_Admin {
 	 * @static
 	 * @return void
 	 */
-	public static function page_field_shell() {
+	public static function page_field_shell( $action, $user_data, $where ) {
+		error_log("Called page_field_shell");
 		self::$action = $action;
-		$contexts = Profile_CCT_Admin::default_shells();
+		//$contexts = self::default_shells($where);
+		$contexts = self::get_contexts($where);
+		
+		error_log("== CREATE SHELL (".$where.") ==");
+		error_log(print_r($contexts, TRUE));
         
         if ($action == 'edit'):
             ?><div id="page-shell"><?php
         endif;
+		
 		foreach ( $contexts as $context ):
 			// This is being called for tabs
 			if ( function_exists('profile_cct_page_shell_'.$context) ):
 				call_user_func('profile_cct_page_shell_'.$context, $action, $user_data);
 			else:
+				error_log("Creating Context ".$context);
 				?>
                     <div id="<?php echo $context; ?>-shell" class="profile-cct-shell">
                     <?php if($action == 'edit'): ?>
-		 			<span class="description-shell"><?php echo $context; ?></span>
-		 			<ul class="form-builder sort" id="<?php echo $context; ?>">
+						<span class="description-shell"><?php echo $context; ?></span>
+						<ul class="form-builder sort" id="<?php echo $context; ?>">
                     <?php endif; ?>
                 <?php
                 
-				$fields = self::get_option($where, 'fields', $context) ;//+ self::get_option('form','fields',$context);
-                
+				$fields = self::get_option( $where, 'fields', $context ) ;
+				
 				if ( is_array( $fields ) ):
 					foreach( $fields as $field ):
-						if ( function_exists('profile_cct_'.$field['type'].'_display_shell') ):
-							call_user_func( 'profile_cct_'.$field['type'].'_display_shell', $action, $field, $user_data[ $field['type'] ] );
+						$field['page'] = $where;
+						
+						if ( function_exists( 'profile_cct_'.$field['type'].'_shell' ) ):
+							call_user_func( 'profile_cct_'.$field['type'].'_shell', $field, $user_data[ $field['type'] ] );
 						else:
-							do_action( 'profile_cct_display_shell_'.$field['type'], $action, $field, $user_data[ $field['type'] ] );
+							do_action( 'profile_cct_shell_'.$field['type'], $field, $user_data[ $field['type'] ] );
 						endif;
 					endforeach;
 				endif;
-            if ( $action == 'edit' ):
-                ?>
-                    </ul>
-                <?php endif; ?>
-                </div>
+				if ( $action == 'edit' ):
+					?>
+						</ul>
+					<?php
+				endif;
+				?>
+					</div>
                 <?php
             endif;
         endforeach;
@@ -438,7 +450,7 @@ class Profile_CCT_Admin {
 	 */
 	public static function admin_pages() {
 		Profile_CCT_Admin::$action = 'edit';
-		Profile_CCT_Admin::$page = ( in_array( $_GET['view'], array('form', 'page', 'list', 'taxonomy', 'fields', 'settings') ) ? $_GET['view'] : 'about' );
+		Profile_CCT_Admin::$page = ( in_array( $_GET['view'], array( 'form', 'page', 'list', 'taxonomy', 'fields', 'settings' ) ) ? $_GET['view'] : 'about' );
         
 		// the header file determins what other files should be loaded here
 		require( PROFILE_CCT_DIR_PATH.'views/header.php' );
@@ -545,7 +557,7 @@ class Profile_CCT_Admin {
 	 * @return void
 	 */
 	static function order_profiles_admin_scripts() {
-		wp_enqueue_script( 'profile-cct-order', PROFILE_CCT_DIR_URL.'/js/order-profiles.js', array('jquery', 'jquery-ui-sortable') );
+		wp_enqueue_script( 'profile-cct-order', PROFILE_CCT_DIR_URL.'/js/order-profiles.js', array( 'jquery', 'jquery-ui-sortable' ) );
 	}
 
 	############################################################################################################
@@ -692,8 +704,10 @@ class Profile_CCT_Admin {
 	 * @param string $type. (default: 'form')
 	 * @return void
 	 */
-	static function default_shells() {
-		switch( Profile_CCT_Admin::$page ) {
+	static function default_shells( $where = null ) {
+		$where = ( isset( $where ) ? $where : Profile_CCT_Admin::$page );
+		
+		switch ( $where ):
 			case 'form':
 				return array( 'normal', 'side', 'tabs' );
                 break;
@@ -703,7 +717,7 @@ class Profile_CCT_Admin {
 			case 'list':
 				return array( 'normal' );
     			break;
-		}
+		endswitch;
 	}
 
 	/**
@@ -713,8 +727,8 @@ class Profile_CCT_Admin {
 	 * @param string $type. (default: 'form')
 	 * @return void
 	 */
-	static function get_contexts() {
-		$contexts = Profile_CCT_Admin::default_shells();
+	static function get_contexts( $where ) {
+		$contexts = self::default_shells( $where );
 		$id = array_search( 'tabs', $contexts );
         
 		if( is_numeric( $id ) ):
@@ -751,7 +765,7 @@ class Profile_CCT_Admin {
 			?>
 			<div id="<?php echo Profile_CCT_Admin::$page; ?>-shell">
 			<?php
-			foreach ( Profile_CCT_Admin::default_shells() as $shell ):
+			foreach ( self::default_shells() as $shell ):
 				// lets get all the different sections
 				Profile_CCT_Admin::render_context( $shell );
 			endforeach;
@@ -883,16 +897,13 @@ class Profile_CCT_Admin {
 		
 		ob_start();
 		do_action( 'profile_cct_page', 'display', $profile_cct_data, 'page' );
-		$content = ob_get_contents();
+		$data['post_content'] = ob_get_contents();
 		ob_end_clean();
 		
 		ob_start();
 		do_action( 'profile_cct_page', 'display', $profile_cct_data, 'list' );
-		$excerpt = ob_get_contents();
+		$data['post_excerpt'] = ob_get_contents();
 		ob_end_clean();
-		
-		$data['post_excerpt'] = $excerpt;
-		$data['post_content'] = $content;
 		
 		if ( is_array($_POST["profile_cct"]) ):
 			error_log("Updating");
@@ -905,8 +916,8 @@ class Profile_CCT_Admin {
 		
 		kses_init_filters();
 		
-		error_log("==== SAVE CHECK ====");
-		error_log(print_r(get_post_meta( $postarr['ID'], 'profile_cct' ), TRUE));
+		//error_log("==== SAVE CHECK ====");
+		//error_log(print_r(get_post_meta( $postarr['ID'], 'profile_cct' ), TRUE));
 		
 		return $data;	
 	}

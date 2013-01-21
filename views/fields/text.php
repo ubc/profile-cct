@@ -1,7 +1,5 @@
 <?php 
-
 Class Profile_CCT_Text extends Profile_CCT_Field {
-	
 	/**
 	 * default_options
 	 * 
@@ -9,17 +7,15 @@ Class Profile_CCT_Text extends Profile_CCT_Field {
 	 * @access public
 	 */
 	var $default_options = array(
-		'type' => 'text',
-		'label' => 'text',
-		'description' => '',
-		
-		'multiple'=>true,
-		'show_multiple'=>true,
-	
-		'width' => 'full',
-		'before' => '',
-		'empty' => '',
-		'after' =>'',
+		'type'          => 'text',
+		'label'         => 'text',
+		'description'   => '',
+		'multiple'      => true,
+		'show_multiple' => true,
+		'width'         => 'full',
+		'before'        => '',
+		'empty'         => '',
+		'after'         =>'',
 	);
 	
 	/**
@@ -29,9 +25,12 @@ Class Profile_CCT_Text extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function field() {
-		
-		$this->input_text( array( 'field_id' => 'text', 'label' => '', 'size'=>25, 'class'=>"text-shell" ) );
-
+		$this->input_text( array(
+			'field_id' => 'text',
+			'label'    => '',
+			'size'     => 25,
+			'class'    => "text-shell",
+		) );
 	}
 	
 	/**
@@ -41,11 +40,12 @@ Class Profile_CCT_Text extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		
 		$this->display_shell( array( 'class' => 'text') );
-		$this->display_text( array( 'class' => 'text text', 'default_text' => 'lorem ipsum' ) );
+		$this->display_text( array(
+			'class' => 'text text',
+			'default_text' => 'lorem ipsum',
+		) );
 		$this->display_end_shell();
-
 	}
 	
 	/**
@@ -60,7 +60,6 @@ Class Profile_CCT_Text extends Profile_CCT_Field {
 	public static function shell( $options, $data ) {
 		new Profile_CCT_Text( $options, $data ); 
 	}
-	
 }
 
 /**
@@ -72,10 +71,9 @@ Class Profile_CCT_Text extends Profile_CCT_Field {
  * @return void
  */
 function profile_cct_text_shell( $options, $data ) {
-	
 	Profile_CCT_Text::shell( $options, $data );
-	
 }
+
 /*
 function profile_cct_text_display_shell( $options, $data ) {
 	

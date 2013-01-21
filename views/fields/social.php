@@ -1,7 +1,5 @@
 <?php 
-
 Class Profile_CCT_Social extends Profile_CCT_Field {
-	
 	/**
 	 * default_options
 	 * 
@@ -9,18 +7,14 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 	 * @access public
 	 */
 	var $default_options = array(
-		'type' => 'social',
-		'label' => 'social',	
-		'description' => '',
-		
-		'multiple'=>true,
-		'show_multiple' =>true,
-					
-		
-		
-		'before' => '',
-		'empty' => '',
-		'after' =>'',
+		'type'          => 'social',
+		'label'         => 'social',	
+		'description'   => '',
+		'multiple'      => true,
+		'show_multiple' => true,
+		'before'        => '',
+		'empty'         => '',
+		'after'         => '',
 	);
 	
 	/**
@@ -30,11 +24,20 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function field() {
-		
-		$this->input_select( array( 'field_id' => 'option', 'label' => 'Site',  'value'=>$data['option'], 'all_fields'=>$this->social_options( 'label' ), 'type' => 'select','count'=>$count) );
-		$this->input_text( array( 'field_id' => 'usersocial', 'label'=>$social_array_details[$data['option']]['user_url'],  'value'=>$data['usersocial'], 'all_fields'=>$social_array ) );
-
-
+		$this->input_select( array(
+			'field_id'   => 'option',
+			'label'      => 'Site',
+			'value'      => $data['option'],
+			'all_fields' => $this->social_options( 'label' ),
+			'type'       => 'select',
+			'count'      => $count,
+		) );
+		$this->input_text( array(
+			'field_id'   => 'usersocial',
+			'label'      => $social_array_details[$data['option']]['user_url'],
+			'value'      => $data['usersocial'],
+			'all_fields' => $social_array,
+		) );
 	}
 	
 	/**
@@ -44,12 +47,11 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		
 		$this->display_shell( array( 'class' => 'social-link' ) );
-		$this->display_social_link( array( 'field_id' => 'usersocial'  ) );
+		$this->display_social_link( array(
+			'field_id' => 'usersocial',
+		) );
 		$this->display_end_shell();
-		
-		// $this->display_text( array( 'field_type'=>$type, 'type' => 'text', 'tag' => 'span', 'separator' => '/', 'value'=>$data['usersocial']) );
 	}
 	
 	/**
@@ -71,92 +73,89 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 	 * @access public
 	 * @return void
 	 */
-	function social_options( $what = 'all' ){
+	function social_options( $what = 'all' ) {
 		$all = array(
-					
-					array( 	"type"=> "ubc-blog", 	
-							"label"=> "UBC Blog", 
-							"service_url" =>"http://blogs.ubc.ca/",	
-							"user_url"=> "http://blogs.ubc.ca/{value}"),
-					array( 	"type"=> "ubc-wiki", 	
-							"label"=> "UBC Wiki",
-							"service_url" =>"http://wiki.ubc.ca/",		
-							"user_url"=> "http://wiki.ubc.ca/User:{value}"),
-			 		array( 	"type"=> "twitter", 		
-			 				"label"=> "Twitter",
-			 				"service_url" =>"http://twitter.com",			
-			 				"user_url"=> "http://twitter.com/#!/{value}"),
-			 		array( 	"type"=> "facebook",		
-			 				"label"=> "Facebook",
-			 				"service_url" =>"http://www.facebook.com/",			
-			 				"user_url"=> "http://www.facebook.com/{value}" ),
-			 		array( 	"type"=> "google-plus", 	
-			 				"label"=> "Google Plus",
-			 				"service_url" =>"http://plus.google.com",		
-			 				"user_url"=> "http://plus.google.com/{value}"),
-			 		array( 	"type"=> "linked-in",	
-			 				"label"=> "Linked In",
-			 				"service_url" =>"http://www.linkedin.com/",			
-			 				"user_url"=> "http://www.linkedin.com/in/{value}" ), 
-			 		array( 	"type"=> "delicious",	
-			 				"label"=> "Delicious",
-			 				"service_url" =>"http://www.delicious.com",			
-			 				"user_url"=> "http://www.delicious.com/{value}" ),
-			 		array( 	"type"=> "picasa",		
-			 				"label"=> "Picasa",
-			 				"service_url" =>"http://picasaweb.google.com",
-			 				"user_url"=> "http://picasaweb.google.com/{value}"),
-			 		array(  "type"=> "flickr",		
-			 				"label"=> "Flickr",
-			 				"service_url" =>"",				
-			 				"user_url"=> "http://www.flickr.com/photos/{value}"),
-			 		array( 	"type"=> "tumblr",		
-			 				"label"=> "Tumblr",
-			 				"service_url" =>"http://tumblr.com",			
-			 				"user_url"=> "http://{value}.tumblr.com"), 
-			 		array( 	"type"=> "blogger",		
-			 				"label"=> "Blogger",
-			 				"service_url" =>"http://blogspot.com/",			
-			 				"user_url"=> "http://{value}.blogspot.com/"), 
-			 		array( 	"type"=> "posterous",	
-			 				"label"=> "Posterous",
-			 				"service_url" =>"http://posterous.com",	
-			 				"user_url"=> "http://{value}.posterous.com"),
-			 		array( 	"type"=> "wordpress-com",
-			 				"label"=> "WordPress.com",
-			 				"service_url" =>"http://wordpress.com",	
-			 				"user_url"=> "http://{value}.wordpress.com"),
-			 		array( 	"type"=> "youtube",		
-			 				"label"=> "YouTube",
-			 				"service_url" =>"http://youtube.com/",		
-			 				"user_url"=> "http://youtube.com/{value}"),
-			 		array( 	"type"=> "vimeo",		
-			 				"label"=> "Vimeo",
-			 				"service_url" =>"http://vimeo.com",			
-			 				"user_url"=> "http://vimeo.com/{value}"),
-			 		array( 	"type"=> "slideshare",		
-			 				"label"=> "SlideShare",
-			 				"service_url" =>"http://www.slideshare.net/",			
-			 				"user_url"=> "http://www.slideshare.net/{value}"),
-			 		);
-		switch( $what ) {
+			array( 	"type"        => "ubc-blog", 	
+					"label"       => "UBC Blog", 
+					"service_url" => "http://blogs.ubc.ca/",	
+					"user_url"    => "http://blogs.ubc.ca/{value}"),
+			array( 	"type"        => "ubc-wiki", 	
+					"label"       => "UBC Wiki",
+					"service_url" => "http://wiki.ubc.ca/",		
+					"user_url"    => "http://wiki.ubc.ca/User:{value}"),
+			array( 	"type"        => "twitter", 		
+					"label"       => "Twitter",
+					"service_url" => "http://twitter.com",			
+					"user_url"    => "http://twitter.com/#!/{value}"),
+			array( 	"type"        => "facebook",		
+					"label"       => "Facebook",
+					"service_url" => "http://www.facebook.com/",			
+					"user_url"    => "http://www.facebook.com/{value}" ),
+			array( 	"type"        => "google-plus", 	
+					"label"       => "Google Plus",
+					"service_url" => "http://plus.google.com/",		
+					"user_url"    => "http://plus.google.com/{value}"),
+			array( 	"type"        => "linked-in",	
+					"label"       => "Linked In",
+					"service_url" => "http://www.linkedin.com/",			
+					"user_url"    => "http://www.linkedin.com/in/{value}" ), 
+			array( 	"type"        => "delicious",	
+					"label"       => "Delicious",
+					"service_url" => "http://www.delicious.com",			
+					"user_url"    => "http://www.delicious.com/{value}" ),
+			array( 	"type"        => "picasa",		
+					"label"       => "Picasa",
+					"service_url" => "http://picasaweb.google.com",
+					"user_url"    => "http://picasaweb.google.com/{value}"),
+			array(  "type"        => "flickr",		
+					"label"       => "Flickr",
+					"service_url" => "http://www.flickr.com/",				
+					"user_url"    => "http://www.flickr.com/photos/{value}"),
+			array( 	"type"        => "tumblr",		
+					"label"       => "Tumblr",
+					"service_url" => "http://tumblr.com",			
+					"user_url"    => "http://{value}.tumblr.com"), 
+			array( 	"type"        => "blogger",		
+					"label"       => "Blogger",
+					"service_url" => "http://blogspot.com/",			
+					"user_url"    => "http://{value}.blogspot.com/"), 
+			array( 	"type"        => "posterous",	
+					"label"       => "Posterous",
+					"service_url" => "http://posterous.com",	
+					"user_url"    => "http://{value}.posterous.com"),
+			array( 	"type"        => "wordpress-com",
+					"label"       => "WordPress.com",
+					"service_url" => "http://wordpress.com",	
+					"user_url"    => "http://{value}.wordpress.com"),
+			array( 	"type"        => "youtube",		
+					"label"       => "YouTube",
+					"service_url" => "http://youtube.com/",		
+					"user_url"    => "http://youtube.com/{value}"),
+			array( 	"type"        => "vimeo",		
+					"label"       => "Vimeo",
+					"service_url" => "http://vimeo.com",			
+					"user_url"    => "http://vimeo.com/{value}"),
+			array( 	"type"        => "slideshare",		
+					"label"       => "SlideShare",
+					"service_url" => "http://www.slideshare.net/",			
+					"user_url"    => "http://www.slideshare.net/{value}"),
+		);
+		
+		switch ( $what ):
 			case 'all':
 				return $all;
-			break;
-			
+				break;
 			default:
-				if( in_array( $what, array( 'type', 'label', 'service_url', 'user_url' ) ) ):
-				
-					foreach( $all as $service)
+				if ( in_array( $what, array( 'type', 'label', 'service_url', 'user_url' ) ) ):
+					foreach ( $all as $service ):
 						$build_array[] = $service[$what];
+					endforeach;
 					
 					return $build_array;
 				endif;
 				return array();
-			break;
-		}
-		
-		
+				break;
+		endswitch;
 	}
 	
 }
@@ -170,10 +169,9 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
  * @return void
  */
 function profile_cct_social_shell( $options, $data ) {
-	
 	Profile_CCT_Social::shell( $options, $data );
-	
 }
+
 /*
 function profile_cct_social_display_shell( $options, $data ) {
 	

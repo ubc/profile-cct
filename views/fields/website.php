@@ -1,7 +1,5 @@
-<?php 
-
+<?php
 Class Profile_CCT_Website extends Profile_CCT_Field {
-	
 	/**
 	 * default_options
 	 * 
@@ -9,20 +7,17 @@ Class Profile_CCT_Website extends Profile_CCT_Field {
 	 * @access public
 	 */
 	var $default_options = array(
-		'type' => 'website',
-		'label' => 'website',
-		'description' => '',
-		
-		'multiple'=>true,
-		'show_multiple'=>true,
-	
-		'show'=>array(),
-		'show_fields'=>array('site-title'),
-		
-		'width' => 'full',
-		'before' => '',
-		'empty' => '',
-		'after' =>'',
+		'type'          => 'website',
+		'label'         => 'website',
+		'description'   => '',
+		'multiple'      => true,
+		'show_multiple' => true,
+		'show'          => array(),
+		'show_fields'   => array('site-title'),
+		'width'         => 'full',
+		'before'        => '',
+		'empty'         => '',
+		'after'         => '',
 	);
 	
 	/**
@@ -32,9 +27,16 @@ Class Profile_CCT_Website extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function field() {
-		
-		$this->input_text( array( 'field_id' => 'website', 'label' => 'Website - http://', 'size'=>35) );
-		$this->input_text( array( 'field_id' => 'site-title', 'label' => 'Site title', 'size'=>35 ) );
+		$this->input_text( array(
+			'field_id' => 'website',
+			'label'    => 'Website - http://',
+			'size'     => 35,
+		) );
+		$this->input_text( array(
+			'field_id' => 'site-title',
+			'label'    => 'Site title',
+			'size'     => 35,
+		) );
 	}
 	
 	/**
@@ -44,9 +46,13 @@ Class Profile_CCT_Website extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		
-		$this->display_shell( array(  'class' => 'website' ) );
-		$this->display_link( array( 'field_id' => 'site-title', 'default_text' => 'http://wayneenterprises.biz', 'href'=>$this->data['website'], 'force_link' => true ) );
+		$this->display_shell( array( 'class' => 'website' ) );
+		$this->display_link( array(
+			'field_id'     => 'site-title',
+			'default_text' => 'http://wayneenterprises.biz',
+			'href'         => $this->data['website'],
+			'force_link'   => true,
+		) );
 		$this->display_end_shell();
 	}
 	
@@ -61,8 +67,7 @@ Class Profile_CCT_Website extends Profile_CCT_Field {
 	 */
 	public static function shell( $options, $data ) {
 		new Profile_CCT_Website( $options, $data ); 
-	}
-	
+	}	
 }
 
 /**
@@ -74,12 +79,12 @@ Class Profile_CCT_Website extends Profile_CCT_Field {
  * @return void
  */
 function profile_cct_website_shell( $options, $data ) {
-		Profile_CCT_Website::shell( $options, $data ); 
-
+	Profile_CCT_Website::shell( $options, $data ); 
 }
+
 /*
 function profile_cct_website_display_shell( $options, $data ) {
-		Profile_CCT_Website::shell( $options, $data ); 
+	Profile_CCT_Website::shell( $options, $data ); 
 
 }
 

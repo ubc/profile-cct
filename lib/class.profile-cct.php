@@ -409,9 +409,6 @@ class Profile_CCT {
 					foreach ( $fields as $field ):
 						$data = ( isset( $user_data[$field['type']] ) ? $user_data[$field['type']] : null );
 						
-						//error_log("==== ".$field['type']." ====");
-						//error_log(print_r($data, TRUE));
-						
                         $callback = 'profile_cct_'.$field['type'].'_shell';
 						if ( function_exists( $callback ) ):
                             $id = $field['type']."-".$i.'-'.rand(0, 999);

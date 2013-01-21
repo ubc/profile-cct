@@ -1,7 +1,5 @@
 <?php 
-
 Class Profile_CCT_Textarea extends Profile_CCT_Field {
-	
 	/**
 	 * default_options
 	 * 
@@ -9,14 +7,13 @@ Class Profile_CCT_Textarea extends Profile_CCT_Field {
 	 * @access public
 	 */
 	var $default_options = array(
-		'type' => 'textarea',
-		'label' => 'textarea',
+		'type'        => 'textarea',
+		'label'       => 'textarea',
 		'description' => '',
-	
-		'width' => 'full',
-		'before' => '',
-		'empty' => '',
-		'after' =>'',
+		'width'       => 'full',
+		'before'      => '',
+		'empty'       => '',
+		'after'       => '',
 	);
 	
 	/**
@@ -26,9 +23,13 @@ Class Profile_CCT_Textarea extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function field() {
-		
-		$this->input_textarea( array( 'field_id' => 'textarea', 'label' => '', 'size'=>25, 'row'=>2, 'cols'=>20 ) );
-
+		$this->input_textarea( array(
+			'field_id' => 'textarea',
+			'label'    => '',
+			'size'     => 25,
+			'row'      => 2,
+			'cols'     => 20,
+		) );
 	}
 	
 	/**
@@ -38,9 +39,10 @@ Class Profile_CCT_Textarea extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		
-		$this->display_textfield( array( 'class' => 'textarea textarea','default_text' => 'lorem ipsum') );
-		
+		$this->display_textfield( array(
+			'class' => 'textarea textarea',
+			'default_text' => 'lorem ipsum',
+		) );
 	}
 	
 	/**
@@ -67,11 +69,8 @@ Class Profile_CCT_Textarea extends Profile_CCT_Field {
  * @return void
  */
 function profile_cct_textarea_shell( $options, $data ) {
-	
 	Profile_CCT_Textarea::shell( $options, $data );
-	
 }
-
 
 /*
 

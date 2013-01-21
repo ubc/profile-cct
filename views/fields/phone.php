@@ -46,7 +46,7 @@ class Profile_CCT_Phone extends Profile_CCT_Field {
 	 */
 	function display() {
 		$this->display_shell( array( 'class' => 'telephone tel') );
-		$this->display_text( array( 'field_id' => 'option', 'class' => 'type', 'default_text' => 'Work', 'post_separator' => ':' ) );
+		$this->display_text( array( 'field_id' => 'option', 'class' => 'type', 'default_text' => 'Work', 'post_separator' => ': ' ) );
 		$this->display_text( array( 'field_id' => 'tel-1', 'class' => 'tel-1', 'default_text' => '735', 'post_separator' => '-' ) );
 		$this->display_text( array( 'field_id' => 'tel-2', 'class' => 'tel-2', 'default_text' => '279', 'post_separator' => '-' ) );
 		$this->display_text( array( 'field_id' => 'tel-3', 'class' => 'tel-3', 'default_text' => '2963' ) );

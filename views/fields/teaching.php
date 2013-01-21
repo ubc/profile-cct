@@ -1,6 +1,5 @@
 <?php 
 
-
 /**
  * profile_cct_teaching_shell function.
  * 
@@ -10,13 +9,11 @@
  * @return void
  */
 function profile_cct_teaching_shell( $options = array(), $data = null ) {
-	
 	$options[ "type" ]  = 'teaching'; // make sure that you can't over write this
-	$options[ "label" ] = ( !empty( $options[ "label" ] ) ? $options[ "label" ] : 'Teaching' ); // 
+	$options[ "label" ] = ( !empty( $options[ "label" ] ) ? $options[ "label" ] : 'Teaching' );
 	
 	Profile_CCT_Textarea::shell( $options, $data );
 }
-
 
 /*
 add_action('profile_cct_admin_pages', 'profile_cct_add_teaching_fields_filter', 10, 1);

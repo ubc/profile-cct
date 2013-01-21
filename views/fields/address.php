@@ -157,4 +157,3 @@ function profile_cct_address_shell( $options, $data = null ) {
 function profile_cct_address_display_shell( $options, $data=null ) {
 	Profile_CCT_Address::shell( $options, $data );
 }
-

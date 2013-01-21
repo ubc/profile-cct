@@ -1,6 +1,4 @@
 <?php 
-
-
 /**
  * profile_cct_research_shell function.
  * 
@@ -10,9 +8,8 @@
  * @return void
  */
 function profile_cct_research_shell( $options = array(), $data = null ) {
-	
 	$options[ "type" ]  = 'research'; // make sure that you can't over write this
-	$options[ "label" ] = ( !empty( $options[ "label" ] ) ? $options[ "label" ] : 'Research' ); // 
+	$options[ "label" ] = ( !empty( $options[ "label" ] ) ? $options[ "label" ] : 'Research' );
 	
 	Profile_CCT_Textarea::shell( $options, $data );
 }

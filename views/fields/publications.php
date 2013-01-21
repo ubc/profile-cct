@@ -1,6 +1,4 @@
 <?php 
-
-
 /**
  * profile_cct_publications_shell function.
  * 
@@ -10,10 +8,8 @@
  * @return void
  */
 function profile_cct_publications_shell( $options, $data = null ) {
-	
-	
 	$options[ "type" ]  = 'publications'; // make sure that you can't over write this
-	$options[ "label" ] = ( !empty( $options[ "label" ] ) ? $options[ "label" ] : 'Publications' ); // 
+	$options[ "label" ] = ( !empty( $options[ "label" ] ) ? $options[ "label" ] : 'Publications' ); 
 	
 	Profile_CCT_Textarea::shell( $options, $data );
 }
