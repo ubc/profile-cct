@@ -1,18 +1,12 @@
 <?php 
-
-
 function profile_cct_bio_shell( $options, $data = null ) {
-	
-	
-	$options[ "type" ]  = 'bio'; // make sure that you can't over write this
-	$options[ "label" ] = ( !empty( $options[ "label" ] ) ? $options[ "label" ] : 'Biography' ); // 
-	
+	$options->type  = 'bio'; // make sure that you can't over write this
+	$options->label = ( !empty( $options->label ) ? $options->label : 'Biography' ); // 
+		
 	Profile_CCT_Textarea::shell( $options, $data );
 }
 
 /*
-
-
 add_action('profile_cct_admin_pages', 	'profile_cct_add_bio_fields_filter', 10, 1);
 add_action('profile_cct_form', 			'profile_cct_add_bio_fields_filter', 5);
 add_action('profile_cct_page', 			'profile_cct_add_bio_fields_filter', 5);

@@ -1,7 +1,5 @@
 <?php
-
 Class Profile_CCT_Graduatestudent extends Profile_CCT_Field {
-	
 	/**
 	 * default_options
 	 * 
@@ -9,20 +7,17 @@ Class Profile_CCT_Graduatestudent extends Profile_CCT_Field {
 	 * @access public
 	 */
 	var $default_options = array(
-		'type' => 'graduatestudent',
-		'label' => 'graduate student',	
-		'description' => '',
-		
-		'show'=>array( 'student-salutations','student-middle','student-credentials','student-website'),
-		'show_fields'=>array('student-salutations','student-middle','student-credentials','student-website'),
-		
-		'multiple'=>true,
-		'show_multiple'=>true,
-	
-		'width' => 'full',
-		'before' => '',
-		'empty' => '',
-		'after' =>'',
+		'type'          => 'graduatestudent',
+		'label'         => 'graduate student',	
+		'description'   => '',
+		'show'          => array( 'student-salutations', 'student-middle', 'student-credentials', 'student-website' ),
+		'show_fields'   => array( 'student-salutations', 'student-middle', 'student-credentials', 'student-website' ),
+		'multiple'      => true,
+		'show_multiple' => true,
+		'width'         => 'full',
+		'before'        => '',
+		'empty'         => '',
+		'after'         =>'',
 	);
 	
 	/**
@@ -32,13 +27,36 @@ Class Profile_CCT_Graduatestudent extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function field() {
-		$this->input_text( array( 'field_id' => 'student-salutations','label' => 'Salutations', 'size'=>2 ) );
-		$this->input_text( array( 'field_id' => 'student-first','label' => 'First', 'size'=>14 ) );
-		$this->input_text( array( 'field_id' => 'student-middle','label' => 'Middle', 'size'=>3 ) );
-		$this->input_text( array( 'field_id' => 'student-last','label' => 'Last', 'size'=>19 ) );
-		$this->input_text( array( 'field_id' => 'student-credentials', 'label' => 'Credentials','size'=>7 ) );
-		$this->input_text( array( 'field_id' => 'student-website', 'label' => 'Website - http://','size'=>35 ) );
-
+		$this->input_text( array(
+			'field_id' => 'student-salutations',
+			'label'    => 'Salutations',
+			'size'     => 2,
+		) );
+		$this->input_text( array(
+			'field_id' => 'student-first',
+			'label'    => 'First',
+			'size'     => 14,
+		) );
+		$this->input_text( array(
+			'field_id' => 'student-middle',
+			'label'    => 'Middle',
+			'size'     => 3,
+		) );
+		$this->input_text( array(
+			'field_id' => 'student-last',
+			'label'    => 'Last',
+			'size'     => 19,
+		) );
+		$this->input_text( array(
+			'field_id' => 'student-credentials',
+			'label'    => 'Credentials',
+			'size'     => 7
+		) );
+		$this->input_text( array(
+			'field_id' => 'student-website',
+			'label'    => 'Website - http://{value}',
+			'size'     => 35,
+		) );
 	}
 	
 	/**
@@ -48,20 +66,46 @@ Class Profile_CCT_Graduatestudent extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		
 		$this->display_shell( array( 'class' => 'graduatestudent' ) );
 		
-		$this->display_text( array( 'field_id' => 'student-salutations', 'class' => 'honorific-prefix student-salutations','default_text' => 'Mr' ) );
-		$this->display_text( array( 'field_id' => 'student-first', 'class' => 'student-given-name','default_text' => 'Richard' ) );
-		$this->display_text( array( 'field_id' => 'student-middle', 'class' => 'additional-name student-middle','default_text' => 'John',  ) );
-		$this->display_text( array( 'field_id' => 'student-last', 'class' => 'student-family-name','default_text' => 'Grayson' ) );
-		$this->display_text( array( 'field_id' => 'student-credentials','class' => 'honorific-suffix suffix student-credentials', 'separator' => ', ', 'default_text' => 'B.S.S.' ) );
-		
-		
-		$this->display_link( array(  'field_id' => 'student-website', 'class' => 'student-website', 'default_text' => 'http://richardjohngrayson.com/'  ) );
+		$this->display_text( array(
+			'field_id'       => 'student-salutations',
+			'class'          => 'honorific-prefix student-salutations',
+			'default_text'   => 'Mr.',
+			'post_separator' => ' ',
+		) );
+		$this->display_text( array(
+			'field_id'       => 'student-first',
+			'class'          => 'student-given-name',
+			'default_text'   => 'Richard',
+			'post_separator' => ' ',
+		) );
+		$this->display_text( array(
+			'field_id'       => 'student-middle',
+			'class'          => 'additional-name student-middle',
+			'default_text'   => 'John',
+			'post_separator' => ' ',
+		) );
+		$this->display_text( array(
+			'field_id'       => 'student-last',
+			'class'          => 'student-family-name',
+			'default_text'   => 'Grayson',
+			'post_separator' => ', ',
+		) );
+		$this->display_text( array(
+			'field_id'       => 'student-credentials',
+			'class'          => 'honorific-suffix suffix student-credentials',
+			'default_text'   => 'B.S.S.',
+			'post_separator' => ' ',
+		) );
+		$this->display_link( array(
+			'field_id'     => 'student-website',
+			'class'        => 'student-website',
+			'default_text' => 'http://richardjohngrayson.com/',
+			'href'         => 'http://'.$this->data['student-website'],
+		) );
 		
 		$this->display_end_shell();
-		
 	}
 	
 	/**
@@ -76,7 +120,6 @@ Class Profile_CCT_Graduatestudent extends Profile_CCT_Field {
 	public static function shell( $options, $data ) {
 		new Profile_CCT_Graduatestudent( $options, $data ); 
 	}
-	
 }
 
 /**

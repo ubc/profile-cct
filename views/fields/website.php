@@ -29,7 +29,7 @@ Class Profile_CCT_Website extends Profile_CCT_Field {
 	function field() {
 		$this->input_text( array(
 			'field_id' => 'website',
-			'label'    => 'Website - http://',
+			'label'    => 'Website - http://{value}',
 			'size'     => 35,
 		) );
 		$this->input_text( array(
@@ -50,7 +50,8 @@ Class Profile_CCT_Website extends Profile_CCT_Field {
 		$this->display_link( array(
 			'field_id'     => 'site-title',
 			'default_text' => 'http://wayneenterprises.biz',
-			'href'         => $this->data['website'],
+			'value'        => $this->data['site-title'],
+			'href'         => 'http://'.$this->data['website'],
 			'force_link'   => true,
 		) );
 		$this->display_end_shell();

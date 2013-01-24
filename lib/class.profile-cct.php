@@ -3,15 +3,15 @@
  * Profile_CCT class.
  */
 class Profile_CCT {
-	static private $classobj = NULL; // refence for itself
-	static public  $textdomain  = NULL;
-	static public  $action   = NULL;
-	static public  $settings = NULL; // renamed from  $settings_options
-	static public  $form_fields = NULL;
-	static public  $taxonomies = NULL; // 
-	static public  $is_main_query = false;
-	static public  $form_field_options = NULL; 
-	static public  $option     = NULL; 
+	static private $classobj            = NULL; // refence for itself
+	static public  $textdomain          = NULL;
+	static public  $action              = NULL;
+	static public  $settings            = NULL; // renamed from  $settings_options
+	static public  $form_fields         = NULL;
+	static public  $taxonomies          = NULL;
+	static public  $is_main_query       = false;
+	static public  $form_field_options  = NULL;
+	static public  $option              = NULL;
 	static public  $current_form_fields = NULL; // stores the current state of the form field... the labels and if it is on the banch... 
     
 	/**
@@ -22,8 +22,8 @@ class Profile_CCT {
 	 */
 	function __construct () {
 		add_action('init', array( $this, 'init' ) );
-		$this->settings 	= $this->get_settings( 'settings' );
-		$this->taxonomies 	= $this->get_settings( 'taxonomy' );
+		$this->settings   = $this->get_settings( 'settings' );
+		$this->taxonomies = $this->get_settings( 'taxonomy' );
 	}
 	
 	/**
@@ -48,8 +48,8 @@ class Profile_CCT {
 	 * @return void
 	 */
 	public function init() {
-		add_action( 'edit_form_advanced', array($this, 'edit_post_advanced'));
-		add_action( 'add_meta_boxes_profile_cct', array($this, 'edit_post'));
+		add_action( 'edit_form_advanced', array($this, 'edit_post_advanced') );
+		add_action( 'add_meta_boxes_profile_cct', array($this, 'edit_post') );
 		
 		$this->register_profiles();
 		$this->load_fields();
@@ -69,35 +69,35 @@ class Profile_CCT {
 		endif;
 		
 		$labels = array(
-			'name' => _x( 'Profiles', 'profile_cct' ),
-			'singular_name' => _x( 'Profile', 'profile_cct' ),
-			'add_new' => _x( 'Add New', 'profile_cct' ),
-			'add_new_item' => _x( 'Add New Profile', 'profile_cct' ),
-			'edit_item' => _x( 'Edit Public Profile', 'profile_cct' ),
-			'new_item' => _x( 'New Profile', 'profile_cct' ),
-			'view_item' => _x( 'View Profile', 'profile_cct' ),
-			'search_items' => _x( 'Search Profiles', 'profile_cct' ),
-			'not_found' => _x( 'No profiles found', 'profile_cct' ),
+			'name'               => _x( 'Profiles', 'profile_cct' ),
+			'singular_name'      => _x( 'Profile', 'profile_cct' ),
+			'add_new'            => _x( 'Add New', 'profile_cct' ),
+			'add_new_item'       => _x( 'Add New Profile', 'profile_cct' ),
+			'edit_item'          => _x( 'Edit Public Profile', 'profile_cct' ),
+			'new_item'           => _x( 'New Profile', 'profile_cct' ),
+			'view_item'          => _x( 'View Profile', 'profile_cct' ),
+			'search_items'       => _x( 'Search Profiles', 'profile_cct' ),
+			'not_found'          => _x( 'No profiles found', 'profile_cct' ),
 			'not_found_in_trash' => _x( 'No profiles found in Trash', 'profile_cct' ),
-			'parent_item_colon' => _x( 'Parent Profile:', 'profile_cct' ),
-			'menu_name' => _x( 'Profiles', 'profile_cct' ),
+			'parent_item_colon'  => _x( 'Parent Profile:', 'profile_cct' ),
+			'menu_name'          => _x( 'Profiles', 'profile_cct' ),
 		);
 
 		$args = array(
-			'labels' => $labels,
-			'hierarchical' => false,
-			'menu_icon' => PROFILE_CCT_DIR_URL.'/icon.png',
-			'supports' => array( 'author' ),
-			'public' => true,
-			'show_ui' => true,
-			'show_in_menu' => true,
-			'menu_position' => 20,
-			'show_in_nav_menus' => true,
-			'publicly_queryable' => true,
+			'labels'              => $labels,
+			'hierarchical'        => false,
+			'menu_icon'           => PROFILE_CCT_DIR_URL.'/icon.png',
+			'supports'            => array( 'author' ),
+			'public'              => true,
+			'show_ui'             => true,
+			'show_in_menu'        => true,
+			'menu_position'       => 20,
+			'show_in_nav_menus'   => true,
+			'publicly_queryable'  => true,
 			'exclude_from_search' => false,
-			'has_archive' => true,
-			'query_var' => true,
-			'can_export' => true,
+			'has_archive'         => true,
+			'query_var'           => true,
+			'can_export'          => true,
 			'rewrite' => array(
 				'slug'       => $slug,
 				'with_front' => true,
@@ -167,7 +167,6 @@ class Profile_CCT {
 				
 				// also delete all the tabs 
 				self::delete_option( $where, 'tabs' );
-				
 			endforeach;
             
 			// finally delete the settings data 
@@ -205,16 +204,13 @@ class Profile_CCT {
 			$role = get_role( $user );
 			
 			foreach($permission_array as $permission => $can):
-                
 				// add the new capability
 				if( $field->settings['permissions'][$user][$permission] ):
 					$role->add_cap( $permission );
 				else: // or remove it
 					$role->remove_cap( $permission );
 				endif;
-				
 			endforeach;
-			
 		endforeach;
 		
         update_option( 'Profile_CCT_settings', $field->settings );
@@ -386,18 +382,12 @@ class Profile_CCT {
 		global $post, $post_new_file, $pagenow, $current_user, $post_type_object;
 		$post_new_file = '#';
 		
-		//error_log("Edit");
-		//error_log(print_r($post, TRUE));
-		
 		if ( (int) $post->post_author != $current_user->ID && ! current_user_can( 'edit_others_profile_cct' ) ):
 			wp_die( 'You are not allow to edit this profile.' );
 		endif;
 		
 		$this->form_fields = get_option( 'Profile_CCT_form_fields' );
 		$user_data = get_post_meta( $post->ID, 'profile_cct', true );
-		
-		//error_log("==== LOADING ====");
-		//error_log(print_r($user_data, TRUE));
 		
 		remove_meta_box( 'submitdiv', 'profile_cct', 'side' );
         
@@ -419,7 +409,7 @@ class Profile_CCT {
                                 'options' => $field,
                                 'data' => $data,
                             );
-                            
+							
 							add_meta_box( $id, $title, $callback, $post_type, $context, $priority, $callback_args );
 						else:
 							do_action( "profile_cct_".$field['type']."_add_meta_box", $field, $context, $data, $i );
@@ -481,8 +471,8 @@ class Profile_CCT {
         global $user_ID;
         
         $parameters = array(
-            'who' => null,
-            'name' => 'post_author_override',
+            'who'      => null,
+            'name'     => 'post_author_override',
             'selected' => empty($post->ID) ? $user_ID : $post->post_author,
             'include_selected' => true
         )
@@ -491,14 +481,12 @@ class Profile_CCT {
         <?php
         wp_dropdown_users( $parameters );
 	}
-	
-	
 }
 
 if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT' ) ):
 	add_action( 'plugins_loaded', array( 'Profile_CCT', 'get_object' ) );
 endif;
 
-register_activation_hook(   PROFILE_CCT_BASE_FILE,   array( 'Profile_CCT', 'install'    ) );
-register_deactivation_hook( PROFILE_CCT_BASE_FILE,   array( 'Profile_CCT', 'deactivate' ) );
-register_uninstall_hook(    PROFILE_CCT_BASE_FILE,   array( 'Profile_CCT', 'uninstall'  ) );
+register_activation_hook(   PROFILE_CCT_BASE_FILE, array( 'Profile_CCT', 'install'    ) );
+register_deactivation_hook( PROFILE_CCT_BASE_FILE, array( 'Profile_CCT', 'deactivate' ) );
+register_uninstall_hook(    PROFILE_CCT_BASE_FILE, array( 'Profile_CCT', 'uninstall'  ) );

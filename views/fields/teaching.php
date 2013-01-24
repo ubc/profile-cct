@@ -1,5 +1,4 @@
-<?php 
-
+<?php
 /**
  * profile_cct_teaching_shell function.
  * 
@@ -9,8 +8,8 @@
  * @return void
  */
 function profile_cct_teaching_shell( $options = array(), $data = null ) {
-	$options[ "type" ]  = 'teaching'; // make sure that you can't over write this
-	$options[ "label" ] = ( !empty( $options[ "label" ] ) ? $options[ "label" ] : 'Teaching' );
+	$options->type  = 'teaching'; // make sure that you can't over write this
+	$options->label = ( !empty( $options->label ) ? $options->label : 'Teaching' );
 	
 	Profile_CCT_Textarea::shell( $options, $data );
 }

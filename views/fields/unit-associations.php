@@ -34,7 +34,7 @@ Class Profile_CCT_Unitassociations extends Profile_CCT_Field {
 		) );
 		$this->input_text( array(
 			'field_id' => 'unit-website',
-			'label'    => 'Website - http://',
+			'label'    => 'Website - http://{value}',
 			'size'     => 35
 		) );
 	}
@@ -46,13 +46,15 @@ Class Profile_CCT_Unitassociations extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		$this->display_shell( array( 'class' => 'department') );
-		$this->display_text( array(
-			'field_id' => 'unit',
+		$this->display_shell( array( 'class' => 'unit-associations') );
+		
+		$this->display_link( array(
+			'field_id'     => 'unit',
 			'default_text' => 'Biotechnology',
-			'maybe_link' => true,
-			'href'=> $this->data['unit-website'],
+			'maybe_link'   => true,
+			'href'         => 'http://'.$this->data['unit-website'],
 		) );
+		
 		$this->display_end_shell();
 	}
 	

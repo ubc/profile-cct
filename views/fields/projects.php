@@ -27,37 +27,32 @@ Class Profile_CCT_Projects extends Profile_CCT_Field {
 		) );
 		$this->input_text( array(
 			'field_id' => 'project-website',
-			'label'    => 'Website - http://',
+			'label'    => 'Website - http://{value}',
 			'size'     => 35,
 		) );
 		$this->input_select( array(
 			'field_id'   => 'start-date-month',
 			'label'      => 'Start Month',
-			'size'       => 35,
 			'all_fields' => $this->list_of_months()
 		) );
 		$this->input_select( array(
 			'field_id'   => 'start-date-year',
 			'label'      => 'Start Year',
-			'size'       => 35,
 			'all_fields' => $this->list_of_years(),
 		) );
 		$this->input_select( array(
 			'field_id'   => 'end-date-month',
 			'label'      => 'End Month',
-			'size'       => 35,
 			'all_fields' => $this->list_of_months()
 		) );
 		$this->input_select( array(
 			'field_id'   => 'end-date-year',
 			'label'      => 'End Year',
-			'size'       => 35,
 			'all_fields' => $this->list_of_years( 20, -20 ),
 		) );
 		$this->input_select( array(
 			'field_id'   => 'project-status',
 			'label'      => 'Status',
-			'size'       => 35,
 			'all_fields' => $this->project_status(),
 		) );
 	}
@@ -65,10 +60,11 @@ Class Profile_CCT_Projects extends Profile_CCT_Field {
 	function display() {
 		$this->display_shell( array( 'class' => 'projects') );
 		$this->display_text( array(
-			'field_id'     => 'project-title',
-			'class'        => 'project-title',
-			'default_text' => 'Cure for Cancer',
-			'tag'          => 'strong',
+			'field_id'       => 'project-title',
+			'class'          => 'project-title',
+			'default_text'   => 'Cure for Cancer',
+			'post_separator' => ' ',
+			'tag'            => 'strong',
 		) );
 		$this->display_text( array(
 			'field_id'     => 'project-status',
@@ -81,38 +77,40 @@ Class Profile_CCT_Projects extends Profile_CCT_Field {
 			'field_id'       => 'start-date-month',
 			'class'          => 'start-date-month',
 			'default_text'   => 'January',
-			'post_separator' => ','
+			'post_separator' => ', ',
 		) );
 		$this->display_text( array(
 			'field_id'     => 'start-date-year',
 			'class'        => 'start-date-year',
-			'default_text' => '2006'
+			'default_text' => '2006',
 		) );
 		$this->display_separator( array(
+			'field_id'  => 'end-date-year',
 			'class'     => 'end-date-year',
-			'separator' => ' - '
+			'separator' => '  -  ',
 		) );
 		$this->display_text( array(
 			'field_id'       => 'end-date-month',
 			'class'          => 'end-date-month',
 			'default_text'   => 'December',
-			'post_separator' => ',',
+			'post_separator' => ', ',
 		) );
 		$this->display_text( array(
 			'field_id'     => 'end-date-year',
 			'class'        => 'end-date-year',
-			'default_text' => '2016'
+			'default_text' => '2016',
 		) );
 		$this->display_end_shell();
 		$this->display_link( array(
 			'field_id'     => 'project-website',
 			'class'        => 'project-website',
-			'default_text' => 'http://wayneenterprises.biz'
+			'default_text' => 'http://wayneenterprises.biz',
+			'href'         => 'http://'.$this->data['project-website'],
 		) );
 		$this->display_textfield( array(
 			'field_id'     => 'project-description',
 			'class'        => 'project-description',
-			'default_text' => 'The current research at Wayne Biotech is focused on finding a cure for cancer.'
+			'default_text' => 'The current research at Wayne Biotech is focused on finding a cure for cancer.',
 		) );
 		$this->display_end_shell();
 	}

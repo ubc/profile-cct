@@ -71,9 +71,10 @@ Class Profile_CCT_Address extends Profile_CCT_Field {
 		$this->display_shell( array('class' => 'address adr' ) );
 		
 		$this->display_text( array(
-			'field_id'     => 'building-name',
-			'class'        => 'building-name',
-			'default_text' => 'Wayne Manor',
+			'field_id'       => 'building-name',
+			'class'          => 'building-name',
+			'default_text'   => 'Wayne Manor',
+			'post_separator' => ' ',
 		) );
 		$this->display_text( array(
 			'field_id'     => 'room-number',
@@ -96,12 +97,13 @@ Class Profile_CCT_Address extends Profile_CCT_Field {
 			'field_id'       => 'city',
 			'class'          => 'locality city',
 			'default_text'   => 'Gotham',
-			'post_separator' => ',',
+			'post_separator' => ', ',
 		) );
 		$this->display_text( array(
 			'field_id'     => 'province',
 			'class'        => 'region province',
 			'default_text' => 'Connecticut',
+			'post_separator' => ' ',
 		) );
 		$this->display_text( array(
 			'field_id'     => 'postal',
@@ -112,7 +114,6 @@ Class Profile_CCT_Address extends Profile_CCT_Field {
 			'field_id'     => 'country',
 			'class'        => 'country-name country',
 			'default_text' => 'United States',
-			'all_fields'   => $this->list_of_countries(),
 			'tag'          => 'div',
 		) );
 		

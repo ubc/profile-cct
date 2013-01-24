@@ -31,9 +31,9 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
      */
     function field() {
 		$this->input_text( array(
-			'field_id' => 'salutations',
-			'label'    => 'Salutations',
-			'size'     => 2,
+			'field_id'  => 'salutations',
+			'label'     => 'Salutations',
+			'size'      => 2,
 		) );
 		$this->input_text( array(
 			'field_id' => 'first',
@@ -74,22 +74,25 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
 		$this->display_text( array(
 			'field_id'     => 'first',
 			'class'        => 'given-name',
+			'separator'    => ' ',
 			'default_text' => 'Bruce',
 		) );
 		$this->display_text( array(
 			'field_id'     => 'middle',
 			'class'        => 'additional-name middle',
+			'separator'    => ' ',
 			'default_text' => 'Anthony',
 		) );
 		$this->display_text( array(
 			'field_id'     => 'last',
 			'class'        => 'family-name',
+			'separator'    => ' ',
 			'default_text' => 'Wayne',
 		) );
 		$this->display_text( array(
 			'field_id'     => 'credentials',
 			'class'        => 'honorific-suffix suffix credentials',
-			'separator'    => ',',
+			'separator'    => ', ',
 			'default_text' => 'BCom',
 		) );
 		

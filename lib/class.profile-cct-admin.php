@@ -44,12 +44,6 @@ class Profile_CCT_Admin {
 		
 		// redirect users to their profile page and create one if it doesn't exist
 		Profile_CCT_Admin::redirect_to_public_profile();
-        
-		// function to be executed on form admin page
-		add_action( 'profile_cct_form',            array( __CLASS__, 'form_field_shell' ), 10 );
-        
-		// function to be executed on page and list admin pages
-		add_action( 'profile_cct_page',            array( __CLASS__, 'page_field_shell' ), 10, 3 );
 		
 		add_action( 'wp_ajax_cct_update_fields',   array( __CLASS__, 'update_fields' ) );
 		add_action( 'wp_ajax_cct_update_tabs',     array( __CLASS__, 'update_tabs' ) );
@@ -143,119 +137,13 @@ class Profile_CCT_Admin {
 		endif;
     }
 
-
-	/**
-	 * form_field_shell function.
-	 *
-	 * @access public
-	 * @static
-	 * @return void
-	 */
-	//TODO: Determine if this function is ever called.
-	public static function form_field_shell() {
-		error_log("Called form_field_shell");
-		$contexts = self::default_shells();
-		
-		foreach ($contexts as $context):
-			if ( function_exists( 'profile_cct_form_shell_'.$context ) ):
-				call_user_func( 'profile_cct_form_shell_'.$context );
-			else:
-				?>
-		 		<div id="<?php echo $context; ?>-shell">
-		 			<span class="description-shell"><?php echo $context; ?></span>
-		 			<ul class="form-builder sort" id="<?php echo $context; ?>">
-		 			<?php
-					$fields = Profile_CCT_Admin::get_option( 'form', 'fields', $context );
-					
-					if ( is_array( $fields ) ):
-						foreach ( $fields  as $field ):
-							if( function_exists('profile_cct_'.$field['type'].'_field_shell') ):
-								call_user_func( 'profile_cct_'.$field['type'].'_field_shell', $field, $data );
-							else:
-								do_action( 'profile_cct_field_shell_'.$field['type'], $field, $user_data[ $field['type'] ] );
-							endif;
-						endforeach;
-					endif;
-					?>
-					</ul>
-		 		</div>
-		 		<?php
-			endif;
-		endforeach;
-	}
-
-	/**
-	 * page_field_shell function.
-	 *
-	 * @access public
-	 * @static
-	 * @return void
-	 */
-	public static function page_field_shell( $action, $user_data, $where ) {
-		error_log("Called page_field_shell");
-		self::$action = $action;
-		//$contexts = self::default_shells($where);
-		$contexts = self::get_contexts($where);
-		
-		error_log("== CREATE SHELL (".$where.") ==");
-		error_log(print_r($contexts, TRUE));
-        
-        if ($action == 'edit'):
-            ?><div id="page-shell"><?php
-        endif;
-		
-		foreach ( $contexts as $context ):
-			// This is being called for tabs
-			if ( function_exists('profile_cct_page_shell_'.$context) ):
-				call_user_func('profile_cct_page_shell_'.$context, $action, $user_data);
-			else:
-				error_log("Creating Context ".$context);
-				?>
-                    <div id="<?php echo $context; ?>-shell" class="profile-cct-shell">
-                    <?php if($action == 'edit'): ?>
-						<span class="description-shell"><?php echo $context; ?></span>
-						<ul class="form-builder sort" id="<?php echo $context; ?>">
-                    <?php endif; ?>
-                <?php
-                
-				$fields = self::get_option( $where, 'fields', $context ) ;
-				
-				if ( is_array( $fields ) ):
-					foreach( $fields as $field ):
-						$field['page'] = $where;
-						
-						if ( function_exists( 'profile_cct_'.$field['type'].'_shell' ) ):
-							call_user_func( 'profile_cct_'.$field['type'].'_shell', $field, $user_data[ $field['type'] ] );
-						else:
-							do_action( 'profile_cct_shell_'.$field['type'], $field, $user_data[ $field['type'] ] );
-						endif;
-					endforeach;
-				endif;
-				if ( $action == 'edit' ):
-					?>
-						</ul>
-					<?php
-				endif;
-				?>
-					</div>
-                <?php
-            endif;
-        endforeach;
-        
-        if ($action == 'edit'):
-            ?>
-                </div>
-            <?php
-		endif;
-	}
-
 	public static function recount_field( $where ) {
 		if ( ! in_array( $where, array('form', 'page', 'list') ) ):
 			return true;
 		endif;
         
 		// lets see what all the fields are that are suppoed to be there.
-		$contexts = Profile_CCT_Admin::get_contexts($where);
+		$contexts = Profile_CCT_Admin::get_contexts();
         
 		// CURRENT FIELDS
 		// All the fields that are there.
@@ -449,8 +337,8 @@ class Profile_CCT_Admin {
 	 * @return void
 	 */
 	public static function admin_pages() {
-		Profile_CCT_Admin::$action = 'edit';
-		Profile_CCT_Admin::$page = ( in_array( $_GET['view'], array( 'form', 'page', 'list', 'taxonomy', 'fields', 'settings' ) ) ? $_GET['view'] : 'about' );
+		self::$action = 'edit';
+		self::$page = ( in_array( $_GET['view'], array( 'form', 'page', 'list', 'taxonomy', 'fields', 'settings' ) ) ? $_GET['view'] : 'about' );
         
 		// the header file determins what other files should be loaded here
 		require( PROFILE_CCT_DIR_PATH.'views/header.php' );
@@ -648,27 +536,6 @@ class Profile_CCT_Admin {
 	}
 	
 	/**
-	 * Sets whether the plugin's profiles need to be updated or not.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	static function set_profiles_need_refresh() {
-		if ( isset($_POST['needs_refresh']) ):
-			$key = 'Profile_CCT_needs_refresh';
-			$expiration = 3*DAY_IN_SECONDS; //Expires in 3 days.
-			
-			if ( $_POST['needs_refresh'] ):
-				$value = get_transient( $key );
-				$value[$_POST['where']] = 1;
-				set_transient( $key, $value, $expiration );
-			else:
-				delete_transient( $key );
-			endif;
-		endif;
-	}
-	
-	/**
 	 * delete_option function.
 	 *
 	 * @access public
@@ -695,7 +562,37 @@ class Profile_CCT_Admin {
 		$setting = $option[$type];
 		return apply_filters( 'profile_cct_default_options', $setting, $type );
 	}
-
+	
+	/**
+	 * icon function.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	function icon() {
+		printf( '<img src="%s/icon-64.png" class="icon32" width="32" height="32" />', PROFILE_CCT_DIR_URL );
+	}
+	
+	/**
+	 * Sets whether the plugin's profiles need to be updated or not.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	static function set_profiles_need_refresh() {
+		if ( isset($_POST['needs_refresh']) ):
+			$key = 'Profile_CCT_needs_refresh';
+			$expiration = 3*DAY_IN_SECONDS; //Expires in 3 days.
+			
+			if ( $_POST['needs_refresh'] ):
+				$value = get_transient( $key );
+				$value[$_POST['where']] = 1;
+				set_transient( $key, $value, $expiration );
+			else:
+				delete_transient( $key );
+			endif;
+		endif;
+	}
 
 	/**
 	 * default_shells function.
@@ -704,8 +601,8 @@ class Profile_CCT_Admin {
 	 * @param string $type. (default: 'form')
 	 * @return void
 	 */
-	static function default_shells( $where = null ) {
-		$where = ( isset( $where ) ? $where : Profile_CCT_Admin::$page );
+	static function default_shells() {
+		$where = Profile_CCT_Admin::$page;
 		
 		switch ( $where ):
 			case 'form':
@@ -727,25 +624,29 @@ class Profile_CCT_Admin {
 	 * @param string $type. (default: 'form')
 	 * @return void
 	 */
-	static function get_contexts( $where ) {
-		$contexts = self::default_shells( $where );
-		$id = array_search( 'tabs', $contexts );
-        
-		if( is_numeric( $id ) ):
+	static function get_contexts() {
+		$contexts = self::default_shells();
+		$index = array_search( 'tabs', $contexts );
+		
+		if ( is_numeric( $index ) ):
 			$tabs = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page, 'tabs' );
             
-			if( is_array( $tabs ) ):
+			$tab_contexts = array();
+			if ( is_array( $tabs ) ):
 				$count = 1;
-				foreach($tabs as $tab):
-					$contexts[] = "tabbed-".$count;
+				foreach ( $tabs as $tab ):
+					$tab_contexts[] = "tabbed-".$count;
 					$count++;
 				endforeach;
+				
+				array_splice( $contexts, $index+1, 0, $tab_contexts );
+			else:
+				unset( $contexts[$index] );
 			endif;
             
-			unset( $contexts[$id] );
 			$contexts = array_values( $contexts );
 		endif;
-        
+		
 		return $contexts;
 	}
 
@@ -756,8 +657,8 @@ class Profile_CCT_Admin {
 	 * @param mixed $section
 	 * @return void
 	 */
-	static function generate_profile( $section ) {
-		switch ( $section ) {
+	static function generate_profile( $section, $data = null ) {
+		switch ( $section ):
 		case 'bench':
 			Profile_CCT_Admin::render_context( $section, false );
 			break;
@@ -765,16 +666,27 @@ class Profile_CCT_Admin {
 			?>
 			<div id="<?php echo Profile_CCT_Admin::$page; ?>-shell">
 			<?php
-			foreach ( self::default_shells() as $shell ):
-				// lets get all the different sections
-				Profile_CCT_Admin::render_context( $shell );
+			foreach ( self::default_shells() as $context ):
+				Profile_CCT_Admin::render_context( $context );
 			endforeach;
-			// Show the preview
 			?>
 			</div>
 			<?php
 			break;
-		}
+		case 'page':
+			Profile_CCT_Admin::$page = 'page';
+			foreach ( self::get_contexts() as $context ):
+				echo "<br />===== ".$context." =====<br />";
+				Profile_CCT_Admin::render_context( $context, $data );
+			endforeach;
+			break;
+		case 'list':
+			Profile_CCT_Admin::$page = 'list';
+			foreach ( self::get_contexts() as $context ):
+				Profile_CCT_Admin::render_context( $context, $data );
+			endforeach;
+			break;
+		endswitch;
 	}
 	
 	/**
@@ -785,45 +697,35 @@ class Profile_CCT_Admin {
 	 * @param bool $display_context (default: true)
 	 * @return void
 	 */
-	static function render_context( $context, $display_context = true ) {
+	static function render_context( $context, $data = null ) {
 		$class = ( 'bench' != $context ? 'form-builder' : '' );
         
 		if ( function_exists('profile_cct_'.$context.'_shell') ):
+			echo "CALLED FUNCTION: profile_cct_".$context."_shell";
 			call_user_func('profile_cct_'.$context.'_shell');
 		else:
-			// class //profile-cct-shell should be added to the profile stuff
 			?>
 			<div id="<?php echo $context; ?>-shell" >
-					<?php if ( $display_context ): ?>
-					<span class="description-shell"><?php echo $context; ?></span>
-					<?php endif; ?>
-					<ul class="sort <?php echo $class; ?>" id="<?php echo $context; ?>">
+				<?php if ( self::$page == 'form' ): ?>
+				<span class="description-shell"><?php echo $context; ?></span>
+				<?php endif; ?>
+				<ul class="sort <?php echo $class; ?>" id="<?php echo $context; ?>">
 				<?php
 				$fields = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page, 'fields', $context );
 				if ( is_array( $fields ) ):
 					foreach ( $fields as $field ):
 						if ( function_exists('profile_cct_'.$field['type'].'_shell') ):
-							call_user_func( 'profile_cct_'.$field['type'].'_shell', $field, $data );
+							call_user_func( 'profile_cct_'.$field['type'].'_shell', $field, $data[ $field['type'] ] );
 						else:
-							do_action( 'profile_cct_field_shell_'.$field['type'], $field, $user_data[ $field['type'] ] );
+							do_action( 'profile_cct_field_shell_'.$field['type'], $field, $data[ $field['type'] ] );
 						endif;
 					endforeach;
 				endif;
 				?>
-					</ul>
+				</ul>
 			</div>
 			<?php
 		endif;
-	}
-	
-	/**
-	 * icon function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	function icon() {
-		printf( '<img src="%s/icon-64.png" class="icon32" width="32" height="32" />', PROFILE_CCT_DIR_URL );
 	}
 	
 	/**
@@ -858,68 +760,73 @@ class Profile_CCT_Admin {
 	 * @param mixed $postarr
 	 * @return void
 	 */
-	function save_post_data( $data, $postarr ) {
+	function save_post_data( $post_data, $postarr ) {
 		global $post, $wp_filter;
 		
-		if ( ! isset( $_POST["profile_cct"] )):
-			return $data;
+		if ( isset( $_POST["profile_cct"] )):
+			kses_remove_filters();
+			
+			$profile_cct_data = self::overwrite_previous_post_data($postarr['ID'], $_POST["profile_cct"]);
+			
+			// save the name of the person as the title
+			if ( is_array( $profile_cct_data["name"]) || !empty($profile_cct_data["name"]) ):
+				$post_data['post_title'] = $profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last'];
+				$post_data['post_name'] = sanitize_title($profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last']);
+			else:
+				$userdata = get_userdata($post_data['post_author']);
+				$post_data['post_title'] = $userdata->user_nicename;
+				$post_data['post_name'] = sanitize_title($userdata->user_nicename);
+			endif;
+			
+			//Ensure there is no slug conflict
+			$post_data['post_name'] = wp_unique_post_slug( $post_data['post_name'], $postarr['ID'], 'publish', 'profile_cct', 0 );
+			
+			$post_data['post_content'] = self::generate_content($profile_cct_data, 'page');
+			$post_data['post_excerpt'] = self::generate_content($profile_cct_data, 'list');
+			
+			self::store_post_data( $postarr['ID'], $profile_cct_data );
+			
+			kses_init_filters();
 		endif;
 		
-		kses_remove_filters();
+		error_log("==== *PCCT DATA =====");
+		error_log(print_r($profile_cct_data, TRUE));
 		
-		$profile_cct_data_previous =  get_post_meta($postarr['ID'], 'profile_cct', true);
+		return $post_data;
+	}
+	
+	static function generate_content($profile_cct_data, $where) {
+		ob_start();
+		self::generate_profile( $where, $profile_cct_data );
+		$contents = ob_get_contents();
+		ob_end_clean();
+		
+		return $contents;
+	}
+	
+	static function overwrite_previous_post_data( $post_id, $profile_cct ) {
+		$profile_cct_data_previous =  get_post_meta( $post_id, 'profile_cct', true );
 		
 		if ( ! is_array($profile_cct_data_previous)):
 			$profile_cct_data_previous = array();
 		endif;
 		
-		$profile_cct_data = ( is_array($_POST["profile_cct"]) ? array_merge( $profile_cct_data_previous, $_POST["profile_cct"] ) : $profile_cct_data_previous );
-		
-		// save the name of the person as the title
-		if ( is_array( $profile_cct_data["name"]) || !empty($profile_cct_data["name"]) ):
-			$data['post_title'] = $profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last'];
-			$data['post_name'] = sanitize_title($profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last']);
-		else:
-			$userdata = get_userdata($data['post_author']);
-			$data['post_title'] = $userdata->user_nicename;
-			$data['post_name'] = sanitize_title($userdata->user_nicename);
-		endif;
-		
-		if ( is_array( $profile_cct_data["name"]) || !empty($profile_cct_data["name"]) ):
-			$data['post_title'] = $profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last'];
-		else:
-			$userdata = get_userdata($data['post_author']);
-			$data['post_title'] = $userdata->user_nicename;
-		endif;
-		
-		//Ensure there is no slug conflict
-		$data['post_name'] = wp_unique_post_slug( $data['post_name'], $postarr['ID'], 'publish', 'profile_cct', 0 );
-		
-		ob_start();
-		do_action( 'profile_cct_page', 'display', $profile_cct_data, 'page' );
-		$data['post_content'] = ob_get_contents();
-		ob_end_clean();
-		
-		ob_start();
-		do_action( 'profile_cct_page', 'display', $profile_cct_data, 'list' );
-		$data['post_excerpt'] = ob_get_contents();
-		ob_end_clean();
-		
-		if ( is_array($_POST["profile_cct"]) ):
-			error_log("Updating");
-			update_post_meta( $postarr['ID'], 'profile_cct', $profile_cct_data );
-			update_post_meta( $postarr['ID'], 'profile_cct_last_name', $profile_cct_data["name"]['last'] );
-		endif;
+		return ( is_array($profile_cct) ? array_merge( $profile_cct_data_previous, $profile_cct ) : $profile_cct_data_previous );
+	}
+	
+	/**
+	 * Saves data associated with a single post to the database.
+	 *
+	 * @param @profile_cct_data the data to save
+	 * @param $post_id the identifier of the post to save data for.
+	 * @return void
+	 */
+	static function store_post_data( $post_id, $profile_cct_data ) {
+		update_post_meta( $post_id, 'profile_cct', $profile_cct_data );
+		update_post_meta( $post_id, 'profile_cct_last_name', $profile_cct_data["name"]['last'] );
 		
 		$first_letter = strtolower(substr($profile_cct_data["name"]['last'], 0, 1));
-		wp_set_post_terms($postarr['ID'], $first_letter, 'profile_cct_letter', false);
-		
-		kses_init_filters();
-		
-		//error_log("==== SAVE CHECK ====");
-		//error_log(print_r(get_post_meta( $postarr['ID'], 'profile_cct' ), TRUE));
-		
-		return $data;	
+		wp_set_post_terms( $post_id, $first_letter, 'profile_cct_letter', false );
 	}
 	
 	static function refresh_profiles() {
@@ -956,22 +863,12 @@ class Profile_CCT_Admin {
 	}
 
 	static function update_profile( $post, $version_bump = false ) {
-		error_log("Updating Profile ".$post['ID']." (Version Bump? $version_bump)");
-		error_log(print_r($post, TRUE));
 		$mypost = array();
 		$data = get_post_meta( $post->ID, 'profile_cct', true );
 		
-		ob_start();
-		do_action( 'profile_cct_page', 'display', $data, 'page' );
-		$mypost['post_content'] = ob_get_contents();
-		ob_end_clean();
-		
-		ob_start();
-		do_action( 'profile_cct_page', 'display', $data, 'list' );
-		$mypost['post_excerpt'] = ob_get_contents();
-		ob_end_clean();
-		
 		$mypost['ID'] = $post->ID;
+		$mypost['post_content'] = self::generate_content( $data, 'page' );
+		$mypost['post_excerpt'] = self::generate_content( $data, 'list' );
 		
 		kses_remove_filters();
 		wp_update_post( $mypost );

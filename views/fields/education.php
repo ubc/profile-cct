@@ -60,19 +60,19 @@ Class Profile_CCT_Education extends Profile_CCT_Field {
 			'field_id'     => 'year',
 			'class'        => 'year',
 			'default_text' => '1939',
-			'separator'    => ',',
+			'separator'    => ', ',
 		) );		
 		$this->display_text( array(
 			'field_id'     => 'degree',
 			'class'        => 'textarea bio',
 			'default_text' => 'Finance',
-			'separator'    => ',',
+			'separator'    => ', ',
 		) );
 		$this->display_text( array(
 			'field_id'     => 'honours',
 			'class'        => 'honors',
 			'default_text' => 'BCom',
-			'separator'    => ',',
+			'separator'    => ', ',
 		) );	
 		$this->display_end_shell();
 	}

@@ -52,6 +52,26 @@ Class Profile_CCT_Email extends Profile_CCT_Field {
 	}
 	
 	/**
+	 * display_email function.
+	 * 
+	 * @access public
+	 * @param mixed $attr
+	 * @return void
+	 */
+	function display_email( $attr ) {
+		$value = $this->data['email'];
+		
+		if ( empty( $attr['mailto'] ) ):
+			$attr['mailto'] = ( 'edit' == $this->action ? $attr['default_text'] : $value );
+        endif;
+		
+		$attr['value'] = $value;
+		$attr['href'] = 'mailto:'.$attr['mailto'];
+		
+		$this->display_link( $attr );
+	}
+	
+	/**
 	 * shell function.
 	 * 
 	 * @access public

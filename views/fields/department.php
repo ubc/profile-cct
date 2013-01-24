@@ -1,8 +1,5 @@
 <?php 
-
-
 Class Profile_CCT_Department extends Profile_CCT_Field {
-	
 	/**
 	 * default_options
 	 * 
@@ -10,21 +7,18 @@ Class Profile_CCT_Department extends Profile_CCT_Field {
 	 * @access public
 	 */
 	var $default_options = array(
-		'type' => 'department',
-		'label' => 'department',
-		'description' => '',
-		
-		'multiple'=>true,
-		'show_multiple'=>true,
-		
-		'show'=>array('url'),
-		'show_fields'=>array('url'),
-		
-		'before' => '',
-		'empty' => '',
-		'after' =>'',
-		'width' => 'full'
-		);
+		'type'          => 'department',
+		'label'         => 'department',
+		'description'   => '',
+		'multiple'      => true,
+		'show_multiple' => true,
+		'show'          => array('url'),
+		'show_fields'   => array('url'),
+		'before'        => '',
+		'empty'         => '',
+		'after'         => '',
+		'width'         => 'full',
+	);
 	
 	/**
 	 * field function.
@@ -33,10 +27,19 @@ Class Profile_CCT_Department extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function field() {
-	
-		$this->input_text( array(  'multiple'=>$multiple,'field_id' => 'department', 'label' => 'Name', 'size'=>35, 'type' => 'text' ) );
-		
-		$this->input_text( array(  'multiple'=>$multiple,'field_id' => 'url', 'label' => 'Website - http://', 'size'=>35 ) );
+		$this->input_text( array(
+			'multiple' => $multiple,
+			'field_id' => 'department',
+			'label'    => 'Name',
+			'size'     => 35,
+			'type'     => 'text',
+		) );
+		$this->input_text( array(
+			'multiple' => $multiple,
+			'field_id' => 'url',
+			'label'    => 'Website - http://{value}',
+			'size'     => 35,
+		) );
 	}
 	
 	/**
@@ -47,7 +50,12 @@ Class Profile_CCT_Department extends Profile_CCT_Field {
 	 */
 	function display() {
 		$this->display_shell( array( 'class' => 'department') );
-		$this->display_link( array(  'field_id' => 'department', 'default_text' => 'Finance and Technology', 'maybe_link' => true, 'href'=> $this->data['url'] ) );
+		$this->display_link( array(
+			'field_id'     => 'department',
+			'default_text' => 'Finance and Technology',
+			'maybe_link'   => true,
+			'href'         => 'http://'.$this->data['url'],
+		) );
 		$this->display_end_shell();
 	}
 	
@@ -74,9 +82,7 @@ Class Profile_CCT_Department extends Profile_CCT_Field {
  * @return void
  */
 function profile_cct_department_shell( $options, $data = null ) {
-
 	Profile_CCT_Department::shell( $options, $data );
-
 }
 
 /*	

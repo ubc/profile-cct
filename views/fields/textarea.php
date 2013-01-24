@@ -40,7 +40,8 @@ Class Profile_CCT_Textarea extends Profile_CCT_Field {
 	 */
 	function display() {
 		$this->display_textfield( array(
-			'class' => 'textarea textarea',
+			'field_id'     => 'textarea',
+			'class'        => 'textarea',
 			'default_text' => 'lorem ipsum',
 		) );
 	}
@@ -57,7 +58,6 @@ Class Profile_CCT_Textarea extends Profile_CCT_Field {
 	public static function shell( $options, $data ) {
 		new Profile_CCT_Textarea( $options, $data ); 
 	}
-	
 }
 
 /**

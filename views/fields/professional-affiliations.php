@@ -1,5 +1,4 @@
 <?php 
-
 Class Profile_CCT_Professionalaffiliations extends Profile_CCT_Field {
 	/**
 	 * default_options
@@ -35,7 +34,7 @@ Class Profile_CCT_Professionalaffiliations extends Profile_CCT_Field {
 		) );
 		$this->input_text( array(
 			'field_id' => 'affiliation-website',
-			'label'    => 'Website - http://',
+			'label'    => 'Website - http://{value}',
 			'size'     => 35,
 		) );
 		?>
@@ -50,13 +49,11 @@ Class Profile_CCT_Professionalaffiliations extends Profile_CCT_Field {
 			'field_id'   => 'active-date-month',
 			'separator'  => 'member since:',
 			'label'      => 'Month',
-			'size'       => 35,
 			'all_fields' => $this->list_of_months(),
 		) );
 		$this->input_select( array(
 			'field_id'   => 'active-date-year',
 			'label'      => 'Year',
-			'size'       => 35,
 			'all_fields' => $this->list_of_years(),
 		) );
 	}
@@ -74,20 +71,21 @@ Class Profile_CCT_Professionalaffiliations extends Profile_CCT_Field {
 			'class'          => 'affiliation',
 			'default_text'   => 'Wayne Healthcare',
 			'maybe_link'     => true,
-			'href'           => $this->data['affiliation-website'],
-			'post_separator' => ',',
+			'href'           => 'http://'.$this->data['affiliation-website'],
+			'post_separator' => ', ',
 		) );
 		$this->display_text( array(
 			'field_id'       => 'affiliation-role',
 			'class'          => 'affiliation-role',
-			'default_text'   => 'public speaker',
+			'default_text'   => 'Public Speaker',
 			'tag'            => 'strong',
-			'post_separator' => ',',
+			'post_separator' => ', ',
 		));
 		$this->display_text( array(
-			'field_id'     => 'active-date-month',
-			'class'        => 'active-date-month',
-			'default_text' => 'January',
+			'field_id'       => 'active-date-month',
+			'class'          => 'active-date-month',
+			'default_text'   => 'January',
+			'post_separator' => ' ',
 		) );
 		$this->display_text( array(
 			'field_id'     => 'active-date-year',
