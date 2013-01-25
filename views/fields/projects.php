@@ -84,28 +84,25 @@ Class Profile_CCT_Projects extends Profile_CCT_Field {
 			'class'        => 'start-date-year',
 			'default_text' => '2006',
 		) );
-		$this->display_separator( array(
-			'field_id'  => 'end-date-year',
-			'class'     => 'end-date-year',
-			'separator' => '  -  ',
-		) );
 		$this->display_text( array(
 			'field_id'       => 'end-date-month',
 			'class'          => 'end-date-month',
 			'default_text'   => 'December',
+			'separator'      => '  -  ',
 			'post_separator' => ', ',
 		) );
 		$this->display_text( array(
 			'field_id'     => 'end-date-year',
 			'class'        => 'end-date-year',
 			'default_text' => '2016',
+			'separator'    => ( empty( $this->data['end-date-month'] ) ? '  -  ' : '' ),
 		) );
 		$this->display_end_shell();
 		$this->display_link( array(
 			'field_id'     => 'project-website',
 			'class'        => 'project-website',
 			'default_text' => 'http://wayneenterprises.biz',
-			'href'         => 'http://'.$this->data['project-website'],
+			'href'         => ( ! empty( $this->data['project-website'] ) ? 'http://'.$this->data['project-website'] : '' ),
 		) );
 		$this->display_textfield( array(
 			'field_id'     => 'project-description',

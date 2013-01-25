@@ -48,8 +48,14 @@ class Profile_CCT {
 	 * @return void
 	 */
 	public function init() {
-		add_action( 'edit_form_advanced', array($this, 'edit_post_advanced') );
-		add_action( 'add_meta_boxes_profile_cct', array($this, 'edit_post') );
+		if ( is_admin() ):
+			add_action( 'edit_form_advanced', array($this, 'edit_post_advanced') );
+			add_action( 'add_meta_boxes_profile_cct', array($this, 'edit_post') );
+		else:
+			remove_filter ( 'the_content', 'wpautop' );
+			wp_enqueue_script( 'jquery-ui-tabs' );
+			wp_enqueue_style( 'profile-cct', PROFILE_CCT_DIR_URL.'/css/profile-cct.css' );
+		endif;
 		
 		$this->register_profiles();
 		$this->load_fields();

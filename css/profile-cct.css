@@ -1,48 +1,137 @@
-/* used to display content on the profile */
-
+/**
+ * Used to display content on the profile
+ */
 
 .half,
 .one-third,
-.two-third{
+.two-third {
 	float: left;
 	clear: none;
 }
+
 .inline,
-.inline div{
+.inline div {
 	width: auto;
 	display: inline;
 }
+
 .one-third {
-	width:33.3%;
+	width: 33.3%;
 }
 
 .two-third {
-	width:66.6%;
-}
-.half {
-	width:50%;
-}
-.full {
-	clear:both;
+	width: 66.6%;
 }
 
-.profile_cct{
-	position: relative;
-	overflow: hidden;
+.half {
+	width: 50%;
 }
-.profile-cct-shell{
+
+.full {
 	clear: both;
 }
 
-.profile-cct-shell h3{
+.profile_cct {
+	position: relative;
+	overflow: hidden;
+}
+
+.profile-cct-shell {
+	clear: both;
+}
+
+.profile-cct-shell h3 {
 	margin-bottom: 0;
 }
 
-.ui-autocomplete { position: absolute; cursor: default; background-color:#fff;border:1px solid #ddd;padding:4px;}	
-.ui-autocomplete li{list-style-type:none;}
-* html .ui-autocomplete { width:1px; } /* without this, the menu expands to 100% in IE6 */
+.field-item > .field-shell {
+    margin-bottom: 10px;
+}
+/*.field-item > .field-shell > .field:last-child > *:last-child {
+    margin-bottom: 10px;
+}*/
 
-.profile-cct-filter-box{
-	margin-right:16px;
-	float:left;
+.field-shell-name .field h2 {
+    margin-top: 10px;
+}
+
+.field-shell-projects .field,
+.field-shell-courses .field {
+    margin-bottom: 5px;
+}
+
+.field-shell-social img {
+    margin-right: 5px;
+}
+
+/*.ui-autocomplete {
+    position: absolute;
+    cursor: default;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 4px;
+}
+
+.ui-autocomplete li {
+    list-style-type: none;
+}
+
+.profile-cct-filter-box {
+	margin-right: 16px;
+	float: left;
+}
+
+* html .ui-autocomplete {
+    width: 1px;
+} /* without this, the menu expands to 100% in IE6 */
+
+/* ----- Tabs ----- */
+.type-profile_cct .ui-tabs-nav {
+	border-bottom: 1px solid #CCCCCC;
+    padding-bottom: 0;
+    min-height: 30px;
+    margin-bottom: 10px;
+    padding-top: 10px;
+}
+
+.type-profile_cct .ui-tabs-nav li.ui-state-active,
+.type-profile_cct .ui-tabs-nav li a:hover {
+	border-color: #CCCCCC #CCCCCC #FFFFFF;
+}
+
+.type-profile_cct .ui-tabs-nav li {
+    border-color: #DFDFDF #DFDFDF #CCC;
+    border-radius: 3px 3px 0 0;
+    border-style: solid;
+    border-width: 1px;
+    color: #AAAAAA;
+    display: inline-block;
+    font-size: 17px;
+    line-height: 19px;
+    margin: 0 6px -1px 0;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #FFFFFF;
+    float: left;    
+}
+
+.type-profile_cct .ui-tabs-nav li a {
+	color: #AAAAAA;
+	text-decoration: none;
+	display: block;
+	padding: 4px 14px 6px 14px;
+}
+
+.type-profile_cct .ui-tabs-nav li.ui-state-active a {
+	color:#464646;
+	padding: 4px 14px 6px 14px;
+}
+
+.type-profile_cct .ui-statehover {
+	background: #EEE;
+}
+
+.type-profile_cct .ui-tabs-panel {
+   	border-bottom: 1px solid #CCCCCC;
+    margin-bottom: 20px;
+    overflow: hidden;
 }

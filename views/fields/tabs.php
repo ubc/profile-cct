@@ -7,9 +7,9 @@ Class Profile_CCT_Tabs {
 	 * @static
 	 * @return void
 	 */
-	public static function shell( ) {
+	public static function shell( $data ) {
 		$editing = ( 'edit' == Profile_CCT_Admin::$action ?  true : false );
-		$tabs = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page , 'tabs' ); // get back all the tabs for that page
+		$tabs = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page, 'tabs' ); // get back all the tabs for that page
 		
 		// check if we even want to display the tabs. 
 		$display_tabs = true;
@@ -22,7 +22,6 @@ Class Profile_CCT_Tabs {
 		endif;
 		
 		if ( $display_tabs ):
-			// Play this if we are editing 
 			if ( $editing ):
 				?>
 				<div id="tabs">
@@ -36,24 +35,26 @@ Class Profile_CCT_Tabs {
 			endif; 
 			?>
 			<ul>
-			<?php 
-			$count = 1;
-			if ( is_array( $tabs ) ):
-				foreach( $tabs as $tab ): 
-					?>
-					<li><a href="#tabs-<?php echo $count; ?>" class="tab-link"><?php echo $tab; ?></a>
-					<?php if( $editing ): ?>
-						<span class="remove-tab">Remove Tab</span> <span class="edit-tab">Edit</span><input type="text" class="edit-tab-input" value="<?php echo esc_attr($tab); ?>" /><input type="button" class="edit-tab-save button" value="Save" />
-					<?php endif; ?>
-					</li>
-					<?php
-					$count++;
-				endforeach;
-			endif;
-			?>
-			<?php if ( $editing ): ?>
-				<li id="add-tab-shell"><a href="#add-tabshell" id="add-tab" title="Add Tab">Add Tab</a></li>
-			<?php endif; ?>
+				<?php 
+				$count = 1;
+				if ( is_array( $tabs ) ):
+					foreach( $tabs as $tab ): 
+						?>
+						<li>
+							<a href="#tabs-<?php echo $count; ?>" class="tab-link"><?php echo $tab; ?></a>
+							<?php if ( $editing ): ?>
+								<span class="remove-tab">Remove Tab</span> <span class="edit-tab">Edit</span><input type="text" class="edit-tab-input" value="<?php echo esc_attr($tab); ?>" /><input type="button" class="edit-tab-save button" value="Save" />
+							<?php endif; ?>
+						</li>
+						<?php
+						$count++;
+					endforeach;
+				endif;
+				?>
+				
+				<?php if ( $editing ): ?>
+					<li id="add-tab-shell"><a href="#add-tabshell" id="add-tab" title="Add Tab">Add Tab</a></li>
+				<?php endif; ?>
 			</ul>
 			<?php 
 			
@@ -65,14 +66,12 @@ Class Profile_CCT_Tabs {
 					<?php if ($editing): ?>
 						<input type="hidden" name="form_field[tabs][]" value="<?php echo esc_attr($tab); ?>" />
 					<?php endif; ?>
-					<?php
-					unset($fields);
-					Profile_CCT_Admin::render_context( 'tabbed-'.$count , false );
-					
-					?>
+						<?php
+						unset($fields);
+						Profile_CCT_Admin::render_context( 'tabbed-'.$count, $data );
+						?>
 					</div>
 					<?php
-					
 					$count++;
 				endforeach; 
 			endif;
@@ -100,6 +99,6 @@ Class Profile_CCT_Tabs {
  * @access public
  * @return void
  */
-function profile_cct_tabs_shell() {
-	Profile_CCT_Tabs::shell();
+function profile_cct_tabs_shell( $data ) {
+	Profile_CCT_Tabs::shell( $data );
 }

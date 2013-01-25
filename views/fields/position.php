@@ -46,7 +46,7 @@ Class Profile_CCT_Position extends Profile_CCT_Field {
 			'separator'    => ', ',
 			'default_text' => 'Wayne Enterprises',
 			'maybe_link'   => true,
-			'href'         => 'http://'.$this->data['url'],
+			'href'         => ( empty( $this->data['url'] ) ? '' : 'http://'.$this->data['url'] ),
 		) );
 		
 		$this->display_end_shell();

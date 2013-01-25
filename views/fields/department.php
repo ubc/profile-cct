@@ -54,7 +54,7 @@ Class Profile_CCT_Department extends Profile_CCT_Field {
 			'field_id'     => 'department',
 			'default_text' => 'Finance and Technology',
 			'maybe_link'   => true,
-			'href'         => 'http://'.$this->data['url'],
+			'href'         => ( empty( $this->data['url'] ) ? '' : 'http://'.$this->data['url'] ),
 		) );
 		$this->display_end_shell();
 	}

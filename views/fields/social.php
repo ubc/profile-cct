@@ -55,17 +55,19 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 	}
 	
 	function display_social_link( $attr ) {
-		$service = $this->social_options( 'user_url',  $this->data['option'] );
-		
-		if ( isset( $this->data ) ):
-			$attr['href'] = str_replace( '{value}', $this->data['usersocial'], $service['user_url'] );
-			$attr['value'] = '<img src="'.PROFILE_CCT_DIR_URL.'/img/'.$service['type'].'.png" /><strong>'.$this->data['option'].'</strong>/ '.$this->data['usersocial'];
-		else:
-			$attr['href'] = "http://www.facebook.com/";
-			$attr['default_text'] = '<img src="'.PROFILE_CCT_DIR_URL.'/img/facebook.png" /><strong>Facebook</strong>/ waynebiz';
+		if ( ! empty( $this->data['option'] ) ):
+			$service = $this->social_options( 'user_url',  $this->data['option'] );
+			
+			if ( isset( $this->data ) ):
+				$attr['href'] = str_replace( '{value}', $this->data['usersocial'], $service['user_url'] );
+				$attr['value'] = '<img src="'.PROFILE_CCT_DIR_URL.'/img/'.$service['type'].'.png" /><strong>'.$this->data['option'].'</strong>/ '.$this->data['usersocial'];
+			else:
+				$attr['href'] = "http://www.facebook.com/";
+				$attr['default_text'] = '<img src="'.PROFILE_CCT_DIR_URL.'/img/facebook.png" /> <strong>Facebook</strong>/ waynebiz';
+			endif;
+			
+			$this->display_link( $attr );
 		endif;
-		
-		$this->display_link( $attr );
 	}
 	
 	/**

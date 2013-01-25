@@ -1,7 +1,5 @@
 <?php 
-
 Class Profile_CCT_Permalink extends Profile_CCT_Field {
-		
 	/**
 	 * default_options
 	 * 
@@ -9,17 +7,15 @@ Class Profile_CCT_Permalink extends Profile_CCT_Field {
 	 * @access public
 	 */
 	var $default_options = array(
-		'type' => 'permalink',
-		'label' => 'permalink',
+		'type'        => 'permalink',
+		'label'       => 'permalink',
 		'description' => '',
-		
-		'link_to' => true, // always link to
-		
-		'width' => 'full',
-		'before' => '',
-		'empty' => '',
-		'after' =>'',
-		'text'	=>'more info',
+		'link_to'     => true, // always link to
+		'width'       => 'full',
+		'before'      => '',
+		'empty'       => '',
+		'after'       =>'',
+		'text'	      =>'more info',
 	);
 	
 	
@@ -30,13 +26,13 @@ Class Profile_CCT_Permalink extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		
 		$this->display_shell( array( 'class' => 'permalink' ) );
 		
-		$this->display_text( array( 'value' => $this->text ) );
-	
+		$this->display_text( array(
+			'value' => $this->text,
+		) );
+		
 		$this->display_end_shell( );
-
 	}
 	
 	/**
@@ -50,12 +46,8 @@ Class Profile_CCT_Permalink extends Profile_CCT_Field {
 	 */
 	public static function shell( $options, $data ) {
 		new Profile_CCT_Permalink( $options, $data ); 
-	}
-	
+	}	
 }
-
-
-
 
 /**
  * profile_cct_permalink_display_shell function.
@@ -66,9 +58,7 @@ Class Profile_CCT_Permalink extends Profile_CCT_Field {
  * @return void
  */
 function profile_cct_permalink_display_shell( $options, $data ) {
-	
 	Profile_CCT_Permalink::shell( $options, $data );
-	
 }
 
 /*

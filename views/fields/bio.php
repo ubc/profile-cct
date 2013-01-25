@@ -1,7 +1,16 @@
 <?php 
 function profile_cct_bio_shell( $options, $data = null ) {
-	$options->type  = 'bio'; // make sure that you can't over write this
-	$options->label = ( !empty( $options->label ) ? $options->label : 'Biography' ); // 
+	$type = 'bio'; // make sure that you can't over write this
+	
+	if ( ! is_array( $options ) && get_class( $options ) == "WP_Post" ):
+		$label = ( ! empty( $data['args']['options']['label'] ) ? $data['args']['options']['label'] : 'Biography' );
+		$data['args']['options']['type'] = $type;
+		$data['args']['options']['label'] = $label;
+	else:
+		$label = ( ! empty( $options['label'] ) ? $options['label'] : 'Biography' );
+		$options['type'] = $type;
+		$options['label'] = $label;
+	endif;
 		
 	Profile_CCT_Textarea::shell( $options, $data );
 }

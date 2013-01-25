@@ -628,7 +628,7 @@ class Profile_CCT_Admin {
 		$contexts = self::default_shells();
 		$index = array_search( 'tabs', $contexts );
 		
-		if ( is_numeric( $index ) ):
+		/*if ( is_numeric( $index ) ):
 			$tabs = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page, 'tabs' );
             
 			$tab_contexts = array();
@@ -645,7 +645,7 @@ class Profile_CCT_Admin {
 			endif;
             
 			$contexts = array_values( $contexts );
-		endif;
+		endif;*/
 		
 		return $contexts;
 	}
@@ -676,7 +676,7 @@ class Profile_CCT_Admin {
 		case 'page':
 			Profile_CCT_Admin::$page = 'page';
 			foreach ( self::get_contexts() as $context ):
-				echo "<br />===== ".$context." =====<br />";
+				//echo "<br />===== ".$context." =====<br />";
 				Profile_CCT_Admin::render_context( $context, $data );
 			endforeach;
 			break;
@@ -701,8 +701,8 @@ class Profile_CCT_Admin {
 		$class = ( 'bench' != $context ? 'form-builder' : '' );
         
 		if ( function_exists('profile_cct_'.$context.'_shell') ):
-			echo "CALLED FUNCTION: profile_cct_".$context."_shell";
-			call_user_func('profile_cct_'.$context.'_shell');
+			//echo "CALLED FUNCTION: profile_cct_".$context."_shell";
+			call_user_func('profile_cct_'.$context.'_shell', $data);
 		else:
 			?>
 			<div id="<?php echo $context; ?>-shell" >

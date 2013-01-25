@@ -98,7 +98,7 @@ class Profile_CCT_Field {
 	}
 
 	function start_field() {
-		echo '<br />--- '.$this->type.' ---';
+		//echo '<br />--- '.$this->type.' ---';
 		// lets display the start of the field to the user
 		if ( 'edit' == $this->action ): ?>
 	 		<li class="<?php echo' shell-'.esc_attr( $this->type ); ?> field-item <?php echo $this->class." ".$this->width; ?>" for="cct-<?php echo esc_attr( $this->type ); ?>" data-options="<?php echo esc_attr( $this->serialize( $this->options ) ); ?>" >
@@ -138,7 +138,7 @@ class Profile_CCT_Field {
 						'class'        => 'field-width',
 						'label'        => 'select width',
 						'before_label' => true,
-						'all_fields'   => array('full', 'half', 'one-third', 'two-third'),
+						'all_fields'   => array( 'full', 'half', 'one-third', 'two-third' ),
 						'value'        => $this->width,
 					) );
 				endif;
@@ -244,9 +244,9 @@ class Profile_CCT_Field {
 		<div class="field-shell field-shell-<?php echo $this->type; ?>">
 		<?php
 		
-		/*if ( isset( $this->description ) ):
-			printf( '<pre class="description">%s</pre>', esc_html($description) );
-		endif;*/
+		if ( isset( $this->description ) && 'edit' ==$this->action ):
+			printf( '<pre class="description">%s</pre>', esc_html($this->description) );
+		endif;
 	}
 
 	function end_field() {

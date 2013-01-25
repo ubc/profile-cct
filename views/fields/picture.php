@@ -1,23 +1,21 @@
 <?php 
 // Still lots of work to be done here
-
 if ( !defined( 'PROFILE_CCT_FULL_WIDTH'         ) ) define( 'PROFILE_CCT_FULL_WIDTH',         150 );
 if ( !defined( 'PROFILE_CCT_FULL_HEIGHT'        ) ) define( 'PROFILE_CCT_FULL_HEIGHT',        150 );
 if ( !defined( 'PROFILE_CCT_MAX_PREVIEW_WIDTH'  ) ) define( 'PROFILE_CCT_MAX_PREVIEW_WIDTH',  400 );
 if ( !defined( 'PROFILE_CCT_MAX_PREVIEW_HEIGHT' ) ) define( 'PROFILE_CCT_MAX_PREVIEW_HEIGHT', 400 );
 
 Class Profile_CCT_Picture extends Profile_CCT_Field {
-	
 	var $default_options = array(
-		'type' => 'picture',
-		'label' => 'picture',
-		'description' => '',
-		'link_to'	=> true,
+		'type'         => 'picture',
+		'label'        => 'picture',
+		'description'  => '',
+		'link_to'	   => true,
 		'show_link_to' => true,
-		'width' => 'one-third',
-		'before' => '',
-		'empty' => '',
-		'after' => '',
+		'width'        => 'one-third',
+		'before'       => '',
+		'empty'        => '', //<img src="http://placehold.it/180x220" />
+		'after'        => '',
 	);
 	
 	function field() {
@@ -31,63 +29,63 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 	
 	function picture() {
 		global $post;
-			
-	 	// $field 	= Profile_CCT::get_object();
-	 	// $show 	= (is_array($show) ? $show : array());
-	 	// $href 	= ( isset($post) ? get_permalink() : "#" );
-	
-		if( isset( $post ) ):
-			// $field->display_text( array( 'field_type'=>$type, 'class' => '', 'type' => 'shell', 'tag' => 'a','link_to'=>$link_to, 'href'=>$href ) );
-			// $this->post_thumbnail( $post->ID, 'full' );
-			// $field->display_end_shell( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'a','link_to'=>$link_to) );
-		else:
-			global $current_user;
-	      	// get_currentuserinfo();
-			echo '<div id="user-avatar-display-image">'.get_avatar( $current_user->user_email, 150 ).'</div>';
-		endif;
+		
+		?>
+		<div id="user-avatar-display-image">
+			<?php
+			if ( isset( $post ) ):
+				echo get_the_post_thumbnail($post->ID, array(150, 150));
+			else:
+				global $current_user;
+				echo get_avatar( $current_user->user_email, 150 );
+			endif;
+			?>
+		</div>
+		<?php
 	}
 	
 	function update_picture() {
-		// create the 
 		global $post;
-	
+		
 		$picture_options = $this->picture_options();
 		$iframe_width = $picture_options['width'] + 520;
 		
-		if( empty($post) ): // in the preview ?>
-			<span class="add-multiple"><a class="button disabled" disabled="disabled" style="display: inline;" href="#add">Update Picture</a> <em>disabled in preview</em></span>
+		if ( empty($post) ): // If you are viewing the preview.
+			?>
+			<span class="add-multiple">
+				<a class="button disabled" disabled="disabled" style="display: inline;" href="#add">Update Picture</a>
+				 <em>disabled in preview</em>
+			</span>
 			<?php
 			return;
 		endif;
-		$update_url = 	admin_url('admin-ajax.php').'?action=profile_cct_picture_add_photo&step=1&post_id='. $post->ID .'&TB_iframe=true&width=' .$iframe_width .'&height=520';
 		
-		// update picture 
-		if( has_post_thumbnail() ):
-			
-			
-			printf('<a id="user-avatar-link" class="button thickbox" href="%s" title="Upload and Crop an Image to be Displayed" >Update Picture</a>', $update_url);
-			
-			// Remove the User-Avatar button if there is no uploaded image
-			$remove_url = admin_url('post.php')."?post=".$post->ID."&action=edit&delete_avatar=true&_nononce=". wp_create_nonce('profile_cct_picture');
-			printf(' <a id="user-avatar-remove" class="submitdelete deleteaction" href="%s" title="Remove User Avatar Image" >Remove</a>', $remove_url );
+		$update_url = admin_url('admin-ajax.php').'?action=profile_cct_picture_add_photo&step=1&post_id='.$post->ID.'&TB_iframe=true&width='.$iframe_width.'&height=520';
+		$remove_url = admin_url('post.php')."?post=".$post->ID."&action=edit&delete_avatar=true&_nononce=".wp_create_nonce('profile_cct_picture');
+		if ( has_post_thumbnail() ):
+			?>
+			<a id="user-avatar-link" class="button thickbox" href="<?php echo $update_url; ?>" title="Upload and Crop an Image to be Displayed">Update Picture</a>
+			<a id="user-avatar-remove" class="submitdelete deleteaction" href="<?php echo $remove_url; ?>" title="Remove Profile Image" >Remove</a>
+			<?php
+		else:
+			?>
+			<a id="user-avatar-link" class="button thickbox" href="<?php echo $update_url; ?>" title="Upload and Crop an Image to be Displayed">Add Picture</a>
+			<?php
+		endif;
 		
-		else: // add picture 
-			printf('<a id="user-avatar-link" class="button thickbox" href="%s" title="Upload and Crop an Image to be Displayed" >Add Picture</a>', $update_url);
-		
-		endif; ?>
+		?>
 		<script type="text/javascript">
-		//<![CDATA[
-		function profile_cct_picture_refresh_image( img ) {
-		 	jQuery( '#user-avatar-display-image' ).html( img );
-		}
-		function profile_cct_add_remove_avatar_link() {
-			if( !jQuery( '#user-avatar-remove' ) ) {
-				jQuery( '#user-avatar-link' ).after( " <a href='<?php echo $remove_url; ?>' class='submitdelete'  id='user-avatar-remove' ><?php _e('Remove','user-avatar'); ?></a>")
+			function profile_cct_picture_refresh_image( img ) {
+				jQuery( '#user-avatar-display-image' ).html( img );
 			}
-		}
-		//]]>
+			
+			function profile_cct_add_remove_avatar_link() {
+				if ( !jQuery( '#user-avatar-remove' ) ) {
+					jQuery( '#user-avatar-link' ).after( "<a href='<?php echo $remove_url; ?>' class='submitdelete' id='user-avatar-remove'><?php _e('Remove','user-avatar'); ?></a>")
+				}
+			}
 		</script>
-	<?php
+		<?php
 	}
 	
 	/**
@@ -97,7 +95,10 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function picture_options() {
-		return array( 'width' => 150, 'height' => 150 );
+		return array(
+			'width'  => PROFILE_CCT_FULL_WIDTH,
+			'height' => PROFILE_CCT_FULL_HEIGHT,
+		);
 	}
 	
 	/**
@@ -110,16 +111,13 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 	 * @return void
 	 */
 	public static function shell( $options, $data ){
-		New Profile_CCT_Picture( $options, $data );
+		new Profile_CCT_Picture( $options, $data );
 	}
-	
 }
 
 function profile_cct_picture_shell( $options, $data ){
-	
 	Profile_CCT_Picture::shell( $options, $data );
 }
-
 
 /**
  * profile_cct_picture_shell function.

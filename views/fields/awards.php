@@ -44,7 +44,7 @@ Class Profile_CCT_Awards extends Profile_CCT_Field {
 			'field_id'       => 'award-name',
 			'class'          => 'award-name',
 			'default_text'   => 'Gotham Prize for Cancer Research',
-			'href'           => 'http://'.$this->data['award-website'],
+			'href'           => ( empty( $this->data['award-website'] ) ? '' : 'http://'.$this->data['award-website'] ),
 			'post_separator' => ' ',
 		) );
 		$this->display_text( array(

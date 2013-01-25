@@ -51,7 +51,7 @@ Class Profile_CCT_Website extends Profile_CCT_Field {
 			'field_id'     => 'site-title',
 			'default_text' => 'http://wayneenterprises.biz',
 			'value'        => $this->data['site-title'],
-			'href'         => 'http://'.$this->data['website'],
+			'href'         => ( empty( $this->data['website'] ) ? '' : 'http://'.$this->data['website'] ),
 			'force_link'   => true,
 		) );
 		$this->display_end_shell();

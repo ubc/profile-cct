@@ -1,5 +1,4 @@
 <?php 
-
 class Profile_CCT_Phone extends Profile_CCT_Field {
 	/**
 	 * default_options
@@ -8,20 +7,17 @@ class Profile_CCT_Phone extends Profile_CCT_Field {
 	 * @access public
 	 */
 	var $default_options = array(
-		'type' => 'phone',
-		'label' => 'phone',
-		'description' => '',
-		
-		'show'=> array( 'tel-1' ),
-		'show_fields'=> array( 'tel-1', 'extension' ),
-		
-		'multiple' => true,
+		'type'          => 'phone',
+		'label'         => 'phone',
+		'description'   => '',
+		'show'          => array( 'tel-1' ),
+		'show_fields'   => array( 'tel-1', 'extension' ),
+		'multiple'      => true,
 		'show_multiple' => true,
-		
-		'width' => 'full',
-		'before' => '',
-		'empty' => '',
-		'after' => '',
+		'width'         => 'full',
+		'before'        => '',
+		'empty'         => '',
+		'after'         => '',
 	);
 	
 	/**
@@ -31,11 +27,31 @@ class Profile_CCT_Phone extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function field() {
-		$this->input_select( array( 'field_id' => 'option','label' => 'Option', 'all_fields' => $this->phone_options() ) );
-		$this->input_text( array( 'field_id' => 'tel-1','label' => '###', 'size' => 3 ) );
-		$this->input_text( array( 'field_id' => 'tel-2','label' => '###', 'size' => 3 ) );
-		$this->input_text( array( 'field_id' => 'tel-3','label' => '####', 'size' => 4 ) );
-		$this->input_text( array( 'field_id' => 'extension','label' => 'extension', 'size' => 4 ) );
+		$this->input_select( array(
+			'field_id'   => 'option',
+			'label'      => 'Option',
+			'all_fields' => $this->phone_options(),
+		) );
+		$this->input_text( array(
+			'field_id' => 'tel-1',
+			'label'    => '###',
+			'size'     => 3,
+		) );
+		$this->input_text( array(
+			'field_id' => 'tel-2',
+			'label'    => '###',
+			'size'     => 3, 
+		) );
+		$this->input_text( array(
+			'field_id' => 'tel-3',
+			'label'    => '####',
+			'size'     => 4,
+		) );
+		$this->input_text( array(
+			'field_id' => 'extension',
+			'label'    => 'extension',
+			'size'     => 4,
+		) );
 	}
 	
 	/**
@@ -46,11 +62,37 @@ class Profile_CCT_Phone extends Profile_CCT_Field {
 	 */
 	function display() {
 		$this->display_shell( array( 'class' => 'telephone tel') );
-		$this->display_text( array( 'field_id' => 'option', 'class' => 'type', 'default_text' => 'Work', 'post_separator' => ': ' ) );
-		$this->display_text( array( 'field_id' => 'tel-1', 'class' => 'tel-1', 'default_text' => '735', 'post_separator' => '-' ) );
-		$this->display_text( array( 'field_id' => 'tel-2', 'class' => 'tel-2', 'default_text' => '279', 'post_separator' => '-' ) );
-		$this->display_text( array( 'field_id' => 'tel-3', 'class' => 'tel-3', 'default_text' => '2963' ) );
-		$this->display_text( array( 'field_id' => 'extension', 'class' => 'extension', 'default_text' => '2', 'separator' => ' ext:' ) );
+		
+		$this->display_text( array(
+			'field_id'       => 'option',
+			'class'          => 'type',
+			'default_text'   => 'Work',
+			'post_separator' => ': ',
+		) );
+		$this->display_text( array(
+			'field_id'       => 'tel-1',
+			'class'          => 'tel-1',
+			'default_text'   => '735',
+			'post_separator' => '-',
+		) );
+		$this->display_text( array(
+			'field_id'       => 'tel-2',
+			'class'          => 'tel-2',
+			'default_text'   => '279',
+			'post_separator' => '-',
+		) );
+		$this->display_text( array(
+			'field_id'     => 'tel-3',
+			'class'        => 'tel-3',
+			'default_text' => '2963',
+		) );
+		$this->display_text( array(
+			'field_id'     => 'extension',
+			'class'        => 'extension',
+			'default_text' => '2',
+			'separator'    => ' ext:',
+		) );
+		
 		$this->display_end_shell();
 	}
 	
@@ -66,7 +108,6 @@ class Profile_CCT_Phone extends Profile_CCT_Field {
 	public static function shell( $options, $data ) {
 		new Profile_CCT_Phone( $options, $data ); 
 	}
-	
 }
 
 /**
