@@ -20,6 +20,10 @@ Class Profile_CCT_Department extends Profile_CCT_Field {
 		'width'         => 'full',
 	);
 	
+	var $shell = array(
+		'class' => 'department',
+	);
+	
 	/**
 	 * field function.
 	 * 
@@ -49,14 +53,12 @@ Class Profile_CCT_Department extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		$this->display_shell( array( 'class' => 'department') );
 		$this->display_link( array(
 			'field_id'     => 'department',
 			'default_text' => 'Finance and Technology',
 			'maybe_link'   => true,
 			'href'         => ( empty( $this->data['url'] ) ? '' : 'http://'.$this->data['url'] ),
 		) );
-		$this->display_end_shell();
 	}
 	
 	/**

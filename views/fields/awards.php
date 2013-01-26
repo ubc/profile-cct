@@ -14,6 +14,10 @@ Class Profile_CCT_Awards extends Profile_CCT_Field {
 		'after'         => '',
 	);
 	
+	var $shell = array(
+		'class' => 'awards',
+	);
+	
 	function field() {
 		$this->input_text( array(
 			'field_id' => 'award-name',
@@ -38,8 +42,6 @@ Class Profile_CCT_Awards extends Profile_CCT_Field {
 	}
 	
 	function display() {
-		$this->display_shell( array( 'class' => 'awards'  ) );
-		
 		$this->display_link( array(
 			'field_id'       => 'award-name',
 			'class'          => 'award-name',
@@ -58,8 +60,6 @@ Class Profile_CCT_Awards extends Profile_CCT_Field {
 			'default_text' => '2011',
 			'separator'    => ', ',
 		));
-		
-		$this->display_end_shell();
 	}
 	
 	public static function shell( $options, $data ) {

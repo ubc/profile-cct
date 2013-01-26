@@ -18,6 +18,10 @@ Class Profile_CCT_Text extends Profile_CCT_Field {
 		'after'         =>'',
 	);
 	
+	var $shell = array(
+		'class' => 'text',
+	);
+	
 	/**
 	 * field function.
 	 * 
@@ -40,12 +44,10 @@ Class Profile_CCT_Text extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		$this->display_shell( array( 'class' => 'text') );
 		$this->display_text( array(
-			'class' => 'text text',
+			'class'        => 'text text',
 			'default_text' => 'lorem ipsum',
 		) );
-		$this->display_end_shell();
 	}
 	
 	/**

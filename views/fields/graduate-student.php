@@ -59,6 +59,10 @@ Class Profile_CCT_Graduatestudent extends Profile_CCT_Field {
 		) );
 	}
 	
+	var $shell = array(
+		'class' => 'graduatestudent',
+	);
+	
 	/**
 	 * display function.
 	 * 
@@ -66,8 +70,6 @@ Class Profile_CCT_Graduatestudent extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		$this->display_shell( array( 'class' => 'graduatestudent' ) );
-		
 		$this->display_text( array(
 			'field_id'       => 'student-salutations',
 			'class'          => 'honorific-prefix student-salutations',
@@ -104,8 +106,6 @@ Class Profile_CCT_Graduatestudent extends Profile_CCT_Field {
 			'default_text' => 'http://richardjohngrayson.com/',
 			'href'         => ( empty( $this->data['student-website'] ) ? '' : 'http://'.$this->data['student-website'] ),
 		) );
-		
-		$this->display_end_shell();
 	}
 	
 	/**

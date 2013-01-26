@@ -18,6 +18,9 @@ Class Profile_CCT_Permalink extends Profile_CCT_Field {
 		'text'	      =>'more info',
 	);
 	
+	var $shell = array(
+		'class' => 'permalink',
+	);
 	
 	/**
 	 * display function.
@@ -26,13 +29,9 @@ Class Profile_CCT_Permalink extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		$this->display_shell( array( 'class' => 'permalink' ) );
-		
 		$this->display_text( array(
 			'value' => $this->text,
 		) );
-		
-		$this->display_end_shell( );
 	}
 	
 	/**

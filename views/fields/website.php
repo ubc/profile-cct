@@ -20,6 +20,10 @@ Class Profile_CCT_Website extends Profile_CCT_Field {
 		'after'         => '',
 	);
 	
+	var $shell = array(
+		'class' => 'website',
+	);
+	
 	/**
 	 * field function.
 	 * 
@@ -46,7 +50,6 @@ Class Profile_CCT_Website extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		$this->display_shell( array( 'class' => 'website' ) );
 		$this->display_link( array(
 			'field_id'     => 'site-title',
 			'default_text' => 'http://wayneenterprises.biz',
@@ -54,7 +57,6 @@ Class Profile_CCT_Website extends Profile_CCT_Field {
 			'href'         => ( empty( $this->data['website'] ) ? '' : 'http://'.$this->data['website'] ),
 			'force_link'   => true,
 		) );
-		$this->display_end_shell();
 	}
 	
 	/**

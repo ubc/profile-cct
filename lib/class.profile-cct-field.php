@@ -31,6 +31,9 @@ class Profile_CCT_Field {
 	
 	// data
 	var $data;
+	//var $input_array;
+	//var $display_array;
+	//var $shell_array;
 
 	function __construct ( $options, $data ) {
 		if ( ! is_array($options) && get_class($options) == "WP_Post" ):
@@ -84,8 +87,21 @@ class Profile_CCT_Field {
 			if ( 'form' == $this->page || false == $this->page ):
 				$this->field();
 			else:
+				ob_start();
 				$this->display();
+				$contents = ob_get_contents();
+				if ( $contents == '' ):
+					ob_end_clean();
+					echo $this->empty;
+				else:
+					if ( isset( $this->shell ) ) $this->display_shell( $this->shell );
+					ob_end_flush();
+					if ( isset( $this->shell ) ) $this->display_end_shell( $this->shell );
+				endif;
 			endif;
+			
+			/*$form = 'form' == $this->page || false == $this->page;
+			$this->construct_field( $form );*/
 			
 			if ($enable_remove):
 				?>
@@ -248,6 +264,38 @@ class Profile_CCT_Field {
 			printf( '<pre class="description">%s</pre>', esc_html($this->description) );
 		endif;
 	}
+	
+	/*function construct_field( $form = false ) {
+		if ( $form ):
+			$construct_array = $this->input_array;
+		else:
+			$construct_array = $this->display_array;
+			$this->display_shell( $this->shell_array );
+		endif;
+		
+		if ( is_array( $construct_array ) ):
+			ob_start();
+			foreach ( $construct_array as $field ):
+				if ( method_exists( $this, $field['function'] ) ):
+					call_user_method( $field['function'], $this, $field['args'] );
+				endif;
+			endforeach;
+			
+			$contents = ob_get_contents();
+			if ( $contents == '' ):
+				ob_end_clean();
+				echo $this->empty;
+			else:
+				ob_end_flush();
+			endif;
+		else:
+			echo $this->empty;
+		endif;
+		
+		if ( ! $form ):
+			$this->display_end_shell( $this->shell_array );
+		endif;
+	}*/
 
 	function end_field() {
 		$shell_tag  = ( $this->action == 'edit' ? 'li' : 'div');

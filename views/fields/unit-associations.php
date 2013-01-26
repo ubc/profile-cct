@@ -20,6 +20,10 @@ Class Profile_CCT_Unitassociations extends Profile_CCT_Field {
 		'after'         => '',
 	);
 	
+	var $shell = array(
+		'class' => 'unit-associations',
+	);
+	
 	/**
 	 * field function.
 	 * 
@@ -46,16 +50,12 @@ Class Profile_CCT_Unitassociations extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		$this->display_shell( array( 'class' => 'unit-associations') );
-		
 		$this->display_link( array(
 			'field_id'     => 'unit',
 			'default_text' => 'Biotechnology',
 			'maybe_link'   => true,
 			'href'         => ( empty( $this->data['unit-website'] ) ? '' : 'http://'.$this->data['unit-website'] ),
 		) );
-		
-		$this->display_end_shell();
 	}
 	
 	/**

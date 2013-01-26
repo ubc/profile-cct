@@ -23,6 +23,11 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
 		'after'        => '',
     );
 	
+	var $shell = array(
+		'class' => 'fn n',
+		'tag'   => 'h2',
+	);
+	
     /**
      * field function.
      * 
@@ -64,8 +69,6 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
      * @return void
      */
     function display() {
-		$this->display_shell( array( 'class' => 'fn n', 'tag' => 'h2' ) );
-		
 		$this->display_text( array(
 			'field_id'     => 'salutations',
 			'class'        => 'honorific-prefix salutations',
@@ -95,8 +98,6 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
 			'separator'    => ', ',
 			'default_text' => 'BCom',
 		) );
-		
-		$this->display_end_shell( array( 'tag' => 'h2' ) );
     }
 
     public static function shell( $options, $data ) {

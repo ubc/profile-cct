@@ -14,6 +14,10 @@ Class Profile_CCT_Education extends Profile_CCT_Field {
 		'after'         => '',
 	);
 	
+	var $shell = array(
+		'class' => 'educaton',
+	);
+	
 	/**
 	 * field function.
 	 * 
@@ -50,7 +54,6 @@ Class Profile_CCT_Education extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		$this->display_shell( array( 'class' => 'educaton' ) );	
 		$this->display_text( array(
 			'field_id'     => 'school',
 			'class'        => 'school',
@@ -74,7 +77,6 @@ Class Profile_CCT_Education extends Profile_CCT_Field {
 			'default_text' => 'BCom',
 			'separator'    => ', ',
 		) );	
-		$this->display_end_shell();
 	}
 	
 	/**

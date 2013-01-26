@@ -18,6 +18,10 @@ Class Profile_CCT_Specialization extends Profile_CCT_Field {
 		'after'         => '',
 	);
 	
+	var $shell = array(
+		'class' => 'specialization',
+	);
+	
 	/**
 	 * field function.
 	 * 
@@ -39,12 +43,10 @@ Class Profile_CCT_Specialization extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		$this->display_shell( array( 'class' => 'specialization' ) );
 		$this->display_text( array(
 			'field_id' => 'specialization',
 			'default_text' => 'Philanthropy',
 		) );
-		$this->display_end_shell();
 	}
 	
 	/**

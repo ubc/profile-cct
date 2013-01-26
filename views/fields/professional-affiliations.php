@@ -20,6 +20,10 @@ Class Profile_CCT_Professionalaffiliations extends Profile_CCT_Field {
 		'after'         => '',
 	);
 	
+	var $shell = array(
+		'class' => 'professionalaffiliations',
+	);
+	
 	/**
 	 * field function.
 	 * 
@@ -65,7 +69,6 @@ Class Profile_CCT_Professionalaffiliations extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		$this->display_shell( array( 'class' => 'professionalaffiliations' ) );
 		$this->display_link( array(
 			'field_id'       => 'affiliation',
 			'class'          => 'affiliation',
@@ -93,7 +96,6 @@ Class Profile_CCT_Professionalaffiliations extends Profile_CCT_Field {
 			'class'        => 'active-date-year',
 			'default_text' => '1951',
 		) );
-		$this->display_end_shell();
 	}
 	
 	public static function shell( $options, $data ) {

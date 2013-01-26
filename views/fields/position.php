@@ -14,6 +14,10 @@ Class Profile_CCT_Position extends Profile_CCT_Field {
 		'after'         => '',
 	);
 	
+	var $shell = array(
+		'class' => 'position',
+	);
+	
 	function field() {
 		$this->input_text( array(
 			'field_id' => 'position',
@@ -33,8 +37,6 @@ Class Profile_CCT_Position extends Profile_CCT_Field {
 	}
 	
 	function display() {
-		$this->display_shell( array(  'class' => 'position' ) );
-		
 		$this->display_text( array(
 			'field_id'     => 'position',
 			'class'        => 'role',
@@ -48,8 +50,6 @@ Class Profile_CCT_Position extends Profile_CCT_Field {
 			'maybe_link'   => true,
 			'href'         => ( empty( $this->data['url'] ) ? '' : 'http://'.$this->data['url'] ),
 		) );
-		
-		$this->display_end_shell();
 	}
 	
 	public static function shell( $options, $data ) {

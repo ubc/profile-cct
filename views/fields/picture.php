@@ -29,19 +29,15 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 	
 	function picture() {
 		global $post;
+		$image = ( isset( $post ) ? get_the_post_thumbnail($post->ID, array(150, 150)) : get_avatar( $current_user->user_email, 150 ) );
 		
-		?>
-		<div id="user-avatar-display-image">
-			<?php
-			if ( isset( $post ) ):
-				echo get_the_post_thumbnail($post->ID, array(150, 150));
-			else:
-				global $current_user;
-				echo get_avatar( $current_user->user_email, 150 );
-			endif;
+		if ( $image != null ):
 			?>
-		</div>
-		<?php
+			<div id="user-avatar-display-image">
+				<?php echo $image; ?>
+			</div>
+			<?php
+		endif;
 	}
 	
 	function update_picture() {

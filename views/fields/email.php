@@ -1,7 +1,6 @@
 <?php 
 
 Class Profile_CCT_Email extends Profile_CCT_Field {
-	
 	/**
 	 * default_options
 	 * 
@@ -18,6 +17,10 @@ Class Profile_CCT_Email extends Profile_CCT_Field {
 		'before'        => '',
 		'empty'         => '',
 		'after'         => '',
+	);
+	
+	var $shell = array(
+		'class' => 'email',
 	);
 	
 	/**
@@ -41,14 +44,10 @@ Class Profile_CCT_Email extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		$this->display_shell( array( 'class' => 'email') );
-		
 		$this->display_email( array(
 			'field_id'     => 'email',
 			'default_text' => 'bruce.wayne@wayneenterprises.com',
 		) );
-		
-		$this->display_end_shell();
 	}
 	
 	/**

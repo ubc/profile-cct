@@ -14,6 +14,10 @@ Class Profile_CCT_Projects extends Profile_CCT_Field {
 		'after'         => '',
 	);
 	
+	var $shell = array(
+		'class' => 'projects',
+	);
+	
 	function field() {
 		$this->input_text( array(
 			'field_id' => 'project-title',
@@ -58,7 +62,6 @@ Class Profile_CCT_Projects extends Profile_CCT_Field {
 	}
 	
 	function display() {
-		$this->display_shell( array( 'class' => 'projects') );
 		$this->display_text( array(
 			'field_id'       => 'project-title',
 			'class'          => 'project-title',
@@ -109,7 +112,6 @@ Class Profile_CCT_Projects extends Profile_CCT_Field {
 			'class'        => 'project-description',
 			'default_text' => 'The current research at Wayne Biotech is focused on finding a cure for cancer.',
 		) );
-		$this->display_end_shell();
 	}
 	
 	public static function shell( $options, $data ) {

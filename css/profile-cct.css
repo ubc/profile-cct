@@ -44,12 +44,12 @@
 	margin-bottom: 0;
 }
 
-.field-item > .field-shell {
-    margin-bottom: 10px;
-}
-/*.field-item > .field-shell > .field:last-child > *:last-child {
+/*.field-item > .field-shell {
     margin-bottom: 10px;
 }*/
+.field-item > .field-shell > .field:last-child > *:last-child {
+    margin-bottom: 10px;
+}
 
 .field-shell-name .field h2 {
     margin-top: 10px;

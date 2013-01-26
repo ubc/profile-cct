@@ -18,6 +18,10 @@ Class Profile_CCT_Officehours extends Profile_CCT_Field {
 		'after'         => ''
 	);
 	
+	var $shell = array(
+		'class' => 'officehours',
+	);
+	
 	/**
 	 * field function.
 	 * 
@@ -72,8 +76,6 @@ Class Profile_CCT_Officehours extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		$this->display_shell( array( 'class' => 'officehours' ) );
-		
 		$separator = "";
 		if ( isset( $this->data['days'] ) ):
 			foreach( $this->data['days'] as $day ):
@@ -126,8 +128,6 @@ Class Profile_CCT_Officehours extends Profile_CCT_Field {
 			'class'        => 'end-period',
 			'default_text' => 'PM',
 		) );
-		
-		$this->display_end_shell();
 	}
 	
 	/**

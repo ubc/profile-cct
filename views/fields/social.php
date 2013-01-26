@@ -17,6 +17,10 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 		'after'         => '',
 	);
 	
+	var $shell = array(
+		'class' => 'social-link',
+	);
+	
 	/**
 	 * field function.
 	 * 
@@ -47,11 +51,9 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		$this->display_shell( array( 'class' => 'social-link' ) );
 		$this->display_social_link( array(
-			'field_id'     => 'usersocial',
+			'field_id' => 'usersocial',
 		) );
-		$this->display_end_shell();
 	}
 	
 	function display_social_link( $attr ) {

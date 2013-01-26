@@ -12,6 +12,10 @@ Class Profile_CCT_Address extends Profile_CCT_Field {
 		'after'       => '',
 	);
 	
+	var $shell = array(
+		'class' => 'address adr',
+	);
+	
 	/**
 	 * field function.
 	 * 
@@ -68,8 +72,6 @@ Class Profile_CCT_Address extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		$this->display_shell( array('class' => 'address adr' ) );
-		
 		$this->display_text( array(
 			'field_id'       => 'building-name',
 			'class'          => 'building-name',
@@ -116,8 +118,6 @@ Class Profile_CCT_Address extends Profile_CCT_Field {
 			'default_text' => 'United States',
 			'tag'          => 'div',
 		) );
-		
-		$this->display_end_shell();
 	}
 	
 	/**
