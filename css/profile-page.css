@@ -16,10 +16,6 @@
 	display: none;
 }
 
-.field-item .textarea-shell {
-	margin:-15px 0 0 0;
-}
-
 .inside {
     position: relative;
     overflow: hidden;
@@ -47,6 +43,23 @@
 	width: 100%;
 }
 
+.field-item .textarea-shell {
+	margin: -15px 0 0 0;
+}
+
+.field-item .textarea-shell .wp-editor-wrap {
+    margin-top: 10px;
+}
+
+.field-item .textarea-shell textarea {
+    width: 100%;
+    resize: vertical;
+}
+
+.field-item .textarea-shell .mceIframeContainer {
+    background: white;
+}
+
 .field-item label {
 	display: block;
 	color: #888;
@@ -57,8 +70,8 @@
 .field-item hr {
 	border: 0;
 	height: 0;
-	border-top: 1px solid rgba(0,0,0,0.1);
-	border-bottom: 1px solid rgba(255,255,255, 0.3);
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 #post-body-content  select {
@@ -68,11 +81,11 @@
     padding: 2px 4px;
 }
 
-#post-body-content textarea {
+/*#post-body-content textarea {
 	display: block;
 	min-height: 200px;
 	min-width: 661px;
-}
+}*/
 
 /* Address */
 .address {
@@ -88,13 +101,13 @@
 }
 
 #side-info-column .field-item textarea {
-	width:253px;
+	width: 253px;
 	height: 300px;
 	display: block;
 }
 
 .wrap-fields {
-	clear:both;
+	clear: both;
 }
 
 .field-shell,

@@ -441,7 +441,9 @@ class Profile_CCT_Field {
 	function input_textarea( $attr ) {
 		$attr = $this->field_attr( $attr, 'textarea' );
 		
-		printf( "<span %s>", $attr['field_shell_attr'] );
+		?>
+		<span <?php echo $attr['field_shell_attr']; ?>>
+		<?
 		$this->input_label_before( $attr['id'], $attr['label'], $attr['before_label'] );
 		
 		if ( 'edit' == $this->action || $this->multiple ): // only display the editor on the Profile edit side
@@ -449,7 +451,13 @@ class Profile_CCT_Field {
 			<textarea <?php echo $attr['field_attr']; ?>><?php echo esc_html( $attr['value'] ); ?></textarea>
 			<?php
 		else:
-			wp_editor( $attr['value'], $attr['id'], array( 'textarea_name' => $attr['name'], 'teeny' => true, 'media_buttons' => false ) );
+			$args = array(
+				'textarea_name' => $attr['name'],
+				'teeny'         => true,
+				'media_buttons' => false,
+			);
+			
+			wp_editor( $attr['value'], $attr['id'], $args );
 		endif;
         
 		$this->input_label_after( $attr['id'], $attr['label'], $attr['before_label'] );
@@ -634,7 +642,7 @@ class Profile_CCT_Field {
 		// Things to be returned.
 		$needed_attr['id']               = ( isset( $attr['field_id'] ) && $attr['field_id'] ? $attr['field_id'] : 'profile-cct-'.$this->type.'-'.$field_type.'-'.$this->field_counter ); // todo: show warning
 		$needed_attr['before_label']     = ( isset( $attr['before_label'] ) && $attr['before_label'] ? true : false );
-		$needed_attr['field_shell_attr'] = ( isset( $attr['field_id'] )        ? ' class="'.$attr['field_id'].' '.$field_type.'-shell"' : '' ) . $show;
+		$needed_attr['field_shell_attr'] = ( isset( $attr['field_id'] )        ? ' class="'.$attr['field_id'].' '.$field_type.'-shell"' : ' class="'.$this->type.' '.$field_type.'-shell"' ) . $show;
 		$needed_attr['label']            = ( isset( $attr['label'] )		   ? $attr['label']           : '' );
 		$needed_attr['sub_label']        = ( isset( $attr['sub_label'] )	   ? $attr['sub_label']       : '' );
 		$needed_attr['all_fields']       = ( isset( $attr['all_fields'] )	   ? $attr['all_fields']      : '' );
