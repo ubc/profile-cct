@@ -5,7 +5,7 @@
 	$note = '';
 	$profile = Profile_CCT::get_object();
     
-	if ( !empty($_POST) && wp_verify_nonce( $_POST['update_settings_nonce_field'], 'update_settings_nonce' ) ):
+	if ( ! empty($_POST) && wp_verify_nonce( $_POST['update_settings_nonce_field'], 'update_settings_nonce' ) ):
 		//Validate pic options
 		$width = intval( $_POST['picture_width'] );
 		$height = intval( $_POST['picture_height'] );
@@ -17,14 +17,14 @@
 		endif;
 		
 		$slug = trim( $_POST['slug'] );
-		if( !empty( $slug ) ):
+		if ( ! empty( $slug ) ):
 			$profile->settings['slug'] = sanitize_title( trim( $_POST['slug'] ) );
 		else:
 			$profile->settings['slug'] = 'person';
 		endif;
 		
 		$order_by = $_POST['sort_order'];
-		if(in_array($order_by, array("manual", "first_name", "last_name", "date"))):
+		if ( in_array( $order_by, array( "manual", "first_name", "last_name", "date" ) ) ):
 			$profile->settings['sort_order'] = $order_by;
 		endif;
 		
@@ -40,7 +40,7 @@
 				
 				foreach ( $permission_array as $permission => $can ):
 					if ( isset( $profile->settings['permissions'][$user][$permission] ) ): // does the permission exist in the settings
-						$profile->settings['permissions'][$user][$permission] = (bool)$post_permissions[$user][$permission];
+						$profile->settings['permissions'][$user][$permission] = (bool) $post_permissions[$user][$permission];
 						// add the new capability
 						if ( (bool) $post_permissions[$user][$permission] ): 
 							$role->add_cap( $permission );
@@ -61,13 +61,13 @@
 		
 		//Store updated options
         update_option( 'Profile_CCT_settings', $profile->settings );
-        
+		
 		$note = '<div class="updated below-h2"><p> Settings saved.</p></div>';
+		
 		// lets flush the rules again
-		$profile->register_cpt_profile_cct();
+		$profile->register_profiles();
 		flush_rewrite_rules();
 	endif;
-
 ?>
 <h2>General Settings</h2>
 <?php echo $note; ?>

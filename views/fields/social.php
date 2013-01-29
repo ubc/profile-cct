@@ -37,9 +37,9 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 			'count'      => $count,
 		) );
 		$this->input_text( array(
-			'field_id'   => 'usersocial',
+			'field_id'   => 'username',
 			'label'      => $this->social_options( 'user_url', $this->data['option'] ),
-			'value'      => $this->data['usersocial'],
+			'value'      => $this->data['username'],
 			'all_fields' => $social_array,
 		) );
 	}
@@ -52,7 +52,7 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 	 */
 	function display() {
 		$this->display_social_link( array(
-			'field_id' => 'usersocial',
+			'field_id' => 'username',
 		) );
 	}
 	
@@ -61,8 +61,8 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 			$service = $this->social_options( 'user_url',  $this->data['option'] );
 			
 			if ( isset( $this->data ) ):
-				$attr['href'] = str_replace( '{value}', $this->data['usersocial'], $service['user_url'] );
-				$attr['value'] = '<img src="'.PROFILE_CCT_DIR_URL.'/img/'.$service['type'].'.png" /><strong>'.$this->data['option'].'</strong>/ '.$this->data['usersocial'];
+				$attr['href'] = str_replace( '{value}', $this->data['username'], $service['user_url'] );
+				$attr['value'] = '<img src="'.PROFILE_CCT_DIR_URL.'/img/'.$service['type'].'.png" /><strong>'.$this->data['option'].'</strong>/ '.$this->data['username'];
 			else:
 				$attr['href'] = "http://www.facebook.com/";
 				$attr['default_text'] = '<img src="'.PROFILE_CCT_DIR_URL.'/img/facebook.png" /> <strong>Facebook</strong>/ waynebiz';

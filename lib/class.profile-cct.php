@@ -143,7 +143,7 @@ class Profile_CCT {
 		if ( $settings = get_option( 'Profile_CCT_'.$type ) ):
 			return $settings;
         else:
-            return get_default_settings($type);
+            return $this->get_default_settings($type);
         endif;
 	}
 	
@@ -162,7 +162,7 @@ class Profile_CCT {
 	function delete_all_settings(){
 		// only administator can do this… 
 		if ( current_user_can('administrator') ):
-			foreach ( array("form","page","list") as $where):
+			foreach ( array( "form", "page", "list" ) as $where):
 				// delete all the fields
 				foreach ( self::get_contexts( $where ) as $context ):
 					self::delete_option( $where, 'fields', $context );
@@ -186,6 +186,20 @@ class Profile_CCT {
 				delete_site_option('Profile_CCT_global_settings');
             endif;
 		endif;
+	}
+	
+	/**
+	 * delete_option function.
+	 *
+	 * @access public
+	 * @param string $type. (default: 'form')
+	 * @param string $fields_or_tabs. (default: 'fields')
+	 * @param string $context. (default: 'normal')
+	 * @return void
+	 */
+	function delete_option( $type = 'form', $fields_or_tabs = 'fields', $context = 'normal' ) {
+		unset( $this->option[$type][$fields_or_tabs][$context] );
+		return delete_option( 'Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context );
 	}
     
 	/**
@@ -241,7 +255,7 @@ class Profile_CCT {
 			endforeach;
 		endforeach;
 		
-		$profile->delete_all_settings();
+		//$profile->delete_all_settings();
 	}
 	
 	/**
@@ -254,9 +268,7 @@ class Profile_CCT {
 		// remove permissions
 		$profile = Profile_CCT::get_object();
 		$profile->deactivate();
-		//$profile->delete_all_settings();
-		
-		// also delete all the users info
+		$profile->delete_all_settings();
 	}
 	
 	public static function version() {
