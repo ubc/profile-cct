@@ -352,9 +352,9 @@ class Profile_CCT {
             if ( $context == 'bench' ):
                 // Check to see if the plugin has been updated since this code last ran. And if so, merge the settings.
                 $perform_merge = false;
-                if ( ! isset( $this->settings_options['version'][$type][$subtype][$context] ) ): // Is there no version setting?
+                if ( ! isset( $this->settings['version'][$type][$subtype][$context] ) ): // Is there no version setting?
                     $perform_merge = true;
-                elseif ( $this->version() > $this->settings_options['version'][$type][$subtype][$context] ): // Is the stored version less than the current version?
+                elseif ( $this->version() > $this->settings['version'][$type][$subtype][$context] ): // Is the stored version less than the current version?
                     $perform_merge = true;
                 endif;
                 

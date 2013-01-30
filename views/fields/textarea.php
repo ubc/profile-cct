@@ -30,6 +30,7 @@ Class Profile_CCT_Textarea extends Profile_CCT_Field {
 			'size'     => 25,
 			'row'      => 2,
 			'cols'     => 20,
+			'value'    => ( isset( $this->data['textarea'] ) ? $this->data['textarea']  : null ),
 		) );
 	}
 	
@@ -44,6 +45,7 @@ Class Profile_CCT_Textarea extends Profile_CCT_Field {
 			//'field_id'     => 'textarea',
 			'class'        => 'textarea',
 			'default_text' => 'lorem ipsum',
+			'value'        => ( isset( $this->data['textarea'] ) ? $this->data['textarea']  : null ),
 		) );
 	}
 	

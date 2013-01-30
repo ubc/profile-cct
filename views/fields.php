@@ -6,8 +6,8 @@
 	$profile = Profile_CCT::get_object();
 	
 	// For local 
-	if ( ! empty($profile->settings_options['clone_fields']) ):
-		foreach ( $profile->settings_options['clone_fields'] as $local_clone_field ):
+	if ( ! empty($profile->settings['clone_fields']) ):
+		foreach ( $profile->settings['clone_fields'] as $local_clone_field ):
 			$clone_fields[] = $local_clone_field['type'];
 		endforeach;
 	else:
@@ -78,9 +78,9 @@
 			else:
 				if ( !in_array( $field['type'], $clone_fields ) ):
 					// add a copy of the to the local field
-					(array) $profile->settings_options['clone_fields'][] 	= $copy_to_local;
+					(array) $profile->settings['clone_fields'][] 	= $copy_to_local;
 					
-					update_option( 'Profile_CCT_settings', $profile->settings_options );
+					update_option( 'Profile_CCT_settings', $profile->settings );
 					$global_settings['clone_fields'][$global_to_change_count]['blogs'] .= ",".$blog_id;
 					// also update the blogs field in the particular 
 					update_site_option( 'Profile_CCT_global_settings', $global_settings );
@@ -97,10 +97,10 @@
 			// create a new field add it to global as well as local 
 			if ( empty($error) && !empty($new_field) ):
 				// add completely new field to the site and global scope
-				(array) $profile->settings_options['clone_fields'][] = $new_field;
+				(array) $profile->settings['clone_fields'][] = $new_field;
 				$new_field['blogs'] = $blog_id;
 				(array) $global_settings['clone_fields'][] = $new_field;
-				update_option( 'Profile_CCT_settings', $profile->settings_options );
+				update_option( 'Profile_CCT_settings', $profile->settings );
 				update_site_option( 'Profile_CCT_global_settings', $global_settings );
 				$clone_fields[] = $new_field['type'];
 				
@@ -118,7 +118,7 @@
 			unset($count_set);
 			unset($clone_fields); // we will recreate this later
 			$clone_fields = array();
-			foreach ( $profile->settings_options['clone_fields'] as $field ):
+			foreach ( $profile->settings['clone_fields'] as $field ):
 				if ( $global_field['type'] == $field['type'] ):
 					$count_set = $count;
 				else:
@@ -130,7 +130,7 @@
 			
 			// remove the fields
 			if ( is_numeric($count_set)):
-				unset($profile->settings_options['clone_fields'][$count_set]);
+				unset($profile->settings['clone_fields'][$count_set]);
 				
 				// also remove the site from the blogs global array
 				$blogs = str_replace($blog_id, "", $global_field['blogs']);
@@ -139,7 +139,7 @@
 				
 				$global_settings['clone_fields'][$_GET['remove']]['blogs'] = $blogs;
 				
-				update_option( 'Profile_CCT_settings', $profile->settings_options );
+				update_option( 'Profile_CCT_settings', $profile->settings );
 				update_site_option( 'Profile_CCT_global_settings', $global_settings );
 			endif;
 		endif;
@@ -165,18 +165,18 @@
 			?>
 				<tr <?php if ( $count % 2 ) echo 'class="alternate"'; ?>>
 					<td ><?php echo $field['label']; ?>
-						<?php if ( ! in_array( $field['type'], $clone_fields ) ): ?>
-							<form action="<?php echo admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASEADMIN.'&view=fields'); ?>" method="POST">
-								<?php wp_nonce_field( 'add_profile_field','add_profile_fields_field' ); ?>
-								<input type="hidden" name="field_type" value="<?php echo esc_attr($field['type']); ?>" />
-								<input type="submit" value="Add" class="button-primary" />
-							</form>
-						<?php else: ?>
+						<?php if ( in_array( $field['type'], $clone_fields ) ): ?>
 							<div class="row-actions">
 								<span class="trash">
 									<a href="?post_type=profile_cct&page=<?php echo PROFILE_CCT_BASEADMIN; ?>&view=fields&remove=<?php echo $count."&_wpnonce=".wp_create_nonce('profile_cct_remove_field'.$field['type']); ?> " class="submitdelete">Delete</a>
 								</span>
 							</div>
+						<?php else: ?>
+							<form action="<?php echo admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASEADMIN.'&view=fields'); ?>" method="POST">
+								<?php wp_nonce_field( 'add_profile_field','add_profile_fields_field' ); ?>
+								<input type="hidden" name="field_type" value="<?php echo esc_attr($field['type']); ?>" />
+								<input type="submit" value="Add" class="button-primary" />
+							</form>
 						<?php endif; ?>
 					</td>
 					<td><?php echo $field['description']; ?></td>
@@ -216,7 +216,7 @@
 			<td>
 				<select name="field_clone" id="field_clone" class="all-options">
 					<?php foreach(Profile_CCT_Admin::fields_to_clone() as $field_to_clone): ?>
-					<option value="<?php echo esc_attr($field_to_clone['type']);?>" <?php selected($field_clone,$field_to_clone['type']); ?>><?php echo esc_attr($field_to_clone['type']);?></option>
+						<option value="<?php echo esc_attr($field_to_clone['type']);?>" <?php selected($field_clone,$field_to_clone['type']); ?>><?php echo esc_attr($field_to_clone['type']);?></option>
 					<?php endforeach; ?>
 				</select>
 				<span class="description">Select the field that you want to mimic in functionality.</span>	

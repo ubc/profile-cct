@@ -113,6 +113,7 @@
 		</tbody>
 	</table>
 	
+	<!--
 	<h3>Profile Archive Navigation Form</h3>
 	<p>Which navigation to display on profile listing page</p>
 	<table class="form-table">
@@ -151,6 +152,7 @@
             </tr>
         </tbody>
     </table>
+	-->
 	
 	<h3>Permalink</h3>
 	<table class="form-table">
