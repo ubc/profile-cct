@@ -10,8 +10,8 @@ class Profile_CCT_Admin {
 	static public $option = NULL;
 	static public $page   = NULL;
     
-    
-    static public  $current_form_fields = NULL; // stores the current state of the form field... the labels and if it is on the banch...
+    static public $current_form_fields = NULL; // Stores the current state of the form field... the labels and if it is on the banch...
+
 	/**
 	 * init function.
 	 *
@@ -25,8 +25,7 @@ class Profile_CCT_Admin {
         
 		// function removed the edit Public profile from everyone but the person who can really edit it
 		add_action( 'wp_before_admin_bar_render', array('Profile_CCT_Admin', 'edit_admin_bar_render'), 20 );
-		
-		}
+	}
 
 	/**
 	 * admin_init function.
@@ -279,8 +278,9 @@ class Profile_CCT_Admin {
 	 * @return void
 	 */
 	public static function display_fields_check( $where ) {
-        if( !in_array( $where, array( 'page','list' ) ) )
+        if ( ! in_array( $where, array( 'page', 'list' ) ) ):
 			return true;
+		endif;
 		
 		$contexts = self::get_contexts('form');
 		
@@ -288,28 +288,23 @@ class Profile_CCT_Admin {
 		// all the fields that are there 
 		$current_fields = array();
 		foreach( $contexts as $context ):
+			$fields = self::get_option( 'form', 'fields', $context );
 			
-			$fields = self::get_option('form','fields', $context );
-			
-			if( is_array( $fields ) ):
-				foreach( $fields as $field):
-				
-					$field['is_active'] = true;
-					
+			if ( is_array( $fields ) ):
+				foreach ( $fields as $field ):
+					$field['is_active'] = 1;
 					self::$current_form_fields[$field['type']] = $field;
 				endforeach;
 			endif;
 		endforeach;
 		
-		// don't forget the banch field
-		foreach(self::get_option( 'form','fields','bench' ) as $field):
-			$field['is_active'] = false;
+		// Don't forget the bench field.
+		foreach ( self::get_option( 'form', 'fields', 'bench' ) as $field ):
+			$field['is_active'] = 0;
 			self::$current_form_fields[$field['type']] = $field;
 		endforeach;
 		
-
 		return true;
-
 	}
 
 	/**
@@ -541,8 +536,8 @@ class Profile_CCT_Admin {
                 endif;
 			endif;
             
-			 // lets check if we have the fresh version since we last updated the plugin
-			 /* CHECK to see if we need to do the merge */
+			// lets check if we have the fresh version since we last updated the plugin
+			/* CHECK to see if we need to do the merge */
 			$perform_merge = false;
             
 			// can we find the version settings
@@ -554,13 +549,13 @@ class Profile_CCT_Admin {
 			endif;
             
 			// lets perform the merge
-			if( $perform_merge && $context == 'bench' ):
+			if ( $perform_merge && $context == 'bench' ):
 				$new_fields = self::default_options( 'new_fields' );
                 
 				// lets add the new fields in this version to the banch
-				if( is_array( $new_fields[PROFILE_CCT_VERSION] ) ):
-					foreach( $new_fields[PROFILE_CCT_VERSION] as $field ) :
-						if( in_array( $type , $field['where'] ) ):
+				if ( is_array( $new_fields[PROFILE_CCT_VERSION] ) ):
+					foreach ( $new_fields[PROFILE_CCT_VERSION] as $field ) :
+						if ( in_array( $type , $field['where'] ) ):
 							$options[] = $field['field'];
 						endif;
 					endforeach;
@@ -568,7 +563,6 @@ class Profile_CCT_Admin {
 					// $this->update_option($type,$fields_or_tabs,$context,$options);
 				endif;
 			endif;
-			
 		endif;
         // todo: make sure that we don't duplicate fields… :(
         
@@ -587,14 +581,14 @@ class Profile_CCT_Admin {
 	 * @param mixed $update
 	 * @return void
 	 */
-	static function update_option( $type='form', $fields_or_tabs='fields', $context='normal', $update ) {
+	static function update_option( $type = 'form', $fields_or_tabs = 'fields', $context = 'normal', $update ) {
 		$profile = Profile_CCT::get_object();
 		$profile->settings['version'][$type][$fields_or_tabs][$context] = PROFILE_CCT_VERSION;
 		$profile->settings[$type.'_updated'] = time();
-		// saving of the version number
-        
+		// Saving of the version number
 		self::$option[$type][$fields_or_tabs][$context] = $update;
-		// update the settings
+		
+		// Update the settings
 		update_option( 'Profile_CCT_settings', $profile->settings );
         
 		return update_option( 'Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context, $update );
@@ -778,15 +772,18 @@ class Profile_CCT_Admin {
 				<?php
 				$fields = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page, 'fields', $context );
 				
+				echo '<pre>';
+				echo 'Params: '.Profile_CCT_Admin::$page.', fields, '.$context;
+				//print_r($fields);
+				echo '</pre>';
+				
 				if ( is_array( $fields ) ):
 					foreach ( $fields as $field ):
-						
 						if ( function_exists('profile_cct_'.$field['type'].'_shell') ):
 							call_user_func( 'profile_cct_'.$field['type'].'_shell', $field, $data[ $field['type'] ] );
 						else:
 							do_action( 'profile_cct_field_shell_'.$field['type'], $field, $data[ $field['type'] ] );
 						endif;
-						
 					endforeach;
 				endif;
 				?>

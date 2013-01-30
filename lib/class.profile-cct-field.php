@@ -41,11 +41,17 @@ class Profile_CCT_Field {
 			$options = $options_or_post;
 		endif;
 		
+		echo '<pre>';
+		//print_r($options);
+		//print_r($data);
+		//print_r(Profile_CCT_Admin::$current_form_fields);
+		echo '</pre>';
+		
 		$this->options       = ( is_array( $options ) ? array_merge( $this->default_options, $options ): $this->default_options );
 		$this->action        = ( isset( Profile_CCT_Admin::$action ) ? Profile_CCT_Admin::$action : 'edit' );
 		$this->page          = ( isset( $this->options['page'] ) ? $this->options['page'] : ( isset( Profile_CCT_Admin::$page ) ? Profile_CCT_Admin::$page : false ) );
 		$this->type          = ( isset( $this->options['type'] ) ? $this->options['type'] : null );
-		$this->label         = ( isset( $this->options['label'] ) ? $this->options['label'] : false );
+		$this->label         = ( isset( Profile_CCT_Admin::$current_form_fields[$this->type]['label'] ) ? Profile_CCT_Admin::$current_form_fields[$this->type]['label'] : ( isset( $this->options['label'] ) ? $this->options['label'] : false ) );
 		$this->description   = ( isset( $this->options['description'] ) ? $this->options['description'] : null );
 		$this->show_link_to  = ( isset( $this->options['show_link_to'] ) ? $this->options['show_link_to'] : false );
 		$this->link_to       = ( isset( $this->options['link_to'] ) && $this->options['link_to']  ? true : false );
@@ -127,140 +133,144 @@ class Profile_CCT_Field {
 	 * @return void
 	 */
 	function start_field() {
-		// lets display the start of the field to the user
+		// Lets display the start of the field to the user
 		if ( 'edit' == $this->action ): ?>
-	 		<li class="<?php echo' shell-'.esc_attr( $this->type ); ?> field-item <?php echo $this->class." ".$this->width; ?>" for="cct-<?php echo esc_attr( $this->type ); ?>" data-options="<?php echo esc_attr( $this->serialize( $this->options ) ); ?>" >
-			<a href="#edit-field" class="edit">Edit</a>
-			<div class="edit-shell" style="display:none;">
-				<input type="hidden" name="type" value="<?php echo esc_attr( $this->type ); ?>" />
-				<?php
-				if ( 'form' == $this->page ):
-					$this->input_text( array(
-						'name'         => 'label',
-						'class'        => 'field-label',
-						'label'        => 'label',
-						'before_label' => true,
-						'value'        => $this->label,
-					) );
-				else:
-					$this->input_hidden( array(
-						'name'         => 'label',
-						'value'        => $this->label,
-					) );
-				endif;
-                
-				if ( isset($this->description) && 'form' == $this->page):
-					$this->input_textarea( array(
-						'name'         => 'description',
-						'size'         => 10,
-						'class'        => 'field-description',
-						'label'        => 'description' ,
-						'before_label' => true,
-						'value'        => $this->description,
-					) );
-				endif;
-				
-				if ( $this->width && 'form' != $this->page ):
-					$this->input_select( array(
-						'name'         => 'width',
-						'class'        => 'field-width',
-						'label'        => 'select width',
-						'before_label' => true,
-						'all_fields'   => array( 'full', 'half', 'one-third', 'two-third' ),
-						'value'        => $this->width,
-					) );
-				endif;
-                
-				if ( $this->text && 'form' != $this->page ):
-					$this->input_text( array(
-						'size'         => 30,
-						'class'        => 'field-text',
-						'label'        => 'text input',
-						'before_label' => true,
-						'value'        => $this->text,
-					) );
-				endif;
-				
-				if ( isset($this->before) && 'form' != $this->page ):
-					$this->input_textarea( array(
-						'name'         => 'before',
-						'size'         => 10,
-						'class'        => 'field-textarea',
-						'label'        => 'before html',
-						'before_label' => true,
-						'value'        => $this->before,
-					) );
-				endif;
-                
-				if ( isset($this->after) && 'form' != $this->page ):
-					$this->input_textarea( array(
-						'name'         => 'after',
-						'size'         => 10,
-						'class'        => 'field-textarea',
-						'label'        => 'after html',
-						'before_label' => true,
-						'value'        => $this->after,
-					) );
-				endif;
-                
-				if ( isset( $this->empty) && 'form' != $this->page ):
-					$this->input_textarea( array(
-						'name'         => 'empty',
-						'size'         => 10,
-						'class'        => 'field-textarea',
-						'label'        => 'content to be displayed on empty',
-						'before_label' => true,
-						'value'        => $empty,
-					) );
-				endif;
-                
-				if ( $this->url_prefix && 'form' != $this->page ): // needed for the data field
-					$this->input_text( array(
-						'name'         => 'url_prefix',
-						'class'        => 'field-url-prefix',
-						'label'        => 'url prefix ( http:// )',
-						'before_label' => true,
-						'value'        => $this->url_prefix,
-					) );
-				endif;
-                
-				if ( $this->show_fields ):
-					$this->input_multiple( array(
-						'name'            => 'show',
-						'class'           => 'field-show',
-						'label'           => 'show / hide input area',
-						'before_label'    => true,
-						'selected_fields' => $this->show,
-						'all_fields'      => $this->show_fields,
-					) );
-				endif;
-                
-				if ( $this->show_multiple && 'form' == $this->page ):
-					$this->input_checkbox( array(
-						'name'            => 'multiple',
-						'class'           => 'field-multiple',
-						'label'           => 'multiple',
-						'sub_label'       => 'yes, allow the user to create multiple fields',
-						'before_label'    => true,
-						'value'           => $this->multiple,
-					) );
-				endif;
-                
-				if ( $this->show_link_to && 'form' != $this->page ):
-					$this->input_checkbox( array(
-						'name'         => 'link_to',
-						'class'        => 'field-multiple',
-						'label'        => 'link to profile',
-						'sub_label'    => 'wrap the field with a link to the profile page',
-						'before_label' => true ,
-						'value'        => $this->link_to,
-					) );
-				endif;
-				?>
-				<input type="button" value="Save" class="button save-field-settings" />
-				<span class="spinner" style="display:none;"><img src="<?php echo admin_url('/images/wpspin_light.gif'); ?>" alt="spinner" /> saving...</span>
-			</div>
-		 	<label class="field-title"><?php echo $this->label; ?></label>
+			<?php
+				$shell_type = 'shell-'.esc_attr( $this->type );
+				$is_active = ( ( isset( Profile_CCT_Admin::$current_form_fields ) && Profile_CCT_Admin::$current_form_fields[$this->type]['is_active'] == 1 ) ? "is-active" : "" );
+			?>
+	 		<li class="field-item <?php echo $shell_type." ".$this->width." ".$this->class." ".$is_active; ?>" for="cct-<?php echo esc_attr( $this->type ); ?>" data-options="<?php echo esc_attr( $this->serialize( $this->options ) ); ?>" >
+				<a href="#edit-field" class="edit">Edit</a>
+				<div class="edit-shell" style="display:none;">
+					<input type="hidden" name="type" value="<?php echo esc_attr( $this->type ); ?>" />
+					<?php
+					if ( 'form' == $this->page ):
+						$this->input_text( array(
+							'name'         => 'label',
+							'class'        => 'field-label',
+							'label'        => 'label',
+							'before_label' => true,
+							'value'        => $this->label,
+						) );
+					else:
+						$this->input_hidden( array(
+							'name'         => 'label',
+							'value'        => $this->label,
+						) );
+					endif;
+					
+					if ( isset($this->description) && 'form' == $this->page):
+						$this->input_textarea( array(
+							'name'         => 'description',
+							'size'         => 10,
+							'class'        => 'field-description',
+							'label'        => 'description' ,
+							'before_label' => true,
+							'value'        => $this->description,
+						) );
+					endif;
+					
+					if ( $this->width && 'form' != $this->page ):
+						$this->input_select( array(
+							'name'         => 'width',
+							'class'        => 'field-width',
+							'label'        => 'select width',
+							'before_label' => true,
+							'all_fields'   => array( 'full', 'half', 'one-third', 'two-third' ),
+							'value'        => $this->width,
+						) );
+					endif;
+					
+					if ( $this->text && 'form' != $this->page ):
+						$this->input_text( array(
+							'size'         => 30,
+							'class'        => 'field-text',
+							'label'        => 'text input',
+							'before_label' => true,
+							'value'        => $this->text,
+						) );
+					endif;
+					
+					if ( isset($this->before) && 'form' != $this->page ):
+						$this->input_textarea( array(
+							'name'         => 'before',
+							'size'         => 10,
+							'class'        => 'field-textarea',
+							'label'        => 'before html',
+							'before_label' => true,
+							'value'        => $this->before,
+						) );
+					endif;
+					
+					if ( isset($this->after) && 'form' != $this->page ):
+						$this->input_textarea( array(
+							'name'         => 'after',
+							'size'         => 10,
+							'class'        => 'field-textarea',
+							'label'        => 'after html',
+							'before_label' => true,
+							'value'        => $this->after,
+						) );
+					endif;
+					
+					if ( isset( $this->empty) && 'form' != $this->page ):
+						$this->input_textarea( array(
+							'name'         => 'empty',
+							'size'         => 10,
+							'class'        => 'field-textarea',
+							'label'        => 'content to be displayed on empty',
+							'before_label' => true,
+							'value'        => $empty,
+						) );
+					endif;
+					
+					if ( $this->url_prefix && 'form' != $this->page ): // needed for the data field
+						$this->input_text( array(
+							'name'         => 'url_prefix',
+							'class'        => 'field-url-prefix',
+							'label'        => 'url prefix ( http:// )',
+							'before_label' => true,
+							'value'        => $this->url_prefix,
+						) );
+					endif;
+					
+					if ( $this->show_fields ):
+						$this->input_multiple( array(
+							'name'            => 'show',
+							'class'           => 'field-show',
+							'label'           => 'show / hide input area',
+							'before_label'    => true,
+							'selected_fields' => $this->show,
+							'all_fields'      => $this->show_fields,
+						) );
+					endif;
+					
+					if ( $this->show_multiple && 'form' == $this->page ):
+						$this->input_checkbox( array(
+							'name'            => 'multiple',
+							'class'           => 'field-multiple',
+							'label'           => 'multiple',
+							'sub_label'       => 'yes, allow the user to create multiple fields',
+							'before_label'    => true,
+							'value'           => $this->multiple,
+						) );
+					endif;
+					
+					if ( $this->show_link_to && 'form' != $this->page ):
+						$this->input_checkbox( array(
+							'name'         => 'link_to',
+							'class'        => 'field-multiple',
+							'label'        => 'link to profile',
+							'sub_label'    => 'wrap the field with a link to the profile page',
+							'before_label' => true ,
+							'value'        => $this->link_to,
+						) );
+					endif;
+					?>
+					<input type="button" value="Save" class="button save-field-settings" />
+					<span class="spinner" style="display:none;"><img src="<?php echo admin_url('/images/wpspin_light.gif'); ?>" alt="spinner" /> saving...</span>
+				</div>
+				<label class="field-title"><?php echo $this->label; ?></label>
 		<?php
 		else:
 			?>
