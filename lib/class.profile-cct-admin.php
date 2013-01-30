@@ -719,14 +719,11 @@ class Profile_CCT_Admin {
 				if ( is_array( $fields ) ):
 					foreach ( $fields as $field ):
 						if ( ! in_array( $field, $exclude ) ):
-							echo print_r($field, TRUE) . " included.";
 							if ( function_exists('profile_cct_'.$field['type'].'_shell') ):
 								call_user_func( 'profile_cct_'.$field['type'].'_shell', $field, $data[ $field['type'] ] );
 							else:
 								do_action( 'profile_cct_field_shell_'.$field['type'], $field, $data[ $field['type'] ] );
 							endif;
-						else:
-							echo print_r($field, TRUE) . " excluded.";
 						endif;
 					endforeach;
 				endif;

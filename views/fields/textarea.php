@@ -25,6 +25,7 @@ Class Profile_CCT_Textarea extends Profile_CCT_Field {
 	function field() {
 		$this->input_textarea( array(
 			//'field_id' => 'textarea',
+			'name'     => 'profile_cct['.$this->type.'][textarea]',
 			'label'    => '',
 			'size'     => 25,
 			'row'      => 2,

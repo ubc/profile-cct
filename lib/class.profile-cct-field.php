@@ -33,16 +33,14 @@ class Profile_CCT_Field {
 	var $data;
 	
 	function __construct ( $options_or_post, $data ) {
-		
 		if ( $this->is_post( $options_or_post ) ): 
-			// $options_or_post is $post
 			//This means the parameters were passed from do_meta_boxes, and are not correctly configured.
 			$options = $data['args']['options'];
 			$data = $data['args']['data'];
 		else:	
 			$options = $options_or_post;
 		endif;
-		// var_dump(get_class($options));
+		
 		$this->options       = ( is_array( $options ) ? array_merge( $this->default_options, $options ): $this->default_options );
 		$this->action        = ( isset( Profile_CCT_Admin::$action ) ? Profile_CCT_Admin::$action : 'edit' );
 		$this->page          = ( isset( $this->options['page'] ) ? $this->options['page'] : ( isset( Profile_CCT_Admin::$page ) ? Profile_CCT_Admin::$page : false ) );
@@ -70,7 +68,7 @@ class Profile_CCT_Field {
 		$this->start_field();
 		if ( $this->multiple && isset( $data ) ):
 			$first = true;
-			// print_r($data);
+			
 			foreach ( $data as $this->data ):
 				$this->create_subfield( ! $first && ! in_array( $this->page, array('page', 'list') ) );
 				$this->subfield_counter++;
@@ -129,7 +127,6 @@ class Profile_CCT_Field {
 	 * @return void
 	 */
 	function start_field() {
-		//echo '<br />--- '.$this->type.' ---';
 		// lets display the start of the field to the user
 		if ( 'edit' == $this->action ): ?>
 	 		<li class="<?php echo' shell-'.esc_attr( $this->type ); ?> field-item <?php echo $this->class." ".$this->width; ?>" for="cct-<?php echo esc_attr( $this->type ); ?>" data-options="<?php echo esc_attr( $this->serialize( $this->options ) ); ?>" >
@@ -442,7 +439,7 @@ class Profile_CCT_Field {
 		$this->input_label_before( $attr['id'], $attr['label'], $attr['before_label'] );
 		?>
 		<select <?php echo $attr['field_attr']; ?> >
-			<option value=""></option><!-- this gives us an emty field if the user doesn't select anything -->
+			<option value=""></option><!-- This gives us an emty field for if the user doesn't select anything -->
             <?php 
 			foreach ( $attr['all_fields'] as $field ):
 				printf('<option value="%s" %s>%s</option>', $field, selected( $attr['value'], $field , false ), $field );
@@ -653,12 +650,6 @@ class Profile_CCT_Field {
 	 */
 	function field_attr( $attr, $field_type ) {
 		echo( isset( $attr['separator'] ) ? '<span class="separator">'.esc_html( $attr['separator'] ).'</span>' : '' );
-		
-		/*echo '<pre>';
-		print_r($attr);
-		echo 'Data ';
-		print_r($this->data);
-		echo '</pre>';*/
 		
 		$show = ( isset( $attr['field_id'] ) && ! in_array( $attr['field_id'], $this->show ) && in_array( $attr['field_id'], $this->show_fields )  ? ' style="display:none;"' : '' ); // should this field be displayed
 		
