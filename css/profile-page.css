@@ -31,7 +31,9 @@
 	font-size: 22px;
 	padding: 5px 2px 1px;
 }
-
+.field-item input.text{
+	padding: 4px;
+}
 .field-item span {
 	float: left;
 	margin-top: 5px;
@@ -44,8 +46,20 @@
 }
 
 .field-item .textarea-shell {
-	margin: -15px 0 0 0;
+	margin-top:  -15px;
 }
+.field-shell-multiple .textarea-shell {
+	margin-top: 0;
+}
+
+.field-shell-multiple div.field{
+	position: relative;
+	overflow: hidden;
+	padding-bottom: 5px;
+	border-bottom:1px dotted #CCC;
+	margin-bottom: 5px;
+}
+
 
 .field-item .textarea-shell .wp-editor-wrap {
     margin-top: 10px;

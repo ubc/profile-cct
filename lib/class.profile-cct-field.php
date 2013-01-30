@@ -31,17 +31,18 @@ class Profile_CCT_Field {
 	
 	// data
 	var $data;
-	//var $input_array;
-	//var $display_array;
-	//var $shell_array;
-
-	function __construct ( $options, $data ) {
-		if ( ! is_array($options) && get_class($options) == "WP_Post" ):
+	
+	function __construct ( $options_or_post, $data ) {
+		
+		if ( $this->is_post( $options_or_post ) ): 
+			// $options_or_post is $post
 			//This means the parameters were passed from do_meta_boxes, and are not correctly configured.
 			$options = $data['args']['options'];
 			$data = $data['args']['data'];
+		else:	
+			$options = $options_or_post;
 		endif;
-		
+		// var_dump(get_class($options));
 		$this->options       = ( is_array( $options ) ? array_merge( $this->default_options, $options ): $this->default_options );
 		$this->action        = ( isset( Profile_CCT_Admin::$action ) ? Profile_CCT_Admin::$action : 'edit' );
 		$this->page          = ( isset( $this->options['page'] ) ? $this->options['page'] : ( isset( Profile_CCT_Admin::$page ) ? Profile_CCT_Admin::$page : false ) );
@@ -69,6 +70,7 @@ class Profile_CCT_Field {
 		$this->start_field();
 		if ( $this->multiple && isset( $data ) ):
 			$first = true;
+			// print_r($data);
 			foreach ( $data as $this->data ):
 				$this->create_subfield( ! $first && ! in_array( $this->page, array('page', 'list') ) );
 				$this->subfield_counter++;
@@ -80,6 +82,13 @@ class Profile_CCT_Field {
 		$this->end_field();
 	}
 	
+	/**
+	 * create_subfield function.
+	 * 
+	 * @access public
+	 * @param bool $enable_remove (default: false)
+	 * @return void
+	 */
 	function create_subfield( $enable_remove = false ) {
 		?>
 		<div class="field" data-count="<?php echo $this->subfield_counter; ?>">
@@ -100,11 +109,7 @@ class Profile_CCT_Field {
 				endif;
 			endif;
 			
-			/*$form = 'form' == $this->page || false == $this->page;
-			$this->construct_field( $form );*/
-			
-			if ($enable_remove):
-				?>
+			if ( $enable_remove ):	?>
 				<a href="#" class="remove-fields button">Remove</a>
 				<?php
 			endif;
@@ -112,7 +117,17 @@ class Profile_CCT_Field {
 		</div>
 		<?php
 	}
-
+	
+	function is_post( $options_or_post ){
+		return ( isset( $options_or_post->ID ) && is_numeric( $options_or_post->ID ) );
+	}
+	
+	/**
+	 * start_field function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function start_field() {
 		//echo '<br />--- '.$this->type.' ---';
 		// lets display the start of the field to the user
@@ -256,8 +271,10 @@ class Profile_CCT_Field {
 			<?php
 			echo $this->before;
 		endif;
+		
+		$multiple_class = ( $this->show_multiple ? "field-shell-multiple": "");
 		?>
-		<div class="field-shell field-shell-<?php echo $this->type; ?>">
+		<div class="field-shell field-shell-<?php echo $this->type.' '.$multiple_class; ?>">
 		<?php
 		
 		if ( isset( $this->description ) && 'edit' ==$this->action ):
@@ -296,7 +313,13 @@ class Profile_CCT_Field {
 			$this->display_end_shell( $this->shell_array );
 		endif;
 	}*/
-
+	
+	/**
+	 * end_field function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function end_field() {
 		$shell_tag  = ( $this->action == 'edit' ? 'li' : 'div');
         
@@ -809,6 +832,12 @@ class Profile_CCT_Field {
 		);
 	}
 	
+	/**
+	 * project_status function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function project_status() {
 		return array( 'Planning', 'Current', 'Completed' );
 	}

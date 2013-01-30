@@ -506,9 +506,12 @@ class Profile_CCT_Admin {
 					// $this->update_option($type,$fields_or_tabs,$context,$options);
 				endif;
 			endif;
+			
 		endif;
+        // todo: make sure that we don't duplicate fields… :(
         
 		self::$option[$type][$fields_or_tabs][$context] = $options;
+		
 		return $options;
 	}
     
@@ -712,12 +715,6 @@ class Profile_CCT_Admin {
 				<ul class="sort <?php echo $class; ?>" id="<?php echo $context; ?>">
 				<?php
 				$fields = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page, 'fields', $context );
-				if ( $context == 'bench' ):
-					$exclude = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page, 'fields', 'preview' );
-					echo '---- EXCLUDES ----<br />';
-					print_r($exclude);
-					echo '<br />---- /EXCLUDES ----';
-				endif;
 				
 				if ( is_array( $fields ) ):
 					foreach ( $fields as $field ):
