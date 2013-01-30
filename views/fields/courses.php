@@ -60,6 +60,7 @@ Class Profile_CCT_Courses extends Profile_CCT_Field {
 		$this->input_textarea( array(
 			'field_id' => 'course-summary',
 			'label'    => 'Course Summary',
+			'class'	   => 'textarea',
 			'size'     => 35,
 		) );
 	}
