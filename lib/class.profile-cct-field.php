@@ -443,7 +443,7 @@ class Profile_CCT_Field {
 		
 		?>
 		<span <?php echo $attr['field_shell_attr']; ?>>
-		<?
+		<?php
 		$this->input_label_before( $attr['id'], $attr['label'], $attr['before_label'] );
 		
 		if ( 'edit' == $this->action || $this->multiple ): // only display the editor on the Profile edit side

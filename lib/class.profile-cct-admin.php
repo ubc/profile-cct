@@ -676,7 +676,6 @@ class Profile_CCT_Admin {
 		case 'page':
 			Profile_CCT_Admin::$page = 'page';
 			foreach ( self::get_contexts() as $context ):
-				//echo "<br />===== ".$context." =====<br />";
 				Profile_CCT_Admin::render_context( $context, $data );
 			endforeach;
 			break;
@@ -701,23 +700,36 @@ class Profile_CCT_Admin {
 		$class = ( 'bench' != $context ? 'form-builder' : '' );
         
 		if ( function_exists('profile_cct_'.$context.'_shell') ):
-			//echo "CALLED FUNCTION: profile_cct_".$context."_shell";
 			call_user_func('profile_cct_'.$context.'_shell', $data);
 		else:
 			?>
 			<div id="<?php echo $context; ?>-shell" >
+				<!--
 				<?php if ( self::$page == 'form' ): ?>
 				<span class="description-shell"><?php echo $context; ?></span>
 				<?php endif; ?>
+				-->
 				<ul class="sort <?php echo $class; ?>" id="<?php echo $context; ?>">
 				<?php
 				$fields = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page, 'fields', $context );
+				if ( $context == 'bench' ):
+					$exclude = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page, 'fields', 'preview' );
+					echo '---- EXCLUDES ----<br />';
+					print_r($exclude);
+					echo '<br />---- /EXCLUDES ----';
+				endif;
+				
 				if ( is_array( $fields ) ):
 					foreach ( $fields as $field ):
-						if ( function_exists('profile_cct_'.$field['type'].'_shell') ):
-							call_user_func( 'profile_cct_'.$field['type'].'_shell', $field, $data[ $field['type'] ] );
+						if ( ! in_array( $field, $exclude ) ):
+							echo print_r($field, TRUE) . " included.";
+							if ( function_exists('profile_cct_'.$field['type'].'_shell') ):
+								call_user_func( 'profile_cct_'.$field['type'].'_shell', $field, $data[ $field['type'] ] );
+							else:
+								do_action( 'profile_cct_field_shell_'.$field['type'], $field, $data[ $field['type'] ] );
+							endif;
 						else:
-							do_action( 'profile_cct_field_shell_'.$field['type'], $field, $data[ $field['type'] ] );
+							echo print_r($field, TRUE) . " excluded.";
 						endif;
 					endforeach;
 				endif;
