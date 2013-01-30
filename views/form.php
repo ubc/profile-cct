@@ -7,16 +7,20 @@
 	
 	<div id="col-right">
 		<div class="col-wrap">
-		<h3>Inactive Fields</h3>
-		<?php Profile_CCT_Admin::generate_profile( 'bench' ); ?>
-		<p class="info"><em>Place fields that you don't want to display above .</em> &uarr;</p>
+
+			<h3>Inactive Fields</h3>
+			<?php Profile_CCT_Admin::generate_profile( 'bench' ); ?>
+			<p class="info"><em>Place fields that you don't want to display above.</em> &uarr;</p>
+
 		</div>
 	</div>
 
 	<div id="col-middle">
 		<div id="preview-form" class="col-wrap">
-		<h3>Preview</h3>
-		<?php Profile_CCT_Admin::generate_profile( 'preview' ); ?>
+
+			<h3>Preview</h3>
+			<?php Profile_CCT_Admin::generate_profile( 'preview' ); ?>
+
 		</div>
 	</div>
 
