@@ -14,6 +14,13 @@ if( is_array($this->settings_options['clone_fields']) ):
 	endforeach;
 endif;
 
+/**
+ * profile_cct_add_db_fields_filter function.
+ * 
+ * @access public
+ * @param mixed $type_of (default: null)
+ * @return void
+ */
 function profile_cct_add_db_fields_filter($type_of= null){
 	
 	
@@ -29,6 +36,13 @@ function profile_cct_add_db_fields_filter($type_of= null){
 	
 }
 
+/**
+ * profile_cct_add_db_fields function.
+ * 
+ * @access public
+ * @param mixed $fields
+ * @return void
+ */
 function profile_cct_add_db_fields( $fields ){
 	
 	$profile_cct = Profile_CCT::get_object();
@@ -42,6 +56,16 @@ function profile_cct_add_db_fields( $fields ){
 }
 
 
+/**
+ * profile_cct_db_add_meta_box function.
+ * 
+ * @access public
+ * @param mixed $field
+ * @param mixed $context
+ * @param mixed $data
+ * @param mixed $i
+ * @return void
+ */
 function profile_cct_db_add_meta_box($field, $context, $data, $i){
 	$profile_cct = Profile_CCT::get_object();
 	foreach($profile_cct->settings_options['clone_fields'] as $db_field):

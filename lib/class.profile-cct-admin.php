@@ -10,6 +10,8 @@ class Profile_CCT_Admin {
 	static public $option = NULL;
 	static public $page   = NULL;
     
+    
+    static public  $current_form_fields = NULL; // stores the current state of the form field... the labels and if it is on the banch...
 	/**
 	 * init function.
 	 *
@@ -23,7 +25,8 @@ class Profile_CCT_Admin {
         
 		// function removed the edit Public profile from everyone but the person who can really edit it
 		add_action( 'wp_before_admin_bar_render', array('Profile_CCT_Admin', 'edit_admin_bar_render'), 20 );
-	}
+		
+		}
 
 	/**
 	 * admin_init function.
@@ -50,9 +53,11 @@ class Profile_CCT_Admin {
 		add_action( 'wp_ajax_cct_update_profiles', array( __CLASS__, 'refresh_profiles' ) );
 		add_action( 'wp_ajax_cct_needs_refresh',   array( __CLASS__, 'set_profiles_need_refresh' ) );
         
+        // double check that the fields don't display twice
 		add_action( 'profile_cct_before_page',     array( __CLASS__, 'recount_field' ), 10, 1 );
 		add_action( 'profile_cct_before_page',     array( __CLASS__, 'display_fields_check' ), 11, 1 );
 		
+		// save the date 
 		add_action( 'wp_insert_post_data',         array( __CLASS__, 'save_post_data'), 10, 2 );
 	}
 
@@ -136,12 +141,20 @@ class Profile_CCT_Admin {
             
 		endif;
     }
-
+	
+	/**
+	 * recount_field function.
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $where
+	 * @return void
+	 */
 	public static function recount_field( $where ) {
 		if ( ! in_array( $where, array('form', 'page', 'list') ) ):
 			return true;
 		endif;
-        
+       
 		// lets see what all the fields are that are suppoed to be there.
 		$contexts = Profile_CCT_Admin::get_contexts();
         
@@ -149,15 +162,23 @@ class Profile_CCT_Admin {
 		// All the fields that are there.
 		$current_fields = array();
 		foreach ( $contexts as $context ):
-			foreach ( (array) Profile_CCT_Admin::get_option($where, 'fields', $context) as $field ):
+			foreach ( (array) Profile_CCT_Admin::get_option( $where, 'fields', $context ) as $field ):
 				$current_fields[] = $field['type'];
 			endforeach;
 		endforeach;
-        
+        // check to see if this field is alr
 		// don't forget the bench fields.
 		foreach ( Profile_CCT_Admin::get_option($where, 'fields', 'bench') as $field ):
-			$current_fields[] = $field['type'];
+			// lets make sure that for no reason duplicate fields end up in the bench 
+			if( !in_array($field['type'], $current_fields) ):
+				$current_fields[] = $field['type'];
+				$brench_fields[] = $field;
+			endif;
+			
 		endforeach;
+		
+		// correct the bench fields 
+		self::$option[$where]['fields']['bench'] = $brench_fields;
         
 		// DYNAMIC FIELDS
 		// all the fields that get included
@@ -181,11 +202,11 @@ class Profile_CCT_Admin {
 		endif;
         
 		/*
-		$this->e("current fields after merge with dynamic fields");
-		$this->e($current_fields);
+		self::e("current fields after merge with dynamic fields");
+		self::e( $current_fields );
 		
-		$this->e("dynamic fields");
-		$this->e($all_dynamic_fields);
+		self::e("dynamic fields");
+		self::e( $all_dynamic_fields );
 		*/
         
 		// DEFAULT FIELDS NOW
@@ -223,16 +244,16 @@ class Profile_CCT_Admin {
 		$default_fields = array_merge($default_fields, $all_dynamic_fields);
         
 		/*
-		$this->e("default fields");
-		$this->e($default_fields);
+		self::e("default fields");
+		self::e($default_fields);
 		// all the default fields should contain the dynamic fields as well
         
-		$this->e("default fields after merging with default fields");
-		$this->e($default_fields);
-		*/
+		self::e("default fields after merging with default fields");
+		self::e($default_fields);
+		
         
-		// $this->e("difference between current_fields and default fields");
-        
+		self::e("difference between current_fields and default fields");
+        */
 		$different = array_diff($default_fields, $current_fields);
         
 		unset($field);
@@ -245,9 +266,50 @@ class Profile_CCT_Admin {
         
 		return true;
 	}
+	
+	/**
+	 * display_fields_check function.
+	 * 
+	 * Helps us determine which of these fields is already in the form. 
+	 * So we can indicate to the user what tthe fileds
+	 *
+	 * @access public
+	 * @static
+	 * @param mixed $where
+	 * @return void
+	 */
+	public static function display_fields_check( $where ) {
+        if( !in_array( $where, array( 'page','list' ) ) )
+			return true;
+		
+		$contexts = self::get_contexts('form');
+		
+		// CURRENT FIELDS
+		// all the fields that are there 
+		$current_fields = array();
+		foreach( $contexts as $context ):
+			
+			$fields = self::get_option('form','fields', $context );
+			
+			if( is_array( $fields ) ):
+				foreach( $fields as $field):
+				
+					$field['is_active'] = true;
+					
+					self::$current_form_fields[$field['type']] = $field;
+				endforeach;
+			endif;
+		endforeach;
+		
+		// don't forget the banch field
+		foreach(self::get_option( 'form','fields','bench' ) as $field):
+			$field['is_active'] = false;
+			self::$current_form_fields[$field['type']] = $field;
+		endforeach;
+		
 
-	public static function display_fields_check() {
-        
+		return true;
+
 	}
 
 	/**
@@ -622,7 +684,7 @@ class Profile_CCT_Admin {
 
 	/**
 	 * get_contexts function.
-	 *
+	 * This function returns all the conte
 	 * @access public
 	 * @param string $type. (default: 'form')
 	 * @return void
@@ -631,7 +693,7 @@ class Profile_CCT_Admin {
 		$contexts = self::default_shells();
 		$index = array_search( 'tabs', $contexts );
 		
-		/*if ( is_numeric( $index ) ):
+		if ( is_numeric( $index ) ):
 			$tabs = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page, 'tabs' );
             
 			$tab_contexts = array();
@@ -648,7 +710,7 @@ class Profile_CCT_Admin {
 			endif;
             
 			$contexts = array_values( $contexts );
-		endif;*/
+		endif;
 		
 		return $contexts;
 	}
@@ -718,13 +780,13 @@ class Profile_CCT_Admin {
 				
 				if ( is_array( $fields ) ):
 					foreach ( $fields as $field ):
-						if ( ! in_array( $field, $exclude ) ):
-							if ( function_exists('profile_cct_'.$field['type'].'_shell') ):
-								call_user_func( 'profile_cct_'.$field['type'].'_shell', $field, $data[ $field['type'] ] );
-							else:
-								do_action( 'profile_cct_field_shell_'.$field['type'], $field, $data[ $field['type'] ] );
-							endif;
+						
+						if ( function_exists('profile_cct_'.$field['type'].'_shell') ):
+							call_user_func( 'profile_cct_'.$field['type'].'_shell', $field, $data[ $field['type'] ] );
+						else:
+							do_action( 'profile_cct_field_shell_'.$field['type'], $field, $data[ $field['type'] ] );
 						endif;
+						
 					endforeach;
 				endif;
 				?>
@@ -1023,6 +1085,13 @@ class Profile_CCT_Admin {
 		self::update_option($where, 'tabs', 'normal', $tabs);
 		echo $print;
 		die();
+	}
+	
+	function e($data){
+		echo "<pre>";
+		var_dump($data);
+		echo "</pre>";
+
 	}
 }
 

@@ -2,7 +2,7 @@
 
 	$type_of = ( in_array($_GET['view'], array('form','page','list'))? $_GET['view']: NULL );
 
-	do_action('profile_cct_admin_pages', $type_of );
+	do_action( 'profile_cct_admin_pages', $type_of );
 	
 	$previous_version = get_option( 'profile_cct_version', '1.1.8' );
 ?>
@@ -36,7 +36,7 @@
 	<?php
 	$this->action = 'edit';
 	
-	do_action("profile_cct_before_page",$_GET['view']);
+	do_action( "profile_cct_before_page",$_GET['view'] );
 	
 	switch( $_GET['view'] ) {
 	
