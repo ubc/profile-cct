@@ -285,7 +285,7 @@ class Profile_CCT_Admin {
 		$contexts = self::get_contexts('form');
 		
 		// CURRENT FIELDS
-		// all the fields that are there 
+		// All the fields that are there.
 		$current_fields = array();
 		foreach( $contexts as $context ):
 			$fields = self::get_option( 'form', 'fields', $context );
@@ -660,8 +660,8 @@ class Profile_CCT_Admin {
 	 * @param string $type. (default: 'form')
 	 * @return void
 	 */
-	static function default_shells() {
-		$where = Profile_CCT_Admin::$page;
+	static function default_shells( $where ) {
+		$where = ( isset($where) ? $where : Profile_CCT_Admin::$page );
 		
 		switch ( $where ):
 			case 'form':
@@ -683,12 +683,13 @@ class Profile_CCT_Admin {
 	 * @param string $type. (default: 'form')
 	 * @return void
 	 */
-	static function get_contexts() {
-		$contexts = self::default_shells();
+	static function get_contexts( $page ) {
+		$contexts = self::default_shells($page);
 		$index = array_search( 'tabs', $contexts );
+		$page = ( isset($page) ? $page : Profile_CCT_Admin::$page );
 		
 		if ( is_numeric( $index ) ):
-			$tabs = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page, 'tabs' );
+			$tabs = Profile_CCT_Admin::get_option( $page, 'tabs' );
             
 			$tab_contexts = array();
 			if ( is_array( $tabs ) ):
@@ -772,11 +773,6 @@ class Profile_CCT_Admin {
 				<?php
 				$fields = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page, 'fields', $context );
 				
-				echo '<pre>';
-				echo 'Params: '.Profile_CCT_Admin::$page.', fields, '.$context;
-				//print_r($fields);
-				echo '</pre>';
-				
 				if ( is_array( $fields ) ):
 					foreach ( $fields as $field ):
 						if ( function_exists('profile_cct_'.$field['type'].'_shell') ):
@@ -853,9 +849,6 @@ class Profile_CCT_Admin {
 			
 			kses_init_filters();
 		endif;
-		
-		error_log("==== *PCCT DATA =====");
-		error_log(print_r($profile_cct_data, TRUE));
 		
 		return $post_data;
 	}
