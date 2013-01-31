@@ -1,41 +1,119 @@
 <?php 
 	global $blog_id;
-	
 	$global_settings = get_site_option( 'Profile_CCT_global_settings', array() );
-	
 	$profile = Profile_CCT::get_object();
 	
+	// Add Field
+	if ( ! empty($_POST) && check_admin_referer( 'add_profile_field', 'add_profile_fields_field' ) ):
+		echo "Adding ".$field_to_add;
+		
+		// Creating a new field.
+		$field_label = trim( strip_tags($_POST['label']) );
+		$field_clone = trim( strip_tags($_POST['field_clone']) );
+		$field_description = trim( strip_tags($_POST['description']) );
+		
+		// Validate the form input.
+		$error = array();
+		if ( empty($field_label) ) $error['label'] = "Please fill out the field name.";
+		if ( empty($field_clone) ) $error['field_clone'] = "Please select a field to duplicate.";
+		if ( empty($field_description) ) $error['description'] = "Please enter a description for the field.";
+		
+		if ( empty($error) ):
+			$field_type = "clone_".strtolower(preg_replace('/[^A-Za-z0-9]+/', '_', $field_label));
+			$field = array(
+				'type' => $field_type,
+				'label' => $field_label,
+				'field_close' => $field_clone,
+				'description' => $field_description,
+				'blogs' => array(),
+			);
+			$field['blogs'][$blog_id] = true;
+			
+			$global_settings['clone_fields'][] = $field;
+			update_site_option( 'Profile_CCT_global_settings', $global_settings );
+			
+			// Unset these fields in order to empty the form on this page.
+			unset($field_label);
+			unset($field_clone);
+			unset($field_description);
+		endif;
+	else:
+		if ( wp_verify_nonce($_GET['_wpnonce'], 'profile_cct_toggle_field') ):
+			$field_index = ( isset( $_GET['add'] ) ? $_GET['add'] : $_GET['remove'] );
+			$field = $global_settings['clone_fields'][$field_index];
+			$blogs = array();
+			
+			if ( is_array( $global_settings['clone_fields'][$field_index]['blogs'] ) ):
+				$blogs = $global_settings['clone_fields'][$field_index]['blogs'];
+			elseif ( ! is_array( $global_settings['clone_fields'][$field_index]['blogs'] ) ):
+				$blogs_ids = explode(',', $global_settings['clone_fields'][$field_index]['blogs']);
+				
+				foreach ( $blogs_ids as $id ):
+					$id = trim($id);
+					if ( ! empty($id) ):
+						$blogs[$id] = true;
+					endif;
+				endforeach;
+			endif;
+			
+			if ( isset( $_GET['add'] ) ):
+				$blogs[$blog_id] = true;
+			elseif ( isset( $_GET['remove'] ) ):
+				unset($blogs[$blog_id]);
+			endif;
+			
+			// If not used by any blog, then delete the field from the entire network
+			if ( empty($blogs) ):
+				unset($global_settings['clone_fields'][$field_index]);
+				$global_settings['clone_fields'] = array_values(array_filter($global_settings['clone_fields'])); // Reindex the array.
+			else:
+				$global_settings['clone_fields'][$field_index]['blogs'] = $blogs;
+			endif;
+			
+			update_site_option( 'Profile_CCT_global_settings', $global_settings );
+		endif;
+	endif;
+	
+	echo '<pre>';
+	echo 'POST<br />';
+	print_r($_POST);
+	echo '<br />Global Settings<br />';
+	print_r($global_settings);
+	//echo '<br />Profile Settings<br />';
+	//print_r($profile->settings['clone_fields']);
+	echo '</pre>';
+	
 	// For local 
-	if ( ! empty($profile->settings['clone_fields']) ):
+	/*if ( ! empty($profile->settings['clone_fields']) ):
 		foreach ( $profile->settings['clone_fields'] as $local_clone_field ):
-			$clone_fields[] = $local_clone_field['type'];
+			$local_clone_fields[$local_clone_field['type']] = false;
 		endforeach;
 	else:
-		$clone_fields = array();
+		$local_clone_fields = array();
 	endif;
 	
 	// ADD FIELDS 
 	if ( !empty($_POST) && check_admin_referer( 'add_profile_field', 'add_profile_fields_field' ) ):
 		$error = array();
 		
-		$field_label = trim(strip_tags($_POST['label']));
+		$field_label = trim( strip_tags($_POST['label']) );
 		if ( empty($field_label) ):
 			$error['label'] = "Please Fill out the Field Name";
 		endif;
 		
-		$field_clone = trim(strip_tags($_POST['field_clone']));
+		$field_clone = trim( strip_tags($_POST['field_clone']) );
 		if ( empty($field_clone) ):
 			$error['field_clone'] = "Please Select a Field To Duplicate";
 		endif;
 		
-		$field_description = trim(strip_tags($_POST['description']));
+		$field_description = trim( strip_tags($_POST['description']) );
 		if ( empty($field_description) ):
 			$error['description'] = "Please enter a Description for the Field";
 		endif;
 		
-		$new_type = trim(strip_tags($_POST['field_type']));
-	
-		// We want to either add a completly new type or add one to the local array.
+		$new_type = trim( strip_tags($_POST['field_type']) );
+		
+		// We want to either add a completly new type or add an existing one to the local array.
 		if ( empty($error) || ! empty($new_type) ):
 			$type = "clone_".strtolower(preg_replace('/[^A-Za-z0-9]+/', '_', $field_label));
 			$field_type = $type;
@@ -46,7 +124,7 @@
 				$global_count = 0;
 				// For global 
 				foreach ( $global_settings['clone_fields'] as $clone_field ):
-					$global_clone_fields[] = $clone_field['type'];
+					$global_clone_fields[$clone_field['type']] = true;
 					
 					// Just adding one to the local array
 					if ( $new_type == $clone_field['type'] || ( $type == $clone_field['type'] && $clone_field['field_clone'] == $field_clone ) ):
@@ -70,15 +148,15 @@
 			// create a new 
 			if ( empty( $copy_to_local ) ):
 				$new_field = array(
-					'type'=>$field_type,
-					'label'=>$field_label,
-					'field_clone'=>$field_clone,
-					'description'=>$field_description
+					'type'        => $field_type,
+					'label'       => $field_label,
+					'field_clone' => $field_clone,
+					'description' => $field_description,
 				);
 			else:
-				if ( !in_array( $field['type'], $clone_fields ) ):
+				if ( ! in_array( $field['type'], $local_clone_fields ) ):
 					// add a copy of the to the local field
-					(array) $profile->settings['clone_fields'][] 	= $copy_to_local;
+					(array) $profile->settings['clone_fields'][] = $copy_to_local;
 					
 					update_option( 'Profile_CCT_settings', $profile->settings );
 					$global_settings['clone_fields'][$global_to_change_count]['blogs'] .= ",".$blog_id;
@@ -88,7 +166,7 @@
 					// remove the errors from the 
 					unset($error);
 					// make sure that the new clone fields is added to the clone_fields
-					$clone_fields[] = $copy_to_local['type'];
+					$local_clone_fields[$copy_to_local['type']] = true;
 					
 					$note = "<p class='info'>Now you can add ". $copy_to_local['label']." Field to the <a href=\"".admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASEADMIN.'&view=form')."\">form</a>, <a href=\"".admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASEADMIN.'&view=page')."\">person page</a> or the <a href=\"".admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASEADMIN.'&view=list')."\">list view</a></p>";
 				endif;
@@ -102,38 +180,41 @@
 				(array) $global_settings['clone_fields'][] = $new_field;
 				update_option( 'Profile_CCT_settings', $profile->settings );
 				update_site_option( 'Profile_CCT_global_settings', $global_settings );
-				$clone_fields[] = $new_field['type'];
+				$local_clone_fields[] = $new_field['type'];
 				
 				$note = "<p class='info'>Now you can add ".$new_field['label']." Field to the <a href=\"".admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=form')."\">form</a>, <a href=\"".admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=page')."\">person page</a> or the <a href=\"".admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=list')."\">list view</a></p>";;
 			endif;
 		endif;
 	endif;
 	
-	// Remove Fields 
+	// REMOVE FIELDS
 	if ( is_numeric($_GET['remove']) ):
-		$global_field = $global_settings['clone_fields'][$_GET['remove']];
+		$field_to_remove = $global_settings['clone_fields'][$_GET['remove']];
 		
-		if ( wp_verify_nonce($_GET['_wpnonce'], 'profile_cct_remove_field'.$global_field['type']) ):
+		if ( wp_verify_nonce($_GET['_wpnonce'], 'profile_cct_remove_field'.$field_to_remove['type']) ):
 			$count = 0;
-			unset($count_set);
-			unset($clone_fields); // we will recreate this later
-			$clone_fields = array();
+			unset($removal_index);
+			unset($local_clone_fields); // We will recreate this.
+			$local_clone_fields = array();
+			
 			foreach ( $profile->settings['clone_fields'] as $field ):
-				if ( $global_field['type'] == $field['type'] ):
-					$count_set = $count;
+				print_r($field['type']);
+				echo ", ";
+				if ( $field_to_remove['type'] == $field['type'] ):
+					$removal_index = $count;
 				else:
-					$clone_fields[] = $field['type'];
+					$local_clone_fields[$field['type']] = true;
 				endif;
 				
 				$count++;
 			endforeach;
 			
 			// remove the fields
-			if ( is_numeric($count_set)):
-				unset($profile->settings['clone_fields'][$count_set]);
+			if ( is_numeric($removal_index) ):
+				unset($profile->settings['clone_fields'][$removal_index]);
 				
 				// also remove the site from the blogs global array
-				$blogs = str_replace($blog_id, "", $global_field['blogs']);
+				$blogs = str_replace( $blog_id, "", $field_to_remove['blogs']);
 				$blogs = str_replace(",,", "", $blogs);
 				$blogs = ( substr($blogs, -1) == "," ? substr($blogs, 0, -1) : $blogs );
 				
@@ -143,13 +224,16 @@
 				update_site_option( 'Profile_CCT_global_settings', $global_settings );
 			endif;
 		endif;
-	endif;
+	endif;*/
 ?>
 <h2>Fields Builder</h2>
 <?php echo $note; ?>
 
 <h3>Available Fields</h3>
-<?php if ( is_array($global_settings['clone_fields']) && !empty($global_settings['clone_fields']) ): ?>
+<pre>
+<?php print_r($local_clone_fields); ?>
+</pre>
+<?php if ( is_array( $global_settings['clone_fields'] ) && ! empty( $global_settings['clone_fields'] ) ): ?>
 	<table class="widefat">
 		<thead>
 			<tr>
@@ -164,19 +248,26 @@
 			foreach ( $global_settings['clone_fields'] as $field ): 
 			?>
 				<tr <?php if ( $count % 2 ) echo 'class="alternate"'; ?>>
-					<td ><?php echo $field['label']; ?>
-						<?php if ( in_array( $field['type'], $clone_fields ) ): ?>
+					<td >
+						<?php echo $field['label']; ?>
+						<?php //if ( isset( $local_clone_fields[$field['type']] ) && $local_clone_fields[$field['type']] == true ): ?>
+						<?php if ( isset( $global_settings['clone_fields'][$count]['blogs'][$blog_id] ) && $global_settings['clone_fields'][$count]['blogs'][$blog_id] == true ): ?>
 							<div class="row-actions">
 								<span class="trash">
-									<a href="?post_type=profile_cct&page=<?php echo PROFILE_CCT_BASEADMIN; ?>&view=fields&remove=<?php echo $count."&_wpnonce=".wp_create_nonce('profile_cct_remove_field'.$field['type']); ?> " class="submitdelete">Delete</a>
+									<a href="?post_type=profile_cct&page=<?php echo PROFILE_CCT_BASEADMIN; ?>&view=fields&remove=<?php echo $count."&_wpnonce=".wp_create_nonce('profile_cct_toggle_field'); ?> " class="submitdelete">Delete</a>
 								</span>
 							</div>
 						<?php else: ?>
+							<div>
+								<a class="button-primary" href="?post_type=profile_cct&page=<?php echo PROFILE_CCT_BASEADMIN; ?>&view=fields&add=<?php echo $count."&_wpnonce=".wp_create_nonce('profile_cct_toggle_field'); ?> " class="submitadd">Add</a>
+							</div>
+							<!--
 							<form action="<?php echo admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASEADMIN.'&view=fields'); ?>" method="POST">
 								<?php wp_nonce_field( 'add_profile_field','add_profile_fields_field' ); ?>
 								<input type="hidden" name="field_type" value="<?php echo esc_attr($field['type']); ?>" />
 								<input type="submit" value="Add" class="button-primary" />
 							</form>
+							-->
 						<?php endif; ?>
 					</td>
 					<td><?php echo $field['description']; ?></td>
@@ -208,7 +299,7 @@
 			<td>
 				<input type="text" value="<?php echo esc_attr($field_label); ?>" id="label" name="label" class="all-options"  /> <span class="description">For example: Lab Phone</span>
 				<br />
-				<?php echo (isset($error['label'])? "<span class='form-invalid' style='padding:2px;'>".$error['label']."</span>": ""); ?>
+				<?php if (isset($error['label'])) echo "<span class='form-invalid' style='padding:2px;'>".$error['label']."</span>"; ?>
 			</td>
 		</tr>
 		<tr valign="top">
@@ -216,11 +307,12 @@
 			<td>
 				<select name="field_clone" id="field_clone" class="all-options">
 					<?php foreach(Profile_CCT_Admin::fields_to_clone() as $field_to_clone): ?>
-						<option value="<?php echo esc_attr($field_to_clone['type']);?>" <?php selected($field_clone,$field_to_clone['type']); ?>><?php echo esc_attr($field_to_clone['type']);?></option>
+						<option value="<?php echo esc_attr($field_to_clone['type']);?>" <?php selected($field_clone, $field_to_clone['type']); ?>><?php echo esc_attr($field_to_clone['type']);?></option>
 					<?php endforeach; ?>
 				</select>
-				<span class="description">Select the field that you want to mimic in functionality.</span>	
+				<span class="description">Select the field that you want to mimic in functionality.</span>
 				<br />
+				<?php if (isset($error['field_clone'])) echo "<span class='form-invalid' style='padding:2px;'>".$error['field_clone']."</span>"; ?>
 			</td>
 		</tr>
 		<tr valign="top">
@@ -229,7 +321,8 @@
 				<textarea name="description" id="description" class="large-text" cols="30" rows="5"><?php echo esc_textarea($field_description); ?></textarea>
 				<br />
 				<span class="description">Describe what this field is used for.</span>
-				<?php echo (isset($error['description'])? "<span class='form-invalid' style='padding:2px;'>".$error['description']."</span>": ""); ?>
+				<br />
+				<?php if (isset($error['description'])) echo "<span class='form-invalid' style='padding:2px;'>".$error['description']."</span>"; ?>
 			</td>
 		</tr>
 	</table>

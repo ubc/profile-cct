@@ -283,38 +283,6 @@ class Profile_CCT_Field {
 		endif;
 	}
 	
-	/*function construct_field( $form = false ) {
-		if ( $form ):
-			$construct_array = $this->input_array;
-		else:
-			$construct_array = $this->display_array;
-			$this->display_shell( $this->shell_array );
-		endif;
-		
-		if ( is_array( $construct_array ) ):
-			ob_start();
-			foreach ( $construct_array as $field ):
-				if ( method_exists( $this, $field['function'] ) ):
-					call_user_method( $field['function'], $this, $field['args'] );
-				endif;
-			endforeach;
-			
-			$contents = ob_get_contents();
-			if ( $contents == '' ):
-				ob_end_clean();
-				echo $this->empty;
-			else:
-				ob_end_flush();
-			endif;
-		else:
-			echo $this->empty;
-		endif;
-		
-		if ( ! $form ):
-			$this->display_end_shell( $this->shell_array );
-		endif;
-	}*/
-	
 	/**
 	 * end_field function.
 	 * 
