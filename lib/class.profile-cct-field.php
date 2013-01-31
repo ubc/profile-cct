@@ -41,12 +41,6 @@ class Profile_CCT_Field {
 			$options = $options_or_post;
 		endif;
 		
-		echo '<pre>';
-		//print_r($options);
-		//print_r($data);
-		//print_r(Profile_CCT_Admin::$current_form_fields);
-		echo '</pre>';
-		
 		$this->options       = ( is_array( $options ) ? array_merge( $this->default_options, $options ): $this->default_options );
 		$this->action        = ( isset( Profile_CCT_Admin::$action ) ? Profile_CCT_Admin::$action : 'edit' );
 		$this->page          = ( isset( $this->options['page'] ) ? $this->options['page'] : ( isset( Profile_CCT_Admin::$page ) ? Profile_CCT_Admin::$page : false ) );
@@ -588,11 +582,13 @@ class Profile_CCT_Field {
 	function display_text( $attr ) {
 		$attr = self::display_attr( $attr, 'text' );
 		
+		printf( "<span %s>", $attr['field_shell_attr'] );
 		if ( ! empty($attr['display']) ):
 	    	$this->display_separator( array( 'separator' => $attr['separator'], 'class' => $attr['class'] ) );
 			echo "<".$attr['tag']." ".$attr['field_attr'].">".$attr['display']."</".$attr['tag'].">";
 			$this->display_separator( array( 'separator' => $attr['post_separator'], 'class' => $attr['class'] ) );
 		endif;
+		printf( "</span>" );
 	}
 	
 	function display_separator( $attr ) {
@@ -659,14 +655,14 @@ class Profile_CCT_Field {
 	 * @return void
 	 */
 	function field_attr( $attr, $field_type ) {
-		echo( isset( $attr['separator'] ) ? '<span class="separator">'.esc_html( $attr['separator'] ).'</span>' : '' );
+		//echo( isset( $attr['separator'] ) ? '<span class="separator">'.esc_html( $attr['separator'] ).'</span>' : '' );
 		
 		$show = ( isset( $attr['field_id'] ) && ! in_array( $attr['field_id'], $this->show ) && in_array( $attr['field_id'], $this->show_fields )  ? ' style="display:none;"' : '' ); // should this field be displayed
 		
 		// Things to be returned.
 		$needed_attr['id']               = ( isset( $attr['field_id'] ) && $attr['field_id'] ? $attr['field_id'] : 'profile-cct-'.$this->type.'-'.$field_type.'-'.$this->field_counter ); // todo: show warning
 		$needed_attr['before_label']     = ( isset( $attr['before_label'] ) && $attr['before_label'] ? true : false );
-		$needed_attr['field_shell_attr'] = ( isset( $attr['field_id'] )        ? ' class="'.$attr['field_id'].' '.$field_type.'-shell"' : ' class="'.$this->type.' '.$field_type.'-shell"' ) . $show;
+		$needed_attr['field_shell_attr'] = ( isset( $attr['field_id'] )        ? ' class="'.$attr['field_id'].' '.$field_type.'-shell"' : ' class="'.$this->type.' '.$field_type.'-shell"' ).$show;
 		$needed_attr['label']            = ( isset( $attr['label'] )		   ? $attr['label']           : '' );
 		$needed_attr['sub_label']        = ( isset( $attr['sub_label'] )	   ? $attr['sub_label']       : '' );
 		$needed_attr['all_fields']       = ( isset( $attr['all_fields'] )	   ? $attr['all_fields']      : '' );
@@ -715,28 +711,27 @@ class Profile_CCT_Field {
 		$lorem_ipsum  = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et tempor lorem. Nam eget sapien sit amet risus porttitor pellentesque. Sed vestibulum tellus et quam faucibus vel tristique metus sagittis. Integer neque justo, suscipit sit amet lobortis eu, aliquet imperdiet sapien. Morbi id tellus quis nisl tempor semper.</p><p>Nunc sed diam sit amet augue venenatis scelerisque quis eu ante. Cras mattis auctor turpis, non congue nibh auctor at. Nulla libero ante, dapibus a tristique eu, semper ac odio. Nulla ultrices dui et velit eleifend congue. Mauris vel mauris eu justo lobortis semper. Duis lacinia faucibus nibh, ac sodales leo condimentum id. Suspendisse commodo mattis dui, eu rutrum sapien vehicula a. Proin iaculis sollicitudin lacus vitae commodo.</p>';
 		$default_text = ( 'lorem ipsum' == $attr['default_text'] ? $lorem_ipsum   : $attr['default_text'] );
 		
-		$needed_attr['id']             = ( isset( $attr['field_id'] ) && $attr['field_id'] ? $attr['field_id'] : '' );
-	    $needed_attr['display']        = ( 'edit' == $this->action          ? $default_text           : ( isset($attr['value']) ? $attr['value'] : $this->data[$needed_attr['id']] ) );
-	    $needed_attr['tag']            = ( isset( $attr['tag'] )            ? $attr['tag']            : 'span' );
-		$needed_attr['post_separator'] = ( isset( $attr['post_separator'] ) ? $attr['post_separator'] : ''     );
-		$needed_attr['separator']      = ( isset( $attr['separator'] )      ? $attr['separator']      : ''     );
-		$needed_attr['class']          = ( isset( $attr['class'] )          ? $attr['class']          : ''     );
+		$show = ( ( isset( $attr['field_id'] ) && in_array( $attr['field_id'], $this->show_fields ) && ! in_array( $attr['field_id'], $this->show ) ) ? ' style="display:none;"' : '' );
+		
+		$needed_attr['id']               = ( isset( $attr['field_id'] ) && $attr['field_id'] ? $attr['field_id'] : '' );
+	    $needed_attr['display']          = ( 'edit' == $this->action          ? $default_text           : ( isset($attr['value']) ? $attr['value'] : $this->data[$needed_attr['id']] ) );
+	    $needed_attr['tag']              = ( isset( $attr['tag'] )            ? $attr['tag']            : 'span' );
+		$needed_attr['field_shell_attr'] = ( isset( $attr['field_id'] )        ? ' class="'.$attr['field_id'].' '.$field_type.'-shell"' : ' class="'.$this->type.' '.$field_type.'-shell"' ).$show;
+		$needed_attr['post_separator']   = ( isset( $attr['post_separator'] ) ? $attr['post_separator'] : ''     );
+		$needed_attr['separator']        = ( isset( $attr['separator'] )      ? $attr['separator']      : ''     );
+		$needed_attr['class']            = ( isset( $attr['class'] )          ? $attr['class']          : ''     );
 		
 		if ( ( ! isset( $needed_attr['display'] ) || $needed_attr['display'] == '' ) && isset( $attr['href'] ) ):
 			$needed_attr['display'] = $attr['href'];
 		endif;
 		
-		$id    = ( isset( $attr['field_id']  ) ? ' id="'   . $attr['field_id'].'" ' : ''               );
-		$class = ( isset( $attr['class']     ) ? ' class="'. $attr['class']   .'" ' : ' class="field"' );
-	    $href  = ( isset( $attr['href']      ) ? ' href="' . $attr['href']    .'" ' : ''               );
+		$id    = ( isset( $attr['field_id'] ) ? ' id="'   . $attr['field_id'].'" ' : ''               );
+		$class = ( isset( $attr['class']    ) ? ' class="'. $attr['class']   .'" ' : ' class="field"' );
+	    $href  = ( isset( $attr['href']     ) ? ' href="' . $attr['href']    .'" ' : ''               );
 		
 		$needed_attr['field_attr'] = $id.$class.$href.' ';
 		
 		$this->field_counter++;
-		
-		//echo '<br>';
-		//print_r($this->data);
-		//echo '<br>';
 		
 		return $needed_attr;
 	}
