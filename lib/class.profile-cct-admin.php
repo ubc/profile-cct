@@ -185,6 +185,7 @@ class Profile_CCT_Admin {
 		// - db fields (added via the add field function)
 		// all the once that are
 		$dynamic_fields = apply_filters( "profile_cct_dynamic_fields", array(), $where );
+		
 		var_dump($dynamic_fields);
 		$all_dynamic_fields = array();
         $real_fields = array(); // array of all the default fields containing the field array with the key field['type']
@@ -196,7 +197,7 @@ class Profile_CCT_Admin {
                 
 				if ( !in_array($field['type'], $current_fields) ): // add to the current_fields array
 					$current_fields[] = $field['type'];
-					Profile_CCT_Admin::$option[$where]['fields']['bench'][] = $field;
+					self::$option[$where]['fields']['bench'][] = $field;
 				endif;
 			endforeach;
 		endif;
@@ -654,17 +655,20 @@ class Profile_CCT_Admin {
 		endif;
 	}
 
+	
 	/**
 	 * default_shells function.
-	 *
+	 * 
 	 * @access public
-	 * @param string $type. (default: 'form')
+	 * @static
+	 * @param mixed $page (default: null)
 	 * @return void
 	 */
-	static function default_shells( $where ) {
-		$where = ( isset($where) ? $where : Profile_CCT_Admin::$page );
+	static function default_shells( $page = null ) {
 		
-		switch ( $where ):
+		$page = ( is_null( $page )? self::$page : $page );
+		
+		switch ( $page ):
 			case 'form':
 				return array( 'normal', 'side', 'tabs' );
                 break;
@@ -677,17 +681,22 @@ class Profile_CCT_Admin {
 		endswitch;
 	}
 
+	
 	/**
 	 * get_contexts function.
-	 * This function returns all the conte
+	 * This functio
 	 * @access public
-	 * @param string $type. (default: 'form')
+	 * @static
+	 * @param mixed $page (default: null)
 	 * @return void
 	 */
-	static function get_contexts( $page ) {
-		$contexts = self::default_shells($page);
+	static function get_contexts( $page = null ) {
+		
+		$page = ( is_null( $page )? self::$page : $page );
+		
+		$contexts = self::default_shells( $page );
+		
 		$index = array_search( 'tabs', $contexts );
-		$page = ( isset($page) ? $page : Profile_CCT_Admin::$page );
 		
 		if ( is_numeric( $index ) ):
 			$tabs = Profile_CCT_Admin::get_option( $page, 'tabs' );
@@ -779,7 +788,7 @@ class Profile_CCT_Admin {
 						if ( function_exists('profile_cct_'.$field['type'].'_shell') ):
 							call_user_func( 'profile_cct_'.$field['type'].'_shell', $field, $data[ $field['type'] ] );
 						else:
-							do_action( 'profile_cct_field_shell_'.$field['type'], $field, $data[ $field['type'] ] );
+							do_action( 'profile_cct_shell_'.$field['type'], $field, $data[ $field['type'] ] );
 						endif;
 					endforeach;
 				endif;

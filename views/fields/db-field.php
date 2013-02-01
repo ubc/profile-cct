@@ -5,6 +5,7 @@ $profile = Profile_CCT::get_object();
 if( is_array($profile->settings['clone_fields']) ): 
 	// add the fields that need to be applied to the form page
 	Profile_CCT_DB_Field::init();
+	
 endif;
 
 class Profile_CCT_DB_Field extends Profile_CCT_Field {
@@ -24,8 +25,19 @@ class Profile_CCT_DB_Field extends Profile_CCT_Field {
 		'after'       => '',
 	);
 	
-	function init(){
+	function init() {
+		
+		add_filter( 'profile_cct_dynamic_fields', array( __CLASS__, 'add_custom_fields' ) );
+		
+		$profile_cct = Profile_CCT::get_object();
 	
+		foreach( $profile_cct->settings['clone_fields'] as $field ):
+			
+			// add_action( 'profile_cct_display_shell_'.$field['type'], 'profile_cct_'.$field['field_clone'].'_display_shell',10, 3);	
+			add_action('profile_cct_shell_'.$field['type'], 'profile_cct_'.$field['field_clone'].'_shell',10, 3);
+		endforeach;
+
+		
 		// add_action('profile_cct_form', 			'profile_cct_add_db_fields_filter', 5);
 	
 		// add_action('profile_cct_admin_pages', 	'profile_cct_add_db_fields_filter', 10, 1);
@@ -52,12 +64,11 @@ function profile_cct_add_db_fields_filter($type_of= null){
 	
 	$profile_cct = Profile_CCT::get_object();
 	
-	
-	
-	foreach($profile_cct->settings['clone_fields'] as $field):
-		
-		add_action('profile_cct_display_shell_'.$field['type'], 'profile_cct_'.$field['field_clone'].'_display_shell',10, 3);	
-		add_action('profile_cct_shell_'.$field['type'], 'profile_cct_'.$field['field_clone'].'_shell',10, 3);
+	foreach($profile_cct->settings['clone_fields'] as $field_key => $field_data):
+		if( !is_numeric($field_key) ):
+			add_action('profile_cct_display_shell_'.$field['type'], 'profile_cct_'.$field['field_clone'].'_display_shell',10, 3);	
+			add_action('profile_cct_shell_'.$field['type'], 'profile_cct_'.$field['field_clone'].'_shell',10, 3);
+		endif;
 	endforeach;
 	
 }
@@ -69,13 +80,14 @@ function profile_cct_add_db_fields_filter($type_of= null){
  * @param mixed $fields
  * @return void
  */
-function profile_cct_add_db_fields( $fields ){
+function add_custom_fields( $fields ){
 	
 	$profile_cct = Profile_CCT::get_object();
 	
-	foreach( $profile_cct->settings['clone_fields'] as $field ):
+	foreach( $profile_cct->settings['clone_fields'] as $field_key => $field_data ):
+		if( !is_numeric($field_key) )
+			$fields[] = array( "type"=> $field_data['type'], "label"=> $field_data['label'] );
 		
-		$fields[] = array( "type"=> $field['type'], "label"=> $field['label'] );
 	endforeach;
 	
 	return $fields;
