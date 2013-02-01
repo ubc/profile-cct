@@ -186,7 +186,6 @@ class Profile_CCT_Admin {
 		// all the once that are
 		$dynamic_fields = apply_filters( "profile_cct_dynamic_fields", array(), $where );
 		
-		var_dump($dynamic_fields);
 		$all_dynamic_fields = array();
         $real_fields = array(); // array of all the default fields containing the field array with the key field['type']
         
@@ -201,14 +200,6 @@ class Profile_CCT_Admin {
 				endif;
 			endforeach;
 		endif;
-        
-		/*
-		self::e("current fields after merge with dynamic fields");
-		self::e( $current_fields );
-		
-		self::e("dynamic fields");
-		self::e( $all_dynamic_fields );
-		*/
         
 		// DEFAULT FIELDS NOW
 		unset($context);
@@ -244,17 +235,6 @@ class Profile_CCT_Admin {
 		// merging the default array with the dynamic one
 		$default_fields = array_merge( $default_fields, $all_dynamic_fields );
         
-		/*
-		self::e("default fields");
-		self::e($default_fields);
-		// all the default fields should contain the dynamic fields as well
-        
-		self::e("default fields after merging with default fields");
-		self::e($default_fields);
-		
-        
-		self::e("difference between current_fields and default fields");
-        */
 		$different = array_diff($default_fields, $current_fields);
         
 		unset($field);
@@ -1085,13 +1065,6 @@ class Profile_CCT_Admin {
 		self::update_option($where, 'tabs', 'normal', $tabs);
 		echo $print;
 		die();
-	}
-	
-	function e($data){
-		echo "<pre>";
-		var_dump($data);
-		echo "</pre>";
-
 	}
 }
 

@@ -1,13 +1,4 @@
 <?php 
-$profile = Profile_CCT::get_object();
-// lets you add fields that are dynamically created by adding to the clone_fields in the settings option
-
-if( is_array($profile->settings['clone_fields']) ): 
-	// add the fields that need to be applied to the form page
-	Profile_CCT_DB_Field::init();
-	
-endif;
-
 class Profile_CCT_DB_Field extends Profile_CCT_Field {
 	/**
 	 * default_options
@@ -26,104 +17,77 @@ class Profile_CCT_DB_Field extends Profile_CCT_Field {
 	);
 	
 	function init() {
-		
 		add_filter( 'profile_cct_dynamic_fields', array( __CLASS__, 'add_custom_fields' ) );
 		
-		$profile_cct = Profile_CCT::get_object();
-	
-		foreach( $profile_cct->settings['clone_fields'] as $field ):
-			
-			// add_action( 'profile_cct_display_shell_'.$field['type'], 'profile_cct_'.$field['field_clone'].'_display_shell',10, 3);	
-			add_action('profile_cct_shell_'.$field['type'], 'profile_cct_'.$field['field_clone'].'_shell',10, 3);
+		$profile = Profile_CCT::get_object();
+		
+		foreach( $profile->settings['clone_fields'] as $field ):
+			if ( ! is_numeric($field_key) ):
+				add_action( 'profile_cct_shell_'.$field['type'], 'profile_cct_'.$field['field_clone'].'_shell', 10, 3 );
+			else:
+				//This removes old and invalid fields that are left over from previous versions of the plugin.
+				unset($profile_cct->settings['clone_fields'][$field_key]);
+			endif;
 		endforeach;
-
 		
-		// add_action('profile_cct_form', 			'profile_cct_add_db_fields_filter', 5);
-	
-		// add_action('profile_cct_admin_pages', 	'profile_cct_add_db_fields_filter', 10, 1);
-		// add_action('profile_cct_form', 			'profile_cct_add_db_fields_filter', 5);
-		// add_action('profile_cct_page', 			'profile_cct_add_db_fields_filter', 5);
-	
-	/* 
-	foreach($profile->settings['clone_fields'] as $field ):
-		add_action('profile_cct_'.$field['type'].'_add_meta_box','profile_cct_db_add_meta_box',10, 4 );
-	endforeach;
-	*/
+		foreach( $profile->settings['clone_fields'] as $field ):
+			add_action( 'profile_cct_'.$field['type'].'_add_meta_box', array( __CLASS__, 'add_db_meta_box' ), 10, 4 );
+		endforeach;
 	}
-
-
-/**
- * profile_cct_add_db_fields_filter function.
- * 
- * @access public
- * @param mixed $type_of (default: null)
- * @return void
- */
-function profile_cct_add_db_fields_filter($type_of= null){
 	
-	
-	$profile_cct = Profile_CCT::get_object();
-	
-	foreach($profile_cct->settings['clone_fields'] as $field_key => $field_data):
-		if( !is_numeric($field_key) ):
-			add_action('profile_cct_display_shell_'.$field['type'], 'profile_cct_'.$field['field_clone'].'_display_shell',10, 3);	
-			add_action('profile_cct_shell_'.$field['type'], 'profile_cct_'.$field['field_clone'].'_shell',10, 3);
-		endif;
-	endforeach;
-	
-}
-
-/**
- * profile_cct_add_db_fields function.
- * 
- * @access public
- * @param mixed $fields
- * @return void
- */
-function add_custom_fields( $fields ){
-	
-	$profile_cct = Profile_CCT::get_object();
-	
-	foreach( $profile_cct->settings['clone_fields'] as $field_key => $field_data ):
-		if( !is_numeric($field_key) )
-			$fields[] = array( "type"=> $field_data['type'], "label"=> $field_data['label'] );
+	/**
+	 * profile_cct_add_db_fields function.
+	 * 
+	 * @access public
+	 * @param mixed $fields
+	 * @return void
+	 */
+	function add_custom_fields( $fields ) {
+		$profile_cct = Profile_CCT::get_object();
 		
-	endforeach;
-	
-	return $fields;
-}
-
-
-/**
- * profile_cct_db_add_meta_box function.
- * 
- * @access public
- * @param mixed $field
- * @param mixed $context
- * @param mixed $data
- * @param mixed $i
- * @return void
- */
-function profile_cct_db_add_meta_box($field, $context, $data, $i){
-	$profile_cct = Profile_CCT::get_object();
-	foreach($profile_cct->settings_options['clone_fields'] as $db_field):
+		foreach ( $profile_cct->settings['clone_fields'] as $field_key => $field_data ):
+			if ( ! is_numeric($field_key) ):
+				$fields[] = array( "type"=> $field_data['type'], "label"=> $field_data['label'] );
+			else:
+				//This removes old and invalid fields that are left over from previous versions of the plugin.
+				unset($profile_cct->settings['clone_fields'][$field_key]);
+			endif;
+		endforeach;
 		
-		if($db_field['type'] == $field['type']):
+		return $fields;
+	}
 	
-		add_meta_box( 
-			$field['type']."-".$i.'-'.rand(0,999), 
-			$field['label'], 
-			'profile_cct_'.$db_field['field_clone'].'_shell', 
-			'profile_cct', $context, 'core', 
-			array(
-				'options'=>$field,
-				'data'=>$data
-				)
-		);
-		break;
+	/**
+	 * profile_cct_db_add_meta_box function.
+	 * 
+	 * @access public
+	 * @param mixed $field
+	 * @param mixed $context
+	 * @param mixed $data
+	 * @param mixed $i
+	 * @return void
+	 */
+	function add_db_meta_box( $field, $context, $data, $i ) {
+		$profile = Profile_CCT::get_object();
+		
+		if ( isset( $profile->settings['clone_fields'][$field['type']] ) ):
+			$custom_field = $profile->settings['clone_fields'][$field['type']];
+			
+			$id = $field['type']."-".$i.'-'.rand(0,999);
+			$type = $field['label'];
+			$callback = 'profile_cct_'.$custom_field['field_clone'].'_shell';
+			$post_type = 'profile_cct';
+			$priority = 'core';
+			$callback_args = array(
+				'options' => $field,
+				'data'    => $data
+			);
+			
+			add_meta_box( $id, $type, $callback, $post_type, $context, $priority, $callback_args );
 		endif;
-	endforeach;
-	
-	
+	}
 }
-}
+
+if ( is_array(Profile_CCT::get_object()->settings['clone_fields']) ):
+	Profile_CCT_DB_Field::init();
+endif;
