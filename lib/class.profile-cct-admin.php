@@ -185,6 +185,7 @@ class Profile_CCT_Admin {
 		// - db fields (added via the add field function)
 		// all the once that are
 		$dynamic_fields = apply_filters( "profile_cct_dynamic_fields", array(), $where );
+		var_dump($dynamic_fields);
 		$all_dynamic_fields = array();
         $real_fields = array(); // array of all the default fields containing the field array with the key field['type']
         
@@ -215,7 +216,7 @@ class Profile_CCT_Admin {
 		$default_fields = array();
         
 		// get the default
-		$default_options = Profile_CCT_Admin::default_options($where);
+		$default_options = Profile_CCT_Admin::default_options( $where );
         
 		foreach ( $default_options['fields'] as $context => $fields ):
 			foreach ( $fields as $field ):
@@ -226,7 +227,7 @@ class Profile_CCT_Admin {
 		endforeach;
         
 		// also don't forget fields that are fields that were added later
-		$new_fields = Profile_CCT_Admin::default_options('new_fields');
+		$new_fields = Profile_CCT_Admin::default_options( 'new_fields' );
 		foreach ( $new_fields as $version ):
 			foreach ( $version as $field ):
 				if ( in_array($where, $field['where']) ): // only add it if it supports the the current where state
@@ -240,7 +241,7 @@ class Profile_CCT_Admin {
 		unset($version);
         
 		// merging the default array with the dynamic one
-		$default_fields = array_merge($default_fields, $all_dynamic_fields);
+		$default_fields = array_merge( $default_fields, $all_dynamic_fields );
         
 		/*
 		self::e("default fields");

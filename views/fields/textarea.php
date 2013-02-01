@@ -1,5 +1,11 @@
 <?php 
-Class Profile_CCT_Textarea extends Profile_CCT_Field {
+
+/**
+ * Profile_CCT_Textarea class.
+ * 
+ * @extends Profile_CCT_Field
+ */
+class Profile_CCT_Textarea extends Profile_CCT_Field {
 	/**
 	 * default_options
 	 * 
