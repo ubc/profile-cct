@@ -1,28 +1,28 @@
 /**
  * displayed in the settings
  */
-
-.nav-tab-wrapper span{
+.nav-tab-wrapper span {
 	padding-right: 5px;
 	padding-left: 20px;
 	color:#AAA;
 	font-size: 12px;
 }
 
-#col-left{
+#col-left {
     float: left;
     overflow: hidden;
 	margin: 0;
     padding: 0;
-	/* width:625px; */
 }
-#col-right{
+
+#col-right {
 	float: left;
 	margin:0 10px 0 0;
 	width:150px;
 	
 }
-#col-middle{
+
+#col-middle {
     float: left;
 	margin: 0;
     padding: 0;
@@ -30,64 +30,65 @@
 	max-width: 960px;
  
 }
+
 #page-shell #header-shell,
 #page-shell #bottom-shell,
 #normal-shell,
-#tabs{
+#tabs {
 	float: left;
     width: 68%;
 	max-width: 655px;
 }
-#tabs .ui-tabs-nav{
+
+#tabs .ui-tabs-nav {
     margin-bottom: 10px;
     padding-bottom: 0;
     height: 27px;
 	border-bottom: 1px solid #CCCCCC;
 }
 
-#side-shell{
+#side-shell {
 	float: right;
 	width: 31%;
 	max-width: 300px;
 }
-#side-shell .form-builder{
-	/* width: 322px; */
-}
-#side-shell .form-builder li{
-	/* width: 280px; */
-}
-#notify{
-	 float: left;
+
+#notify {
+	float: left;
     margin-top: -43px;
     margin-left: 230px;
     height: 30px;
 }
-#notify span{
+
+#notify span {
     position: relative;
-    top:5px;
+    top: 5px;
 	display: none;
     margin-bottom: 18px;
     padding: 7px 15px;
-    border:1px  #FCEEC1 solid;
+    border: 1px #FCEEC1 solid;
     border-radius: 4px;
     background-color: #FDF5D9;
     color: #404040;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
- }
-#notify img{
+}
+
+#notify img {
 	position: relative;
 	top:3px;
 }
-.info{
+
+.info {
 	padding: 5px;
 	border-radius: 4px;
 	background: #EAF2FA;
 }
-.info em{
+
+.info em {
 	font-size: 12px;
 }
 
-.profile-cct-shell{
+.profile-cct-shell {
 	float: left;
     clear: both;
     width: 98%;
@@ -98,38 +99,33 @@
 	padding: 20px 10px;
 }
 
-.profile-version{
+.profile-version {
 	clear: both;
 	margin-top: 10px;
 	color: #AAA;
 	text-align: right;
-	
 }
-#update-profiles-slider{
+
+#update-profiles-slider {
 	display: none;
 	overflow: hidden;
 }
-#update-profiles-slider div{
+
+#update-profiles-slider div {
 	margin-top: 3px;
 	padding: 5px 10px 0;
 	height: 19px;
 	background: #EEE;
 }
+
 #update-profiles-slider.active-slider{
 	display: block;
 }
-/* <a class="close" href="#">x</a>
-.close{
-	 position: relative; */
-/* top:5px; */
-/* left: 5px; */
-/* color: #000000; */
-/* text-decoration: none; */
-/* text-shadow: 0 1px 0 #FFFFFF; */
-/* line-height: 13.5px; */
-/* font-weight: bold; */
-/* font-size: 16px; */
-/* opacity: 0.2; */ 
+
 .close:hover{
 	opacity: 0.8;
+}
+
+tr.disabled td {
+    color: #BBBBBB;
 }

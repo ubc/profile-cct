@@ -3,10 +3,10 @@
 	$global_settings = get_site_option( 'Profile_CCT_global_settings', array() );
 	$profile = Profile_CCT::get_object();
 	
+	//$profile->settings['clone_fields'] = array();
+	
 	// Add Field
 	if ( ! empty($_POST) && check_admin_referer( 'add_profile_field', 'add_profile_fields_field' ) ):
-		echo "Adding ".$field_to_add;
-		
 		// Creating a new field.
 		$field_label = trim( strip_tags($_POST['label']) );
 		$field_clone = trim( strip_tags($_POST['field_clone']) );
@@ -23,13 +23,16 @@
 			$field = array(
 				'type' => $field_type,
 				'label' => $field_label,
-				'field_close' => $field_clone,
+				'field_clone' => $field_clone,
 				'description' => $field_description,
 				'blogs' => array(),
 			);
 			$field['blogs'][$blog_id] = true;
-			
 			$global_settings['clone_fields'][] = $field;
+			unset($field['blogs']);
+			$profile->settings['clone_fields'][$field['type']] = $field;
+			
+			update_option( 'Profile_CCT_settings', $profile->settings );
 			update_site_option( 'Profile_CCT_global_settings', $global_settings );
 			
 			// Unset these fields in order to empty the form on this page.
@@ -39,7 +42,8 @@
 		endif;
 	else:
 		if ( wp_verify_nonce($_GET['_wpnonce'], 'profile_cct_toggle_field') ):
-			$field_index = ( isset( $_GET['add'] ) ? $_GET['add'] : $_GET['remove'] );
+			$field_index = $_GET['field'];
+			$field_action = $_GET['action'];
 			$field = $global_settings['clone_fields'][$field_index];
 			$blogs = array();
 			
@@ -56,32 +60,41 @@
 				endforeach;
 			endif;
 			
-			if ( isset( $_GET['add'] ) ):
+			switch ($field_action):
+			case 'add':
 				$blogs[$blog_id] = true;
-			elseif ( isset( $_GET['remove'] ) ):
-				unset($blogs[$blog_id]);
-			endif;
-			
-			// If not used by any blog, then delete the field from the entire network
-			if ( empty($blogs) ):
-				unset($global_settings['clone_fields'][$field_index]);
-				$global_settings['clone_fields'] = array_values(array_filter($global_settings['clone_fields'])); // Reindex the array.
-			else:
 				$global_settings['clone_fields'][$field_index]['blogs'] = $blogs;
-			endif;
+				unset($field['blogs']);
+				$profile->settings['clone_fields'][$field['type']] = $field;
+				break;
+			case 'remove':
+				unset($blogs[$blog_id]);
+				unset($profile->settings['clone_fields'][$field['type']]);
+				
+				if ( empty($blogs) ):
+					unset($global_settings['clone_fields'][$field_index]);
+					$global_settings['clone_fields'] = array_values(array_filter($global_settings['clone_fields'])); // Reindex the array.
+				else:
+					$global_settings['clone_fields'][$field_index]['blogs'] = $blogs;
+				endif;
+				break;
+			endswitch;
 			
+			update_option( 'Profile_CCT_settings', $profile->settings );
 			update_site_option( 'Profile_CCT_global_settings', $global_settings );
 		endif;
 	endif;
 	
+	/*
 	echo '<pre>';
 	echo 'POST<br />';
 	print_r($_POST);
 	echo '<br />Global Settings<br />';
 	print_r($global_settings);
-	//echo '<br />Profile Settings<br />';
-	//print_r($profile->settings['clone_fields']);
+	echo '<br />Profile Settings<br />';
+	print_r($profile->settings['clone_fields']);
 	echo '</pre>';
+	*/
 	
 	// For local 
 	/*if ( ! empty($profile->settings['clone_fields']) ):
@@ -245,29 +258,23 @@
 		<tbody>
 			<?php
 			$count = 0;
-			foreach ( $global_settings['clone_fields'] as $field ): 
+			foreach ( $global_settings['clone_fields'] as $field ):
+				$enabled = ( isset( $global_settings['clone_fields'][$count]['blogs'][$blog_id] ) && $global_settings['clone_fields'][$count]['blogs'][$blog_id] == true );
 			?>
-				<tr <?php if ( $count % 2 ) echo 'class="alternate"'; ?>>
+				<tr class="<?php if ( $count % 2 ) echo 'alternate'; ?> <?php if ( ! $enabled ) echo 'disabled'; ?>">
 					<td >
 						<?php echo $field['label']; ?>
 						<?php //if ( isset( $local_clone_fields[$field['type']] ) && $local_clone_fields[$field['type']] == true ): ?>
-						<?php if ( isset( $global_settings['clone_fields'][$count]['blogs'][$blog_id] ) && $global_settings['clone_fields'][$count]['blogs'][$blog_id] == true ): ?>
+						<?php if ( $enabled ): ?>
 							<div class="row-actions">
 								<span class="trash">
-									<a href="?post_type=profile_cct&page=<?php echo PROFILE_CCT_BASEADMIN; ?>&view=fields&remove=<?php echo $count."&_wpnonce=".wp_create_nonce('profile_cct_toggle_field'); ?> " class="submitdelete">Delete</a>
+									<a href="?post_type=profile_cct&page=<?php echo PROFILE_CCT_BASEADMIN; ?>&view=fields&field=<?php echo $count; ?>&action=remove&_wpnonce=<?php echo wp_create_nonce('profile_cct_toggle_field'); ?>" class="submitdelete">Delete</a>
 								</span>
 							</div>
 						<?php else: ?>
-							<div>
-								<a class="button-primary" href="?post_type=profile_cct&page=<?php echo PROFILE_CCT_BASEADMIN; ?>&view=fields&add=<?php echo $count."&_wpnonce=".wp_create_nonce('profile_cct_toggle_field'); ?> " class="submitadd">Add</a>
+							<div class="row-actions">
+								<a href="?post_type=profile_cct&page=<?php echo PROFILE_CCT_BASEADMIN; ?>&view=fields&field=<?php echo $count; ?>&action=add&_wpnonce=<?php echo wp_create_nonce('profile_cct_toggle_field'); ?>" class="submitadd">Enable</a>
 							</div>
-							<!--
-							<form action="<?php echo admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASEADMIN.'&view=fields'); ?>" method="POST">
-								<?php wp_nonce_field( 'add_profile_field','add_profile_fields_field' ); ?>
-								<input type="hidden" name="field_type" value="<?php echo esc_attr($field['type']); ?>" />
-								<input type="submit" value="Add" class="button-primary" />
-							</form>
-							-->
 						<?php endif; ?>
 					</td>
 					<td><?php echo $field['description']; ?></td>
