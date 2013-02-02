@@ -30,10 +30,13 @@ Class Profile_CCT_Email extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function field() {
+		$current_user = wp_get_current_user();
+		
 		$this->input_text( array(
 			'field_id' => 'email',
 			'label'    => '',
 			'size'     => 35,
+			'default'  => $current_user->user_email,
 		) );
 	}
 	

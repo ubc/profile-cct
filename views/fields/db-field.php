@@ -1,21 +1,5 @@
 <?php 
-class Profile_CCT_DB_Field extends Profile_CCT_Field {
-	/**
-	 * default_options
-	 * 
-	 * @var mixed
-	 * @access public
-	 */
-	var $default_options = array(
-		'type'        => 'textarea',
-		'label'       => 'textarea',
-		'description' => '',
-		'width'       => 'full',
-		'before'      => '',
-		'empty'       => '',
-		'after'       => '',
-	);
-	
+class Profile_CCT_DB_Field {
 	function init() {
 		add_filter( 'profile_cct_dynamic_fields', array( __CLASS__, 'add_custom_fields' ) );
 		
@@ -47,7 +31,10 @@ class Profile_CCT_DB_Field extends Profile_CCT_Field {
 		
 		foreach ( $profile_cct->settings['clone_fields'] as $field_key => $field_data ):
 			if ( ! is_numeric($field_key) ):
-				$fields[] = array( "type"=> $field_data['type'], "label"=> $field_data['label'] );
+				$fields[] = array(
+					"type"  => $field_data['type'],
+					"label" => $field_data['label'],
+				);
 			else:
 				//This removes old and invalid fields that are left over from previous versions of the plugin.
 				unset($profile_cct->settings['clone_fields'][$field_key]);
@@ -73,7 +60,7 @@ class Profile_CCT_DB_Field extends Profile_CCT_Field {
 		if ( isset( $profile->settings['clone_fields'][$field['type']] ) ):
 			$custom_field = $profile->settings['clone_fields'][$field['type']];
 			
-			$id = $field['type']."-".$i.'-'.rand(0,999);
+			$id = $field['type']."-".$i.'-'.rand( 0, 999 );
 			$type = $field['label'];
 			$callback = 'profile_cct_'.$custom_field['field_clone'].'_shell';
 			$post_type = 'profile_cct';

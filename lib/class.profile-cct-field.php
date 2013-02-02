@@ -649,6 +649,8 @@ class Profile_CCT_Field {
 			$needed_attr['value'] = $attr['value'];
 		elseif ( isset( $this->data[$needed_attr['id']] ) ):
 			$needed_attr['value'] = $this->data[$needed_attr['id']];
+		elseif ( isset( $attr['default'] ) && $attr['default'] != '' ):
+			$needed_attr['value'] = $attr['default'];
 		else:
 			$needed_attr['value'] = '';
 		endif;

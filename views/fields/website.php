@@ -31,10 +31,13 @@ Class Profile_CCT_Website extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function field() {
+		$current_user = wp_get_current_user();
+		
 		$this->input_text( array(
 			'field_id' => 'website',
 			'label'    => 'Website - http://{value}',
 			'size'     => 35,
+			'default'  => $current_user->user_url,
 		) );
 		$this->input_text( array(
 			'field_id' => 'site-title',

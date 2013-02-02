@@ -35,6 +35,8 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
      * @return void
      */
     function field() {
+		$current_user = wp_get_current_user();
+		
 		$this->input_text( array(
 			'field_id'  => 'salutations',
 			'label'     => 'Salutations',
@@ -44,6 +46,7 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
 			'field_id' => 'first',
 			'label'    => 'First',
 			'size'     => 13,
+			'default'  => $current_user->user_firstname,
 		) );
 		$this->input_text( array(
 			'field_id' => 'middle',
@@ -54,6 +57,7 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
 			'field_id' => 'last',
 			'label'    => 'Last',
 			'size'     => 17,
+			'default'  => $current_user->user_lastname,
 		) );
 		$this->input_text( array(
 			'field_id' => 'credentials',
