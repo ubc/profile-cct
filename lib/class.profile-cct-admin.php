@@ -735,13 +735,13 @@ class Profile_CCT_Admin {
 			break;
 		case 'page':
 			Profile_CCT_Admin::$page = 'page';
-			foreach ( self::get_contexts() as $context ):
+			foreach ( self::default_shells() as $context ):
 				Profile_CCT_Admin::render_context( $context, $data );
 			endforeach;
 			break;
 		case 'list':
 			Profile_CCT_Admin::$page = 'list';
-			foreach ( self::get_contexts() as $context ):
+			foreach ( self::default_shells() as $context ):
 				Profile_CCT_Admin::render_context( $context, $data );
 			endforeach;
 			break;

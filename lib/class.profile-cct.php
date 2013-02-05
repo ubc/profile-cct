@@ -530,17 +530,17 @@ class Profile_CCT {
     
     function post_author_meta_box($post) {
         global $user_ID;
-        
-        $parameters = array(
+		
+        ?>
+        Make sure that you select who this is supposed to be.<br /><label class="screen-reader-text" for="post_author_override"><?php _e('Author'); ?></label>
+        <?php
+		
+        wp_dropdown_users( array(
             'who'      => null,
             'name'     => 'post_author_override',
             'selected' => empty($post->ID) ? $user_ID : $post->post_author,
             'include_selected' => true
-        )
-        ?>
-        Make sure that you select who this is supposed to be.<br /><label class="screen-reader-text" for="post_author_override"><?php _e('Author'); ?></label>
-        <?php
-        wp_dropdown_users( $parameters );
+        ) );
 	}
 }
 
