@@ -365,7 +365,7 @@ class Profile_CCT_Admin {
 			wp_enqueue_style( 'profile-cct-edit-post', PROFILE_CCT_DIR_URL.'/css/profile-page.css' );
 			wp_enqueue_script( 'profile-cct-edit-post-validation', PROFILE_CCT_DIR_URL.'/js/profile-page-validation.js' );
 			wp_enqueue_script( 'profile-cct-edit-post', PROFILE_CCT_DIR_URL.'/js/profile-page.js', array( 'jquery-ui-tabs' ) );
-			wp_localize_script( 'profile-cct-edit-post', 'profileCCTSocialArray', Profile_CCT_Social::social_options());
+			wp_localize_script( 'profile-cct-edit-post', 'profileCCTSocialArray', Profile_CCT_Social::social_options() );
 		endif;
 	}
 

@@ -38,7 +38,7 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 		) );
 		$this->input_text( array(
 			'field_id'   => 'username',
-			'label'      => $this->social_options( 'user_url', $this->data['option'] ),
+			'label'      => ( isset( $this->data['option'] ) ? $this->social_options( 'user_url', $this->data['option'] ) : "" ),
 			'value'      => $this->data['username'],
 			'all_fields' => $social_array,
 		) );

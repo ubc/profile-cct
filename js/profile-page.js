@@ -9,7 +9,7 @@ var Profile_CCT_PAGE = {
 		//jQuery('.hide-if-js', Profile_CCT_PAGE.tabs_shell).removeClass('hide-if-js'); // this helps with showing the meta boxes 
 		jQuery('.add-multiple').click(Profile_CCT_PAGE.addFields);
 		jQuery('.remove-fields').live( 'click', Profile_CCT_PAGE.removeFields );
-		jQuery(".wrap-social-fields select").live('change', Profile_CCT_PAGE.updateSocialLabel);
+		jQuery(".field-shell-social select").live('change', Profile_CCT_PAGE.updateSocialLabel);
 		jQuery(".add-multiple").live( 'click', Profile_CCT_PAGE.clearSocialLabel );
 		
 		// placed right after tb_show call
@@ -37,14 +37,11 @@ var Profile_CCT_PAGE = {
 		e.preventDefault();
 		var link = jQuery(this);
 		var field = link.prev();
-        //var days_case = field.children('div').hasClass('days');
 		var count = field.data('count');
 		if (count == undefined) count = 0;
 		var new_count = count + 1;
 		
-		//if (days_case) field.children('hr').remove();
 		var copy = field.clone();
-		//if (days_case) field.append('<hr />');
 		
 		// Add the remove link unless there are none.
 		if ( ! field.children('a.remove-fields').length ) {
@@ -52,11 +49,7 @@ var Profile_CCT_PAGE = {
 		}
 		
 		copy.insertBefore( link );
-		
-		//if (days_case) field.append('<hr />');
-		
 		copy.data('count', new_count);
-		
 		copy.find('input,select,textarea,label').each(function(index, value) {
 			var name = jQuery(this).attr('name');
 			var id = jQuery(this).attr('id');
@@ -107,7 +100,8 @@ var Profile_CCT_PAGE = {
 	
 	updateSocialLabel: function(e) {
 		var value = jQuery(this).val();
-		jQuery(this).parent().next().children("label").text(socialArray[value].user_url);
+		var label = jQuery(this).parent().next().children("label");
+		label.text(socialArray[value].user_url);
 	},
 	
 	clearSocialLabel: function(e) {
