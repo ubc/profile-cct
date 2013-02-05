@@ -35,22 +35,41 @@ class Profile_CCT_Phone extends Profile_CCT_Field {
 		$this->input_text( array(
 			'field_id' => 'tel-1',
 			'label'    => '###',
-			'size'     => 3,
+			'size'     => 2,
+			'data'      => array(
+				'accepts' => '/[0-9]/',
+				'limit'   => 3,
+				'jumps'   => true,
+			),
 		) );
 		$this->input_text( array(
 			'field_id' => 'tel-2',
 			'label'    => '###',
-			'size'     => 3, 
+			'size'     => 2,
+			'data'      => array(
+				'accepts' => '/[0-9]/',
+				'limit'   => 3,
+				'jumps'   => true,
+			),
 		) );
 		$this->input_text( array(
 			'field_id' => 'tel-3',
 			'label'    => '####',
-			'size'     => 4,
+			'size'     => 3,
+			'data'      => array(
+				'accepts' => '/[0-9]/',
+				'limit'   => 4,
+				'jumps'   => true,
+			),
 		) );
 		$this->input_text( array(
 			'field_id' => 'extension',
 			'label'    => 'extension',
-			'size'     => 4,
+			'size'     => 3,
+			'data'      => array(
+				'accepts' => '/[0-9]/',
+				'limit'   => 5,
+			),
 		) );
 	}
 	

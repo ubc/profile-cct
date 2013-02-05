@@ -36,16 +36,28 @@ Class Profile_CCT_Courses extends Profile_CCT_Field {
 			'field_id' => 'teaching-unit-prefix',
 			'label'    => 'Subject Code',
 			'size'     => 4,
+			'data'     => array(
+				'accepts' => '/[a-zA-Z]/',
+				'limit'   => 5,
+			),
 		) );
 		$this->input_text( array(
 			'field_id' => 'course-number',
 			'label'    => 'Course #',
 			'size'     => 3,
+			'data'     => array(
+				'accepts' => '/[0-9]/',
+				'limit'   => 6,
+			),
 		) );
 		$this->input_text( array(
 			'field_id' => 'section-number',
 			'label'    => 'Section #',
 			'size'     => 3,
+			'data'     => array(
+				'accepts' => '/[0-9]/',
+				'limit'   => 6,
+			),
 		) );
 		$this->input_select( array(
 			'field_id'   => 'course-date-month',
@@ -60,7 +72,7 @@ Class Profile_CCT_Courses extends Profile_CCT_Field {
 		$this->input_textarea( array(
 			'field_id' => 'course-summary',
 			'label'    => 'Course Summary',
-			'class'	   => 'textarea',
+			'class'	   => 'field textarea',
 			'size'     => 35,
 		) );
 	}

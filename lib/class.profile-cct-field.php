@@ -97,12 +97,13 @@ class Profile_CCT_Field {
 				ob_start();
 				$this->display();
 				$contents = ob_get_contents();
+				ob_end_clean();
+				
 				if ( $contents == '' ):
-					ob_end_clean();
 					echo $this->empty;
 				else:
 					if ( isset( $this->shell ) ) $this->display_shell( $this->shell );
-					ob_end_flush();
+					echo $contents;
 					if ( isset( $this->shell ) ) $this->display_end_shell( $this->shell );
 				endif;
 			endif;
@@ -512,9 +513,9 @@ class Profile_CCT_Field {
 	 * @return void
 	 */
 	function display_shell( $attr = array() ) {
-		$tag = ( isset($attr['tag']) ? $attr['tag'] : 'div' );
-		$class_attr = ( isset($attr['class']) ? 'class="'.$attr['class'].'"' : '' );
-        
+		$tag        = ( isset( $attr['tag'] )   ? $attr['tag'] : 'div' );
+		$class_attr = ( isset( $attr['class'] ) ? 'class="'.$attr['class'].'"' : '' );
+		
 		printf( '<%s %s>', $tag, $class_attr );
 		if ( $this->link_to ):
 			printf( '<a href="%s">', get_permalink() ); // this should always just link to the profile
@@ -623,8 +624,6 @@ class Profile_CCT_Field {
 	 * @return void
 	 */
 	function field_attr( $attr, $field_type ) {
-		//echo( isset( $attr['separator'] ) ? '<span class="separator">'.esc_html( $attr['separator'] ).'</span>' : '' );
-		
 		$show = ( isset( $attr['field_id'] ) && ! in_array( $attr['field_id'], $this->show ) && in_array( $attr['field_id'], $this->show_fields )  ? ' style="display:none;"' : '' ); // should this field be displayed
 		
 		// Things to be returned.
@@ -662,7 +661,14 @@ class Profile_CCT_Field {
 		$cols  = ( isset( $attr['cols']        ) ? ' cols="' . $attr['cols']       .'" ' : ''                    );
 		$class = ( isset( $attr['class']       ) ? ' class="'. $attr['class']      .'" ' : ' class="field text"' );
 		
-		$needed_attr['field_attr'] = $id.$name.$class.$row.$cols.$size.' ';
+		if ( is_array( $attr['data'] ) ):
+			$data = "";
+			foreach ( $attr['data'] as $key => $value ):
+				$data .= 'data-'.$key.'="'.$value.'" ';
+			endforeach;
+		endif;
+		
+		$needed_attr['field_attr'] = $id.$name.$class.$row.$cols.$size.$data.' ';
 		
 		$this->field_counter++;
 		

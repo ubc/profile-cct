@@ -28,29 +28,49 @@ Class Profile_CCT_Graduatestudent extends Profile_CCT_Field {
 	 */
 	function field() {
 		$this->input_text( array(
-			'field_id' => 'student-salutations',
-			'label'    => 'Salutations',
-			'size'     => 2,
+			'field_id'  => 'student-salutations',
+			'label'     => 'Salutations',
+			'size'      => 2,
+			'data'      => array(
+				'accepts' => '/[a-zA-Z.]/',
+				'limit'   => 5,
+			),
 		) );
 		$this->input_text( array(
 			'field_id' => 'student-first',
 			'label'    => 'First',
 			'size'     => 14,
+			'data'      => array(
+				'accepts' => '/[a-zA-Z]/',
+				'limit'   => 17,
+			),
 		) );
 		$this->input_text( array(
 			'field_id' => 'student-middle',
 			'label'    => 'Middle',
 			'size'     => 3,
+			'data'      => array(
+				'accepts' => '/[a-zA-Z.]/',
+				'limit'   => 6,
+			),
 		) );
 		$this->input_text( array(
 			'field_id' => 'student-last',
 			'label'    => 'Last',
 			'size'     => 19,
+			'data'      => array(
+				'accepts' => '/[a-zA-Z]/',
+				'limit'   => 24,
+			),
 		) );
 		$this->input_text( array(
 			'field_id' => 'student-credentials',
 			'label'    => 'Credentials',
-			'size'     => 7
+			'size'     => 7,
+			'data'      => array(
+				'accepts' => '/[a-zA-Z.]/',
+				'limit'   => 10,
+			),
 		) );
 		$this->input_text( array(
 			'field_id' => 'student-website',

@@ -1,5 +1,4 @@
 <?php 
-
 /**
  * Profile_CCT_Textarea class.
  * 

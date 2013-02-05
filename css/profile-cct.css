@@ -44,15 +44,13 @@
 	margin-bottom: 0;
 }
 
-/*.field-item > .field-shell {
-    margin-bottom: 10px;
-}*/
 .field-item > .field-shell > .field:last-child > *:last-child {
     margin-bottom: 10px;
 }
 
 .field-shell-name .field h2 {
-    margin-top: 10px;
+    margin-top: 0;
+    padding-top: 0;
 }
 
 .field-shell-projects .field,

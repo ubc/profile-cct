@@ -323,20 +323,29 @@ class Profile_CCT_Admin {
 			array( 'Profile_CCT_Admin', 'admin_pages' )
         );
         
-		add_action( 'admin_print_styles-' . $order_page, 	array( 'Profile_CCT_Admin', 'order_profiles_admin_styles' ) );
-		add_action( 'admin_print_scripts-' . $order_page, 	array( 'Profile_CCT_Admin', 'order_profiles_admin_scripts' ) );
+		add_action( 'admin_print_styles-' . $order_page,  array( 'Profile_CCT_Admin', 'order_profiles_admin_styles'  ) );
+		add_action( 'admin_print_scripts-' . $order_page, array( 'Profile_CCT_Admin', 'order_profiles_admin_scripts' ) );
         
-		add_action( 'admin_print_styles-' . $page, 			array( 'Profile_CCT_Admin', 'admin_styles' ) );
-		add_action( 'admin_print_scripts-' . $page, 		array( 'Profile_CCT_Admin', 'admin_scripts' ) );
+		add_action( 'admin_print_styles-' . $page,        array( 'Profile_CCT_Admin', 'admin_styles'  ) );
+		add_action( 'admin_print_scripts-' . $page,       array( 'Profile_CCT_Admin', 'admin_scripts' ) );
         
-		add_action( 'admin_print_styles-post-new.php', 		array( 'Profile_CCT_Admin','edit_profile_script' ) );
-		add_action( 'admin_print_styles-post.php',			array( 'Profile_CCT_Admin','edit_profile_script' ) );
+		add_action( 'admin_print_styles-post-new.php', 	  array( 'Profile_CCT_Admin', 'edit_profile_script' ) );
+		add_action( 'admin_print_styles-post.php',        array( 'Profile_CCT_Admin', 'edit_profile_script' ) );
         
-		add_action( 'admin_print_styles-post.php',			array( 'Profile_CCT_Admin','edit_profile_style' ) );
-		add_action( 'admin_print_styles-post.php',			array( 'Profile_CCT_Admin','edit_profile_style' ) );
-		add_action( 'admin_print_styles-edit.php',			array( 'Profile_CCT_Admin','edit_profile_style' ) );
+		add_action( 'admin_print_styles-post.php',        array( 'Profile_CCT_Admin', 'edit_profile_style' ) );
+		add_action( 'admin_print_styles-post.php',        array( 'Profile_CCT_Admin', 'edit_profile_style' ) );
+		add_action( 'admin_print_styles-edit.php',        array( 'Profile_CCT_Admin', 'edit_profile_style' ) );
+		
+		add_action( 'admin_print_styles-index.php',       array( 'Profile_CCT_Admin', 'widget_style' ) );
 	}
-    
+	
+	############################################################################################################
+	/* DASHBOARD PAGE  */
+
+	public static function widget_style() {
+		wp_enqueue_style( 'profile-cct', PROFILE_CCT_DIR_URL.'/css/profile-cct.css' );
+	}
+	
 	############################################################################################################
 	/* PUBLIC PROFILE PAGE  */
 
@@ -354,15 +363,16 @@ class Profile_CCT_Admin {
 			wp_enqueue_script("thickbox");
             
 			wp_enqueue_style( 'profile-cct-edit-post', PROFILE_CCT_DIR_URL.'/css/profile-page.css' );
+			wp_enqueue_script( 'profile-cct-edit-post-validation', PROFILE_CCT_DIR_URL.'/js/profile-page-validation.js' );
 			wp_enqueue_script( 'profile-cct-edit-post', PROFILE_CCT_DIR_URL.'/js/profile-page.js', array( 'jquery-ui-tabs' ) );
-			// wp_localize_script( 'profile-cct-edit-post', 'profileCCTSocialArray', profile_cct_social_options());
+			wp_localize_script( 'profile-cct-edit-post', 'profileCCTSocialArray', Profile_CCT_Social::social_options());
 		endif;
 	}
 
 	public static function edit_profile_style() {
 		global $current_screen;
-        
-		if ( 'profile_cct' == $current_screen->id || 'edit-profile_cct' == $current_screen->id ):
+		
+		if ( in_array( $current_screen->id, array( 'profile_cct', 'edit-profile_cct' ) ) ):
 			wp_enqueue_style( 'profile-cct-edit-post', PROFILE_CCT_DIR_URL.'/css/profile-page.css' );
 		endif;
 	}

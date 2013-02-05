@@ -21,7 +21,7 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function __construct () {
-		add_action('init', array( $this, 'init' ) );
+		add_action( 'init', array( $this, 'init' ) );
 		$this->settings   = $this->get_settings( 'settings' );
 		$this->taxonomies = $this->get_settings( 'taxonomy' );
 	}
@@ -49,8 +49,9 @@ class Profile_CCT {
 	 */
 	public function init() {
 		if ( is_admin() ):
-			add_action( 'edit_form_advanced', array($this, 'edit_post_advanced') );
-			add_action( 'add_meta_boxes_profile_cct', array($this, 'edit_post') );
+			add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widgets' ) );
+			add_action( 'edit_form_advanced', array( $this, 'edit_post_advanced' ) );
+			add_action( 'add_meta_boxes_profile_cct', array( $this, 'edit_post' ) );
 		else:
 			remove_filter ( 'the_content', 'wpautop' );
 			wp_enqueue_script( 'jquery-ui-tabs' );
@@ -273,6 +274,48 @@ class Profile_CCT {
 	
 	public static function version() {
 		return PROFILE_CCT_VERSION;
+	}
+	
+	function add_dashboard_widgets() {
+		wp_add_dashboard_widget('profile_cct', 'Your Public Profile', array( $this, 'get_dashboard_widget_content' ) );
+		
+		// Try to reorganize the meta boxes to move ours to the top.
+		global $wp_meta_boxes;
+		
+		$normal_dashboard = $wp_meta_boxes['dashboard']['normal']['core'];
+		$profile_cct_widget_backup = array('profile_cct' => $normal_dashboard['profile_cct']);
+		unset( $normal_dashboard['profile_cct'] );
+		$wp_meta_boxes['dashboard']['normal']['core'] = array_merge( $profile_cct_widget_backup, $normal_dashboard );
+	}
+	
+	function get_dashboard_widget_content() {
+		$query = new WP_Query( array(
+			'author'         => wp_get_current_user()->ID,
+			'post_type'      => 'profile_cct',
+			'posts_per_page' => 1,
+			'nopaging'       => true,
+		) );
+		
+		if ( empty( $query->posts ) ):
+			?>
+			<div style="color: darkred;">
+				You do not have a profile.
+				<br /><br />
+			</div>
+			<div>
+				<a class="button-primary" href="<?php echo admin_url('post-new.php?post_type=profile_cct'); ?>">Create New</a>
+			</div>
+			<?php
+		else:
+			$post = $query->posts[0];
+			echo $post->post_excerpt;
+			?>
+			<div>
+				<a class="button" href="<?php echo admin_url('users.php?page=public_profile'); ?>">Edit</a>
+				<a class="button-primary" href="<?php echo get_permalink( $post->ID ); ?>">View</a>
+			</div>
+			<?php
+		endif;
 	}
     
 	/**

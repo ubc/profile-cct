@@ -13,25 +13,20 @@ var Profile_CCT_PAGE = {
 		jQuery(".add-multiple").live( 'click', Profile_CCT_PAGE.clearSocialLabel );
 		
 		// placed right after tb_show call
-		if (typeof window.tb_remove == 'function') {
+		if ( typeof window.tb_remove == 'function' ) {
 			window.tb_remove = function() {
 				// replace the previous function with the new one
-				jQuery("#TB_window").fadeOut("fast",function() {
+				jQuery("#TB_window").fadeOut("fast", function() {
                     jQuery('#TB_window,#TB_overlay,#TB_HideSelect').unload("#TB_ajaxContent").unbind().remove();
                 });
 			}
 		}
 		
-		//Disables metabox sorting on the profile editing page.
-		/*$('.meta-box-sortables').sortable({
-			disabled: true
-		});*/
-		
 		jQuery('.wp-editor-area').closest('.meta-box-sortables').removeClass('meta-box-sortables');
 	},
     
 	startTabs: function () {
-		if (Profile_CCT_PAGE.tabs_shell) {
+		if ( Profile_CCT_PAGE.tabs_shell ) {
 			Profile_CCT_PAGE.tabs_shell = jQuery( "#tabs" );
 		}
 		
@@ -61,7 +56,6 @@ var Profile_CCT_PAGE = {
 		//if (days_case) field.append('<hr />');
 		
 		copy.data('count', new_count);
-		//copy.attr('data-count', new_count);
 		
 		copy.find('input,select,textarea,label').each(function(index, value) {
 			var name = jQuery(this).attr('name');
@@ -72,37 +66,38 @@ var Profile_CCT_PAGE = {
 			var new_id = "";
 			var new_labelFor = "";
 			
-			if (name !== undefined) {
+			if ( name !== undefined ) {
 				new_name = name.replace(count, new_count);
 			}
 			
-			if (id !== undefined) {
+			if ( id !== undefined ) {
 				new_id = id.replace(count, new_count);
-			} else if (labelFor !== undefined) {
+			} else if ( labelFor !== undefined ) {
 				new_labelFor = labelFor.replace(count, new_count);
 			}
 			
 			if ( jQuery(this).attr('type') == 'checkbox' ) {
 				jQuery(this).attr('name', new_name).attr('checked', false);
 				
-				if (new_id != "") {
+				if ( new_id != "" ) {
 					jQuery(this).attr('id', new_id);
 				}
-				if (new_labelFor != "") {
+				if ( new_labelFor != "" ) {
 					jQuery(this).attr('for', new_labelFor);
 				}
 			} else {
 				jQuery(this).attr('name', new_name).val('');
 				
-				if (new_id != "") {
+				if ( new_id != "" ) {
 					jQuery(this).attr('id', new_id);
 				}
-				if (new_labelFor != "") {
+				if ( new_labelFor != "" ) {
 					jQuery(this).attr('for', new_labelFor);
 				}
 			}
-			
 		});
+		
+		Profile_CCT_PAGE_Validation.register_fields(copy);
 	},
 	
 	removeFields: function(e) {

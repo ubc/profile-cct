@@ -41,28 +41,48 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
 			'field_id'  => 'salutations',
 			'label'     => 'Salutations',
 			'size'      => 2,
+			'data'      => array(
+				'accepts' => '/[a-zA-Z.]/',
+				'limit'   => 5,
+			),
 		) );
 		$this->input_text( array(
 			'field_id' => 'first',
 			'label'    => 'First',
 			'size'     => 13,
 			'default'  => $current_user->user_firstname,
+			'data'      => array(
+				'accepts' => '/[a-zA-Z]/',
+				'limit'   => 16,
+			),
 		) );
 		$this->input_text( array(
 			'field_id' => 'middle',
 			'label'    => 'Middle',
 			'size'     => 3,
+			'data'      => array(
+				'accepts' => '/[a-zA-Z.]/',
+				'limit'   => 6,
+			),
 		) );
 		$this->input_text( array(
 			'field_id' => 'last',
 			'label'    => 'Last',
 			'size'     => 17,
 			'default'  => $current_user->user_lastname,
+			'data'      => array(
+				'accepts' => '/[a-zA-Z]/',
+				'limit'   => 22,
+			),
 		) );
 		$this->input_text( array(
 			'field_id' => 'credentials',
 			'label'    => 'Credentials',
 			'size'     => 7,
+			'data'      => array(
+				'accepts' => '/[a-zA-Z.]/',
+				'limit'   => 10,
+			),
 		) );
     }
 	
