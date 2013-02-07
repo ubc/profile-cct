@@ -14,7 +14,7 @@ var Profile_CCT_PAGE_Validation = {
 			elements = element.find(".field");
 		}
 		
-		elements.keypress(Profile_CCT_PAGE_Validation.on_keypress);
+		elements.keypress(Profile_CCT_PAGE_Validation.on_key);
 		elements.blur(function() {
 			jQuery(this).css("border-color", "#DFDFDF");
 		});
@@ -25,15 +25,20 @@ var Profile_CCT_PAGE_Validation = {
 		elements.css("border-color", "blur");
 	},
 	
-	on_keypress: function( event ) {
-		var new_character = String.fromCharCode(event.keyCode);
+	on_key: function( event ) {
+		var new_character = String.fromCharCode(event.originalEvent.charCode);
+		var element = jQuery(this);
 		
-		if ( ! Profile_CCT_PAGE_Validation.check_length( jQuery(this), new_character ) ) {
+		if ( event.originalEvent.charCode == false ) {
+			return true;
+		}
+		
+		if ( ! Profile_CCT_PAGE_Validation.check_length( element, new_character ) ) {
 			return false;
 		}
 		
-		if ( ! Profile_CCT_PAGE_Validation.check_regex( jQuery(this), new_character ) ) {
-			jQuery(this).css("border-color", Profile_CCT_PAGE_Validation.invalid_colour);
+		if ( ! Profile_CCT_PAGE_Validation.check_regex( element, new_character ) ) {
+			element.css("border-color", Profile_CCT_PAGE_Validation.invalid_colour);
 			return false;
 		}
 		
@@ -45,7 +50,7 @@ var Profile_CCT_PAGE_Validation = {
 		var length_limit = element.data("limit");
 		var value_length = element.val().length;
 		
-		if ( value_length >= length_limit ) {
+		if ( value_length >= length_limit && window.getSelection().toString() == "" ) {
 			if ( jumps_to_next_input ) {
 				var next_input = element.parent().next().children('.field');
 				if ( Profile_CCT_PAGE_Validation.check_regex( next_input, new_character ) ) {
