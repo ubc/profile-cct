@@ -22,7 +22,7 @@ var Profile_CCT_PAGE = {
 			}
 		}
 		
-		jQuery('.wp-editor-area').closest('.meta-box-sortables').removeClass('meta-box-sortables');
+		jQuery('.meta-box-sortables').removeClass('meta-box-sortables');
 	},
     
 	startTabs: function () {

@@ -22,19 +22,25 @@ class Profile_CCT_Taxonomy {
 			endforeach;
 		endif;
 		
-		//add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ) );
+		add_action( 'add_meta_boxes', array( __CLASS__, 'remove_meta_boxes' ) );
 	}
 	
-	public static function add_meta_boxes() {
+	public static function remove_meta_boxes() {
 		$profile = Profile_CCT::get_object();
 		
 		if ( is_array( $profile->taxonomies ) ):
 			foreach ( $profile->taxonomies as $taxonomy ):
 				$id = Profile_CCT_Taxonomy::id($taxonomy['single']);
-				$title = __('Test '.$taxonomy['plural']);
-				$args = array( 'taxonomy' => $id );
+				//$title = __('Test '.$taxonomy['plural']);
+				//$args = array( 'taxonomy' => $id );
 				
-				add_meta_box( $id.'div', $title, 'post_categories_meta_box', 'profile_cct', 'side', 'core', $args );
+				if ( $taxonomy['hierarchical'] == true ):
+					remove_meta_box( $id.'div', 'profile_cct', 'side' );
+					//add_meta_box( $id, $title, 'post_categories_meta_box', 'profile_cct', 'side', 'core', $args );
+				else:
+					remove_meta_box( 'tagsdiv-'.$id, 'profile_cct', 'side' );
+					//add_meta_box( $id, $title, 'post_tags_meta_box', 'profile_cct', 'side', 'core', $args );
+				endif;
 			endforeach;
 		endif;
 	}

@@ -49,11 +49,11 @@ class Profile_CCT {
 	 */
 	public function init() {
 		if ( is_admin() ):
-			add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widgets' ) );
-			add_action( 'edit_form_advanced', array( $this, 'edit_post_advanced' ) );
+			add_action( 'wp_dashboard_setup',         array( $this, 'add_dashboard_widgets' ) );
+			add_action( 'edit_form_advanced',         array( $this, 'edit_post_advanced' ) );
 			add_action( 'add_meta_boxes_profile_cct', array( $this, 'edit_post' ) );
 		else:
-			remove_filter ( 'the_content', 'wpautop' );
+			remove_filter( 'the_content', 'wpautop' );
 			wp_enqueue_script( 'jquery-ui-tabs' );
 			wp_enqueue_style( 'profile-cct', PROFILE_CCT_DIR_URL.'/css/profile-cct.css' );
 		endif;
@@ -495,10 +495,10 @@ class Profile_CCT {
 	 */
 	function edit_post_advanced() {
 		global $post;
-        
+		
 		if ( $post->post_type == "profile_cct" ):
 			$tabs = $this->get_option( 'form', 'tabs' );
-            // here we should be finding if there are even any fields in the tabs
+            // Here we should be finding if there are even any fields in the tabs
             ?>
 			<div id="tabs">
 				<ul>
@@ -506,7 +506,9 @@ class Profile_CCT {
                     $count = 1;
                     foreach ( $tabs as $tab ):
                         ?>
-                            <li><a href="#tabs-<?php echo $count; ?>" class="tab-link"><?php echo $tab; ?></a></li>
+                            <li>
+								<a href="#tabs-<?php echo $count; ?>" class="tab-link"><?php echo $tab; ?></a>
+							</li>
                         <?php
                         $count++;
                     endforeach;

@@ -655,8 +655,7 @@ class Profile_CCT_Admin {
 	 * @return void
 	 */
 	static function default_shells( $page = null ) {
-		
-		$page = ( is_null( $page )? self::$page : $page );
+		$page = ( is_null( $page ) ? self::$page : $page );
 		
 		switch ( $page ):
 			case 'form':
@@ -681,8 +680,7 @@ class Profile_CCT_Admin {
 	 * @return void
 	 */
 	static function get_contexts( $page = null ) {
-		
-		$page = ( is_null( $page )? self::$page : $page );
+		$page = ( is_null( $page ) ? self::$page : $page );
 		
 		$contexts = self::default_shells( $page );
 		
@@ -699,7 +697,7 @@ class Profile_CCT_Admin {
 					$count++;
 				endforeach;
 				
-				array_splice( $contexts, $index+1, 0, $tab_contexts );
+				array_splice( $contexts, $index + 1, 0, $tab_contexts );
 			else:
 				unset( $contexts[$index] );
 			endif;

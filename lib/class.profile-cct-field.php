@@ -64,7 +64,6 @@ class Profile_CCT_Field {
 		$this->multiple      = ( isset( $this->options['multiple'] ) ? $this->options['multiple'] : false );
 		$this->data          = $data;
 		
-		$data = $this->data;
 		$this->start_field();
 		if ( $this->multiple && isset( $data ) ):
 			$first = true;
@@ -279,7 +278,7 @@ class Profile_CCT_Field {
 		<div class="field-shell field-shell-<?php echo $this->type.' '.$multiple_class; ?>">
 		<?php
 		
-		if ( isset( $this->description ) && 'edit' ==$this->action ):
+		if ( isset( $this->description ) && 'edit' == $this->action && ! empty( $this->description ) ):
 			printf( '<pre class="description">%s</pre>', esc_html($this->description) );
 		endif;
 	}
@@ -685,14 +684,14 @@ class Profile_CCT_Field {
 	 */
 	function display_attr( $attr, $field_type ) {
 		$lorem_ipsum  = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et tempor lorem. Nam eget sapien sit amet risus porttitor pellentesque. Sed vestibulum tellus et quam faucibus vel tristique metus sagittis. Integer neque justo, suscipit sit amet lobortis eu, aliquet imperdiet sapien. Morbi id tellus quis nisl tempor semper.</p><p>Nunc sed diam sit amet augue venenatis scelerisque quis eu ante. Cras mattis auctor turpis, non congue nibh auctor at. Nulla libero ante, dapibus a tristique eu, semper ac odio. Nulla ultrices dui et velit eleifend congue. Mauris vel mauris eu justo lobortis semper. Duis lacinia faucibus nibh, ac sodales leo condimentum id. Suspendisse commodo mattis dui, eu rutrum sapien vehicula a. Proin iaculis sollicitudin lacus vitae commodo.</p>';
-		$default_text = ( 'lorem ipsum' == $attr['default_text'] ? $lorem_ipsum   : $attr['default_text'] );
+		$default_text = ( 'lorem ipsum' == $attr['default_text'] ? $lorem_ipsum : $attr['default_text'] );
 		
-		$show = ( ( isset( $attr['field_id'] ) && in_array( $attr['field_id'], $this->show_fields ) && ! in_array( $attr['field_id'], $this->show ) ) ? ' style="display:none;"' : '' );
+		$show = ( ( isset( $attr['field_id'] ) && in_array( $attr['field_id'], $this->show_fields ) && ! in_array( $attr['field_id'], $this->show ) && 'edit' != $this->action ) ? ' style="display:none;"' : '' );
 		
 		$needed_attr['id']               = ( isset( $attr['field_id'] ) && $attr['field_id'] ? $attr['field_id'] : '' );
 	    $needed_attr['display']          = ( 'edit' == $this->action          ? $default_text           : ( isset($attr['value']) ? $attr['value'] : $this->data[$needed_attr['id']] ) );
+		$needed_attr['field_shell_attr'] = ( isset( $attr['field_id'] )       ? ' class="'.$attr['field_id'].' '.$field_type.'-shell"' : ' class="'.$this->type.' '.$field_type.'-shell"' ).$show;
 	    $needed_attr['tag']              = ( isset( $attr['tag'] )            ? $attr['tag']            : 'span' );
-		$needed_attr['field_shell_attr'] = ( isset( $attr['field_id'] )        ? ' class="'.$attr['field_id'].' '.$field_type.'-shell"' : ' class="'.$this->type.' '.$field_type.'-shell"' ).$show;
 		$needed_attr['post_separator']   = ( isset( $attr['post_separator'] ) ? $attr['post_separator'] : ''     );
 		$needed_attr['separator']        = ( isset( $attr['separator'] )      ? $attr['separator']      : ''     );
 		$needed_attr['class']            = ( isset( $attr['class'] )          ? $attr['class']          : ''     );

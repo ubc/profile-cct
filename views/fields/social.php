@@ -57,18 +57,33 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 	}
 	
 	function display_social_link( $attr ) {
-		if ( ! empty( $this->data['option'] ) ):
+		if ( isset( $this->data ) ):
 			$service = $this->social_options( 'user_url',  $this->data['option'] );
-			
-			if ( isset( $this->data ) ):
-				$attr['href'] = str_replace( '{value}', $this->data['username'], $service['user_url'] );
-				$attr['value'] = '<img src="'.PROFILE_CCT_DIR_URL.'/img/'.$service['type'].'.png" /><strong>'.$this->data['option'].'</strong>/ '.$this->data['username'];
-			else:
-				$attr['href'] = "http://www.facebook.com/";
-				$attr['default_text'] = '<img src="'.PROFILE_CCT_DIR_URL.'/img/facebook.png" /> <strong>Facebook</strong>/ waynebiz';
-			endif;
-			
+			$attr['href'] = str_replace( '{value}', $this->data['username'], $service['user_url'] );
+			$attr['value'] = '<img src="'.PROFILE_CCT_DIR_URL.'/img/'.$service['type'].'.png" /><strong>'.$this->data['option'].'</strong>/ '.$this->data['username'];
 			$this->display_link( $attr );
+		else:
+			$defaults = array(
+				array(
+					'field_id'     => $attr['field_id'],
+					'href'         => "http://www.youtube.com/",
+					'default_text' => '<img src="'.PROFILE_CCT_DIR_URL.'/img/youtube.png" /> <strong>YouTube</strong>/ wayneenterprise<br />',
+				),
+				array(
+					'field_id'     => $attr['field_id'],
+					'href'         => "http://www.facebook.com/",
+					'default_text' => '<img src="'.PROFILE_CCT_DIR_URL.'/img/facebook.png" /> <strong>Facebook</strong>/ waynebiz<br />',
+				),
+				array(
+					'field_id'     => $attr['field_id'],
+					'href'         => "http://www.twitter.com/",
+					'default_text' => '<img src="'.PROFILE_CCT_DIR_URL.'/img/twitter.png" /> <strong>Twitter</strong>/ waynepr<br />',
+				),
+			);
+			
+			foreach ( $defaults as $default ):
+				$this->display_link( $default );
+			endforeach;
 		endif;
 	}
 	

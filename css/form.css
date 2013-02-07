@@ -1,31 +1,42 @@
-/* This file is being included on the form */
+/* This file is being included on the form builder */
+
+#col-container .field-shell {
+   pointer-events: none;
+   padding: 5px 0;
+}
 
 /* ----- Field Structure ----- */
+.profile-view-builder .field-item {
+    margin: 0;
+}
+
+#col-container.profile-view-builder .field-shell {
+    padding: 7px 0;
+}
+
 .form-builder {
 	list-style-type:none;
-	/* width:645px; */
 }
 
 * html .form-builder {
     /* IE6 Margin Percent Bug for Halves/Thirds */
-	width:99%;
-	zoom:1;
+	width: 99%;
+	zoom: 1;
 }
 
 /* Sorting */
-.sort {
+ul.sort {
 	padding: 5px 0 0 0;
 	border: 1px dashed #EEE;
 	margin-bottom: 16px;
 	overflow: hidden;
-	
 }
 
-.sort li {
-	padding:0 0 0 20px;
-	clear:both;
-	position:relative;
-	border:1px solid #DFDFDF;
+ul.sort > li {
+	padding: 0 0 0 20px;
+	clear: both;
+	position: relative;
+	border: 1px solid #DFDFDF;
     border-radius: 3px 3px 3px 3px;
     box-shadow: 0 1px 0 #FFFFFF inset;
 	background-color: #F1F1F1;
@@ -37,7 +48,7 @@
 	background-image: linear-gradient(top,#F9F9F9,#ECECEC);
 }
 
-.sort .field-title {
+ul.sort .field-title {
 	font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
     font-size: 15px;
     font-weight: normal;
@@ -46,9 +57,9 @@
     padding: 7px 10px;
 	color: #464646;
 	text-transform: capitalize;
-	cursor:move;
-	width:100%;
-	display:block;
+	cursor: move;
+	width: 100%;
+	display: block;
     background-color: #F1F1F1;
 	background-image: -ms-linear-gradient(top,#F9F9F9,#ECECEC);
 	background-image: -moz-linear-gradient(top,#F9F9F9,#ECECEC);
@@ -58,7 +69,7 @@
 	background-image: linear-gradient(top,#F9F9F9,#ECECEC);
 }
 
-.sort .is-active .field-title {
+ul.sort .is-active .field-title {
 	background-color: #D3E3EB;
 	background-image: linear-gradient(bottom, #BCD5E1 0%, #D3E3EB 100%);
 	background-image: -o-linear-gradient(bottom, #BCD5E1 0%, #D3E3EB 100%);
@@ -68,14 +79,13 @@
 	background-image: -webkit-gradient( linear,left bottom,left top,color-stop(0, #BCD5E1),color-stop(1, #D3E3EB) );
 }
 
-.form-builder li {
+.form-builder ul.sort > li {
 	margin:0 5px 5px;
 	padding:0 0 15px 20px;
-	/* max-width:629px; */
 	
-	clear:both;
-	position:relative;
-	border:1px solid #DFDFDF;
+	clear: both;
+	position: relative;
+	border: 1px solid #DFDFDF;
     border-radius: 3px 3px 3px 3px;
     box-shadow: 0 1px 0 #FFFFFF inset;
 	background-color: #F1F1F1;
@@ -139,7 +149,7 @@
 	clear: both;
 }
 
-.form-builder li span {
+.profile-form-builder .form-builder li span {
 	margin: 0 .5em 0 0;
 	padding: 0;
 	float: left;
@@ -172,10 +182,9 @@
     color: #AAA;
 }
 
-.add-multiple {
+#preview-form .field-shell span.add-multiple {
 	clear: both;
-	position: relative;
-    top: 3px;
+    margin: 4px 0;
 }
 
 .form-builder .spinner {
@@ -192,8 +201,7 @@
 }
 
 /* ----- Choices Field Structures ----- */
-#preview-form .form-builder li div span,
-.form-builder li div span {
+#preview-form .form-builder li div span {
 	margin: 0 .3em 0 0;
 	display: block;
 	float: left;
@@ -215,16 +223,26 @@
 	font-size: 16px;
 }
 
+/* ----- Taxonomy Field ----- */
+#preview-form .form-builder .tabs-panel {
+    width: 85%;
+    overflow: hidden;
+}
+
 /* ----- LABELS ----- */
-.form-builder li div label,
-.form-builder li span label {
+.form-builder li label {
 	margin: 0;
 	padding: 1px 0 10px;
 	clear: both;
 	font-size: 85%;
 	line-height: 160%;
 	color: #444;
-	display: block
+	display: block;
+}
+
+.form-builder ul.categorychecklist label {
+    padding: 0;
+    font-size: 100%;
 }
 
 .form-builder li .edit-shell label {
@@ -247,7 +265,7 @@
 }
 
 .form-builder .field-title {
-	font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
+	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
     font-size: 15px;
     font-weight: normal;
     line-height: 1;
@@ -281,7 +299,7 @@
 }
 
 .form-builder li div.multiple-shell label {
-	display: block;
+	display: inline-block;
 	margin-right: 10px;
 }
 
@@ -398,7 +416,7 @@
 li.ui-sortable-helper {
 	border: 0;
 	-moz-box-shadow: 0 0 5px #888;
-	-webkit-box-shadow: 0 0 5px#888;
+	-webkit-box-shadow: 0 0 5px #888;
 	box-shadow: 0 0 5px #888;
 	opacity: 0.8; /* to do add opacity */
 }
@@ -477,7 +495,7 @@ li.ui-sortable-helper {
 
 #tabs .editing .edit-tab-input {
 	width: 120px;
-	margin: 4px 4px 0;
+	margin: 3px 4px 0;
 	display: block;
 	float: left;
 }
@@ -513,7 +531,7 @@ li.ui-sortable-helper {
 }
 
 /* Bench */
-#bench{
+#bench {
 	background: #CCC;
 	border: 0;
 	padding: 5px 5px 2px;
@@ -523,6 +541,7 @@ li.ui-sortable-helper {
 }
 #bench li {
 	width: 104px;
+    margin-bottom: 4px;
 }
 
 .ui-sortable-helper .field-shell,

@@ -8,8 +8,6 @@
  * @return void
  */
 function profile_cct_research_shell( $options = array(), $data = null ) {
-
 	Profile_CCT_Textarea::shell( $options, $data );
-	
 }
 

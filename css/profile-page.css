@@ -25,15 +25,21 @@
     text-transform: capitalize;
 }
 
+#post .hndle {
+    cursor: pointer;
+}
+
 /* Name */
 .name span input,
 .project-title input {
 	font-size: 22px;
 	padding: 5px 2px 1px;
 }
-.field-item input.text{
+
+.field-item input.text {
 	padding: 4px;
 }
+
 .field-item span {
 	float: left;
 	margin-top: 5px;
@@ -48,18 +54,18 @@
 .field-item .textarea-shell {
 	margin-top:  -15px;
 }
+
 .field-shell-multiple .textarea-shell {
 	margin-top: 0;
 }
 
-.field-shell-multiple div.field{
+.field-shell-multiple div.field {
 	position: relative;
 	overflow: hidden;
 	padding-bottom: 5px;
 	border-bottom:1px dotted #CCC;
 	margin-bottom: 5px;
 }
-
 
 .field-item .textarea-shell .wp-editor-wrap {
     margin-top: 10px;
@@ -95,12 +101,6 @@
     padding: 2px 4px;
 }
 
-/*#post-body-content textarea {
-	display: block;
-	min-height: 200px;
-	min-width: 661px;
-}*/
-
 /* Address */
 .address {
 	width: 533px;
@@ -132,7 +132,7 @@
 }
 
 .field-shell > div {
-	clear:both;
+	clear: both;
 }
 
 .field-shell,
@@ -146,7 +146,7 @@
 
 .field-shell .remove-fields {
 	float: left;
-	margin-top: 5px;
+	margin-top: 7px;
 }
 
 /* ----- Tabs ----- */
@@ -185,7 +185,7 @@
 }
 
 .ui-tabs-nav li.ui-state-active a {
-	color:#464646;
+	color: #464646;
 	padding: 4px 14px 6px 14px;
 }
 
