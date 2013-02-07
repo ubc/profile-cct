@@ -8,6 +8,10 @@
 	font-size: 12px;
 }
 
+.ui-tabs-nav a:focus {
+    outline: none;
+}
+
 #col-left {
     float: left;
     overflow: hidden;

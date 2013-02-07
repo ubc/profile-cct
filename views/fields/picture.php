@@ -31,13 +31,15 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		global $post;
 		$image = ( isset( $post ) ? get_the_post_thumbnail($post->ID, array(150, 150)) : get_avatar( $current_user->user_email, 150 ) );
 		
+		?>
+		<div id="user-avatar-display-image">
+		<?php
 		if ( $image != null ):
-			?>
-			<div id="user-avatar-display-image">
-				<?php echo $image; ?>
-			</div>
-			<?php
+			echo $image;
 		endif;
+		?>
+		</div>
+		<?php
 	}
 	
 	function update_picture() {
@@ -58,7 +60,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		
 		$update_url = admin_url('admin-ajax.php').'?action=profile_cct_picture_add_photo&step=1&post_id='.$post->ID.'&TB_iframe=true&width='.$iframe_width.'&height=520';
 		$remove_url = admin_url('post.php')."?post=".$post->ID."&action=edit&delete_avatar=true&_nononce=".wp_create_nonce('profile_cct_picture');
-		if ( has_post_thumbnail() ):
+		if ( has_post_thumbnail( $post->ID ) ):
 			?>
 			<a id="user-avatar-link" class="button thickbox" href="<?php echo $update_url; ?>" title="Upload and Crop an Image to be Displayed">Update Picture</a>
 			<a id="user-avatar-remove" class="submitdelete deleteaction" href="<?php echo $remove_url; ?>" title="Remove Profile Image" >Remove</a>
@@ -73,11 +75,13 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		<script type="text/javascript">
 			function profile_cct_picture_refresh_image( img ) {
 				jQuery( '#user-avatar-display-image' ).html( img );
+				jQuery( '#user-avatar-link' ).text( "Update Picture" );
+				profile_cct_add_remove_avatar_link();
 			}
 			
 			function profile_cct_add_remove_avatar_link() {
-				if ( !jQuery( '#user-avatar-remove' ) ) {
-					jQuery( '#user-avatar-link' ).after( "<a href='<?php echo $remove_url; ?>' class='submitdelete' id='user-avatar-remove'><?php _e('Remove','user-avatar'); ?></a>")
+				if ( jQuery( '#user-avatar-remove' ).length == 0 ) {
+					jQuery( '#user-avatar-link' ).after( "<a href='<?php echo $remove_url; ?>' class='submitdelete' id='user-avatar-remove'><?php _e('Remove', 'user-avatar'); ?></a>")
 				}
 			}
 		</script>

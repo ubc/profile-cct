@@ -194,8 +194,8 @@ ul.sort .is-active .field-title {
     width: auto;
 }
 
-.save-field-settings {
-	margin-top: 15px;
+.edit-shell .save-field-settings {
+	margin-top: 5px;
 	clear: both;
 	float: left;
 }
@@ -298,8 +298,11 @@ ul.sort .is-active .field-title {
 	border: 1px solid #DFDFDF;
 }
 
-.form-builder li div.multiple-shell label {
+.form-builder li .days.multiple-shell label {
 	display: inline-block;
+}
+
+.form-builder li div.multiple-shell label {
 	margin-right: 10px;
 }
 

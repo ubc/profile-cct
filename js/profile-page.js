@@ -6,7 +6,6 @@ var Profile_CCT_PAGE = {
 		Profile_CCT_PAGE.tabs_shell = jQuery("#tabs");
 		Profile_CCT_PAGE.startTabs();
 		
-		//jQuery('.hide-if-js', Profile_CCT_PAGE.tabs_shell).removeClass('hide-if-js'); // this helps with showing the meta boxes 
 		jQuery('.add-multiple').click(Profile_CCT_PAGE.addFields);
 		jQuery('.remove-fields').live( 'click', Profile_CCT_PAGE.removeFields );
 		jQuery(".field-shell-social select").live('change', Profile_CCT_PAGE.updateSocialLabel);

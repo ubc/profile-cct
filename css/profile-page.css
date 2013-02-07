@@ -157,6 +157,10 @@
     margin-bottom: 10px;
 }
 
+.ui-tabs-nav a:focus {
+    outline: none;
+}
+
 .ui-tabs-nav li.ui-state-active,
 .ui-tabs-nav li a:hover {
 	border-color: #CCCCCC #CCCCCC #FFFFFF;
