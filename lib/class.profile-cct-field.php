@@ -33,7 +33,7 @@ class Profile_CCT_Field {
 	var $data;
 	
 	function __construct ( $options_or_post, $data ) {
-		if ( $this->is_post( $options_or_post ) ): 
+		if ( Profile_CCT_Field::is_post( $options_or_post ) ): 
 			//This means the parameters were passed from do_meta_boxes, and are not correctly configured.
 			$options = $data['args']['options'];
 			$data = $data['args']['data'];
@@ -116,7 +116,7 @@ class Profile_CCT_Field {
 		<?php
 	}
 	
-	function is_post( $options_or_post ){
+	public static function is_post( $options_or_post ){
 		return ( isset( $options_or_post->ID ) && is_numeric( $options_or_post->ID ) );
 	}
 	
@@ -647,7 +647,7 @@ class Profile_CCT_Field {
 			$needed_attr['value'] = $attr['value'];
 		elseif ( isset( $this->data[$needed_attr['id']] ) ):
 			$needed_attr['value'] = $this->data[$needed_attr['id']];
-		elseif ( isset( $attr['default'] ) && $attr['default'] != '' ):
+		elseif ( isset( $attr['default'] ) && $attr['default'] != '' && 'edit' != $this->action ):
 			$needed_attr['value'] = $attr['default'];
 		else:
 			$needed_attr['value'] = '';

@@ -96,11 +96,9 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 		);
 		
 		if ( is_taxonomy_hierarchical( $field['type'] ) ):
-			//call_user_func( 'post_categories_meta_box', $post, $data );
 			add_meta_box( $field['type'], $field['label'], 'post_categories_meta_box', 'profile_cct', $context, 'core', $callback_args );
 		else:
-			//call_user_func( 'post_tags_meta_box', $post, $data );
-			add_meta_box( $field['type'], $field['label'], 'post_tags_meta_box', 'profile_cct', $context, 'core', $callback_args );
+			add_meta_box( 'tagsdiv-'.$field['type'].'div', $field['label'], 'post_tags_meta_box', 'profile_cct', $context, 'core', $callback_args );
 		endif;
 	}
 

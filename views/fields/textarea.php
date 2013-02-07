@@ -29,13 +29,13 @@ class Profile_CCT_Textarea extends Profile_CCT_Field {
 	 */
 	function field() {
 		$this->input_textarea( array(
-			//'field_id' => 'textarea',
-			'name'     => 'profile_cct['.$this->type.'][textarea]',
-			'label'    => '',
-			'size'     => 25,
-			'row'      => 2,
-			'cols'     => 20,
-			'value'    => ( isset( $this->data['textarea'] ) ? $this->data['textarea']  : null ),
+			'name'    => 'profile_cct['.$this->type.'][textarea]',
+			'label'   => '',
+			'size'    => 25,
+			'row'     => 2,
+			'cols'    => 20,
+			'default' => $this->data['default'],
+			'value'   => ( isset( $this->data['textarea'] ) ? $this->data['textarea']  : null ),
 		) );
 	}
 	
@@ -47,7 +47,6 @@ class Profile_CCT_Textarea extends Profile_CCT_Field {
 	 */
 	function display() {
 		$this->display_textfield( array(
-			//'field_id'     => 'textarea',
 			'class'        => 'textarea',
 			'default_text' => 'lorem ipsum',
 			'value'        => ( isset( $this->data['textarea'] ) ? $this->data['textarea']  : null ),

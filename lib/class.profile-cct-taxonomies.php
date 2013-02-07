@@ -31,15 +31,11 @@ class Profile_CCT_Taxonomy {
 		if ( is_array( $profile->taxonomies ) ):
 			foreach ( $profile->taxonomies as $taxonomy ):
 				$id = Profile_CCT_Taxonomy::id($taxonomy['single']);
-				//$title = __('Test '.$taxonomy['plural']);
-				//$args = array( 'taxonomy' => $id );
 				
 				if ( $taxonomy['hierarchical'] == true ):
 					remove_meta_box( $id.'div', 'profile_cct', 'side' );
-					//add_meta_box( $id, $title, 'post_categories_meta_box', 'profile_cct', 'side', 'core', $args );
 				else:
 					remove_meta_box( 'tagsdiv-'.$id, 'profile_cct', 'side' );
-					//add_meta_box( $id, $title, 'post_tags_meta_box', 'profile_cct', 'side', 'core', $args );
 				endif;
 			endforeach;
 		endif;
