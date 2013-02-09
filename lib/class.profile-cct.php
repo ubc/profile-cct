@@ -282,10 +282,9 @@ class Profile_CCT {
 		// Try to reorganize the meta boxes to move ours to the top.
 		global $wp_meta_boxes;
 		
-		$normal_dashboard = $wp_meta_boxes['dashboard']['normal']['core'];
-		$profile_cct_widget_backup = array('profile_cct' => $normal_dashboard['profile_cct']);
-		unset( $normal_dashboard['profile_cct'] );
-		$wp_meta_boxes['dashboard']['normal']['core'] = array_merge( $profile_cct_widget_backup, $normal_dashboard );
+		$profile_cct_widget = $wp_meta_boxes['dashboard']['normal']['core']['profile_cct'];
+		unset( $wp_meta_boxes['dashboard']['normal']['core']['profile_cct'] );
+		$wp_meta_boxes['dashboard']['side']['core'] = array_merge( array('profile_cct' => $profile_cct_widget), $wp_meta_boxes['dashboard']['side']['core'] );
 	}
 	
 	function get_dashboard_widget_content() {

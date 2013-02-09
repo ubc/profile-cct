@@ -401,7 +401,7 @@ ul.sort .is-active .field-title {
 .form-builder li .edit-shell {
 	background: #EAF2FA;
 	margin: 0 0 0 -20px;
-	padding: 10px 0 10px 20px;
+	padding: 10px;
 }
 
 .edit-shell span {

@@ -90,7 +90,7 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 		return $fields;
 	}
 	
-	public static function add_meta_box( $field, $context, $data, $i ) {
+	public static function add_meta_box( $field, $context, $data ) {
 		$callback_args = array(
 			'taxonomy' => $field['type'],
 		);
@@ -117,14 +117,16 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 			endif;
 			
 			$data = array();
-			foreach ( $terms as $term ):
-				$data[] = array(
-					'class'        => $term->slug,
-					'value'        => $term->name,
-					'default_text' => $term->name,
-					'href'         => get_term_link( $term, $taxonomy ),
-				);
-			endforeach;
+			if ( is_array($terms) ):
+				foreach ( $terms as $term ):
+					$data[] = array(
+						'class'        => $term->slug,
+						'value'        => $term->name,
+						'default_text' => $term->name,
+						'href'         => get_term_link( $term, $taxonomy ),
+					);
+				endforeach;
+			endif;
 		endif;
 		
 		new Profile_CCT_Taxonomy_Field( $options, $data );

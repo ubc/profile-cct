@@ -64,14 +64,20 @@ class Profile_CCT_Field {
 		$this->multiple      = ( isset( $this->options['multiple'] ) ? $this->options['multiple'] : false );
 		$this->data          = $data;
 		
+		$this->rand = rand(0, 999);
+		//print_r($this->data);
+		
 		$this->start_field();
-		if ( $this->multiple && isset( $data ) ):
+		if ( $this->show_multiple && isset( $data ) ):
 			$first = true;
 			
 			foreach ( $data as $this->data ):
 				$this->create_subfield( ! $first && ! in_array( $this->page, array('page', 'list') ) );
 				$this->subfield_counter++;
-				if ($first) $first = false;
+				if ($first):
+					if ( $this->multiple == false ) break;
+					$first = false;
+				endif;
 			endforeach;
 		else:
 			$this->create_subfield();
@@ -98,7 +104,9 @@ class Profile_CCT_Field {
 				$contents = ob_get_contents();
 				ob_end_clean();
 				
-				if ( $contents == '' ):
+				//echo $this->type.'-'.$this->rand.'['.htmlspecialchars( trim( strip_tags( $contents, '<img>' ) ) ).']';
+				
+				if ( trim( strip_tags( $contents, '<img>' ) ) == '' ):
 					echo $this->empty;
 				else:
 					if ( isset( $this->shell ) ) $this->display_shell( $this->shell );
@@ -214,7 +222,7 @@ class Profile_CCT_Field {
 							'class'        => 'field-textarea',
 							'label'        => 'content to be displayed on empty',
 							'before_label' => true,
-							'value'        => $empty,
+							'value'        => $this->empty,
 						) );
 					endif;
 					
@@ -299,7 +307,7 @@ class Profile_CCT_Field {
 				?>
 				<span class="add-multiple" <?php echo $style_multiple; ?>>
 					<a href="#add" class="button disabled" disabled="disabled">Add another</a> 
-					<em>disabled in preview</em>
+					 <em>disabled in preview</em>
 				</span>
 				<?php
 			elseif ( $this->multiple && ! in_array( $this->page, array('page', 'list') ) ):
@@ -637,7 +645,7 @@ class Profile_CCT_Field {
 		
 		if ( $field_type == 'multiple' ):
 			$needed_attr['name'] = ( ! empty( $attr['name'] ) ? $attr['name'].'[]' : 'profile_cct['.$this->type.']['.$this->subfield_counter.']['.$needed_attr['id'].'][]' );
-		elseif ( $this->multiple ):
+		elseif ( $this->show_multiple ):
 			$needed_attr['name'] = ( ! empty( $attr['name'] ) ? $attr['name']      : 'profile_cct['.$this->type.']['.$this->subfield_counter.']['.$needed_attr['id'].']' );
 		else:
 			$needed_attr['name'] = ( ! empty( $attr['name'] ) ? $attr['name']      : 'profile_cct['.$this->type.']['.$needed_attr['id'].']' );
@@ -686,7 +694,7 @@ class Profile_CCT_Field {
 		$lorem_ipsum  = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et tempor lorem. Nam eget sapien sit amet risus porttitor pellentesque. Sed vestibulum tellus et quam faucibus vel tristique metus sagittis. Integer neque justo, suscipit sit amet lobortis eu, aliquet imperdiet sapien. Morbi id tellus quis nisl tempor semper.</p><p>Nunc sed diam sit amet augue venenatis scelerisque quis eu ante. Cras mattis auctor turpis, non congue nibh auctor at. Nulla libero ante, dapibus a tristique eu, semper ac odio. Nulla ultrices dui et velit eleifend congue. Mauris vel mauris eu justo lobortis semper. Duis lacinia faucibus nibh, ac sodales leo condimentum id. Suspendisse commodo mattis dui, eu rutrum sapien vehicula a. Proin iaculis sollicitudin lacus vitae commodo.</p>';
 		$default_text = ( 'lorem ipsum' == $attr['default_text'] ? $lorem_ipsum : $attr['default_text'] );
 		
-		$show = ( ( isset( $attr['field_id'] ) && in_array( $attr['field_id'], $this->show_fields ) && ! in_array( $attr['field_id'], $this->show ) && 'edit' != $this->action ) ? ' style="display:none;"' : '' );
+		$show = ( isset( $attr['field_id'] ) && ! in_array( $attr['field_id'], $this->show ) && in_array( $attr['field_id'], $this->show_fields )  ? ' style="display:none;"' : '' ); // should this field be displayed
 		
 		$needed_attr['id']               = ( isset( $attr['field_id'] ) && $attr['field_id'] ? $attr['field_id'] : '' );
 	    $needed_attr['display']          = ( 'edit' == $this->action          ? $default_text           : ( isset($attr['value']) ? $attr['value'] : $this->data[$needed_attr['id']] ) );

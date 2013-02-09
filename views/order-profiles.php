@@ -16,9 +16,6 @@
 		'post_type'      => 'profile_cct',
 		'post_status'    => array( 'publish', 'pending', 'draft' ),
 		'posts_per_page' => -1,
-		'orderby'        => 'menu_order',
-		'order'          => 'ASC',
-		'tax_query'      => $tax_query
 	);
 	
 	$the_query = new WP_Query( $args );
@@ -38,17 +35,18 @@
 				<input  type="hidden" name="post_type" value="profile_cct" />
 				<input  type="hidden" name="page" value="order_profiles" />
 				<?php
-					$taxonomys = get_option( 'Profile_CCT_taxonomy' );
-					if ( ! is_array($taxonomys) ) $taxonomys = array();
+					$taxonomies = get_option( 'Profile_CCT_taxonomy' );
+					if ( ! is_array($taxonomies) ) $taxonomies = array();
 					$cat = null;
 					$taxonomy_names = array();
 					
-					foreach( $taxonomys as $tax ):
+					foreach ( $taxonomies as $tax ):
 						$taxonomy = Profile_CCT_Taxonomy::id( $tax['single'] );
 						$taxonomy_names[] = $taxonomy;
 						
-						if ( is_integer( (int) $_GET[$taxonomy] ))
+						if ( is_integer( (int) $_GET[$taxonomy] )):
 							$cat = (int)$_GET[$taxonomy];
+						endif;
 						
 						$dropdown_options = array(
 							'show_option_all' => __( 'View all '.$tax["plural"] ),
@@ -78,10 +76,10 @@
 				</thead>
 			</table>
 			<div id="profile-items">
-				<?php 
-					$tax_query = null;
+				<?php
+					$tax_query = array( 'relation' => 'AND' );
 					foreach( $_GET as $item => $value ):
-						if( in_array( $item, $taxonomy_names ) && is_integer( (int) $value ) && (int) $value > 0 ):
+						if ( in_array( $item, $taxonomy_names ) && is_integer( (int) $value ) && (int) $value > 0 ):
 							$tax_query[] = array(
 								'taxonomy' => $item,
 								'field'    => 'id',
@@ -89,6 +87,17 @@
 							);
 						endif;
 					endforeach;
+					
+					$args = array(
+						'post_type'      => 'profile_cct',
+						'post_status'    => array( 'publish', 'pending', 'draft' ),
+						'posts_per_page' => -1,
+						'orderby'        => 'menu_order',
+						'order'          => 'ASC',
+						'tax_query'      => $tax_query
+					);
+					
+					$the_query = new WP_Query( $args );
 					
 					global $post;
 					// The Loop
@@ -104,12 +113,18 @@
 								<div class="menu_order"> 
 									<input type="text" value="<?php echo $post->menu_order; ?>" name="profile_order[<?php the_ID(); ?>][menu_order]" id="profile_order[<?php the_ID(); ?>][menu_order]" class="menu_order_input">
 								</div>
-								<?php echo profile_cct_get_the_post_thumbnail( $post->ID, array(30, 30) ); ?>
+								<?php echo Profile_CCT_Picture::get_the_post_thumbnail( $post->ID, array( 30, 30 ) ); ?>
 								<span class="name"><?php echo edit_post_link( get_the_title() ) . $status; ?> </span>
 								<input type="hidden" name="profile-id" value="<?php the_ID(); ?>" id="profile-<?php the_ID(); ?>">
 							</div>
 							<?php
 						endwhile;
+					else:
+						?>
+						<pre>
+							No Results Found
+						</pre>
+						<?php
 					endif;
 					
 					// Reset Post Data
