@@ -26,7 +26,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 	
 	function field() {
 		$this->picture();
-		$this->update_picture();
+		$this->update_picture_field();
 		echo '<br/ ><em>This change will take effect immediately.</em>';
 	}
 	
@@ -37,7 +37,6 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 	function picture() {
 		global $post;
 		$image = ( isset( $post ) ? Profile_CCT_Picture::get_the_post_thumbnail( $post->ID, array( 150, 150 ) ) : get_avatar( $current_user->user_email, 150 ) );
-		
 		?>
 		<div id="user-avatar-display-image">
 			<?php if ( $image != null ) echo $image; ?>
@@ -45,13 +44,13 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		<?php
 	}
 	
-	function update_picture() {
+	function update_picture_field() {
 		global $post;
 		
 		$picture_options = $this->picture_options();
 		$iframe_width = $picture_options['width'] + 520;
 		
-		if ( empty($post) ): // If you are viewing the preview.
+		if ( empty( $post ) ): // If you are viewing the preview.
 			?>
 			<span class="add-multiple">
 				<a class="button disabled" disabled="disabled" style="display: inline;" href="#add">Update Picture</a>
@@ -205,16 +204,24 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		
 		$current_user = wp_get_current_user();
 		$post = wp_get_single_post( $_GET['post'] );
-		$post_image_id = get_post_meta( $_GET['post'], '_thumbnail_id', true );
+		//$post_image_id = get_post_meta( $_GET['post'], '_thumbnail_id', true );
 		$post_author = $post->post_author;
 		
 		// If user clicks the remove avatar button, in URL deleter_avatar=true
 		if ( wp_verify_nonce( $_GET['_nonce'], 'profile_cct_picture' ) && $post_author == $current_user->id || current_user_can('edit_users') ):
-			Profile_CCT_Picture::delete_files( $_GET['post'], $post_image_id );
-			//Profile_CCT_Admin::update_profile( $_GET['post'], false );
+			Profile_CCT_Picture::update_picture( $_GET['post'], '' );
 		endif;
 		
 		die();
+	}
+	
+	function update_picture( $post_id, $new_attachment_id ) {
+		global $post;
+		$post = get_post( $post_id );
+		
+		Profile_CCT_Picture::delete_files( $post->ID, get_post_meta( $post->ID, '_thumbnail_id', true ) );
+		set_post_thumbnail( $post->ID, $new_attachment_id );
+		Profile_CCT_Admin::update_profile( $post, false );
 	}
 	
 	/**
@@ -245,6 +252,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 	 */
 	static function delete_files( $post, $img ) {
 		wp_delete_attachment( $img );
+		wp_update_attachment_metadata( $post, null );
 	}
 	
 	/**
@@ -332,7 +340,7 @@ function profile_cct_picture_add_photo_step2( $post_id ) {
 			|| $_FILES["uploadedfile"]["type"] == "image/x-png" ) ):
 		?>
 			<div class='error'>
-				<p><?php __( "Please upload an image file (.jpeg, .gif, .png).", 'user-avatar' ); ?></p>
+				<p><?php _e( "Please upload an image file (.jpeg, .gif, .png).", 'user-avatar' ); ?></p>
 			</div>
 		<?php
 		profile_cct_picture_add_photo_step1( $post_id );
@@ -558,9 +566,7 @@ function profile_cct_picture_add_photo_step3( $post_id, $no_crop = false, $attac
 	@unlink( apply_filters( 'wp_delete_file', $medium ) );
 	@unlink( apply_filters( 'wp_delete_file', $original ) );
 	
-	Profile_CCT_Picture::delete_files( $post_id, get_post_meta( $post_id, '_thumbnail_id', true ) );
-	set_post_thumbnail( $post_id, $_POST['attachment_id'] );
-	//Profile_CCT_Admin::update_profile( $post_id, false );
+	Profile_CCT_Picture::update_picture( $post_id, $_POST['attachment_id'] );
 	
 	if ( is_wp_error( $cropped ) ):
 		wp_die( __( 'Image could not be processed. Please go back and try again.' ), __( 'Image Processing Error' ) );

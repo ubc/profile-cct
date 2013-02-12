@@ -919,24 +919,31 @@ class Profile_CCT_Admin {
 	}
 
 	static function update_profile( $post, $version_bump = false ) {
-		$mypost = array();
-		$data = get_post_meta( $post->ID, 'profile_cct', true );
+		if ( is_object($post) ):
+			$post_id = $post->ID;
+		else:
+			$post_id = $post;
+		endif;
 		
-		$mypost['ID'] = $post->ID;
-		$mypost['post_content'] = self::generate_content( $data, 'page' );
-		$mypost['post_excerpt'] = self::generate_content( $data, 'list' );
+		$data = get_post_meta( $post_id, 'profile_cct', true );
+		
+		$mypost = array(
+			'ID'           => $post_id,
+			'post_content' => self::generate_content( $data, 'page' ),
+			'post_excerpt' => self::generate_content( $data, 'list' ),
+		);
 		
 		kses_remove_filters();
 		wp_update_post( $mypost );
 		kses_init_filters();
 		
 		if ( $version_bump ):
-			$last_name = ( isset($data["name"]['last']) ? $data["name"]['last'] : '0' );
-			update_post_meta( $post->ID, 'profile_cct_last_name', $last_name );
+			$last_name = ( isset( $data["name"]['last'] ) ? $data["name"]['last'] : '0' );
+			update_post_meta( $post_id, 'profile_cct_last_name', $last_name );
 			
 			$first_letter = strtolower( substr( $last_name, 0, 1 ) );
-			$first_letter = ( empty($first_letter) ? '0' : $first_letter );
-			wp_set_post_terms( $post->ID, $first_letter, 'profile_cct_letter', false );
+			$first_letter = ( empty( $first_letter ) ? '0' : $first_letter );
+			wp_set_post_terms( $post_id, $first_letter, 'profile_cct_letter', false );
 		endif;
 	}
 	
