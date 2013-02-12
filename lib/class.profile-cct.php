@@ -58,8 +58,40 @@ class Profile_CCT {
 			wp_enqueue_style( 'profile-cct', PROFILE_CCT_DIR_URL.'/css/profile-cct.css' );
 		endif;
 		
+		add_action( 'pre_get_posts', array( $this, 'sort_posts' ) );
+		
 		$this->register_profiles();
 		$this->load_fields();
+	}
+	
+	function sort_posts( $query ) {
+		if ( $query->is_main_query() && is_post_type_archive( 'profile_cct' ) ):
+			$order = in_array( $this->settings['sort_order'], array( 'ASC', 'DESC' ) ) ? $this->settings['sort_order'] : null;
+			
+			switch ( $this->settings['sort_order_by'] ):
+				case "manual":
+					$query->set( 'orderby', 'menu_order' );
+					if ( is_null( $order ) ) $order = 'ASC';
+					break;
+				case "first_name":
+					$query->set( 'orderby', 'title' );
+					if ( is_null( $order ) ) $order = 'ASC';
+					break;
+				case "last_name":
+					$query->set( 'orderby', 'meta_value' );
+					$query->set( 'meta_key', 'profile_cct_last_name' );
+					if ( is_null( $order ) ) $order = 'ASC';
+					break;
+				case "date":
+					$query->set( 'orderby', 'date' );
+					if ( is_null( $order ) ) $order = 'DESC';
+					break;
+				default:
+					$order = 'DESC';
+			endswitch;
+			
+			$query->set( 'order', $order );
+		endif;
 	}
 	
 	/**

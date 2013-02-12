@@ -956,7 +956,7 @@ class Profile_CCT_Admin {
 	static function update_fields() {
 		$context = $_POST['context'];
 		
-		if ( in_array( $_POST['where'], array('form', 'page', 'list') ) ):
+		if ( in_array( $_POST['where'], array( 'form', 'page', 'list' ) ) ):
 			$where = $_POST['where'];
 		else:
 			$where = 'form';

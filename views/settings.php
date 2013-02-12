@@ -18,14 +18,16 @@
 		
 		$slug = trim( $_POST['slug'] );
 		if ( ! empty( $slug ) ):
-			$profile->settings['slug'] = sanitize_title( trim( $_POST['slug'] ) );
+			$profile->settings['slug'] = trim( sanitize_title( $_POST['slug'] ) );
 		else:
 			$profile->settings['slug'] = 'person';
 		endif;
 		
-		$order_by = $_POST['sort_order'];
+		$order_by = $_POST['sort_order_by'];
+		$order = in_array( $_POST['sort_order'], array( 'ASC', 'DESC' ) ) ? $_POST['sort_order'] : null ;
 		if ( in_array( $order_by, array( "manual", "first_name", "last_name", "date" ) ) ):
-			$profile->settings['sort_order'] = $order_by;
+			$profile->settings['sort_order_by'] = $order_by;
+			$profile->settings['sort_order'] = $order;
 		endif;
 		
 		$archive = $_POST['archive'];
@@ -72,7 +74,7 @@
 <?php echo $note; ?>
 <form method="post" action="">
 	<h3>Picture Dimensions</h3>
-	<?php wp_nonce_field( 'update_settings_nonce','update_settings_nonce_field' ); ?>	
+	<?php wp_nonce_field( 'update_settings_nonce', 'update_settings_nonce_field' ); ?>	
 	<table class="form-table">
         <tbody>
 			<tr valign="top">
@@ -80,7 +82,7 @@
 					<label for="picture_width">Width</label>
 				</th>
 				<td>
-					<input type="text" size="3" name="picture_width" id="picture_width" value="<?php echo esc_attr($profile->settings['picture']['width']); ?>" /> pixels
+					<input type="text" size="3" name="picture_width" id="picture_width" value="<?php echo esc_attr( $profile->settings['picture']['width'] ); ?>" /> pixels
 				</td>
 			</tr>
 			<tr valign="top">
@@ -88,7 +90,7 @@
 					<label for="picture_height">Height</label>
 				</th>
 				<td>
-					<input type="text" size="3" name="picture_height" id="picture_height" value="<?php echo esc_attr($profile->settings['picture']['height']); ?>" /> pixels
+					<input type="text" size="3" name="picture_height" id="picture_height" value="<?php echo esc_attr( $profile->settings['picture']['height'] ); ?>" /> pixels
 				</td>
 			</tr>
         </tbody>
@@ -100,14 +102,44 @@
 			<tr valign="top">
 				<th scope="row"><label for="slug">Order by</label></th>
 				<td>
-					<select name="sort_order" id="sort_order">
-						<option value="manual" <?php selected("manual", $profile->settings['sort_order']); ?>>Manually</option>
-						<option value="first_name" <?php selected("first_name", $profile->settings['sort_order']); ?>>First Name</option>
-						<option value="last_name" <?php selected("last_name", $profile->settings['sort_order']); ?>>Last Name</option>
-						<option value="date" <?php selected("date", $profile->settings['sort_order']); ?>>Date Added</option>
+					<?php
+						$sort_order_by = $profile->settings['sort_order_by'];
+						$sort_order = $profile->settings['sort_order'];
+					?>
+					<select name="sort_order_by" id="sort_order_by" onchange="update_sort_order_dropdown(jQuery(this).val());">
+						<option value="manual" <?php selected( "manual", $sort_order_by ); ?>>Manually</option>
+						<option value="first_name" <?php selected( "first_name", $sort_order_by ); ?>>First Name</option>
+						<option value="last_name" <?php selected( "last_name", $sort_order_by ); ?>>Last Name</option>
+						<option value="date" <?php selected( "date", $sort_order_by ); ?>>Date Added</option>
 					</select>
-					<br />
-					If using manual sorting, go to <a href="<?php echo admin_url('edit.php?post_type=profile_cct&page=order_profiles'); ?>" title="Order Profiles">Order Profiles</a> to set the order.
+					<select name="sort_order" id="sort_order" <?php if ( $sort_order_by == "manual" ) echo 'style="display:none"'; ?>>
+						<option value="ASC" <?php selected( "ASC", $sort_order ); ?>>Ascending</option>
+						<option value="DESC" <?php selected( "DESC", $sort_order ); ?>>Descending</option>
+					</select>
+					<!--<br />-->
+					<span id="sort_order_info" <?php if ( $sort_order_by != "manual" ) echo 'style="display:none"'; ?>>
+						 Go to <a href="<?php echo admin_url('edit.php?post_type=profile_cct&page=order_profiles'); ?>" title="Order Profiles">Order Profiles</a> to set the order.
+					</span>
+					<script>
+						function update_sort_order_dropdown( order_by ) {
+							switch ( order_by ) {
+								case "manual":
+									jQuery('#sort_order').hide();
+									jQuery('#sort_order_info').show();
+									break;
+								case "date":
+									jQuery('#sort_order').val('DESC');
+									jQuery('#sort_order').show();
+									jQuery('#sort_order_info').hide();
+									break;
+								default:
+									jQuery('#sort_order').val('ASC');
+									jQuery('#sort_order').show();
+									jQuery('#sort_order_info').hide();
+									break;
+							}
+						}
+					</script>
 				</td>
 			</tr>
 		</tbody>
@@ -140,13 +172,13 @@
                 <th scope="row">Show Taxonomies</th>
                 <td>
                     <?php
-                        foreach ( get_object_taxonomies('profile_cct') as $tax ):
+                        //foreach ( get_object_taxonomies('profile_cct') as $tax ):
 							?>
                             <input type="checkbox" name="archive[display_tax][<?php echo $tax; ?>]" id="archive_display_tax_<?php echo $tax; ?>" <?php checked($profile->settings['archive']['display_tax'][$tax], 'on'); ?> />
 							<label style="padding-left:6px;"for="archive_display_tax_<?php echo $tax; ?>"><?php echo substr($tax, 12); ?></label>
 							<br />
 							<?php
-						endforeach;
+						//endforeach;
                     ?>
                 </td>
             </tr>

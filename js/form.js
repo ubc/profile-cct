@@ -1,8 +1,6 @@
 var Profile_CCT_FORM = {
 	onReady: function() {
 		var tab_shell = jQuery( "#tabs" );
-		//add fields 
-		
 		var formB = jQuery(".form-builder");
 		
 		jQuery( ".sort" ).sortable({
@@ -24,7 +22,7 @@ var Profile_CCT_FORM = {
 		formB.find(".field-textarea").live('keyup', Profile_CCT_FORM.updateTextarea);
 		formB.find(".field-text").live('keyup', Profile_CCT_FORM.updateText);
 		// name field
-		jQuery(".edit","#form-name").click(Profile_CCT_FORM.editField);
+		jQuery(".edit", "#form-name").click(Profile_CCT_FORM.editField);
 	},
     
 	updateSort: function(event, ui) {
@@ -46,7 +44,7 @@ var Profile_CCT_FORM = {
         };
 		
 		jQuery.post(ajaxurl, data_set, function(response) {		
-            if (response == 'sorted') {
+            if ( response == 'sorted' ) {
                 Profile_CCT_FORM.hideSpinner();
                 Profile_CCT_Admin.show_refresh();
             } // TODO: write the error to the user...
@@ -60,7 +58,7 @@ var Profile_CCT_FORM = {
 		
 		setTimeout( function() {
             var text_label = el.val();
-            if (text_label.length+1 > 0 ) {
+            if ( text_label.length+1 > 0 ) {
                 el.parents().siblings(".field-title").text(text_label);
             } else {
                 el.parents().siblings(".field-title").text(el.attr('title'));
@@ -74,10 +72,10 @@ var Profile_CCT_FORM = {
 		el.parent().parent().addClass('changed');
 		setTimeout( function() {		
 			var text_label = el.val();
-			if(text_label.length+1 > 0 ) {
-				jQuery(".description",el.parent().parent().parent()).text(text_label);
+			if ( text_label.length+1 > 0 ) {
+				jQuery(".description", el.parent().parent().parent()).text(text_label);
 			} else {
-				jQuery(".description",el.parent().parent().parent()).text(el.attr('title'));
+				jQuery(".description", el.parent().parent().parent()).text(el.attr('title'));
 			}
 		}, 10);
 	},
