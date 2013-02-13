@@ -54,6 +54,7 @@ class Profile_CCT {
 			add_action( 'add_meta_boxes_profile_cct', array( $this, 'edit_post' ) );
 		else:
 			remove_filter( 'the_content', 'wpautop' );
+			remove_filter( 'the_excerpt', 'wpautop' );
 			wp_enqueue_script( 'jquery-ui-tabs' );
 			wp_enqueue_style( 'profile-cct', PROFILE_CCT_DIR_URL.'/css/profile-cct.css' );
 		endif;
@@ -61,7 +62,46 @@ class Profile_CCT {
 		add_action( 'pre_get_posts', array( $this, 'sort_posts' ) );
 		
 		$this->register_profiles();
+		$this->update_custom_fields();
 		$this->load_fields();
+	}
+	
+	function update_custom_fields() {
+		$global_settings = get_site_option( PROFILE_CCT_SETTING_GLOBAL, array() );
+		
+		if ( ! isset( $this->settings['version']['clone_fields'] ) || version_compare( PROFILE_CCT_VERSION, $this->settings['version']['custom_fields'], '>' ) ):
+			error_log("Updated cloned fields to 1.3 standards");
+			
+			if ( isset( $this->settings['clone_fields'] ) ):
+				foreach ( $this->settings['clone_fields'] as $key => $field ):
+					if ( is_numeric( $key ) ):
+						unset( $this->settings['clone_fields'][$key] );
+					endif;
+				endforeach;
+			endif;
+			
+			if ( isset( $global_settings['clone_fields'] ) ):
+				foreach ( $global_settings['clone_fields'] as $key => $field ):
+					if ( ! is_array( $field['blogs'] ) ):
+						$blogs = array();
+						
+						$blog_ids = explode( ',', $field['blogs'] );
+						foreach ( $blog_ids as $id ):
+							if ( $id != '' ) $blogs[$id] = true;
+						endforeach;
+						
+						unset( $field['blogs'] );
+						$this->settings['clone_fields'][$field['type']] = $field;
+						
+						$global_settings['clone_fields'][$key]['blogs'] = $blogs;
+					endif;
+				endforeach;
+			endif;
+		endif;
+		
+		//$this->settings['version']['clone_fields'] = PROFILE_CCT_VERSION;
+		update_option( PROFILE_CCT_SETTINGS, $this->settings );
+		update_site_option( PROFILE_CCT_SETTING_GLOBAL, $global_settings );
 	}
 	
 	function sort_posts( $query ) {
@@ -338,12 +378,16 @@ class Profile_CCT {
 			</div>
 			<?php
 		else:
-			$post = $query->posts[0];
-			echo $post->post_excerpt;
 			?>
-			<div>
-				<a class="button" href="<?php echo admin_url('users.php?page=public_profile'); ?>">Edit</a>
-				<a class="button-primary" href="<?php echo get_permalink( $post->ID ); ?>">View</a>
+			<div style="overflow: hidden">
+				<?php
+				$post = $query->posts[0];
+				echo $post->post_excerpt;
+				?>
+				<div class="actions">
+					<a class="button" href="<?php echo admin_url('users.php?page=public_profile'); ?>">Edit</a>
+					<a class="button-primary" href="<?php echo get_permalink( $post->ID ); ?>">View</a>
+				</div>
 			</div>
 			<?php
 		endif;

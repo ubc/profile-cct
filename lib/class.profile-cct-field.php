@@ -64,9 +64,6 @@ class Profile_CCT_Field {
 		$this->multiple      = ( isset( $this->options['multiple'] ) ? $this->options['multiple'] : false );
 		$this->data          = $data;
 		
-		$this->rand = rand(0, 999);
-		//print_r($this->data);
-		
 		$this->start_field();
 		if ( $this->show_multiple && isset( $data ) ):
 			$first = true;
@@ -103,8 +100,6 @@ class Profile_CCT_Field {
 				$this->display();
 				$contents = ob_get_contents();
 				ob_end_clean();
-				
-				//echo $this->type.'-'.$this->rand.'['.htmlspecialchars( trim( strip_tags( $contents, '<img>' ) ) ).']';
 				
 				if ( trim( strip_tags( $contents, '<img>' ) ) == '' ):
 					echo $this->empty;

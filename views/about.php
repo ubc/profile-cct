@@ -10,7 +10,7 @@
 				<p>Think about what information you want to collect from your users and then <a href="<?php echo admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=form'); ?>">build a form</a> that your users will fill out.</p>
 			</li>
             <li>
-				<p>Think about what information you want to display on the individual page and then <a href="<?php echo admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=page'); ?>">create the person page</a> that everyone will be able to see.</p>
+				<p>Think about what information you want to display on the individual page and then <a href="<?php echo admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=page'); ?>">create the profile view</a> that everyone will be able to see.</p>
 			</li>
             <li>
 				<p>Think about what information you want to display on the list page  and then <a href="<?php echo admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=list'); ?>">create the list view</a> that everyone will be able to see.</p>

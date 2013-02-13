@@ -44,6 +44,10 @@
 	margin-bottom: 0;
 }
 
+.site-content .profilelist-shortcode article {
+    margin-bottom: 1em;
+}
+
 .field-item > .field-shell > .field:last-child > *:last-child {
     margin-bottom: 10px;
 }
@@ -61,27 +65,6 @@
 .field-shell-social img {
     margin-right: 5px;
 }
-
-/*.ui-autocomplete {
-    position: absolute;
-    cursor: default;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 4px;
-}
-
-.ui-autocomplete li {
-    list-style-type: none;
-}
-
-.profile-cct-filter-box {
-	margin-right: 16px;
-	float: left;
-}
-
-* html .ui-autocomplete {
-    width: 1px;
-} /* without this, the menu expands to 100% in IE6 */
 
 /* ----- Tabs ----- */
 .type-profile_cct .ui-tabs-nav {

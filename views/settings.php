@@ -33,7 +33,7 @@
 		$archive = $_POST['archive'];
 		$profile->settings['archive'] = $archive;
 		
-		// lets deal with permissions	
+		// Lets deal with permissions	
 		$post_permissions = $_POST['options']['permissions'];
 		
 		foreach ( $profile->settings['permissions'] as $user => $permission_array ):
@@ -65,7 +65,7 @@
         update_option( 'Profile_CCT_settings', $profile->settings );
 		$note = '<div class="updated below-h2"><p> Settings saved.</p></div>';
 		
-		// lLts flush the rules again
+		// Lets flush the rules again
 		$profile->register_profiles();
 		flush_rewrite_rules();
 	endif;
@@ -123,20 +123,20 @@
 					<script>
 						function update_sort_order_dropdown( order_by ) {
 							switch ( order_by ) {
-								case "manual":
-									jQuery('#sort_order').hide();
-									jQuery('#sort_order_info').show();
-									break;
-								case "date":
-									jQuery('#sort_order').val('DESC');
-									jQuery('#sort_order').show();
-									jQuery('#sort_order_info').hide();
-									break;
-								default:
-									jQuery('#sort_order').val('ASC');
-									jQuery('#sort_order').show();
-									jQuery('#sort_order_info').hide();
-									break;
+							case "manual":
+								jQuery('#sort_order').hide();
+								jQuery('#sort_order_info').show();
+								break;
+							case "date":
+								jQuery('#sort_order').val('DESC');
+								jQuery('#sort_order').show();
+								jQuery('#sort_order_info').hide();
+								break;
+							default:
+								jQuery('#sort_order').val('ASC');
+								jQuery('#sort_order').show();
+								jQuery('#sort_order_info').hide();
+								break;
 							}
 						}
 					</script>
@@ -172,13 +172,15 @@
                 <th scope="row">Show Taxonomies</th>
                 <td>
                     <?php
-                        //foreach ( get_object_taxonomies('profile_cct') as $tax ):
+                        /*
+						foreach ( get_object_taxonomies('profile_cct') as $tax ):
 							?>
                             <input type="checkbox" name="archive[display_tax][<?php echo $tax; ?>]" id="archive_display_tax_<?php echo $tax; ?>" <?php checked($profile->settings['archive']['display_tax'][$tax], 'on'); ?> />
 							<label style="padding-left:6px;"for="archive_display_tax_<?php echo $tax; ?>"><?php echo substr($tax, 12); ?></label>
 							<br />
 							<?php
-						//endforeach;
+						endforeach;
+						*/
                     ?>
                 </td>
             </tr>
@@ -218,7 +220,7 @@
 			<?php 
 				$count = 0;
 				foreach( $profile->settings['permissions'] as $user => $permission ):
-					Profile_CCT_Admin::permissions_table( $user, ($count%2), $profile->settings ); $count++;
+					Profile_CCT_Admin::permissions_table( $user, ($count % 2), $profile->settings ); $count++;
 				endforeach;
 			?>
 		</tbody>

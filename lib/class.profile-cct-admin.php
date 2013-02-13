@@ -723,25 +723,37 @@ class Profile_CCT_Admin {
 		case 'preview':
 			?>
 			<div id="<?php echo Profile_CCT_Admin::$page; ?>-shell">
-			<?php
-			foreach ( self::default_shells() as $context ):
-				Profile_CCT_Admin::render_context( $context );
-			endforeach;
-			?>
+				<?php
+					foreach ( self::default_shells() as $context ):
+						Profile_CCT_Admin::render_context( $context );
+					endforeach;
+				?>
 			</div>
 			<?php
 			break;
 		case 'page':
 			Profile_CCT_Admin::$page = 'page';
-			foreach ( self::default_shells() as $context ):
-				Profile_CCT_Admin::render_context( $context, $data );
-			endforeach;
+			?>
+			<div style="overflow: hidden">
+				<?php
+					foreach ( self::default_shells() as $context ):
+						Profile_CCT_Admin::render_context( $context, $data );
+					endforeach;
+				?>
+			</div>
+			<?php
 			break;
 		case 'list':
 			Profile_CCT_Admin::$page = 'list';
-			foreach ( self::default_shells() as $context ):
-				Profile_CCT_Admin::render_context( $context, $data );
-			endforeach;
+			?>
+			<div style="overflow: hidden">
+				<?php
+				foreach ( self::default_shells() as $context ):
+					Profile_CCT_Admin::render_context( $context, $data );
+				endforeach;
+				?>
+			</div>
+			<?php
 			break;
 		endswitch;
 	}
@@ -758,10 +770,10 @@ class Profile_CCT_Admin {
 		$class = ( 'bench' != $context ? 'form-builder' : '' );
         
 		if ( function_exists('profile_cct_'.$context.'_shell') ):
-			call_user_func('profile_cct_'.$context.'_shell', $data);
+			call_user_func( 'profile_cct_'.$context.'_shell', $data );
 		else:
 			?>
-			<div id="<?php echo $context; ?>-shell" >
+			<div id="<?php echo $context; ?>-shell">
 				<!--
 				<?php if ( self::$page == 'form' ): ?>
 				<span class="description-shell"><?php echo $context; ?></span>
@@ -851,7 +863,7 @@ class Profile_CCT_Admin {
 		return $post_data;
 	}
 	
-	static function generate_content($profile_cct_data, $where) {
+	static function generate_content( $profile_cct_data, $where ) {
 		ob_start();
 		self::generate_profile( $where, $profile_cct_data );
 		$contents = ob_get_contents();
@@ -897,7 +909,7 @@ class Profile_CCT_Admin {
 		);
 		
 		$the_query = new WP_Query( $args );
-		$previous_version = get_option( PROFILE_CCT_SETTING_VERSION, "1.1.8" );
+		$previous_version = get_option( PROFILE_CCT_SETTING_VERSION, PROFILE_CCT_VERSION );
 		$version_bump = version_compare( PROFILE_CCT_VERSION, $previous_version, '>' );
 		
 		while ( $the_query->have_posts() ):

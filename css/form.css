@@ -283,21 +283,6 @@ ul.sort .is-active .field-title {
     background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
 }
 
-.form-builder .text,
-.form-builder textarea,
-.form-builder .select {
-	font-family: "Lucida Grande",Tahoma,Arial,sans-serif;
-	font-size: 100%;
-	color: #333;
-	margin: 0;
-	padding: 2px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-khtml-border-radius: 3px;
-	border-radius: 3px;
-	border: 1px solid #DFDFDF;
-}
-
 .form-builder li .days.multiple-shell label {
 	display: inline-block;
 }
@@ -327,7 +312,22 @@ ul.sort .is-active .field-title {
 	height: 100px;
 }
 
-.form-builder .text,
+.form-builder input.text,
+.form-builder textarea,
+.form-builder .select {
+	font-family: "Lucida Grande",Tahoma,Arial,sans-serif;
+	font-size: 100%;
+	color: #333;
+	margin: 0;
+	padding: 2px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-khtml-border-radius: 3px;
+	border-radius: 3px;
+	border: 1px solid #DFDFDF;
+}
+
+.form-builder input.text,
 .form-builder textarea {
 	border: 1px solid #DFDFDF;
 	-moz-border-radius: 4px;
