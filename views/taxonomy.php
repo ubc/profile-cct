@@ -57,7 +57,7 @@
 		<?php 
 			$count = 0;
 			foreach ( $taxonomies as $key => $taxonomy ):
-				$taxonomy_id = Profile_CCT_Taxonomy::id($taxonomy['single']);
+				$taxonomy_id = Profile_CCT_Taxonomy::id( $taxonomy['single'] );
 				?>
 				<tr <?php if ( $count % 2 ) echo 'class="alternate"'; ?>>
 					<td >
@@ -140,6 +140,7 @@
 				<?php endif; ?>
 			</td>
 		</tr>
+		
 		<tr valign="top">
 			<th scope="row">
 				Hierarchical

@@ -24,24 +24,25 @@ Class Profile_CCT_Tabs {
 		if ( $display_tabs ):
 			if ( $editing ):
 				?>
-				<div id="tabs">
+				<div id="tabs" class="tabs">
 					<!--<span class="description-shell">tabs</span>-->
 				<?php 
 			else: 
 				$profile_cct_tabs++;
 				?>
-				<div id="<?php echo "tab-id-".$profile_cct_tabs; ?>" class="profile-cct-shell" >
+				<div id="<?php echo "tab-id-".$profile_cct_tabs; ?>" class="profile-cct-shell tabs" >
 				<?php
 			endif; 
 			?>
-			<ul>
+			<ul class="nav nav-tabs">
 				<?php 
 				$count = 1;
 				if ( is_array( $tabs ) ):
+					$first = true;
 					foreach( $tabs as $tab ): 
 						?>
-						<li>
-							<a href="#tabs-<?php echo $count; ?>" class="tab-link"><?php echo $tab; ?></a>
+						<li <?php if ($first) echo 'class="active"'; $first = false; ?>>
+							<a href="#tabs-<?php echo $count; ?>" data-toggle="tab" class="tab-link"><?php echo $tab; ?></a>
 							<?php if ( $editing ): ?>
 								<span class="remove-tab">Remove Tab</span> <span class="edit-tab">Edit</span><input type="text" class="edit-tab-input" value="<?php echo esc_attr($tab); ?>" /><input type="button" class="edit-tab-save button" value="Save" />
 							<?php endif; ?>
@@ -56,35 +57,36 @@ Class Profile_CCT_Tabs {
 					<li id="add-tab-shell"><a href="#add-tabshell" id="add-tab" title="Add Tab">Add Tab</a></li>
 				<?php endif; ?>
 			</ul>
-			<?php 
-			
-			$count = 1;
-			if ( is_array($tabs) ):
-				foreach ( $tabs as $tab ) :
-					?>
-					<div id="tabs-<?php echo $count?>">
-					<?php if ($editing): ?>
-						<input type="hidden" name="form_field[tabs][]" value="<?php echo esc_attr($tab); ?>" />
-					<?php endif; ?>
-						<?php
-						unset($fields);
-						Profile_CCT_Admin::render_context( 'tabbed-'.$count, $data );
-						?>
-					</div>
-					<?php
-					$count++;
-				endforeach; 
-			endif;
-			
-			if ( $editing ): ?>
+			<div class="tab-content">
+				<?php
+					$count = 1;
+					if ( is_array($tabs) ):
+						$first = true;
+						foreach ( $tabs as $tab ) :
+							?>
+							<div id="tabs-<?php echo $count?>" class="tab-pane <?php if ($first) echo 'active'; $first = false; ?>">
+							<?php if ($editing): ?>
+								<input type="hidden" name="form_field[tabs][]" value="<?php echo esc_attr($tab); ?>" />
+							<?php endif; ?>
+								<?php
+								unset($fields);
+								Profile_CCT_Admin::render_context( 'tabbed-'.$count, $data );
+								?>
+							</div>
+							<?php
+							$count++;
+						endforeach; 
+					endif;
+				?>
+			</div>
+			<?php $theme_support = get_theme_support('tabs'); ?>
+			<?php if ( $editing ): ?>
 				<div id="add-tabshell"></div>
-			<?php else: ?>
+			<?php elseif ( $theme_support[0] != 'twitter-bootstrap' ): ?>
 				<script type="text/javascript">
-					/* <![CDATA[ */
 					jQuery(document).ready(function() {
 						jQuery("#<?php echo "tab-id-".$profile_cct_tabs; ?>").tabs();
 					});
-					/* ]]> */
 				</script>
 			<?php endif; ?>
 			</div>

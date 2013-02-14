@@ -102,6 +102,10 @@
 	padding: 4px 14px 6px 14px;
 }
 
+.type-profile_cct .ui-tabs-nav li a:focus {
+    outline: none;
+}
+
 .type-profile_cct .ui-tabs-nav li.ui-state-active a {
 	color:#464646;
 	padding: 4px 14px 6px 14px;
@@ -111,8 +115,14 @@
 	background: #EEE;
 }
 
-.type-profile_cct .ui-tabs-panel {
+.profile_cct div.tabs.ui-tabs {
    	border-bottom: 1px solid #CCCCCC;
     margin-bottom: 20px;
     overflow: hidden;
 }
+
+.profile_cct div.tabs {
+    border-bottom: 1px solid #D7E0E7;
+    margin-bottom: 20px;
+}
+
