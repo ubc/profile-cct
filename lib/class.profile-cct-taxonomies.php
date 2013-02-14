@@ -42,6 +42,46 @@ class Profile_CCT_Taxonomy {
 	}
 	
 	/**
+	 * remove function.
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $taxonomies
+	 * @return void
+	 */
+	public static function remove($taxonomies) {
+		// Try to remove taxonomies.
+		if ( is_admin() && wp_verify_nonce( $_GET['_wpnonce'], 'profile_cct_remove_taxonomy'.$_GET['remove'] ) ): 
+			if ( isset( $taxonomies[$_GET['remove']] ) ):
+				unset( $taxonomies[$_GET['remove']] );
+			endif;
+			
+			update_option( PROFILE_CCT_SETTING_TAXONOMY, $field->taxonomies );
+			flush_rewrite_rules();
+		endif;
+		
+		return $taxonomies;
+	}
+	
+	/**
+	 * add function.
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $new_taxonomy
+	 * @param mixed $taxonomies
+	 * @return void
+	 */
+	public static function add( $new_taxonomy, $taxonomies ) {
+		$taxonomies[] = $new_taxonomy;
+   		update_option( PROFILE_CCT_SETTING_TAXONOMY, $taxonomies );
+   		
+		Profile_CCT_Taxonomy::register( $new_taxonomy );
+   		flush_rewrite_rules();
+		return $taxonomies;
+	}
+	
+	/**
 	 * register function.
 	 * 
 	 * @access public
@@ -75,46 +115,6 @@ class Profile_CCT_Taxonomy {
 	}
 	
 	/**
-	 * remove function.
-	 * 
-	 * @access public
-	 * @static
-	 * @param mixed $taxonomies
-	 * @return void
-	 */
-	public static function remove($taxonomies) {
-		// Try to remove taxonomies.
-		if ( is_admin() && wp_verify_nonce( $_GET['_wpnonce'], 'profile_cct_remove_taxonomy'.$_GET['remove'] ) ): 
-			if ( isset( $taxonomies[$_GET['remove']] ) ):
-				unset( $taxonomies[$_GET['remove']] );
-			endif;
-			
-			update_option( 'Profile_CCT_taxonomy', $field->taxonomies );
-			flush_rewrite_rules();
-		endif;
-		
-		return $taxonomies;
-	}
-	
-	/**
-	 * add function.
-	 * 
-	 * @access public
-	 * @static
-	 * @param mixed $new_taxonomy
-	 * @param mixed $taxonomies
-	 * @return void
-	 */
-	public static function add( $new_taxonomy, $taxonomies ) {
-		$taxonomies[] = $new_taxonomy;
-   		update_option( 'Profile_CCT_taxonomy', $taxonomies );
-   		
-		Profile_CCT_Taxonomy::register( $new_taxonomy );
-   		flush_rewrite_rules();
-		return $taxonomies;
-	}
-	
-	/**
 	 * id function.
 	 * 
 	 * @access public
@@ -123,7 +123,7 @@ class Profile_CCT_Taxonomy {
 	 * @return void
 	 */
 	public static function id( $single_taxonomy ) {
-		return 'profile_cct_'.str_replace( '-', '_', sanitize_title( $single_taxonomy ) );
+		return PROFILE_CCT_TAXONOMY_PREFIX.str_replace( '-', '_', sanitize_title( $single_taxonomy ) );
 	}
 }
 

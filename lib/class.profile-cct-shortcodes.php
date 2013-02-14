@@ -9,10 +9,10 @@ class Profile_CCT_Shortcodes {
 	 * @return void
 	 */
 	public static function init() {
-		add_shortcode( 'profilelist', 		array( 'Profile_CCT_Shortcodes', 'profile_list_shortcode' ) );
-		add_shortcode( 'profile', 			array( 'Profile_CCT_Shortcodes', 'profile_single_shortcode' ) );
-		add_shortcode( 'profilesearch',  	array( 'Profile_CCT_Shortcodes', 'profile_search_shortcode' ) );
-		//add_shortcode( 'profilenavigation', array( 'Profile_CCT_Shortcodes', 'profile_navigation_shortcode' ) ); //Not Implemented
+		add_shortcode( 'profilelist', 		array( __CLASS__, 'profile_list_shortcode' ) );
+		add_shortcode( 'profile', 			array( __CLASS__, 'profile_single_shortcode' ) );
+		add_shortcode( 'profilesearch',  	array( __CLASS__, 'profile_search_shortcode' ) );
+		//add_shortcode( 'profilenavigation', array( __CLASS__, 'profile_navigation_shortcode' ) ); //Not Implemented
 	}
 	
 	/**
@@ -29,7 +29,7 @@ class Profile_CCT_Shortcodes {
 			foreach ( $atts as $key => $att ):
 				if ( in_array( "profile_cct_".$key, $taxonomies ) ):
 					$array = array(
-						'taxonomy' => 'profile_cct_'.$key,
+						'taxonomy' => PROFILE_CCT_TAXONOMY_PREFIX.$key,
 						'field'    => 'slug',
 						'terms'    => $att,		
 					);

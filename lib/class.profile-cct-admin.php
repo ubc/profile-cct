@@ -20,11 +20,11 @@ class Profile_CCT_Admin {
 	 * @return void
 	 */
 	public static function init() {
-		add_action( 'admin_init', array( 'Profile_CCT_Admin', 'admin_init' ) );
-		add_action( 'admin_menu', array( 'Profile_CCT_Admin', 'add_menu_page' ) );
+		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
+		add_action( 'admin_menu', array( __CLASS__, 'add_menu_page' ) );
         
 		// function removed the edit Public profile from everyone but the person who can really edit it
-		add_action( 'wp_before_admin_bar_render', array('Profile_CCT_Admin', 'edit_admin_bar_render'), 20 );
+		add_action( 'wp_before_admin_bar_render', array( __CLASS__, 'edit_admin_bar_render' ), 20 );
 	}
 
 	/**
@@ -35,13 +35,12 @@ class Profile_CCT_Admin {
 	 */
 	static function admin_init() {
 		// Register Settings
-		register_setting( 'Profile_CCT_settings',    'Profile_CCT_settings' );
-		register_setting( 'Profile_CCT_taxonomy',    'Profile_CCT_taxonomy' );
+		register_setting( PROFILE_CCT_SETTINGS,         'Profile_CCT_settings' );
+		register_setting( PROFILE_CCT_SETTING_TAXONOMY, 'Profile_CCT_taxonomy' );
         
 		// These are Options
 		register_setting( 'Profile_CCT_form_fields', 'Profile_CCT_form_fields', array( __CLASS__, 'validate_form_fields' ) );
 		register_setting( 'Profile_CCT_page_fields', 'Profile_CCT_page_fields', array( __CLASS__, 'validate_page_fields' ) );
-		register_setting( 'Profile_CCT_list_page',   'Profile_CCT_list_page',   array( __CLASS__, 'validate_list_fields' ) );
 		register_setting( 'Profile_CCT_list_page',   'Profile_CCT_list_page',   array( __CLASS__, 'validate_list_fields' ) );
 		
 		// redirect users to their profile page and create one if it doesn't exist
@@ -194,9 +193,13 @@ class Profile_CCT_Admin {
 				$all_dynamic_fields[] 		 = $field['type'];
 				$real_fields[$field['type']] = $field;
                 
-				if ( !in_array($field['type'], $current_fields) ): // add to the current_fields array
+				if ( ! in_array( $field['type'], $current_fields ) ): // add to the current_fields array
 					$current_fields[] = $field['type'];
-					self::$option[$where]['fields']['bench'][] = $field;
+					if ( ! strncmp($field['type'], PROFILE_CCT_TAXONOMY_PREFIX, strlen('profile_cct_') ) ):
+						self::$option[$where]['fields']['side'][] = $field;
+					else:
+						self::$option[$where]['fields']['bench'][] = $field;
+					endif;
 				endif;
 			endforeach;
 		endif;
@@ -302,7 +305,7 @@ class Profile_CCT_Admin {
 			__( 'Public Profile', 'profile-cct-td' ),
 			__( 'Public Profile', 'profile-cct-td' ),
 			'edit_profile_cct', 'public_profile',
-			array( 'Profile_CCT_Admin', 'public_profile' )
+			array( __CLASS__, 'public_profile' )
         );
         
 		// Order Page
@@ -311,7 +314,7 @@ class Profile_CCT_Admin {
 			__( 'Order Profiles', 'profile-cct-td' ),
 			__( 'Order Profiles', 'profile-cct-td' ),
 			'manage_options', 'order_profiles',
-			array( 'Profile_CCT_Admin', 'admin_order_page' )
+			array( __CLASS__, 'admin_order_page' )
         );
         
 		// Settings page
@@ -320,23 +323,23 @@ class Profile_CCT_Admin {
 			__( 'Settings', 'profile-cct-td' ),
 			__( 'Settings', 'profile-cct-td' ),
 			'manage_options', __FILE__,
-			array( 'Profile_CCT_Admin', 'admin_pages' )
+			array( __CLASS__, 'admin_pages' )
         );
         
-		add_action( 'admin_print_styles-' . $order_page,  array( 'Profile_CCT_Admin', 'order_profiles_admin_styles'  ) );
-		add_action( 'admin_print_scripts-' . $order_page, array( 'Profile_CCT_Admin', 'order_profiles_admin_scripts' ) );
+		add_action( 'admin_print_styles-' . $order_page,  array( __CLASS__, 'order_profiles_admin_styles'  ) );
+		add_action( 'admin_print_scripts-' . $order_page, array( __CLASS__, 'order_profiles_admin_scripts' ) );
         
-		add_action( 'admin_print_styles-' . $page,        array( 'Profile_CCT_Admin', 'admin_styles'  ) );
-		add_action( 'admin_print_scripts-' . $page,       array( 'Profile_CCT_Admin', 'admin_scripts' ) );
+		add_action( 'admin_print_styles-' . $page,        array( __CLASS__, 'admin_styles'  ) );
+		add_action( 'admin_print_scripts-' . $page,       array( __CLASS__, 'admin_scripts' ) );
         
-		add_action( 'admin_print_styles-post-new.php', 	  array( 'Profile_CCT_Admin', 'edit_profile_script' ) );
-		add_action( 'admin_print_styles-post.php',        array( 'Profile_CCT_Admin', 'edit_profile_script' ) );
+		add_action( 'admin_print_styles-post-new.php', 	  array( __CLASS__, 'edit_profile_script' ) );
+		add_action( 'admin_print_styles-post.php',        array( __CLASS__, 'edit_profile_script' ) );
         
-		add_action( 'admin_print_styles-post.php',        array( 'Profile_CCT_Admin', 'edit_profile_style' ) );
-		add_action( 'admin_print_styles-post.php',        array( 'Profile_CCT_Admin', 'edit_profile_style' ) );
-		add_action( 'admin_print_styles-edit.php',        array( 'Profile_CCT_Admin', 'edit_profile_style' ) );
+		add_action( 'admin_print_styles-post.php',        array( __CLASS__, 'edit_profile_style' ) );
+		add_action( 'admin_print_styles-post.php',        array( __CLASS__, 'edit_profile_style' ) );
+		add_action( 'admin_print_styles-edit.php',        array( __CLASS__, 'edit_profile_style' ) );
 		
-		add_action( 'admin_print_styles-index.php',       array( 'Profile_CCT_Admin', 'widget_style' ) );
+		add_action( 'admin_print_styles-index.php',       array( __CLASS__, 'widget_style' ) );
 	}
 	
 	############################################################################################################
@@ -581,7 +584,7 @@ class Profile_CCT_Admin {
 		self::$option[$type][$fields_or_tabs][$context] = $update;
 		
 		// Update the settings
-		update_option( 'Profile_CCT_settings', $profile->settings );
+		update_option( PROFILE_CCT_SETTINGS, $profile->settings );
         
 		return update_option( 'Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context, $update );
 	}
@@ -785,7 +788,7 @@ class Profile_CCT_Admin {
 				
 				if ( is_array( $fields ) ):
 					foreach ( $fields as $field ):
-						if ( function_exists('profile_cct_'.$field['type'].'_shell') ):
+						if ( function_exists( 'profile_cct_'.$field['type'].'_shell' ) ):
 							call_user_func( 'profile_cct_'.$field['type'].'_shell', $field, $data[ $field['type'] ] );
 						else:
 							do_action( 'profile_cct_shell_'.$field['type'], $field, $data[ $field['type'] ] );
@@ -997,7 +1000,7 @@ class Profile_CCT_Admin {
 					if ( ! is_array( Profile_CCT::$settings['data-url'] ) ):
 						Profile_CCT::$settings['data-url'] = array();
 						Profile_CCT::$settings['data-url'] = array_merge( Profile_CCT::$settings['data-url'], array( $_POST['type'] => trim($_POST['url_prefix']) ) );
-						update_option('Profile_CCT_settings', Profile_CCT::$settings);
+						update_option( PROFILE_CCT_SETTINGS, Profile_CCT::$settings );
 					endif;
 					break;
 				case "page":

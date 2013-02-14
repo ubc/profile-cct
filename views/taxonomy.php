@@ -32,7 +32,7 @@
 				endif;
 			endforeach;
 			
-			if ( empty($error) ): // Ready to add the taxonomy
+			if ( empty( $error ) ): // Ready to add the taxonomy
 				$taxonomies = Profile_CCT_Taxonomy::add( $new_taxonomy, $taxonomies );
 		   		$note = "<p class='info'>Now you can add ".esc_attr($_POST['single-name'])." to the <a href=\"".admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASEADMIN.'&view=page')."\">person page</a> or the <a href=\"".admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASEADMIN.'&view=list')."\">list view</a></p>" ;
 	   		endif;
@@ -59,7 +59,7 @@
 			foreach ( $taxonomies as $key => $taxonomy ):
 				$taxonomy_id = Profile_CCT_Taxonomy::id($taxonomy['single']);
 				?>
-				<tr <?php if ($count%2) echo 'class="alternate"'; ?>>
+				<tr <?php if ( $count % 2 ) echo 'class="alternate"'; ?>>
 					<td >
 						<a href="<?php echo admin_url("/edit-tags.php?taxonomy=".$taxonomy_id."&post_type=profile_cct"); ?>">
 							<?php echo $taxonomy['single']; ?> / <?php echo $taxonomy['plural']; ?>
@@ -95,7 +95,7 @@
 	<p>There are currently no Taxonomies defined</p>
 <?php endif; ?>
 
-<?php if ( isset($error['duplicate']) ): ?>
+<?php if ( isset( $error['duplicate'] ) ): ?>
 	<br />
 	<div class='error below-h2'>
 		<p>The <strong>".$single."</strong> ".$error['duplicate']."</p>
@@ -155,13 +155,20 @@
 	</table>
 	<input class="button-primary" type="submit" name="Example" value="<?php _e( 'Add Profile Taxonomy' ); ?>" />
 </form>
+
 <!-- TODO: Make a file and add the below to it -->
 <script type="text/javascript">
-	jQuery('document').ready(function($){
-		$('#single-name').keydown(function(){
-			// 
+	jQuery('document').ready( function( $ ) {
+		$('#single-name').keydown( function() {
 			var name = $(this);
-			setTimeout( function(){ $( '#plural-name' ).val( name.val()+'s' ); }, 10);
+			setTimeout( function() {
+				var value = name.val();
+				if ( value == '' ) {
+					$( '#plural-name' ).val( '' );
+				} else {
+					$( '#plural-name' ).val( value + 's' );
+				}
+			}, 10);
 		});
 	});
 </script> 

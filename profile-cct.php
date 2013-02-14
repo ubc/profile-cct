@@ -24,7 +24,10 @@ define( 'PROFILE_CCT_VERSION', '1.3' );
 
 define( 'PROFILE_CCT_SETTINGS', 'Profile_CCT_settings' );
 define( 'PROFILE_CCT_SETTING_VERSION', 'Profile_CCT_version' );
+define( 'PROFILE_CCT_SETTING_TAXONOMY', 'Profile_CCT_taxonomy' );
 define( 'PROFILE_CCT_SETTING_GLOBAL', 'Profile_CCT_global_settings' );
+
+define( 'PROFILE_CCT_TAXONOMY_PREFIX', 'profile_cct_' );
 
 require( PROFILE_CCT_DIR_PATH . 'lib/class.profile-cct.php' );
 require( PROFILE_CCT_DIR_PATH . 'lib/class.profile-cct-admin.php' );

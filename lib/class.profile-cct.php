@@ -62,14 +62,19 @@ class Profile_CCT {
 		add_action( 'pre_get_posts', array( $this, 'sort_posts' ) );
 		
 		$this->register_profiles();
-		$this->update_custom_fields();
+		$this->update();
 		$this->load_fields();
 	}
 	
-	function update_custom_fields() {
+	/*
+	 * This function should modify old data to accomodate any changes to how it is stored.
+	 */
+	function update() {
 		$global_settings = get_site_option( PROFILE_CCT_SETTING_GLOBAL, array() );
+		$bench_fields = get_option( 'Profile_CCT_form_fields_bench', array() );
+		$side_fields = get_option( 'Profile_CCT_form_fields_side', array() );
 		
-		if ( ! isset( $this->settings['version']['clone_fields'] ) || version_compare( PROFILE_CCT_VERSION, $this->settings['version']['custom_fields'], '>' ) ):
+		if ( ! isset( $this->settings['version']['clone_fields'] ) || version_compare( PROFILE_CCT_VERSION, $this->settings['version']['clone_fields'], '>' ) ):
 			error_log("Updated cloned fields to 1.3 standards");
 			
 			if ( isset( $this->settings['clone_fields'] ) ):
@@ -99,7 +104,19 @@ class Profile_CCT {
 			endif;
 		endif;
 		
-		//$this->settings['version']['clone_fields'] = PROFILE_CCT_VERSION;
+		if ( ! isset( $this->settings['version']['taxonomy'] ) || version_compare( '1.3', $this->settings['version']['taxonomy'], '>' ) ):
+			foreach ( $bench_fields as $key => $field ):
+				if ( ! strncmp($field['type'], PROFILE_CCT_TAXONOMY_PREFIX, strlen(PROFILE_CCT_TAXONOMY_PREFIX) ) ):
+					$side_fields[] = $field;
+					unset( $bench_fields[$key] );
+				endif;
+			endforeach;
+		endif;
+		
+		$this->settings['version']['clone_fields'] = PROFILE_CCT_VERSION;
+		$this->settings['version']['taxonomy'] = PROFILE_CCT_VERSION;
+		update_option( 'Profile_CCT_form_fields_bench', $bench_fields );
+		update_option( 'Profile_CCT_form_fields_side', $side_fields );
 		update_option( PROFILE_CCT_SETTINGS, $this->settings );
 		update_site_option( PROFILE_CCT_SETTING_GLOBAL, $global_settings );
 	}
@@ -249,14 +266,14 @@ class Profile_CCT {
 			endforeach;
             
 			// finally delete the settings data 
-			delete_option( 'Profile_CCT_settings' );
+			delete_option( PROFILE_CCT_SETTINGS );
 			
 			// also delete all the taxonomies 
-			delete_option( 'Profile_CCT_taxonomy' );
+			delete_option( PROFILE_CCT_SETTING_TAXONOMY );
 			
 			// also the global settings only super admin can do this
 			if (current_user_can( 'manage_sites' ) && $_GET['delete_profile_cct_data'] == "DELETE-GLOBAL" ):
-				delete_site_option('Profile_CCT_global_settings');
+				delete_site_option( PROFILE_CCT_SETTING_GLOBAL );
             endif;
 		endif;
 	}
@@ -306,7 +323,7 @@ class Profile_CCT {
 			endforeach;
 		endforeach;
 		
-        update_option( 'Profile_CCT_settings', $field->settings );
+        update_option( PROFILE_CCT_SETTING_GLOBAL, $field->settings );
 	}
     
 	/**
