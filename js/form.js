@@ -31,11 +31,11 @@ var Profile_CCT_FORM = {
 		element.insertBefore(previous);
 		var ul = element.parent();
 		Profile_CCT_FORM.updateSort( ul );
-		ul.children(".field-item").each(function() {
+		/*ul.children(".field-item").each(function() {
 			if (jQuery(this).is(':hover')) {
 				jQuery(this).mouseover();
 			}
-		});
+		});*/
 	},
 	
 	moveDown: function(element) {
@@ -44,11 +44,11 @@ var Profile_CCT_FORM = {
 		element.insertAfter(next);
 		var ul = element.parent();
 		Profile_CCT_FORM.updateSort( ul );
-		ul.children(".field-item").each(function() {
+		/*ul.children(".field-item").each(function() {
 			if (jQuery(this).is(':hover')) {
 				jQuery(this).mouseover();
 			}
-		});
+		});*/
 	},
 	
 	updateSortCallback: function( event, ui ) {
@@ -174,8 +174,6 @@ var Profile_CCT_FORM = {
 		var serialize = element.parent().parent().serialize();
 		parent.unwrap();
 		
-		//var data = 'action=cct_update_fields&method=update&'+serialize+'&context='+context+'&field_index='+field_index+'&where='+ProfileCCT.page;
-		
 		var context = parent.parent().parent().attr('id');
 		var field_index = jQuery( ".field-item", parent.parent().parent() ).index( parent.parent() );
 		var data_set = {	
@@ -191,13 +189,13 @@ var Profile_CCT_FORM = {
 		element.siblings('.spinner').show();		
      	
      	parent.parent().data('options', serialize); // update the serialized data 
-     	
+		
 		// Ajax updating of the field options
      	jQuery.post(ajaxurl, data_set, function(response) {
 			if (response == 'updated') {
 				parent.removeClass('changed');
 			 	element.siblings('.spinner').hide();
-				element.parent().siblings('.edit').trigger("click");
+				element.parent().siblings('.action-shell').children('.edit').trigger("click");
 			 	Profile_CCT_Admin.show_refresh();
 			}
 		});
@@ -206,21 +204,21 @@ var Profile_CCT_FORM = {
 	editField: function(e) {
 		e.preventDefault();
 		var el = jQuery(this);
-		var parent = el.parent();
+		var edit_shell = el.parent().siblings(".edit-shell");
 		
 		if ( el.text() == 'Edit' ) {
 			el.text('Close');
 		} else {
-			if (el.siblings('div.edit-shell').hasClass('changed')) {
+			if (edit_shell.hasClass('changed')) {
 				if ( confirm("There are some unsaved chages.\nWould you like to save them?") ) {
-					el.siblings("div.edit-shell").find('.save-field-settings').trigger('click');
+					edit_shell.find('.save-field-settings').trigger('click');
 					return;
 				}
 			}
 			el.text('Edit');
 		}
 		
-		el.siblings(".edit-shell").toggle();
+		edit_shell.toggle();
 	},
     
 	showSpinner: function() {

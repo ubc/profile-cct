@@ -182,11 +182,12 @@ class Profile_CCT_Field {
 						) );
 					endif;
 					
-					if ( $this->text && 'form' != $this->page ):
+					if ( 'form' != $this->page ):
 						$this->input_text( array(
+							'name'         => 'text',
 							'size'         => 30,
 							'class'        => 'field-text',
-							'label'        => 'text input',
+							'label'        => 'label',
 							'before_label' => true,
 							'value'        => $this->text,
 						) );
@@ -284,8 +285,11 @@ class Profile_CCT_Field {
 		?>
 		<div class="field-shell field-shell-<?php echo $this->type.' '.$multiple_class; ?>">
 		<div class="description">
-		<?php if ( isset( $this->description ) && 'edit' == $this->action && ! empty( $this->description ) ) echo esc_html($this->description); ?>
+			<?php if ( isset( $this->description ) && 'edit' == $this->action && ! empty( $this->description ) ) echo esc_html($this->description); ?>
 		</div>
+		<span class="text-input">
+			<?php if ( isset( $this->text ) && 'form' != $this->page && ! empty( $this->text ) ) echo esc_html($this->text); ?>
+		</span>
 		<?php
 	}
 	
