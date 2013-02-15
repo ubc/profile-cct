@@ -120,8 +120,8 @@
 						<option value="date" <?php selected( "date", $sort_order_by ); ?>>Date Added</option>
 					</select>
 					<select name="sort_order" id="sort_order" <?php if ( $sort_order_by == "manual" ) echo 'style="display:none"'; ?>>
-						<option value="ASC" <?php selected( "ASC", $sort_order ); ?>>Ascending</option>
-						<option value="DESC" <?php selected( "DESC", $sort_order ); ?>>Descending</option>
+						<option value="ASC" <?php selected( "ASC", $sort_order ); ?>>Ascending A - Z</option>
+						<option value="DESC" <?php selected( "DESC", $sort_order ); ?>>Descending Z - A</option>
 					</select>
 					<!--<br />-->
 					<span id="sort_order_info" <?php if ( $sort_order_by != "manual" ) echo 'style="display:none"'; ?>>
