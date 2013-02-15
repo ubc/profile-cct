@@ -9,8 +9,6 @@
  * @return void
  */
 function profile_cct_secondary_address_shell( $options = array(), $data = null ) {
-	$type = 'secondary_address';
-
 	Profile_CCT_Address::shell( $options, $data );
 }
 

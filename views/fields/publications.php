@@ -8,7 +8,5 @@
  * @return void
  */
 function profile_cct_publications_shell( $options, $data = null ) {
-	
 	Profile_CCT_Textarea::shell( $options, $data );
-	
 }

@@ -1,5 +1,4 @@
 <?php 
-// Still lots of work to be done here
 if ( ! defined( 'PROFILE_CCT_FULL_WIDTH'         ) ) define( 'PROFILE_CCT_FULL_WIDTH',         150 );
 if ( ! defined( 'PROFILE_CCT_FULL_HEIGHT'        ) ) define( 'PROFILE_CCT_FULL_HEIGHT',        150 );
 if ( ! defined( 'PROFILE_CCT_MAX_PREVIEW_WIDTH'  ) ) define( 'PROFILE_CCT_MAX_PREVIEW_WIDTH',  400 );
@@ -14,7 +13,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		'show_link_to' => true,
 		'width'        => 'one-third',
 		'before'       => '',
-		'empty'        => '<img src="http://placehold.it/180x220" />',
+		'empty'        => '',
 		'after'        => '',
 	);
 	
@@ -27,7 +26,10 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 	function field() {
 		$this->picture();
 		$this->update_picture_field();
-		echo '<br/ ><em>This change will take effect immediately.</em>';
+		?>
+		<br />
+		<em>This change will take effect immediately.</em>
+		<?php
 	}
 	
 	function display() {
@@ -53,15 +55,14 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		if ( empty( $post ) ): // If you are viewing the preview.
 			?>
 			<span class="add-multiple">
-				<a class="button disabled" disabled="disabled" style="display: inline;" href="#add">Update Picture</a>
-				 <em>disabled in preview</em>
+				<a class="button disabled" disabled="disabled" style="display: inline;" href="#add">Update Picture</a> <em>disabled in preview</em>
 			</span>
 			<?php
 			return;
 		endif;
 		
-		$update_url = admin_url('admin-ajax.php?action=profile_cct_picture_add_photo&step=1&post_id='.$post->ID.'&TB_iframe=true&width='.$iframe_width.'&height=520');
-		$remove_url = admin_url('admin-ajax.php?action=profile_cct_picture_delete_ajax&post='.$post->ID.'&_nonce='.wp_create_nonce('profile_cct_picture'));
+		$update_url = admin_url( 'admin-ajax.php?action=profile_cct_picture_add_photo&step=1&post_id='.$post->ID.'&TB_iframe=true&width='.$iframe_width.'&height=520' );
+		$remove_url = admin_url( 'admin-ajax.php?action=profile_cct_picture_delete_ajax&post='.$post->ID.'&_nonce='.wp_create_nonce('profile_cct_picture') );
 		$remove_link = '<a id="user-avatar-remove" class="deleteaction" href="'.$remove_url.'" title="Remove Profile Image" onclick="return profile_cct_picture_remove_image();">Remove</a>';
 		if ( has_post_thumbnail( $post->ID ) ):
 			?>
@@ -204,10 +205,9 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		
 		$current_user = wp_get_current_user();
 		$post = wp_get_single_post( $_GET['post'] );
-		//$post_image_id = get_post_meta( $_GET['post'], '_thumbnail_id', true );
 		$post_author = $post->post_author;
 		
-		// If user clicks the remove avatar button, in URL deleter_avatar=true
+		// If user clicks the remove avatar button, then in the URL deleter_avatar=true
 		if ( wp_verify_nonce( $_GET['_nonce'], 'profile_cct_picture' ) && $post_author == $current_user->id || current_user_can('edit_users') ):
 			Profile_CCT_Picture::update_picture( $_GET['post'], '' );
 		endif;
@@ -333,11 +333,7 @@ function profile_cct_picture_add_photo_step1( $post_id ) {
 function profile_cct_picture_add_photo_step2( $post_id ) {
 	$picture_options = Profile_CCT_Picture::picture_options();	
 	
-	if ( ! ( $_FILES["uploadedfile"]["type"] == "image/gif"
-			|| $_FILES["uploadedfile"]["type"] == "image/jpeg"
-			|| $_FILES["uploadedfile"]["type"] == "image/png"
-			|| $_FILES["uploadedfile"]["type"] == "image/pjpeg"
-			|| $_FILES["uploadedfile"]["type"] == "image/x-png" ) ):
+	if ( ! in_array( $_FILES["uploadedfile"]["type"], array( "image/gif", "image/jpeg", "image/png", "image/pjpeg", "image/x-png" ) ) ):
 		?>
 			<div class='error'>
 				<p><?php _e( "Please upload an image file (.jpeg, .gif, .png).", 'user-avatar' ); ?></p>
@@ -375,9 +371,11 @@ function profile_cct_picture_add_photo_step2( $post_id ) {
 	//If the image is below the minimum width or height
 	if ( $width < $picture_options['width'] || $height < $picture_options['height'] ):
 		?>
-			<p>
-				The image you selected is too small. Please select an image with width at least <?php echo $picture_options['width']; ?> and height at least <?php echo $picture_options['height']; ?>
-			</p>
+			<div class='error'>
+				<p>
+					The image you selected is too small. Please select an image with width at least <?php echo $picture_options['width']; ?> and height at least <?php echo $picture_options['height']; ?>
+				</p>
+			</div>
 		<?php
 		profile_cct_picture_add_photo_step1($post_id);
 		return;
@@ -413,7 +411,7 @@ function profile_cct_picture_add_photo_step2( $post_id ) {
 	?>
 		<form id="iframe-crop-form" method="POST" action="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=3&post_id=<?php echo esc_attr($post_id); ?>">
 			<div style="float:left;">
-				<h4 style=""><?php _e('Choose the part of the image you want to use as your profile image.','user-avatar'); ?></h4> 
+				<h4 style=""><?php _e( 'Choose the part of the image you want to use as your profile image.', 'user-avatar' ); ?></h4> 
 				<div id="wrap">
 					<img src="<?php echo $url; ?>" id="upload" width="<?php echo esc_attr($width); ?>" height="<?php echo esc_attr($height); ?>" />
 				</div>
@@ -490,7 +488,7 @@ function profile_cct_picture_add_photo_step2( $post_id ) {
 						
 						//Scale the picture based on either the maximum preview size or the true picture size (whichever is smaller)
 						<?php
-							$scale_width =  min( PROFILE_CCT_MAX_PREVIEW_WIDTH, $picture_options['width'] );
+							$scale_width  = min( PROFILE_CCT_MAX_PREVIEW_WIDTH, $picture_options['width'] );
 							$scale_height = min( PROFILE_CCT_MAX_PREVIEW_HEIGHT, $picture_options['height'] );
 						?>
 						var scaleX = <?php echo $scale_width; ?> / coords.width;
@@ -576,7 +574,9 @@ function profile_cct_picture_add_photo_step3( $post_id, $no_crop = false, $attac
 	<script type="text/javascript">
 		self.parent.profile_cct_picture_refresh_image('<?php echo Profile_CCT_Picture::get_the_post_thumbnail($post_id, 'thumbnail'); ?>');
 		self.parent.profile_cct_add_remove_avatar_link();
+		self.parent.tb_remove(); //Disabling the final preview step. It's unecessary, as you will see the new image as soon as the thickbox is closed.
 	</script>
+	<!-- The final preview html
 	<div id="user-avatar-step3">
 		<h3><?php _e("Here's your new profile picture...",'user-avatar'); ?></h3>
 		<span style="float:left;">
@@ -584,314 +584,6 @@ function profile_cct_picture_add_photo_step3( $post_id, $no_crop = false, $attac
 		</span>
 		<a id="user-avatar-step3-close" class="button" style="cursor: pointer;" onclick="self.parent.tb_remove();" ><?php _e( 'Close', 'user-avatar' ); ?></a>
 	</div>
+	-->
 	<?php	
 }
-
-/**
- * profile_cct_picture_shell function.
- * 
- * @access public
- * @param mixed $action
- * @param mixed $options. (default: null)
- * @return void
- */
-/*
-function profile_cct_picture_shell_old( $action, $options=null ) {
-	if(!current_theme_supports('post-thumbnails')):
-		echo '<p>Not supported by this theme</p>';
-		return;
-	endif;
-	
-	if( is_object($action) ):
-		$post = $action;
-		$action = "display";
-		$data = $options['args']['data'];
-		$options = $options['args']['options'];
-	endif;
-	
-	$field = Profile_CCT::get_object(); // prints "Creating new instance."
-	if( !is_array($options) )
-		$options = $field->form_fields['picture']; // stuff that is coming from the db
-	
-	$default_options = array(
-		'type' => 'picture',
-		'label' => 'picture',	
-		'description' => '',
-		);
-		
-	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
-	$field->start_field($action,$options);
-	
-	profile_cct_picture_field($data,$options);
-	
-	$field->end_field( $action, $options );
-}
-*/
-
-/**
- * profile_cct_picture_field function.
- * 
- * @access public
- * @param mixed $data
- * @param mixed $options
- * @return void
- */
-/*
-function profile_cct_picture_field( $data, $options ){
-	global $post;
-	extract( $options );
-	
-	$field = Profile_CCT::get_object();
-	$show = (is_array($show) ? $show : array());
-	
-	
-	if(is_object($post)):
-		$thumbnail_id = get_post_meta( $post->ID, '_thumbnail_id', true );
-		profile_cct_picture_form( $thumbnail_id );
-	else:
-		profile_cct_picture_display(  $data, $options  );
-	endif;
-}
-*/
-
-/*
-function profile_cct_picture_display_shell_old( $action, $options=null, $data=null ) {
-	
-	if( is_object($action) ):
-		$post 		= $action;
-		$action 	= "display";
-		$data 		= $options['args']['data'];
-		$options 	= $options['args']['options'];
-	endif;
-	
-	$field = Profile_CCT::get_object(); // prints "Creating new instance."
-	if( !is_array($options) )
-		$options = $field->form_fields['picture']; // stuff that is comming from the db
-	
-	$default_options = array(
-		'type'		=> 'picture',
-		'label'		=> 'picture',
-		'hide_label'=>  true,
-		'before'	=> '',
-		'empty'		=> '',
-		'width' 	=> 'one-third',
-		'link_to'	=> true,
-		'show_link_to' => true,
-		'after'		=> '',
-		);
-		
-	$options = (is_array($options) ? array_merge( $default_options, $options ): $default_options );
-	$field->start_field($action,$options);
-	
-	profile_cct_picture_display( $data,$options );
-	
-	$field->end_field( $action, $options );
-}
-*/
-
-/**
- * profile_cct_picture_field function.
- * 
- * @access public
- * @param mixed $data
- * @param mixed $options
- * @return void
- */
-/*
-function profile_cct_picture_display(  $data, $options  ){
-	global $post;
-	extract( $options );
-	
-	$field 	= Profile_CCT::get_object();
-	$show 	= (is_array($show) ? $show : array());
-	$href 	= ( isset($post) ? get_permalink() : "#" );
-	
-	if( isset($post) ):
-		$field->display_text( array( 'field_type'=>$type, 'class' => '', 'type' => 'shell', 'tag' => 'a','link_to'=>$link_to, 'href'=>$href ) );
-		echo profile_cct_get_the_post_thumbnail($post->ID, 'full');
-		$field->display_text( array( 'field_type'=>$type, 'type' => 'end_shell', 'tag' => 'a','link_to'=>$link_to) );
-	else:
-		global $current_user;
-      	get_currentuserinfo();
-		echo get_avatar($current_user->user_email, 150);
-	endif;
-}
-*/
-
-
-
-/* -- USER AVATAR STUFF -- */
-
-/*
-function profile_cct_picture_form($thumbnail_id) {
-	global $post;
-	$picture_options = profile_cct_get_picture_options();
-	
-	$iframe_width = $picture_options['width'] + 520;
-	if($thumbnail_id): ?>
-		<div id="user-avatar-display-image"><?php echo profile_cct_get_the_post_thumbnail($post_id, 'thumbnail'); ?></div>
-		<a id="user-avatar-link" class="button thickbox" href="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=1&post_id=<?php echo $post->ID; ?>&TB_iframe=true&width=<?php echo $iframe_width; ?>&height=520" ><?php _e('Update Picture','user-avatar'); ?></a> 
-	<?php
-		// Remove the User-Avatar button if there is no uploaded image
-		$remove_url = admin_url('post.php')."?post=".$post->ID."&action=edit&delete_avatar=true&_nononce=". wp_create_nonce('profile_cct_picture');
-		?>
-			<a id="user-avatar-remove" class="submitdelete deleteaction" href="<?php echo esc_url_raw($remove_url); ?>" title="<?php _e('Remove User Avatar Image','user-avatar'); ?>" ><?php _e('Remove','user-avatar'); ?></a>
-		<?php
-	else:
-		?>
-		<div id="user-avatar-display-image"></div>
-	<a id="user-avatar-link" class="button thickbox" href="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=1&post_id=<?php echo $post->ID; ?>&TB_iframe=true&width=<?php echo $iframe_width; ?>&height=520" title="<?php _e('Upload and Crop an Image to be Displayed','user-avatar'); ?>" ><?php _e('Add Picture','user-avatar'); ?></a> 
-	<?php
-	endif;
-	?>
-	<script type="text/javascript">
-	//<![CDATA[
-	function profile_cct_picture_refresh_image(img){
-	 	jQuery('#user-avatar-display-image').html(img);
-	}
-	function profile_cct_add_remove_avatar_link(){
-		if(!jQuery("#user-avatar-remove")){
-			jQuery('#user-avatar-link').after(" <a href='<?php echo $remove_url; ?>' class='submitdelete'  id='user-avatar-remove' ><?php _e('Remove','user-avatar'); ?></a>")
-		}
-	}
-	//]]>
-	</script>
-	<?php
-} 
-*/
-
-
-/**
- * profile_cct_picture_init function.
- * Description: Initializing user avatar style.
- * @access public
- * @return void
- */
-/*
-function profile_cct_picture_init(){
-	wp_enqueue_style( 'global' );
-	wp_enqueue_style( 'wp-admin' );
-	wp_enqueue_style( 'colors' );
-	wp_enqueue_style( 'ie' );
-	wp_enqueue_style( 'user-avatar', PROFILE_CCT_DIR_URL.'/css/profile-picture.css', 'css' );
-	wp_enqueue_style( 'imgareaselect' );
-	wp_enqueue_script( 'imgareaselect' );
-	do_action( 'admin_print_styles' );
-	do_action( 'admin_print_scripts' );
-	do_action( 'admin_head' );
-}
-*/
-
-/**
- * profile_cct_picture_add_photo function.
- * The content inside the iframe 
- * Description: Creating panels for the different steps users take to upload a file and checking their uploads.
- * @access public
- * @return void
- */
-/*
-function profile_cct_picture_add_photo() {
-	global $current_user;
-	$post_id = $_GET['post_id'];
-	
-	?>
-	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	<html xmlns="http://www.w3.org/1999/xhtml" <?php do_action('admin_xml_ns'); ?> <?php language_attributes(); ?>>
-		<head>
-			<meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=<?php echo get_option('blog_charset'); ?>" />
-			<title>
-				<?php bloginfo('name') ?> &rsaquo; <?php _e('Uploads'); ?> &#8212; <?php _e('WordPress'); ?>
-			</title>
-			
-			<script type="text/javascript">
-				addLoadEvent = function(func) {
-					if ( typeof jQuery != "undefined" ) {
-						jQuery(document).ready(func);
-					} else if ( typeof wpOnload != 'function' ) {
-						wpOnload = func;
-					} else {
-						var oldonload = wpOnload;
-						wpOnload = function() {
-							oldonload();
-							func();
-						}
-					}
-				};
-				
-				var userSettings = {
-					'url': '<?php echo SITECOOKIEPATH; ?>',
-					'uid': '<?php if ( ! isset($current_user) ) $current_user = wp_get_current_user(); echo $current_user->ID; ?>',
-					'time':'<?php echo time() ?>'
-				};
-				var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
-				var pagenow = '<?php echo $current_screen->id; ?>';
-				var typenow = '<?php if ( isset($current_screen->post_type) ) echo $current_screen->post_type; ?>';
-				var adminpage = '<?php echo $admin_body_class; ?>';
-				var thousandsSeparator = '<?php echo addslashes( $wp_locale->number_format['thousands_sep'] ); ?>';
-				var decimalPoint = '<?php echo addslashes( $wp_locale->number_format['decimal_point'] ); ?>';
-				var isRtl = <?php echo (int) is_rtl(); ?>;
-			</script>
-			<?php
-				do_action('profile_cct_picture_iframe_head');
-			?>
-		</head>
-		<body>
-			<?php
-				switch( $_GET['step'] ):
-					case 1:
-						profile_cct_picture_add_photo_step1($post_id);
-						break;
-					case 2:
-						profile_cct_picture_add_photo_step2($post_id);
-						break;
-					case 3:
-						profile_cct_picture_add_photo_step3($post_id);
-						break;
-				endswitch;
-				
-				do_action('admin_print_footer_scripts');
-			?>
-			<script type="text/javascript">
-				if ( typeof wpOnload == 'function' ) wpOnload();
-			</script>
-		</body>
-	</html>
-	<?php
-	
-	die();
-}
-*/
-
-//add_action("admin_init", "profile_cct_picture_delete");
-
-/**
- * profile_cct_picture_delete function.
- * 
- * @access public
- * @return void
- */
-/*
-function profile_cct_picture_delete() {
-	global $pagenow;
-	
-	if ( ! is_numeric( $_GET['post'] ) ):
-		return;
-	endif;
-	
-	$current_user = wp_get_current_user();
-	$post = wp_get_single_post( $_GET['post'] );
-	$post_image_id = get_post_meta( $_GET['post'], '_thumbnail_id', true );
-	$post_author = $post->post_author;
-	
-	// If user clicks the remove avatar button, in URL deleter_avatar=true
-	if ( isset( $_GET['delete_avatar'] ) && wp_verify_nonce( $_GET['_nononce'], 'profile_cct_picture' ) && $post_author == $current_user->id || current_user_can('edit_users') ):
-		$user_id = $_GET['user_id'];
-		if ( is_numeric( $user_id ) ):
-			$user_id = "?user_id=".$user_id;
-		endif;
-		
-		profile_cct_picture_delete_files( $_GET['post'], $post_image_id );
-		wp_redirect( admin_url( 'post.php?post='.$_GET['post'].'&action=edit' ) );
-		exit;
-	endif;
-}*/

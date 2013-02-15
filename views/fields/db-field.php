@@ -75,6 +75,6 @@ class Profile_CCT_DB_Field {
 	}
 }
 
-if ( is_array(Profile_CCT::get_object()->settings['clone_fields']) ):
+if ( is_array( Profile_CCT::get_object()->settings['clone_fields'] ) ):
 	Profile_CCT_DB_Field::init();
 endif;
