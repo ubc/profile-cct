@@ -2,7 +2,7 @@ var Profile_CCT_Admin = {
 	ready: function() {
 		jQuery('#refresh-profiles').on('click', function () {
 			Profile_CCT_Admin.update_profiles( 1 );
-		}).parent().after('<div id="update-profiles-slider"> 0% </div>');
+		}).parent().after('<div id="update-profiles-slider"><div class="slider-shell"><div></div></div> 0% </div>');
 	},
     
 	prep: function( where ) {
@@ -68,7 +68,7 @@ var Profile_CCT_Admin = {
 	},
     
 	update_slider: function( percent, message ) {
-		jQuery('#update-profiles-slider').addClass('active-slider').html("<div style='width:"+percent+"%'>"+message+"</div>");
+		jQuery('#update-profiles-slider').addClass('active-slider').html("<div class='slider-shell'><div style='width:"+percent+"%'>&nbsp;</div></div>"+message+"</div>");
 	},
 }
 
