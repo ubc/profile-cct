@@ -137,7 +137,11 @@ class Profile_CCT_Field {
 				$is_active = ( ( isset( Profile_CCT_Admin::$current_form_fields ) && Profile_CCT_Admin::$current_form_fields[$this->type]['is_active'] == 1 ) ? "is-active" : "" );
 			?>
 	 		<li class="field-item <?php echo $shell_type." ".$this->width." ".$this->class." ".$is_active; ?>" for="cct-<?php echo esc_attr( $this->type ); ?>" data-options="<?php echo esc_attr( $this->serialize( $this->options ) ); ?>" >
-				<a href="#edit-field" class="edit">Edit</a>
+				<div class="action-shell">
+					<a href="#" class="action arrow" onclick="Profile_CCT_FORM.moveUp(jQuery(this)); return false;"><img height=16 src="<?php echo PROFILE_CCT_DIR_URL."/img/arrow-up.png"; ?>" /></a>
+					<a href="#" class="action arrow" onclick="Profile_CCT_FORM.moveDown(jQuery(this)); return false;"><img height=16 src="<?php echo PROFILE_CCT_DIR_URL."/img/arrow-down.png"; ?>" /></a>
+					<a href="#edit-field" class="action edit">Edit</a>
+				</div>
 				<div class="edit-shell" style="display:none;">
 					<input type="hidden" name="type" value="<?php echo esc_attr( $this->type ); ?>" />
 					<?php

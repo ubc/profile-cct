@@ -7,7 +7,7 @@ var Profile_CCT_FORM = {
             placeholder: "ui-state-highlight",
             forcePlaceholderSize: true,
             handle: "label.field-title", 
-            update: Profile_CCT_FORM.updateSort,
+            update: Profile_CCT_FORM.updateSortCallback,
             connectWith: '.sort',
             tolerance: 'pointer'
 		});
@@ -21,19 +21,49 @@ var Profile_CCT_FORM = {
 		formB.find(".save-field-settings").live("click", Profile_CCT_FORM.updateField);
 		formB.find(".field-textarea").live('keyup', Profile_CCT_FORM.updateTextarea);
 		formB.find(".field-text").live('keyup', Profile_CCT_FORM.updateText);
-		// name field
+		
 		jQuery(".edit", "#form-name").click(Profile_CCT_FORM.editField);
 	},
+	
+	moveUp: function(element) {
+		element = element.parent().parent('.field-item');
+		var previous = element.prev('.field-item');
+		element.insertBefore(previous);
+		var ul = element.parent();
+		Profile_CCT_FORM.updateSort( ul );
+		ul.children(".field-item").each(function() {
+			if (jQuery(this).is(':hover')) {
+				jQuery(this).mouseover();
+			}
+		});
+	},
+	
+	moveDown: function(element) {
+		element = element.parent().parent('.field-item');
+		var next = element.next('.field-item');
+		element.insertAfter(next);
+		var ul = element.parent();
+		Profile_CCT_FORM.updateSort( ul );
+		ul.children(".field-item").each(function() {
+			if (jQuery(this).is(':hover')) {
+				jQuery(this).mouseover();
+			}
+		});
+	},
+	
+	updateSortCallback: function( event, ui ) {
+		Profile_CCT_FORM.updateSort( jQuery(this) );
+	},
     
-	updateSort: function(event, ui) {
+	updateSort: function( element ) {
 		Profile_CCT_FORM.showSpinner();
 		
 		var data = new Array();
-		jQuery(this).find('.field-item').each(function(index, value) {
+		element.find('.field-item').each( function(index, value) {
 			data[index] = jQuery(this).data('options');
-		});
+		} );
 		
-		var context = jQuery(this).attr('id');
+		var context = element.attr('id');
 		
 		var data_set = {	
             action: 'cct_update_fields',
@@ -47,7 +77,9 @@ var Profile_CCT_FORM = {
             if ( response == 'sorted' ) {
                 Profile_CCT_FORM.hideSpinner();
                 Profile_CCT_Admin.show_refresh();
-            } // TODO: write the error to the user...
+            } else {
+				alert("Failed to save.");
+			}
 		});
 	},
     
@@ -183,10 +215,9 @@ var Profile_CCT_FORM = {
 				if ( confirm("There are some unsaved chages.\nWould you like to save them?") ) {
 					el.siblings("div.edit-shell").find('.save-field-settings').trigger('click');
 					return;
-				} else {
-					el.text('Edit');
 				}
 			}
+			el.text('Edit');
 		}
 		
 		el.siblings(".edit-shell").toggle();

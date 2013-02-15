@@ -51,12 +51,12 @@ class Profile_CCT_Taxonomy {
 	 */
 	public static function remove($taxonomies) {
 		// Try to remove taxonomies.
-		if ( is_admin() && wp_verify_nonce( $_GET['_wpnonce'], 'profile_cct_remove_taxonomy'.$_GET['remove'] ) ): 
+		if ( is_admin() && isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'profile_cct_remove_taxonomy'.$_GET['remove'] ) ): 
 			if ( isset( $taxonomies[$_GET['remove']] ) ):
 				unset( $taxonomies[$_GET['remove']] );
 			endif;
 			
-			update_option( PROFILE_CCT_SETTING_TAXONOMY, $field->taxonomies );
+			update_option( PROFILE_CCT_SETTING_TAXONOMY, $taxonomies );
 			flush_rewrite_rules();
 		endif;
 		

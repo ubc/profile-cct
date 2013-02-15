@@ -311,7 +311,7 @@ ul.sort .is-active .field-title {
 	height: 200px;
 }
 
-.edit-shell textarea{
+.edit-shell textarea {
 	height: 100px;
 }
 
@@ -391,14 +391,34 @@ ul.sort .is-active .field-title {
 }
 
 /* ----- Action ----- */
-.form-builder li .edit {
+.form-builder li .action-shell {
 	float: right;
-	padding: 5px 10px;
-	font-size: 10px;
+    padding: 5px;
 	margin: 0;
     position: absolute;
     top: 0;
     right: 0;
+}
+
+.form-builder li .action {
+    height: 16px;
+	font-size: 10px;
+	margin: 0;
+}
+
+.form-builder li .action.edit {
+	font-size: 10px;
+    margin: 0 5px;
+	position: relative;
+    top: -5px;
+}
+
+.form-builder li .action.arrow {
+	visibility: hidden;
+}
+
+.form-builder li:hover .action.arrow {
+	visibility: visible;
 }
 
 .form-builder li .edit-shell {
@@ -552,12 +572,12 @@ li.ui-sortable-helper {
 
 .ui-sortable-helper .field-shell,
 .ui-sortable-helper .remove,
-.ui-sortable-helper .edit,
+.ui-sortable-helper .action-shell,
 .ui-sortable-helper .add-multiple,
 .ui-sortable-helper .description,
 #bench li .field-shell,
 #bench li .remove,
-#bench li .edit,
+#bench li .action-shell,
 #bench li .add-multiple,
 #bench li .description {
 	display: none !important;
@@ -595,19 +615,19 @@ li.ui-sortable-helper {
 }
 
 #list-shell .field-title,
-#list-shell .edit,
+#list-shell .action-shell,
 #page-shell .field-title,
-#page-shell .edit {
+#page-shell .action-shell {
 	display: none;
 }
 
 #list-shell .hover-expanded .field-title,
-#list-shell .hover-expanded .edit,
+#list-shell .hover-expanded .action-shell,
 #list-shell .hover .field-title,
-#list-shell .hover .edit,
+#list-shell .hover .action-shell,
 #page-shell .hover-expanded .field-title,
-#page-shell .hover-expanded .edit,
+#page-shell .hover-expanded .action-shell,
 #page-shell .hover .field-title,
-#page-shell .hover .edit {
+#page-shell .hover .action-shell {
 	display: inherit;
 }

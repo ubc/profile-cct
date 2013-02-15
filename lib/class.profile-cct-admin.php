@@ -195,7 +195,7 @@ class Profile_CCT_Admin {
                 
 				if ( ! in_array( $field['type'], $current_fields ) ): // add to the current_fields array
 					$current_fields[] = $field['type'];
-					if ( ! strncmp($field['type'], PROFILE_CCT_TAXONOMY_PREFIX, strlen('profile_cct_') ) ):
+					if ( $where == 'form' && ! strncmp($field['type'], PROFILE_CCT_TAXONOMY_PREFIX, strlen('profile_cct_') ) ):
 						self::$option[$where]['fields']['side'][] = $field;
 					else:
 						self::$option[$where]['fields']['bench'][] = $field;
@@ -1033,7 +1033,7 @@ class Profile_CCT_Admin {
 		endswitch;
 		
 		// Save the options
-		self::update_option($where, 'fields', $context, $options);
+		self::update_option( $where, 'fields', $context, $options );
 		echo $print;
 		die();
 	}

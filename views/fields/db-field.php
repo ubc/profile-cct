@@ -5,7 +5,7 @@ class Profile_CCT_DB_Field {
 		
 		$profile = Profile_CCT::get_object();
 		
-		foreach( $profile->settings['clone_fields'] as $field ):
+		foreach ( $profile->settings['clone_fields'] as $field_key => $field ):
 			if ( ! is_numeric($field_key) ):
 				add_action( 'profile_cct_shell_'.$field['type'], 'profile_cct_'.$field['field_clone'].'_shell', 10, 3 );
 			else:
