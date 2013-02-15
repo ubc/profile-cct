@@ -148,8 +148,9 @@
 			<td>
 				<fieldset>
 					<legend class="screen-reader-text"><span>Hierarchical</span></legend>
-					<label title='g:i a'><input type="radio" name="hierarchical" value="1" /> <span>Yes - Works like Post Categories</span></label><br />
-					<label title='g:i a'><input type="radio" name="hierarchical" value="0" checked="checked" /> <span>No - Works like Post Tags</span></label>
+					<label><input type="radio" name="hierarchical" value="1" /> <span>Yes - Works like Post Categories</span></label>
+					<br />
+					<label><input type="radio" name="hierarchical" value="0" checked="checked" /> <span>No - Works like Post Tags</span></label>
 				</fieldset>
 			</td>
 		</tr>
@@ -157,7 +158,7 @@
 	<input class="button-primary" type="submit" name="Example" value="<?php _e( 'Add Profile Taxonomy' ); ?>" />
 </form>
 
-<!-- TODO: Make a file and add the below to it -->
+<!-- TODO: Move this javascript to a seperate file. -->
 <script type="text/javascript">
 	jQuery('document').ready( function( $ ) {
 		$('#single-name').keydown( function() {

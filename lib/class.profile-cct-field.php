@@ -165,7 +165,7 @@ class Profile_CCT_Field {
 							'name'         => 'description',
 							'size'         => 10,
 							'class'        => 'field-description',
-							'label'        => 'description' ,
+							'label'        => 'description',
 							'before_label' => true,
 							'value'        => $this->description,
 						) );

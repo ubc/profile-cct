@@ -952,14 +952,12 @@ class Profile_CCT_Admin {
 		wp_update_post( $mypost );
 		kses_init_filters();
 		
-		if ( $version_bump ):
-			$last_name = ( isset( $data["name"]['last'] ) ? $data["name"]['last'] : '0' );
-			update_post_meta( $post_id, 'profile_cct_last_name', $last_name );
-			
-			$first_letter = strtolower( substr( $last_name, 0, 1 ) );
-			$first_letter = ( empty( $first_letter ) ? '0' : $first_letter );
-			wp_set_post_terms( $post_id, $first_letter, 'profile_cct_letter', false );
-		endif;
+		$last_name = ( isset( $data["name"]['last'] ) ? $data["name"]['last'] : '0' );
+		update_post_meta( $post_id, 'profile_cct_last_name', $last_name );
+		
+		$first_letter = strtolower( substr( $last_name, 0, 1 ) );
+		$first_letter = ( empty( $first_letter ) ? '0' : $first_letter );
+		wp_set_post_terms( $post_id, $first_letter, 'profile_cct_letter', false );
 	}
 	
 	/**

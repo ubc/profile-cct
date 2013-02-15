@@ -118,7 +118,7 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 			endif;
 			
 			$data = array();
-			if ( is_array($terms) ):
+			if ( is_array( $terms ) && ! empty( $terms ) ):
 				foreach ( $terms as $term ):
 					$data[] = array(
 						'class'        => $term->slug,
@@ -127,6 +127,8 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 						'href'         => get_term_link( $term, $taxonomy ),
 					);
 				endforeach;
+			else:
+				$options['empty'] = "No ".$options['label']." have been created.";
 			endif;
 		endif;
 		
