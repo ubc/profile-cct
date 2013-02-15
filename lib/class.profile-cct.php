@@ -122,7 +122,7 @@ class Profile_CCT {
 	}
 	
 	function sort_posts( $query ) {
-		if ( $query->is_main_query() && is_post_type_archive( 'profile_cct' ) ):
+		if ( $query->is_main_query() && is_post_type_archive( 'profile_cct' ) && ! is_admin() ):
 			$order = in_array( $this->settings['sort_order'], array( 'ASC', 'DESC' ) ) ? $this->settings['sort_order'] : null;
 			
 			switch ( $this->settings['sort_order_by'] ):

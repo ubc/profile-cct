@@ -9,6 +9,7 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
     var $default_options = array(
 		'type'         => 'taxonomy',
 		'label'        => 'taxonomy',
+		'class'        => 'taxonomy',
 		'description'  => '',
 		'width'        => 'full',
 		'before'       => '',

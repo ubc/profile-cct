@@ -69,6 +69,13 @@
 		$profile->register_profiles();
 		flush_rewrite_rules();
 	endif;
+	
+	if ( ! isset( $profile->settings['picture'] ) )           $profile->settings['picture'] = array( 'width' => 150, 'height' => 150 );
+	if ( ! isset( $profile->settings['picture']['width'] ) )  $profile->settings['picture']['width'] = 150;
+	if ( ! isset( $profile->settings['picture']['height'] ) ) $profile->settings['picture']['height'] = 150;
+	if ( ! isset( $profile->settings['slug'] ) )              $profile->settings['slug'] = 'person';
+	if ( ! isset( $profile->settings['sort_order_by'] ) )     $profile->settings['sort_order_by'] = 'first_name';
+	if ( ! isset( $profile->settings['sort_order'] ) )        $profile->settings['sort_order'] = 'ASC';
 ?>
 <h2>General Settings</h2>
 <?php echo $note; ?>
@@ -194,7 +201,7 @@
             <tr valign="top">
                 <th scope="row"><label for="slug">Slug</label></th>
                 <td>
-					<input type="text"  name="slug" id="slug" value="<?php echo esc_attr($profile->settings['slug']); ?>" />
+					<input type="text" name="slug" id="slug" value="<?php echo esc_attr($profile->settings['slug']); ?>" />
 					<br />
                     By default this is set to 'person'
                 </td>

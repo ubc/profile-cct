@@ -177,16 +177,18 @@ var Profile_CCT_FORM = {
 		var parent = el.parent();
 		
 		if ( el.text() == 'Edit' ) {
-			el.text('Close'); 
+			el.text('Close');
 		} else {
 			if (el.siblings('div.edit-shell').hasClass('changed')) {
 				if ( confirm("There are some unsaved chages.\nWould you like to save them?") ) {
-					el.siblings("div.edit-shell").find('.save-field-settings').trigger('click');	
+					el.siblings("div.edit-shell").find('.save-field-settings').trigger('click');
+					return;
+				} else {
+					el.text('Edit');
 				}
 			}
-			
-			el.text('Edit');
 		}
+		
 		el.siblings(".edit-shell").toggle();
 	},
     

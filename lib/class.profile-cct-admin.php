@@ -166,9 +166,9 @@ class Profile_CCT_Admin {
 		endforeach;
         // check to see if this field is alr
 		// don't forget the bench fields.
-		foreach ( Profile_CCT_Admin::get_option($where, 'fields', 'bench') as $field ):
+		foreach ( Profile_CCT_Admin::get_option( $where, 'fields', 'bench' ) as $field ):
 			// lets make sure that for no reason duplicate fields end up in the bench 
-			if( !in_array($field['type'], $current_fields) ):
+			if( ! in_array( $field['type'], $current_fields ) ):
 				$current_fields[] = $field['type'];
 				$brench_fields[] = $field;
 			endif;

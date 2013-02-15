@@ -279,11 +279,10 @@ class Profile_CCT_Field {
 		$multiple_class = ( $this->show_multiple ? "field-shell-multiple": "");
 		?>
 		<div class="field-shell field-shell-<?php echo $this->type.' '.$multiple_class; ?>">
+		<div class="description">
+		<?php if ( isset( $this->description ) && 'edit' == $this->action && ! empty( $this->description ) ) echo esc_html($this->description); ?>
+		</div>
 		<?php
-		
-		if ( isset( $this->description ) && 'edit' == $this->action && ! empty( $this->description ) ):
-			printf( '<pre class="description">%s</pre>', esc_html($this->description) );
-		endif;
 	}
 	
 	/**

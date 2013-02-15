@@ -26,7 +26,7 @@
 
 /* Sorting */
 ul.sort {
-	padding: 5px 0 0 0;
+	padding: 5px;
 	border: 1px dashed #EEE;
 	margin-bottom: 16px;
 	overflow: hidden;
@@ -108,11 +108,16 @@ ul.sort .is-active .field-title {
 .form-builder ul:after,
 .form-builder li:after,
 .form-builder li div:after {
-	content: ".";
 	display: block;
 	height: 0;
 	clear: both;
 	visibility: hidden;
+}
+
+.form-builder ul:after,
+.form-builder ul:not(.category-tabs) li:after,
+.form-builder li div:after {
+	content: ".";
 }
 
 * html .form-builder li {
@@ -175,8 +180,6 @@ ul.sort .is-active .field-title {
 .form-builder .description {
 	display: block;
 	clear: both;
-	position: relative;
-    top: 10px;
     padding: 0;
     font-family: sans-serif;
     color: #AAA;
@@ -294,7 +297,7 @@ ul.sort .is-active .field-title {
 #side-shell .form-builder .text,
 #side-shell .form-builder textarea,
 #side-shell .form-builder .select {
-	max-width: 275px;
+	max-width: 200px;
 }
 
 #wpcontent .form-builder select {
