@@ -38,7 +38,9 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 	
 	function picture() {
 		global $post;
-		$image = ( isset( $post ) ? Profile_CCT_Picture::get_the_post_thumbnail( $post->ID, array( 150, 150 ) ) : get_avatar( $current_user->user_email, 150 ) );
+		
+		
+		$image = ( isset( $post ) ? Profile_CCT_Picture::get_the_post_thumbnail( $post->ID, 'profile-image' ) : get_avatar( $current_user->user_email, 150 ) );
 		?>
 		<div id="user-avatar-display-image">
 			<?php if ( $image != null ) echo $image; ?>
@@ -231,7 +233,8 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 	 * @return void
 	 */
 	static function picture_options() {
-		$options = get_option('Profile_CCT_settings');
+		$profile = Profile_CCT::get_object();
+		$options = $profile->settings;
 		
 		if ( ! isset( $options['picture'] ) ):
 			$options['picture'] = array(
@@ -266,6 +269,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 	 */
 	static function get_the_post_thumbnail( $post_id, $type ){
 		if ( current_theme_supports( 'post-thumbnails' ) ):
+			
 			return get_the_post_thumbnail( $post_id, $type );
 		else:
 			return "<p></p>";

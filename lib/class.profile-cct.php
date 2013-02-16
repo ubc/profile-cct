@@ -64,6 +64,13 @@ class Profile_CCT {
 		$this->register_profiles();
 		$this->update();
 		$this->load_fields();
+		
+		
+		if ( function_exists( 'add_image_size' ) ) { 
+			add_image_size( 'profile-image', $this->settings['width'], $this->settings['height'] ); //300 pixels wide (and unlimited height)
+			
+		}
+		
 	}
 	
 	/*
