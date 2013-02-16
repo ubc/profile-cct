@@ -61,8 +61,6 @@ var Profile_CCT_PAGE_Validation = {
 				}
 				
 				next_input.focus();
-			} else {
-				//element.css("border-color", Profile_CCT_PAGE_Validation.invalid_colour);
 			}
 			
 			return false;

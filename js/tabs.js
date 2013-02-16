@@ -82,7 +82,7 @@ var Profile_CCT_TABS = {
 				action: 'cct_update_tabs',
 				method: 'update',
 				title:  tab_title,
-				index:      index
+				index:  index,
 			};
 			// don't submit the val
 			jQuery( "#form-builder").submit(function(e) { e.preventDefault(); });
@@ -110,7 +110,7 @@ var Profile_CCT_TABS = {
             action: 'cct_update_tabs',
             method: 'update',
             title:  tab_title,
-            index:  index
+            index:  index,
         };
         
         jQuery.post(ajaxurl, data, function(response) {
@@ -125,12 +125,7 @@ var Profile_CCT_TABS = {
 	},
     
 	removeTab: function(e) {
-        var $tablist = jQuery( ".tab-link", Profile_CCT_TABS.$tabs );
-        
-        /*if ($tablist.length <= 1 ) {
-            alert("Sorry, but you can't remove the last tab");
-            return false;
-        }*/
+		var $tablist = jQuery( ".tab-link", Profile_CCT_TABS.$tabs );
 		
         var tab_title = jQuery(this).siblings('a').text();
         if ( ! confirm("Are you sure you want to DELETE '"+tab_title+"' tab?")) {
@@ -145,7 +140,7 @@ var Profile_CCT_TABS = {
             where:   ProfileCCT.page,
             action: 'cct_update_tabs',
             method: 'remove',
-            index:  index
+            index:  index,
         };
         
         jQuery.post(ajaxurl, data, function(response) {
@@ -156,9 +151,10 @@ var Profile_CCT_TABS = {
                 Profile_CCT_TABS.$tabs.tabs( "remove", index );
                 Profile_CCT_FORM.hideSpinner();
                 Profile_CCT_Admin.show_refresh();
-                // window.location.reload();
             }
         });
+		
+		return true;
 	},
     
 	selectTab: function(e, ui) {

@@ -33,7 +33,7 @@ var Profile_CCT_FORM = {
 		Profile_CCT_FORM.updateSort( ul );
 		/*ul.children(".field-item").each(function() {
 			if (jQuery(this).is(':hover')) {
-				jQuery(this).mouseover();
+				jQuery(this).mouseenter();
 			}
 		});*/
 	},
@@ -46,7 +46,7 @@ var Profile_CCT_FORM = {
 		Profile_CCT_FORM.updateSort( ul );
 		/*ul.children(".field-item").each(function() {
 			if (jQuery(this).is(':hover')) {
-				jQuery(this).mouseover();
+				jQuery(this).mouseenter();
 			}
 		});*/
 	},
@@ -182,7 +182,6 @@ var Profile_CCT_FORM = {
             context: context,
             field_index: field_index,
             where: ProfileCCT.page,
-			//multiple: 1, //TODO: placeholder
         };
 		data_set = jQuery.param(data_set)+"&"+serialize;
 		

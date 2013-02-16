@@ -54,7 +54,6 @@ var Profile_CCT_ORDER = {
 	},
 	
 	sort_AB: function( A, B ){
-		
 		if ( Profile_CCT_ORDER.order == "ASC" ) {
 			return (A < B) ? -1 : (A > B) ? 1 : 0;
 		} else {

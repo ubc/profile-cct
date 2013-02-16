@@ -1,5 +1,5 @@
 <?php
-// this is the default option array
+	// This is the default option array
     $option = array( );
     $option['form'] = array(
 		'fields' => array(
@@ -15,10 +15,10 @@
 				array( "type" => "bio",      "label" => "bio"      ),
 			),
 			'normal' => array(
-				array( "type" => "name", "label" => "name" ),
+				array( "type" => "name",     "label" => "name" ),
 			),
 			'side' => array(
-				array( "type" => "picture", "label" => "picture" ),
+				array( "type" => "picture",  "label" => "picture" ),
 			),
 			'bench' => array(
 				array( "type" => "department",               "label" => "department"                ),
