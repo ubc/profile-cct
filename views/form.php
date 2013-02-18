@@ -1,3 +1,16 @@
+<?php
+	if ( isset( $_REQUEST['reset'] ) && isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'profile_cct_reset_fields' ) ):
+		foreach( self::get_contexts() as $context ):
+			Profile_CCT_Admin::delete_option( 'form', 'fields', $context, array() );
+		endforeach;
+		
+		?>
+		<script> window.location = "<?php echo admin_url( 'edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASEADMIN.'&view=form' ); ?>"; </script>
+		<?php
+	endif;
+	
+	$reset_url = admin_url( 'edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASEADMIN.'&view=form&reset=1&nonce='.wp_create_nonce( 'profile_cct_reset_fields' ) );
+?>
 <h2>Form Builder</h2>
 <div id="notify">
 	<span id="spinner" class="update"><img src="<?php echo admin_url(); ?>/images/wpspin_light.gif" alt="spinner" /> thinking...</span>	
@@ -12,6 +25,7 @@
 			<h3>Inactive Fields</h3>
 			<?php Profile_CCT_Admin::generate_profile( 'bench' ); ?>
 			<p class="info"><em>Place fields that you don't want to display above.</em> &uarr;</p>
+			<button onClick="Profile_CCT_Admin.confirm_redirect('<?php echo $reset_url; ?>', 'Are you sure you want to reset all fields on this page?\n\nThey will be set to their default configuration.');" class="button" style="width: 100%">Reset Fields</button>
 			
 		</div>
 	</div>

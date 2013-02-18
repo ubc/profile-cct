@@ -48,6 +48,7 @@ class Profile_CCT_Admin {
 		
 		add_action( 'wp_ajax_cct_update_fields',   array( __CLASS__, 'update_fields' ) );
 		add_action( 'wp_ajax_cct_update_tabs',     array( __CLASS__, 'update_tabs' ) );
+		add_action( 'wp_ajax_cct_reset_fields',    array( __CLASS__, 'reset_fields' ) );
 		add_action( 'wp_ajax_cct_update_profiles', array( __CLASS__, 'refresh_profiles' ) );
 		add_action( 'wp_ajax_cct_needs_refresh',   array( __CLASS__, 'set_profiles_need_refresh' ) );
         
@@ -149,7 +150,7 @@ class Profile_CCT_Admin {
 	 * @return void
 	 */
 	public static function recount_field( $where ) {
-		if ( ! in_array( $where, array('form', 'page', 'list') ) ):
+		if ( ! in_array( $where, array( 'form', 'page', 'list' ) ) ):
 			return true;
 		endif;
        
@@ -170,13 +171,13 @@ class Profile_CCT_Admin {
 			// lets make sure that for no reason duplicate fields end up in the bench 
 			if( ! in_array( $field['type'], $current_fields ) ):
 				$current_fields[] = $field['type'];
-				$brench_fields[] = $field;
+				$bench_fields[] = $field;
 			endif;
 			
 		endforeach;
 		
 		// correct the bench fields 
-		self::$option[$where]['fields']['bench'] = $brench_fields;
+		self::$option[$where]['fields']['bench'] = $bench_fields;
         
 		// DYNAMIC FIELDS
 		// all the fields that get included
@@ -267,7 +268,7 @@ class Profile_CCT_Admin {
 			return true;
 		endif;
 		
-		$contexts = self::get_contexts('form');
+		$contexts = self::get_contexts( 'form' );
 		
 		// CURRENT FIELDS
 		// All the fields that are there.
@@ -1060,23 +1061,22 @@ class Profile_CCT_Admin {
 			
 			// Delete the current field
 			$count = $index + 1;
-			$fields = self::get_option($where, 'fields', 'tabbed-'.$count);
-			self::delete_option($where, 'fields', 'tabbed-'.$count);
+			$fields = self::get_option( $where, 'fields', 'tabbed-'.$count );
+			self::delete_option( $where, 'fields', 'tabbed-'.$count );
 			
 			if ( is_array($fields) ): // Array was empty, so there is nothing to move
-				$bench = self::get_option($where, 'fields', 'bench');
-				$bench = array_merge($bench, $fields); // Merge but don't duplicate the fields if they are already there.
-				$bench = self::update_option($where, 'fields', 'bench', $bench); // Save the new bench.
+				$bench = self::get_option( $where, 'fields', 'bench' );
+				$bench = array_merge( $bench, $fields ); // Merge but don't duplicate the fields if they are already there.
+				$bench = self::update_option( $where, 'fields', 'bench', $bench ); // Save the new bench.
 			endif;
 			
 			while ($count < $tabs_count):
 				$count++;
-				$fields = self::get_option($where, 'fields', 'tabbed-'.$count);
+				$fields = self::get_option( $where, 'fields', 'tabbed-'.$count );
 				
 				$previous = $count - 1;
-				self::update_option($where, 'fields', 'tabbed-'.$previous, $fields);
-				
-				$fields = self::delete_option($where, 'fields', 'tabbed-'.$count);
+				self::update_option( $where, 'fields', 'tabbed-'.$previous, $fields );
+				$fields = self::delete_option( $where, 'fields', 'tabbed-'.$count );
 			endwhile;
 			
 			$tabs = array_merge($tabs); // Reindex the $tabs array.
@@ -1085,12 +1085,12 @@ class Profile_CCT_Admin {
 		case "add":
 			$tabs[] = $_POST['title'];
 			$tabs_count = count($tabs); 
-			self::update_option($where, 'fields', 'tabbed-'.$tabs_count, array());
+			self::update_option( $where, 'fields', 'tabbed-'.$tabs_count, array() );
 			$print = "added";
 			break;
 		endswitch;
 		
-		self::update_option($where, 'tabs', 'normal', $tabs);
+		self::update_option( $where, 'tabs', 'normal', $tabs );
 		echo $print;
 		die();
 	}

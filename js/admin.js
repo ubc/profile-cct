@@ -70,6 +70,12 @@ var Profile_CCT_Admin = {
 	update_slider: function( percent, message ) {
 		jQuery('#update-profiles-slider').addClass('active-slider').html("<div class='slider-shell'><div style='width:"+percent+"%'>&nbsp;</div></div>"+message+"</div>");
 	},
+	
+	confirm_redirect: function( url, message ) {
+		if ( confirm( message ) ) {
+			window.location = url;
+		}
+	}
 }
 
 jQuery( Profile_CCT_Admin.ready );

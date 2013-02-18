@@ -38,11 +38,13 @@
 
 .field-item input.text {
 	padding: 4px;
+    max-width: 100%;
 }
 
 .field-item span {
 	float: left;
 	margin-top: 5px;
+    max-width: 250px;
 }
 
 .field-item .textarea-shell,
