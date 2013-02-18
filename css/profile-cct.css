@@ -125,4 +125,12 @@
     border-bottom: 1px solid #D7E0E7;
     margin-bottom: 20px;
 }
-
+.user-avatar-display-image img{
+	max-width: 100%;
+	height: auto;
+	border:1px solid #CCC;
+	
+}
+.user-avatar-display-image{
+	padding:0 10px;
+}

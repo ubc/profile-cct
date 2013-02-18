@@ -42,7 +42,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		
 		$image = ( isset( $post ) ? Profile_CCT_Picture::get_the_post_thumbnail( $post->ID, 'profile-image' ) : get_avatar( $current_user->user_email, 150 ) );
 		?>
-		<div id="user-avatar-display-image">
+		<div class="user-avatar-display-image">
 			<?php if ( $image != null ) echo $image; ?>
 		</div>
 		<?php
@@ -80,7 +80,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		?>
 		<script type="text/javascript">
 			function profile_cct_picture_refresh_image( img ) {
-				jQuery( '#user-avatar-display-image' ).html( img );
+				jQuery( '.user-avatar-display-image' ).html( img );
 				jQuery( '#user-avatar-link' ).text( "Update Picture" );
 				profile_cct_add_remove_avatar_link();
 			}
@@ -96,7 +96,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 					type: "get",
 					url: "<?php echo $remove_url; ?>",
 					success: function(response) {
-						jQuery( '#user-avatar-display-image' ).html( "" );
+						jQuery( '.user-avatar-display-image' ).html( "" );
 						jQuery( '#user-avatar-link' ).text( "Add Picture" );
 						jQuery( '#user-avatar-remove' ).remove();
 					}

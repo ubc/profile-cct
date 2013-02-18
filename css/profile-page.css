@@ -239,6 +239,11 @@
 .officehours div.wrap-fields:first-child hr {
 	margin-top: 10px;
 }
+.attachment-profile-image{
+	max-width: 260px;
+	height: auto;
+}
+
 
 /* Separators on profile page view have a small margin. */
 .separator {
