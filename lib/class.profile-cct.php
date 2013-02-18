@@ -528,7 +528,7 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function default_options( $type = 'form' ) {
-		require( PROFILE_CCT_DIR_PATH.'class/default_options.php' ); // $options is defined in this file.
+		require( PROFILE_CCT_DIR_PATH.'default-options.php' ); // $options is defined in this file.
 		return apply_filters( 'profile_cct_default_options', $options, $type );
 	}
 	

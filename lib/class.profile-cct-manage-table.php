@@ -7,13 +7,11 @@ class Profile_CCT_Table {
 	}
 	
 	function register( $columns ) {
-		error_log(print_r($columns, TRUE));
-		
 		unset($columns);
 		
 		$columns["cb"]        = '<input type="checkbox" />';
 		$columns['title']     = __( "Name" );
-		//$columns['last_name'] = __( "Last Name" );
+		$columns['last_name'] = __( "Last Name" );
 		$columns['thumb']     = __( 'Picture', 'profile_cct' );
 		$columns['author']    = __( "Author" );     
 		$columns['date']      = __( "Date" );
