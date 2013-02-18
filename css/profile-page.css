@@ -44,6 +44,9 @@
 .field-item span {
 	float: left;
 	margin-top: 5px;
+}
+
+#side-sortables .field-item span {
     max-width: 250px;
 }
 
@@ -234,18 +237,17 @@
 	clear: left;
 	display: block;
 	margin-top: 40px;
-
 }
 
 /* Office hours first horizontal rule */
 .officehours div.wrap-fields:first-child hr {
 	margin-top: 10px;
 }
+
 .attachment-profile-image{
 	max-width: 260px;
 	height: auto;
 }
-
 
 /* Separators on profile page view have a small margin. */
 .separator {

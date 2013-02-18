@@ -269,7 +269,6 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 	 */
 	static function get_the_post_thumbnail( $post_id, $type ){
 		if ( current_theme_supports( 'post-thumbnails' ) ):
-			
 			return get_the_post_thumbnail( $post_id, $type );
 		else:
 			return "<p></p>";

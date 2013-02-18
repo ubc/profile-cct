@@ -115,7 +115,7 @@ class Profile_CCT_Admin {
     	global $wp_admin_bar, $post, $current_user;
         
     	if ( 'profile_cct' == get_post_type() ):
-    		if ( ! ( current_user_can('edit_profile_cct') && (int) $post->post_author != $current_user->ID ) && ! current_user_can('edit_others_profile_cct') ):
+    		if ( ! ( current_user_can( 'edit_profile_cct' ) && (int) $post->post_author != $current_user->ID ) && ! current_user_can( 'edit_others_profile_cct' ) ):
     			$wp_admin_bar->remove_node('edit');
     		endif;
     	endif;
