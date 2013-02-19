@@ -72,9 +72,7 @@ var Profile_CCT_Admin = {
 	},
 	
 	confirm_redirect: function( url, message ) {
-		if ( confirm( message ) ) {
-			window.location = url;
-		}
+		if ( confirm( message ) ) window.location = url;
 	}
 }
 

@@ -5,7 +5,9 @@
 		endforeach;
 		
 		?>
-		<script> window.location = "<?php echo admin_url( 'edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASEADMIN.'&view=form' ); ?>"; </script>
+		<script>
+			window.location = "<?php echo admin_url( 'edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASEADMIN.'&view=form' ); ?>";
+		</script>
 		<?php
 	endif;
 	
@@ -40,3 +42,8 @@
 	</div>
 	
 </div>
+<script>
+	jQuery('.form-builder').each( function() {
+		Profile_CCT_FORM.updateSort( jQuery(this) );
+	})
+</script>
