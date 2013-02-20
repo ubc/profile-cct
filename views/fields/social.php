@@ -57,6 +57,7 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 	}
 	
 	function display_social_link( $attr ) {
+		
 		if ( isset( $this->data ) ):
 			$service = $this->social_options( 'user_url',  $this->data['option'] );
 			if ( ! empty($this->data['username']) ):
@@ -65,27 +66,30 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 			endif;
 			$this->display_link( $attr );
 		else:
-			$defaults = array(
-				array(
-					'field_id'     => $attr['field_id'],
-					'href'         => "http://www.youtube.com/",
-					'default_text' => '<img src="'.PROFILE_CCT_DIR_URL.'/img/youtube.png" /> <strong>YouTube</strong>/ wayneenterprise<br />',
-				),
-				array(
-					'field_id'     => $attr['field_id'],
-					'href'         => "http://www.facebook.com/",
-					'default_text' => '<img src="'.PROFILE_CCT_DIR_URL.'/img/facebook.png" /> <strong>Facebook</strong>/ waynebiz<br />',
-				),
-				array(
-					'field_id'     => $attr['field_id'],
-					'href'         => "http://www.twitter.com/",
-					'default_text' => '<img src="'.PROFILE_CCT_DIR_URL.'/img/twitter.png" /> <strong>Twitter</strong>/ waynepr<br />',
-				),
-			);
-			
-			foreach ( $defaults as $default ):
-				$this->display_link( $default );
-			endforeach;
+			// only display this when editing
+			if( 'edit' == $this->action ):
+				$defaults = array(
+					array(
+						'field_id'     => $attr['field_id'],
+						'href'         => "http://www.youtube.com/",
+						'default_text' => '<img src="'.PROFILE_CCT_DIR_URL.'/img/youtube.png" /> <strong>YouTube</strong>/ wayneenterprise<br />',
+					),
+					array(
+						'field_id'     => $attr['field_id'],
+						'href'         => "http://www.facebook.com/",
+						'default_text' => '<img src="'.PROFILE_CCT_DIR_URL.'/img/facebook.png" /> <strong>Facebook</strong>/ waynebiz<br />',
+					),
+					array(
+						'field_id'     => $attr['field_id'],
+						'href'         => "http://www.twitter.com/",
+						'default_text' => '<img src="'.PROFILE_CCT_DIR_URL.'/img/twitter.png" /> <strong>Twitter</strong>/ waynepr<br />',
+					),
+				);
+				
+				foreach ( $defaults as $default ):
+					$this->display_link( $default );
+				endforeach;
+			endif;
 		endif;
 	}
 	

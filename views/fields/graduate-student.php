@@ -11,7 +11,7 @@ Class Profile_CCT_Graduatestudent extends Profile_CCT_Field {
 		'label'         => 'graduate student',	
 		'description'   => '',
 		'show'          => array( 'student-salutations', 'student-middle', 'student-credentials', 'student-website' ),
-		'show_fields'   => array( 'student-salutations', 'student-middle', 'student-credentials', 'student-website' ),
+		'show_fields'   => array( 'student-salutations', 'student-middle', 'student-credentials', 'student-website','thesis-title' ),
 		'multiple'      => true,
 		'show_multiple' => true,
 		'width'         => 'full',
@@ -77,6 +77,11 @@ Class Profile_CCT_Graduatestudent extends Profile_CCT_Field {
 			'label'    => 'Website - http://{value}',
 			'size'     => 35,
 		) );
+		$this->input_text( array(
+			'field_id' => 'thesis-title',
+			'label'    => 'Thesis Title',
+			'size'     => 70,
+		) );
 	}
 	
 	var $shell = array(
@@ -90,6 +95,7 @@ Class Profile_CCT_Graduatestudent extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
+		$this->display_shell( array( 'class' => 'person-name') );
 		$this->display_text( array(
 			'field_id'       => 'student-salutations',
 			'class'          => 'honorific-prefix student-salutations',
@@ -120,11 +126,18 @@ Class Profile_CCT_Graduatestudent extends Profile_CCT_Field {
 			'default_text'   => 'B.S.S.',
 			'post_separator' => ' ',
 		) );
+		$this->display_end_shell();
 		$this->display_link( array(
 			'field_id'     => 'student-website',
 			'class'        => 'student-website',
 			'default_text' => 'http://richardjohngrayson.com/',
 			'href'         => ( empty( $this->data['student-website'] ) ? '' : $this->data['student-website'] ),
+		) );
+		$this->display_text( array(
+			'field_id'     => 'thesis-title',
+			'class'        => 'thesis-title',
+			'default_text' => 'Cloaking Device Opacity',
+			'tag' => 'div'
 		) );
 	}
 	
