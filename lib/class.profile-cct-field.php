@@ -559,14 +559,18 @@ class Profile_CCT_Field {
 	 */
 	function display_text( $attr ) {
 		$attr = self::display_attr( $attr, 'text' );
+		$found = strpos ($attr['field_shell_attr'], 'display:none');
 		
-		printf( "<span %s>", $attr['field_shell_attr'] );
-		if ( ! empty($attr['display']) ):
-	    	$this->display_separator( array( 'separator' => $attr['separator'], 'class' => $attr['class'] ) );
-			echo "<".$attr['tag']." ".$attr['field_attr'].">".$attr['display']."</".$attr['tag'].">";
-			$this->display_separator( array( 'separator' => $attr['post_separator'], 'class' => $attr['class'] ) );
+		if( $found === false || 'edit' == $this->action):
+			printf( "<span %s>", $attr['field_shell_attr'] );
+			if ( ! empty($attr['display']) ):
+		    	$this->display_separator( array( 'separator' => $attr['separator'], 'class' => $attr['class'] ) );
+				echo "<".$attr['tag']." ".$attr['field_attr'].">".$attr['display']."</".$attr['tag'].">";
+				$this->display_separator( array( 'separator' => $attr['post_separator'], 'class' => $attr['class'] ) );
+			endif;
+			printf( "</span>" );
 		endif;
-		printf( "</span>" );
+		
 	}
 	
 	function display_separator( $attr ) {
@@ -584,11 +588,27 @@ class Profile_CCT_Field {
 	function display_link( $attr ) {
 		// todo: implement maybe_link - this might be a link or not favour the text 
 		// todo: implement force_link - this should be a link if not next use the url as the link - example website
+		
+		if( isset( $attr['force_link'] ) && $attr['force_link'] ):
+			if( isset( $attr['value'] ) && $attr['value'] ):
+				$attr['display'] = $attr['value'];
+			else:
+				$attr['display'] = ( 'edit' == $this->action ? $attr['default_text'] : $this->data[$attr['field_id']] );
+			
+			endif;
+		endif;
+		
+		if( isset( $attr['maybe_link'] ) && $attr['maybe_link'] &&  empty( $attr['href'] )):
+			$attr['tag'] = 'span';
+		else:
+			$attr['tag'] = 'a';
+		endif;
+		
 		if ( empty( $attr['href'] ) ):
 			$attr['href'] = ( 'edit' == $this->action ? $attr['default_text'] : $this->data[$attr['field_id']] );
 		endif;
-		$attr['tag'] = 'a';
 		
+		//endif;
 		$this->display_text( $attr );
 	}
 	
@@ -710,9 +730,9 @@ class Profile_CCT_Field {
 			$needed_attr['display'] = $attr['href'];
 		endif;
 		
-		$id    = ( isset( $attr['field_id'] ) ? ' id="'   . $attr['field_id'].'" ' : ''               );
-		$class = ( isset( $attr['class']    ) ? ' class="'. $attr['class']   .'" ' : ' class="field"' );
-	    $href  = ( isset( $attr['href']     ) ? ' href="' . $attr['href']    .'" ' : ''               );
+		$id    = ( isset( $attr['field_id'] ) ? ' id="'   . esc_attr($attr['field_id']).'" ' : ''               );
+		$class = ( isset( $attr['class']    ) ? ' class="'. esc_attr( sanitize_html_class( $attr['class']))   .'" ' : ' class="field"' );
+	    $href  = ( isset( $attr['href']     ) ? ' href="' . esc_url( $attr['href'] )    .'" ' : ''               );
 		
 		$needed_attr['field_attr'] = $id.$class.$href.' ';
 		

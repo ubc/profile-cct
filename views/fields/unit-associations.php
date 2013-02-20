@@ -54,7 +54,7 @@ Class Profile_CCT_Unitassociations extends Profile_CCT_Field {
 			'field_id'     => 'unit',
 			'default_text' => 'Biotechnology',
 			'maybe_link'   => true,
-			'href'         => ( empty( $this->data['unit-website'] ) ? '' : 'http://'.$this->data['unit-website'] ),
+			'href'         => ( empty( $this->data['unit-website'] ) ? '' : $this->data['unit-website'] ),
 		) );
 	}
 	

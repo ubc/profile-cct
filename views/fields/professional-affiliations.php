@@ -74,7 +74,7 @@ Class Profile_CCT_Professionalaffiliations extends Profile_CCT_Field {
 			'class'          => 'affiliation',
 			'default_text'   => 'Wayne Healthcare',
 			'maybe_link'     => true,
-			'href'         => ( empty( $this->data['affiliation-website'] ) ? '' : 'http://'.$this->data['affiliation-website'] ),
+			'href'         => ( empty( $this->data['affiliation-website'] ) ? '' : $this->data['affiliation-website'] ),
 			'post_separator' => ', ',
 		) );
 		$this->display_text( array(

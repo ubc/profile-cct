@@ -124,7 +124,7 @@ Class Profile_CCT_Graduatestudent extends Profile_CCT_Field {
 			'field_id'     => 'student-website',
 			'class'        => 'student-website',
 			'default_text' => 'http://richardjohngrayson.com/',
-			'href'         => ( empty( $this->data['student-website'] ) ? '' : 'http://'.$this->data['student-website'] ),
+			'href'         => ( empty( $this->data['student-website'] ) ? '' : $this->data['student-website'] ),
 		) );
 	}
 	

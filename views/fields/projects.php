@@ -105,7 +105,7 @@ Class Profile_CCT_Projects extends Profile_CCT_Field {
 			'field_id'     => 'project-website',
 			'class'        => 'project-website',
 			'default_text' => 'http://wayneenterprises.biz',
-			'href'         => ( ! empty( $this->data['project-website'] ) ? 'http://'.$this->data['project-website'] : '' ),
+			'href'         => ( ! empty( $this->data['project-website'] ) ? $this->data['project-website'] : '' ),
 		) );
 		$this->display_textfield( array(
 			'field_id'     => 'project-description',

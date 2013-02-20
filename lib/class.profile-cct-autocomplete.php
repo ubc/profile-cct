@@ -15,9 +15,11 @@ class Profile_CCT_Autocomplete {
         add_action( 'wp_ajax_'.self::$action,        array( __CLASS__, 'autocomplete_suggestions' ) );
         add_action( 'wp_ajax_nopriv_'.self::$action, array( __CLASS__, 'autocomplete_suggestions' ) );
 		
-        wp_enqueue_script( 'jquery-ui-autocomplete' );
-        wp_enqueue_style( 'jquery-ui-css' );
-		wp_enqueue_style( 'profile-cct-autocomplete', PROFILE_CCT_DIR_URL.'/css/autocomplete.css' );
+		if( !is_admin()):
+        	wp_enqueue_script( 'jquery-ui-autocomplete' );
+        	wp_enqueue_style( 'jquery-ui-css' );
+			wp_enqueue_style( 'profile-cct-autocomplete', PROFILE_CCT_DIR_URL.'/css/autocomplete.css' );
+		endif;
     }
 
     static function add_scripts_to_form( $form ) {
