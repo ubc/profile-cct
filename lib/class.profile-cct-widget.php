@@ -6,42 +6,63 @@
  */
 class Profile_CCT_Widget extends WP_Widget {
 	function init() {
-		add_action( 'widgets_init', array( __CLASS__, 'register' ) );
-		//add_action( 'parse_query',  array( __CLASS__, 'print_query' ) );
-		//add_action( 'parse_query',  array( __CLASS__, 'search_query' ) );
+		add_action( 'widgets_init',  array( __CLASS__, 'register' ) );
+		add_filter( 'posts_orderby', array( __CLASS__, 'sort_query' ), 10, 2 );
+		add_filter( 'the_posts',     array( __CLASS__, 'sort_posts' ), 10, 2 );
 	}
 	
 	function register() {
 		register_widget( "Profile_CCT_Widget" );
 	}
 	
-	function print_query( $query ) {
-		echo '<pre>';
-		print_r($query->query);
-		echo '</pre>';
-	}
-	
-	function search_query( $query ) {
-		echo '===Parse===';
-		echo '<pre>';
-		print_r($query);
-		echo '</pre>';
+	/**
+	 * Apply the orderby and order parameters that were given into this search.
+	 */
+	function sort_query( $orderby, $query ) {
+		global $wpdb;
 		
-		if ( isset( $_GET['s'] ) && isset( $query->query['post_type'] ) && $query->query['post_type'] == 'profile_cct' ):
-			foreach ( $_GET as $key => $param ) {
-				if ( ! empty( $param ) ):
-					$query->query[$key] = $param;
-				endif;
-			}
+		if ( ! is_admin() && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'profile_cct' ):
+			$order_by = ( ! Profile_CCT_Widget::starts_with( $_GET['orderby'], 'profile_cct_' ) ? $_GET['orderby'] : 'menu_order' );
+			$order    = ( $_GET['order'] == 'DESC' ? 'DESC' : 'ASC' );
+			$orderby  = $wpdb->prefix."posts.".$order_by." ".$order.", ".$orderby;
 		endif;
 		
-		echo '<br />';
-		echo '===Result===';
-		echo '<pre>';
-		print_r($query);
-		echo '</pre>';
+		return $orderby;
+	}
+	
+	/**
+	 * Apply the orderby and order parameters that were given into this search.
+	 */
+	function sort_posts( $posts, $query ) {
+		if ( ! is_admin() && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'profile_cct' ):
+			if ( ! empty( $_GET['alphabet'] ) ):
+				foreach ( $posts as $index => $post ):
+					$last_name = get_post_meta( $post->ID, 'profile_cct_last_name', true );
+					if ( substr( $last_name, 0, 1 ) != $_GET['alphabet'] ) unset( $posts[$index] );
+				endforeach;
+			endif;
+			
+			if ( ! empty( $_GET['orderby'] ) && Profile_CCT_Widget::starts_with( $_GET['orderby'], 'profile_cct_' ) ):
+				$posts_copy = $posts;
+				unset( $posts );
+				$posts = array();
+				foreach ( $posts_copy as $index => $post ):
+					$last_name = get_post_meta( $post->ID, $_GET['orderby'], true );
+					$index = $last_name." ".$post->post_title;
+					$posts[$index] = $post;
+				endforeach;
+				
+				if ( $_GET['order'] == 'DESC' ):
+					krsort( $posts, SORT_STRING );
+				else:
+					ksort( $posts, SORT_STRING );
+				endif;
+			endif;
+			
+			$posts = array_values( $posts ); // Re-index the array
+		endif;
 		
-		return $query;
+		return $posts;
 	}
 
 	/**
@@ -115,7 +136,7 @@ class Profile_CCT_Widget extends WP_Widget {
 					
 					if ( $alphabet == true && $profile->settings['archive']['display_alphabet'] == 'on' ):
 						?>
-						<select name="">
+						<select name="alphabet">
 							<option value="" selected="selected">Any</option>
 							<?php
 							foreach ( range('A', 'Z') as $letter ):
@@ -130,12 +151,11 @@ class Profile_CCT_Widget extends WP_Widget {
 					
 					if ( $orderby == true && $profile->settings['archive']['display_orderby'] == 'on' ):
 						?>
-						<input type="hidden" name="meta_key" value="last_name" />
 						<select name="orderby">
-							<option value="menu_order" selected="selected">Default</option>
-							<option value="title">First Name</option>
-							<option value="meta_value">Last Name</option>
-							<option value="date">Date Added</option>
+							<option value="menu_order" selected="selected">Default Order</option>
+							<option value="post_title">First Name</option>
+							<option value="profile_cct_last_name">Last Name</option>
+							<option value="post_date">Date Added</option>
 						</select>
 						<select name="order">
 							<option value="ASC" selected="selected">Ascending A - Z</option>
@@ -163,11 +183,15 @@ class Profile_CCT_Widget extends WP_Widget {
 					endif;
 				?>
 				<input type="hidden" name="post_type" value="profile_cct" />
-				<input type="submit" value="Search People" />
+				<input type="submit" value="Search Profiles" />
 			</form>
 		</div>
 		<?php
 		return ob_get_clean();
+	}
+	
+	function starts_with( $haystack, $needle ) {
+		return ! strncmp( $haystack, $needle, strlen( $needle ) );
 	}
 }
 

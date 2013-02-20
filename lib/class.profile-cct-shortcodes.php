@@ -179,11 +179,12 @@ class Profile_CCT_Shortcodes {
 		return $data;
 	}
 	
-	static function profile_search_shortcode( $atts = null ) {
+	static function profile_search_shortcode( $atts ) {
 		return Profile_CCT_Widget::profile_search( true, false, false, false );
 	}
 	
-	static function profile_navigation_shortcode( $atts = null ) {
+	static function profile_navigation_shortcode( $atts ) {
+		
 		return Profile_CCT_Widget::profile_search( true, true, true, true );
 	}
 }
