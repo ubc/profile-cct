@@ -22,7 +22,7 @@ class Profile_CCT_Table {
 	function display_thumb( $column_name, $post_id ) {
 		if ( 'thumb' != $column_name ) return;
 		
-		echo Profile_CCT_Picture::get_the_post_thumbnail( $post_id, array( 50 , 50 ) );
+		echo get_the_post_thumbnail( $post_id, array( 50 , 50 ) );
 	}
 	
 	function display_last_name( $column_name, $post_id ) {

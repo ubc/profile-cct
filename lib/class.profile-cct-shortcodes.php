@@ -8,11 +8,11 @@ class Profile_CCT_Shortcodes {
 	 * @static
 	 * @return void
 	 */
-	public static function init() {
+	static function init() {
 		add_shortcode( 'profilelist', 		array( __CLASS__, 'profile_list_shortcode' ) );
 		add_shortcode( 'profile', 			array( __CLASS__, 'profile_single_shortcode' ) );
 		add_shortcode( 'profilesearch',  	array( __CLASS__, 'profile_search_shortcode' ) );
-		//add_shortcode( 'profilenavigation', array( __CLASS__, 'profile_navigation_shortcode' ) ); //Not Implemented
+		add_shortcode( 'profilenavigation', array( __CLASS__, 'profile_navigation_shortcode' ) );
 	}
 	
 	/**
@@ -22,7 +22,7 @@ class Profile_CCT_Shortcodes {
 	 * @param mixed $atts
 	 * @return void
 	 */
-	public static function profile_list_shortcode( $atts ){
+	static function profile_list_shortcode( $atts ){
 		$tax_query = array();
 		$taxonomies = get_taxonomies();
 		if ( $atts ):
@@ -136,7 +136,7 @@ class Profile_CCT_Shortcodes {
 	 * @param mixed $atts
 	 * @return void
 	 */
-	public static function profile_single_shortcode( $atts ) {
+	static function profile_single_shortcode( $atts ) {
 		if ( ! isset( $atts['person'] ) ):
 			return 'You must specify a person';
 		endif;
@@ -166,7 +166,7 @@ class Profile_CCT_Shortcodes {
 	 * @static
 	 * @return void
 	 */
-	public static function get_all_names() {
+	static function get_all_names() {
 		global $wpdb;
 		$data = get_transient("profile_cct_name_list");
 		
@@ -179,33 +179,22 @@ class Profile_CCT_Shortcodes {
 		return $data;
 	}
 	
-	public static function profile_search_shortcode( $atts ) {
+	static function profile_search_shortcode( $atts = null ) {
 		ob_start();
 		?>
-		<div class="profile-cct-search">
+		<div class="profile-cct-search-form">
 			<form action="<?php echo get_bloginfo('siteurl'); ?>" method="get">
 				<input type="text" name="s" class="profile-cct-search" />
 				<input type="hidden" name="post_type" value="profile_cct" />
 				<input type="submit" value="Search People" />
 			</form>
-			<?php
-				$names = array();
-				$query_results = Profile_CCT_Shortcodes::get_all_names();
-				foreach ( $query_results as $result ):
-					$names[] = $result->post_title;
-				endforeach;
-			?>	
-			<script>
-				jQuery( function() {
-					var availableTags = <?php echo json_encode( $names ); ?>;
-					jQuery( ".profile-cct-search" ).autocomplete({
-						source: availableTags,
-					});
-				});
-			</script>
 		</div>
 		<?php
 		return ob_get_clean();
+	}
+	
+	static function profile_navigation_shortcode( $atts = null ) {
+		Profile_CCT_Widget::widget( null, null, false );
 	}
 }
 

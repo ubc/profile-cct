@@ -123,7 +123,6 @@
 						<option value="ASC" <?php selected( "ASC", $sort_order ); ?>>Ascending A - Z</option>
 						<option value="DESC" <?php selected( "DESC", $sort_order ); ?>>Descending Z - A</option>
 					</select>
-					<!--<br />-->
 					<span id="sort_order_info" <?php if ( $sort_order_by != "manual" ) echo 'style="display:none"'; ?>>
 						 Go to <a href="<?php echo admin_url('edit.php?post_type=profile_cct&page=order_profiles'); ?>" title="Order Profiles">Order Profiles</a> to set the order.
 					</span>
@@ -152,7 +151,6 @@
 		</tbody>
 	</table>
 	
-	<!--
 	<h3>Profile Archive Navigation Form</h3>
 	<p>Which navigation to display on profile listing page</p>
 	<table class="form-table">
@@ -178,22 +176,16 @@
             <tr valign="top">
                 <th scope="row">Show Taxonomies</th>
                 <td>
-                    <?php
-                        /*
-						foreach ( get_object_taxonomies('profile_cct') as $tax ):
-							?>
-                            <input type="checkbox" name="archive[display_tax][<?php echo $tax; ?>]" id="archive_display_tax_<?php echo $tax; ?>" <?php checked($profile->settings['archive']['display_tax'][$tax], 'on'); ?> />
-							<label style="padding-left:6px;"for="archive_display_tax_<?php echo $tax; ?>"><?php echo substr($tax, 12); ?></label>
-							<br />
-							<?php
-						endforeach;
-						*/
-                    ?>
+                    <?php foreach ( $profile->taxonomies as $taxonomy ): ?>
+						<?php $taxonomy_id = Profile_CCT_Taxonomy::id( $taxonomy['single'] ); ?>
+						<input type="checkbox" name="archive[display_tax][<?php echo $taxonomy_id; ?>]" id="archive_display_tax_<?php echo $taxonomy_id; ?>" <?php checked($profile->settings['archive']['display_tax'][$taxonomy_id], 'on'); ?> />
+						<label style="padding-left:6px;" for="archive_display_tax_<?php echo $taxonomy_id; ?>"><?php echo $taxonomy['plural']; ?></label>
+						<br />
+					<?php endforeach; ?>
                 </td>
             </tr>
         </tbody>
     </table>
-	-->
 	
 	<h3>Permalink</h3>
 	<table class="form-table">

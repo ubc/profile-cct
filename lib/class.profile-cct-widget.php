@@ -5,30 +5,86 @@
  * @extends WP_Widget
  */
 class Profile_CCT_Widget extends WP_Widget {
+	static $action = 'profile_cct_autocomplete'; //Name of the action - should be unique to your plugin.
+	
+	function init() {
+		register_widget( "Profile_CCT_Widget" );
+	}
+
 	/**
-	 * profile_cct_widget function.
+	 * Register widget with WordPress.
 	 * 
 	 * @access public
 	 * @return void
 	 */
-	function profile_cct_widget() {
-		parent::__construct( false, 'Profile Navigation' );
+	function __construct() {
+		parent::__construct( 
+	 		'profile_cct_navigation', // Base ID
+			'Profile Navigation', // Name
+			array( 'description' => __( 'Allows the user to search through the list of public profiles.', 'profile_cct' ), ) // Args
+		);
 	}
 	
 	/**
-	 * widget function.
+	 * Front-end display of widget.
 	 * 
 	 * @access public
 	 * @param mixed $args
 	 * @param mixed $instance
 	 * @return void
 	 */
-	function widget( $args, $instance ) {
-		echo do_action( 'profile_cct_display_archive_controls', array('mode' => 'widget') );
+	function widget( $args, $instance, $title = true ) {
+		$profile = Profile_CCT::get_object();
+		
+		if ( $title ):
+			?>
+			<h3 class="widget-title">Profile Navigation</h3>
+			<?php
+		endif;
+		
+		if ( $profile->settings['archive']['display_searchbox'] == 'on' ):
+			echo Profile_CCT_Shortcodes::profile_search_shortcode();
+		endif;
+		
+		if ( $profile->settings['archive']['display_alphabet'] == 'on' ):
+			echo Profile_CCT_Shortcodes::profile_search_shortcode();
+		endif;
+		
+		if ( $profile->settings['archive']['display_orderby'] == 'on' ):
+			?>
+			<select name="sort_order_by" id="sort_order_by">
+				<option value="first_name" selected="selected">First Name</option>
+				<option value="last_name">Last Name</option>
+				<option value="date">Date Added</option>
+			</select>
+			<select name="sort_order" id="sort_order">
+				<option value="ASC" selected="selected">Ascending A - Z</option>
+				<option value="DESC">Descending Z - A</option>
+			</select>
+			<?php
+		endif;
+		
+		if ( ! empty( $profile->settings['archive']['display_tax'] ) ):
+			foreach ( $profile->settings['archive']['display_tax'] as $taxonomy_id => $value ):
+				$taxonomy = get_taxonomy($taxonomy_id);
+				?>
+				<select name="<?php echo $taxonomy_id; ?>">
+					<option value="all" selected="selected">All <?php echo $taxonomy->label; ?></option>
+					<?php
+					foreach ( get_terms( $taxonomy_id, array() ) as $term ):
+						?>
+						<option value="<?php echo $term->slug; ?>"><?php echo $term->name; ?></option>
+						<?php
+					endforeach;
+					?>
+				</select>
+				<?php
+			endforeach;
+		endif;
 	}
 	
 	/**
-	 * update function.
+	 * Sanitize widget form values as they are saved.
 	 * 
 	 * @access public
 	 * @param mixed $new_instance
@@ -39,17 +95,19 @@ class Profile_CCT_Widget extends WP_Widget {
 		// there is nothing to update for now
 	}
 	
-	
 	/**
-	 * form function.
+	 * Back-end widget form.
 	 * 
 	 * @access public
 	 * @param mixed $instance
 	 * @return void
 	 */
 	function form( $instance ) {
-		echo 'Customize in <a href="'. admin_url('edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASENAME.'&view=settings').'" title="Profiles Settings">Profiles Settings</a>';
+		?>
+		Customize in <a href="<?php echo admin_url( 'edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASEADMIN.'&view=settings' ); ?>">Profiles Settings</a>
+		<?php
 	}
 }
+
 // Lets initate the widget
-add_action( 'widgets_init', create_function( '', 'register_widget( "Profile_CCT_Widget" );' ) );
+add_action( 'widgets_init', array( 'Profile_CCT_Widget', 'init' ) );

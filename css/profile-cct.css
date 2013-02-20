@@ -44,8 +44,9 @@
 	margin-bottom: 0;
 }
 
-.site-content .profilelist-shortcode article {
-    margin-bottom: 1em;
+.profilelist-shortcode article {
+    padding-bottom: 1em;
+    border-bottom: 1px dashed lightgray;
 }
 
 .field-item > .field-shell > .field:last-child > *:last-child {

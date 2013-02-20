@@ -35,4 +35,5 @@ require( PROFILE_CCT_DIR_PATH . 'lib/class.profile-cct-field.php' );
 require( PROFILE_CCT_DIR_PATH . 'lib/class.profile-cct-taxonomies.php' );
 require( PROFILE_CCT_DIR_PATH . 'lib/class.profile-cct-shortcodes.php' );
 require( PROFILE_CCT_DIR_PATH . 'lib/class.profile-cct-manage-table.php' );
-// require( PROFILE_CCT_DIR_PATH . 'lib/class.profile-cct-widget.php' );
+require( PROFILE_CCT_DIR_PATH . 'lib/class.profile-cct-widget.php' );
+require( PROFILE_CCT_DIR_PATH . 'lib/class.profile-cct-autocomplete.php' );
