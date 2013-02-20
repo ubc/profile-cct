@@ -180,17 +180,7 @@ class Profile_CCT_Shortcodes {
 	}
 	
 	static function profile_search_shortcode( $atts = null ) {
-		ob_start();
-		?>
-		<div class="profile-cct-search-form">
-			<form action="<?php echo get_bloginfo('siteurl'); ?>" method="get">
-				<input type="text" name="s" class="profile-cct-search" />
-				<input type="hidden" name="post_type" value="profile_cct" />
-				<input type="submit" value="Search People" />
-			</form>
-		</div>
-		<?php
-		return ob_get_clean();
+		return Profile_CCT_Widget::profile_search( true, false, false, false );
 	}
 	
 	static function profile_navigation_shortcode( $atts = null ) {
