@@ -184,7 +184,7 @@ class Profile_CCT_Shortcodes {
 	}
 	
 	static function profile_navigation_shortcode( $atts = null ) {
-		Profile_CCT_Widget::widget( null, null, false );
+		return Profile_CCT_Widget::profile_search( true, true, true, true );
 	}
 }
 

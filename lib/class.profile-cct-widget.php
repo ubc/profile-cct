@@ -5,48 +5,41 @@
  * @extends WP_Widget
  */
 class Profile_CCT_Widget extends WP_Widget {
-	static $action = 'profile_cct_autocomplete'; //Name of the action - should be unique to your plugin.
-	
 	function init() {
 		add_action( 'widgets_init', array( __CLASS__, 'register' ) );
-		add_action( 'parse_query', array( __CLASS__, 'search_query' ) );
-		add_action( 'query', array( __CLASS__, 'query' ) );
+		//add_action( 'parse_query',  array( __CLASS__, 'print_query' ) );
+		//add_action( 'parse_query',  array( __CLASS__, 'search_query' ) );
 	}
 	
 	function register() {
 		register_widget( "Profile_CCT_Widget" );
 	}
 	
-	function search_query( $query ) {
-		if ( isset( $_GET['s'] ) && isset( $query->query['post_type'] ) && $query->query['post_type'] == 'profile_cct' ):
-			if ( isset( $_GET['order'] ) ):
-				$query->query['order'] = $_GET['order'];
-				$query->query_vars['order'] = $_GET['order'];
-			endif;
-			
-			if ( isset( $_GET['orderby'] ) ):
-				$query->query['order'] = $_GET['order'];
-				$query->query_vars['order'] = $_GET['order'];
-			endif;
-			
-			/*
-			if ( isset( $_GET['tax_query'] ) ):
-				foreach ( $_GET['tax_query'] as $tax_query ) {
-					$query->query['tax_query']['queries'][] = $tax_query;
-					$query->query_vars['tax_query']['queries'][] = $tax_query;
-				}
-				
-				$query->query['tax_query']['relation'] = $query->query_vars['tax_query']['relation'];
-			endif;
-			*/
-		endif;
-		
-		return $query;
+	function print_query( $query ) {
+		echo '<pre>';
+		print_r($query->query);
+		echo '</pre>';
 	}
 	
-	function query( $query ) {
-		error_log("---Query---");
-		error_log(print_r($query, TRUE));
+	function search_query( $query ) {
+		echo '===Parse===';
+		echo '<pre>';
+		print_r($query);
+		echo '</pre>';
+		
+		if ( isset( $_GET['s'] ) && isset( $query->query['post_type'] ) && $query->query['post_type'] == 'profile_cct' ):
+			foreach ( $_GET as $key => $param ) {
+				if ( ! empty( $param ) ):
+					$query->query[$key] = $param;
+				endif;
+			}
+		endif;
+		
+		echo '<br />';
+		echo '===Result===';
+		echo '<pre>';
+		print_r($query);
+		echo '</pre>';
 		
 		return $query;
 	}
@@ -73,12 +66,10 @@ class Profile_CCT_Widget extends WP_Widget {
 	 * @param mixed $instance
 	 * @return void
 	 */
-	function widget( $args, $instance, $title = true ) {
-		if ( $title ):
-			?>
-			<h3 class="widget-title">Profile Navigation</h3>
-			<?php
-		endif;
+	function widget( $args, $instance ) {
+		?>
+		<h3 class="widget-title">Profile Navigation</h3>
+		<?php
 		
 		echo Profile_CCT_Widget::profile_search( true, true, true, true );
 	}
@@ -139,9 +130,11 @@ class Profile_CCT_Widget extends WP_Widget {
 					
 					if ( $orderby == true && $profile->settings['archive']['display_orderby'] == 'on' ):
 						?>
+						<input type="hidden" name="meta_key" value="last_name" />
 						<select name="orderby">
-							<option value="first_name" selected="selected">First Name</option>
-							<option value="last_name">Last Name</option>
+							<option value="menu_order" selected="selected">Default</option>
+							<option value="title">First Name</option>
+							<option value="meta_value">Last Name</option>
 							<option value="date">Date Added</option>
 						</select>
 						<select name="order">
@@ -155,8 +148,7 @@ class Profile_CCT_Widget extends WP_Widget {
 						foreach ( $profile->settings['archive']['display_tax'] as $taxonomy_id => $value ):
 							$taxonomy = get_taxonomy($taxonomy_id);
 							?>
-							<input type="hidden" name="tax_query[<?php echo $taxonomy_id; ?>][taxonomy]" value="<?php echo $taxonomy_id; ?>" />
-							<select name="tax_query[<?php echo $taxonomy_id; ?>][field]">
+							<select name="<?php echo $taxonomy_id; ?>">
 								<option value="" selected="selected">All <?php echo $taxonomy->label; ?></option>
 								<?php
 								foreach ( get_terms( $taxonomy_id, array() ) as $term ):
@@ -180,4 +172,4 @@ class Profile_CCT_Widget extends WP_Widget {
 }
 
 // Lets initate the widget
-add_action( 'init', array( 'Profile_CCT_Widget', 'init' ) );
+Profile_CCT_Widget::init();
