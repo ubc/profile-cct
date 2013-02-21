@@ -130,13 +130,16 @@ class Profile_CCT_Widget extends WP_Widget {
 				<?php
 					if ( $searchbox == true && $profile->settings['archive']['display_searchbox'] == 'on' ):
 						?>
-						<input type="text" name="s" class="profile-cct-search" />
+						<input type="text" name="s" class="profile-cct-search" placeholder="Search Profiles"/>
 						<?php
+						
+						wp_enqueue_script( 'profile-cct-autocomplete' );
 					endif;
 					
 					if ( $alphabet == true && $profile->settings['archive']['display_alphabet'] == 'on' ):
 						?>
-						<select name="alphabet">
+						<label for="alphabet-profile-cct">Alphabet</label>
+						<select name="alphabet" id="alphabet-profile-cct">
 							<option value="" selected="selected">Any</option>
 							<?php
 							foreach ( range('A', 'Z') as $letter ):
@@ -151,13 +154,15 @@ class Profile_CCT_Widget extends WP_Widget {
 					
 					if ( $orderby == true && $profile->settings['archive']['display_orderby'] == 'on' ):
 						?>
-						<select name="orderby">
+						<label for="orderby-profile-cct">Order by</label>
+						<select name="orderby" id="orderby-profile-cct">
 							<option value="menu_order" selected="selected">Default Order</option>
 							<option value="post_title">First Name</option>
 							<option value="profile_cct_last_name">Last Name</option>
 							<option value="post_date">Date Added</option>
 						</select>
-						<select name="order">
+						<label for="order-profile-cct">Order</label>
+						<select name="order" id="order-profile-cct">
 							<option value="ASC" selected="selected">Ascending A - Z</option>
 							<option value="DESC">Descending Z - A</option>
 						</select>
@@ -168,7 +173,8 @@ class Profile_CCT_Widget extends WP_Widget {
 						foreach ( $profile->settings['archive']['display_tax'] as $taxonomy_id => $value ):
 							$taxonomy = get_taxonomy($taxonomy_id);
 							?>
-							<select name="<?php echo $taxonomy_id; ?>">
+							<label for="<?php echo sanitize_html_class($taxonomy->label);?>-profile-cct"><?php echo $taxonomy->label; ?></label>
+							<select name="<?php echo $taxonomy_id; ?>" id="<?php echo sanitize_html_class($taxonomy->label);?>-profile-cct">
 								<option value="" selected="selected">All <?php echo $taxonomy->label; ?></option>
 								<?php
 								foreach ( get_terms( $taxonomy_id, array() ) as $term ):
@@ -183,7 +189,7 @@ class Profile_CCT_Widget extends WP_Widget {
 					endif;
 				?>
 				<input type="hidden" name="post_type" value="profile_cct" />
-				<input type="submit" value="Search Profiles" />
+				<input type="submit" value="Search Profiles" class="button btn" />
 			</form>
 		</div>
 		<?php

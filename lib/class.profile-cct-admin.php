@@ -786,13 +786,16 @@ class Profile_CCT_Admin {
 			if( 'display' == self::$action ):
 				$shell = '';
 				$end_shell = '';
+				$shell_class = 'class="profile-cct-shell"';
 			else:
 				$shell = '<ul class="sort '.$class.'" id="'.$context.'">';
 				$end_shell = '</ul>';
+				$shell_class = '';
 			endif;
-				
+			
+			
 			?>
-			<div id="<?php echo $context; ?>-shell" class="profile-cct-shell">
+			<div id="<?php echo $context; ?>-shell" <?php echo $shell_class; ?>>
 				<!--
 				<?php if ( self::$page == 'form' ): ?>
 				<span class="description-shell"><?php echo $context; ?></span>
