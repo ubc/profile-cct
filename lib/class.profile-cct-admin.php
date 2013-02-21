@@ -776,17 +776,32 @@ class Profile_CCT_Admin {
 		if ( function_exists('profile_cct_'.$context.'_shell') ):
 			call_user_func( 'profile_cct_'.$context.'_shell', $data );
 		else:
+			
+			
+			$fields = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page, 'fields', $context );
+			
+			if( empty($fields) &&  'display' == self::$action  ):
+				return; // don't dispay the shell if it is empty… there is no need
+			endif;
+			if( 'display' == self::$action ):
+				$shell = '';
+				$end_shell = '';
+			else:
+				$shell = '<ul class="sort '.$class.'" id="'.$context.'">';
+				$end_shell = '</ul>';
+			endif;
+				
 			?>
-			<div id="<?php echo $context; ?>-shell">
+			<div id="<?php echo $context; ?>-shell" class="profile-cct-shell">
 				<!--
 				<?php if ( self::$page == 'form' ): ?>
 				<span class="description-shell"><?php echo $context; ?></span>
 				<?php endif; ?>
 				-->
-				<ul class="sort <?php echo $class; ?>" id="<?php echo $context; ?>">
-				<?php
-				$fields = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page, 'fields', $context );
 				
+				
+				<?php
+				echo $shell;
 				if ( is_array( $fields ) ):
 					foreach ( $fields as $field ):
 						if ( function_exists( 'profile_cct_'.$field['type'].'_shell' ) ):
@@ -796,8 +811,8 @@ class Profile_CCT_Admin {
 						endif;
 					endforeach;
 				endif;
+				echo $end_shell;
 				?>
-				</ul>
 			</div>
 			<?php
 		endif;

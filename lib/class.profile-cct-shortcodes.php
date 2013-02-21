@@ -99,15 +99,15 @@ class Profile_CCT_Shortcodes {
 				<?php
 			elseif ( $atts['display'] == 'full' ):
 				?>
-				<article id="post-<?php the_ID(); ?>" class="post-<?php the_ID(); ?> profile_cct type-profile_cct">
+				<div id="post-<?php the_ID(); ?>" class="post-<?php the_ID(); ?> profile_cct type-profile_cct">
 					<?php the_content(); ?>
-				</article>
+				</div>
 				<?php
 			else:
 				?>
-				<article id="post-<?php the_ID(); ?>" class="post-<?php the_ID(); ?> profile_cct type-profile_cct">
+				<div id="post-<?php the_ID(); ?>" class="post-<?php the_ID(); ?> profile_cct type-profile_cct ">
 					<?php the_excerpt(); ?>
-				</article>
+				</div>
 				<?php
 			endif;
 		endwhile;

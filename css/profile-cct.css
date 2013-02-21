@@ -31,9 +31,22 @@
 	clear: both;
 }
 
+.profile_cct:before,
+.profile_cct:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.profile_cct:after {
+    clear: both;
+}
+
+/**
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
 .profile_cct {
-	position: relative;
-	overflow: hidden;
+    *zoom: 1;
 }
 
 .profile-cct-shell {

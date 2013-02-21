@@ -284,13 +284,22 @@ class Profile_CCT_Field {
 		$multiple_class = ( $this->show_multiple ? "field-shell-multiple": "");
 		?>
 		<div class="field-shell field-shell-<?php echo $this->type.' '.$multiple_class; ?>">
+		<?php if( 'edit' == $this->action ): // only display it on the description ?>
 		<div class="description">
 			<?php if ( isset( $this->description ) && 'edit' == $this->action && ! empty( $this->description ) ) echo esc_html($this->description); ?>
 		</div>
-		<span class="text-input">
-			<?php if ( isset( $this->text ) && 'form' != $this->page && ! empty( $this->text ) ) echo esc_html($this->text); ?>
-		</span>
-		<?php
+		<?php endif; ?>
+		<?php if( 'display' == $this->action && isset( $this->text ) && ! empty( $this->text ) ): 
+				// only display the span if there is something to display on the 
+		?>
+			<span class="text-input">
+				<?php echo esc_html( $this->text ); ?>
+			</span>
+		<?php else: ?>
+			<span class="text-input">
+				<?php if ( isset( $this->text ) && 'form' != $this->page && ! empty( $this->text ) ) echo esc_html($this->text); ?>
+			</span>
+		<?php endif; 
 	}
 	
 	/**
