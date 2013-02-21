@@ -109,6 +109,8 @@ display_alphabet=true to show the letter list
 display_orderby=true to show the orderby field
 display_tax="comma separated list of taxonomies" to show dropdowns to filter by those taxonomies.
 
+
+
 eg [profilenavigation display_searchbox="true" display_tax="location, position"] will show a searchbox as well as two dropdown menus to filter by the two specified taxonomies
 
 == Screenshots ==

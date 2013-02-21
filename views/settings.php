@@ -30,6 +30,9 @@
 			$profile->settings['sort_order'] = $order;
 		endif;
 		
+		$widget_title = $_POST['widget_title'];
+		$profile->settings['widget_title'] = $widget_title;
+		
 		$archive = $_POST['archive'];
 		$profile->settings['archive'] = $archive;
 		
@@ -37,11 +40,11 @@
 		$post_permissions = $_POST['options']['permissions'];
 		
 		foreach ( $profile->settings['permissions'] as $user => $permission_array ):
-			if ( $user != 'administrator' ): // don't want people changing the permissions of the admin
+			if ( $user != 'administrator' ): // Don't want people changing the permissions of the admin
 				$role = get_role($user);
 				
 				foreach ( $permission_array as $permission => $can ):
-					if ( isset( $profile->settings['permissions'][$user][$permission] ) ): // does the permission exist in the settings
+					if ( isset( $profile->settings['permissions'][$user][$permission] ) ): // Does the permission exist in the settings
 						$profile->settings['permissions'][$user][$permission] = (bool) $post_permissions[$user][$permission];
 						// Add the new capability
 						if ( (bool) $post_permissions[$user][$permission] ): 
@@ -54,7 +57,7 @@
 			else: 
 				// Admin role. You can't change the default permissions for the administater
 				$role = get_role( 'administrator' );
-				// the admin gets the best permissions
+				// The admin gets the best permissions (all of them)
 				foreach ( $profile->settings['permissions']['administrator'] as $permission => $can ):
 					$role->add_cap( $permission );
 				endforeach;
@@ -156,21 +159,30 @@
 	<table class="form-table">
         <tbody>
             <tr valign="top">
+                <th scope="row"><label for="widget-title">Widget Title</label></th>
+                <td>
+					<?php
+					if ( empty( $profile->settings['widget_title'] ) ) $profile->settings['widget_title'] = "Profile Navigation"
+					?>
+                    <input type="text" name="widget_title" id="widget-title" value="<?php echo esc_attr($profile->settings['widget_title']); ?>" />
+                </td>
+            </tr>
+            <tr valign="top">
                 <th scope="row"><label for="archive_display_searchbox">Show Search Box</label></th>
                 <td>
-                    <input type="checkbox" name="archive[display_searchbox]" id="archive_display_searchbox" <?php checked($profile->settings['archive']['display_searchbox'], 'on'); ?> />
+                    <input type="checkbox" name="archive[display_searchbox]" id="archive_display_searchbox" value="true" <?php checked($profile->settings['archive']['display_searchbox'], 'true'); ?> />
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row"><label for="archive_display_alphabet">Show Alphabet Listing</label></th>
                 <td>
-                    <input type="checkbox" name="archive[display_alphabet]" id="archive_display_alphabet" <?php checked($profile->settings['archive']['display_alphabet'], 'on'); ?> />
+                    <input type="checkbox" name="archive[display_alphabet]" id="archive_display_alphabet" value="true" <?php checked($profile->settings['archive']['display_alphabet'], 'true'); ?> />
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row"><label for="archive_display_orderby">Show Order By</label></th>
                 <td>
-                    <input type="checkbox" name="archive[display_orderby]" id="archive_display_orderby" <?php checked($profile->settings['archive']['display_orderby'], 'on'); ?> />
+                    <input type="checkbox" name="archive[display_orderby]" id="archive_display_orderby" value="true" <?php checked($profile->settings['archive']['display_orderby'], 'true'); ?> />
                 </td>
             </tr>
             <tr valign="top">
@@ -178,7 +190,7 @@
                 <td>
                     <?php foreach ( $profile->taxonomies as $taxonomy ): ?>
 						<?php $taxonomy_id = Profile_CCT_Taxonomy::id( $taxonomy['single'] ); ?>
-						<input type="checkbox" name="archive[display_tax][<?php echo $taxonomy_id; ?>]" id="archive_display_tax_<?php echo $taxonomy_id; ?>" <?php checked($profile->settings['archive']['display_tax'][$taxonomy_id], 'on'); ?> />
+						<input type="checkbox" name="archive[display_tax][<?php echo $taxonomy_id; ?>]" id="archive_display_tax_<?php echo $taxonomy_id; ?>" value="true" <?php checked($profile->settings['archive']['display_tax'][$taxonomy_id], 'true'); ?> />
 						<label style="padding-left:6px;" for="archive_display_tax_<?php echo $taxonomy_id; ?>"><?php echo $taxonomy['plural']; ?></label>
 						<br />
 					<?php endforeach; ?>

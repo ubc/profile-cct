@@ -88,11 +88,12 @@ class Profile_CCT_Widget extends WP_Widget {
 	 * @return void
 	 */
 	function widget( $args, $instance ) {
+		$profile = Profile_CCT::get_object();
 		?>
-		<h3 class="widget-title">Profile Navigation</h3>
+		<h3 class="widget-title"><?php echo $profile->settings['widget_title']; ?></h3>
 		<?php
 		
-		echo Profile_CCT_Widget::profile_search( true, true, true, true );
+		echo Profile_CCT_Widget::profile_search( $profile->settings['archive'] );
 	}
 	
 	/**
@@ -120,7 +121,7 @@ class Profile_CCT_Widget extends WP_Widget {
 		<?php
 	}
 	
-	function profile_search( $searchbox = true, $alphabet = false, $orderby = false, $taxonomies = false ) {
+	function profile_search( $visible ) {
 		$profile = Profile_CCT::get_object();
 		
 		ob_start();
@@ -128,62 +129,70 @@ class Profile_CCT_Widget extends WP_Widget {
 		<div class="profile-cct-search-form">
 			<form action="<?php echo get_bloginfo('siteurl'); ?>" method="get">
 				<?php
-					if ( $searchbox == true && $profile->settings['archive']['display_searchbox'] == 'on' ):
+					if ( $visible['display_searchbox'] == 'true' ):
 						?>
-						<input type="text" name="s" class="profile-cct-search" placeholder="Search Profiles"/>
+						<div class="profile-cct-searchbox profile-cct-search-input">
+							<input type="text" name="s" class="profile-cct-search" placeholder="Search Profiles"/>
+						</div>
 						<?php
 						
 						wp_enqueue_script( 'profile-cct-autocomplete' );
 					endif;
 					
-					if ( $alphabet == true && $profile->settings['archive']['display_alphabet'] == 'on' ):
+					if ( $visible['display_alphabet'] == 'true' ):
 						?>
-						<label for="alphabet-profile-cct">Alphabet</label>
-						<select name="alphabet" id="alphabet-profile-cct">
-							<option value="" selected="selected">Any</option>
-							<?php
-							foreach ( range('A', 'Z') as $letter ):
-								?>
-								<option value="<?php echo $letter; ?>"><?php echo $letter; ?></option>
+						<div class="profile-cct-search-alphabet profile-cct-search-input">
+							<label for="profile-cct-alphabet">Alphabet</label>
+							<select name="alphabet" id="profile-cct-alphabet">
+								<option value="" selected="selected">Any</option>
 								<?php
-							endforeach;
-							?>
-						</select>
-						<?php
-					endif;
-					
-					if ( $orderby == true && $profile->settings['archive']['display_orderby'] == 'on' ):
-						?>
-						<label for="orderby-profile-cct">Order by</label>
-						<select name="orderby" id="orderby-profile-cct">
-							<option value="menu_order" selected="selected">Default Order</option>
-							<option value="post_title">First Name</option>
-							<option value="profile_cct_last_name">Last Name</option>
-							<option value="post_date">Date Added</option>
-						</select>
-						<label for="order-profile-cct">Order</label>
-						<select name="order" id="order-profile-cct">
-							<option value="ASC" selected="selected">Ascending A - Z</option>
-							<option value="DESC">Descending Z - A</option>
-						</select>
-						<?php
-					endif;
-					
-					if ( $taxonomies == true && ! empty( $profile->settings['archive']['display_tax'] ) ):
-						foreach ( $profile->settings['archive']['display_tax'] as $taxonomy_id => $value ):
-							$taxonomy = get_taxonomy($taxonomy_id);
-							?>
-							<label for="<?php echo sanitize_html_class($taxonomy->label);?>-profile-cct"><?php echo $taxonomy->label; ?></label>
-							<select name="<?php echo $taxonomy_id; ?>" id="<?php echo sanitize_html_class($taxonomy->label);?>-profile-cct">
-								<option value="" selected="selected">All <?php echo $taxonomy->label; ?></option>
-								<?php
-								foreach ( get_terms( $taxonomy_id, array() ) as $term ):
+								foreach ( range('A', 'Z') as $letter ):
 									?>
-									<option value="<?php echo $term->slug; ?>"><?php echo $term->name; ?></option>
+									<option value="<?php echo $letter; ?>"><?php echo $letter; ?></option>
 									<?php
 								endforeach;
 								?>
 							</select>
+						</div>
+						<?php
+					endif;
+					
+					if ( $visible['display_orderby'] == 'true' ):
+						?>
+						<div class="profile-cct-search-orderby profile-cct-search-input">
+							<label for="profile-cct-orderby">Order by</label>
+							<select name="orderby" id="profile-cct-orderby">
+								<option value="menu_order" selected="selected">Default Order</option>
+								<option value="post_title">First Name</option>
+								<option value="profile_cct_last_name">Last Name</option>
+								<option value="post_date">Date Added</option>
+							</select>
+							<label for="profile-cct-order">Order</label>
+							<select name="order" id="profile-cct-order">
+								<option value="ASC" selected="selected">Ascending A - Z</option>
+								<option value="DESC">Descending Z - A</option>
+							</select>
+						</div>
+						<?php
+					endif;
+					
+					if ( ! empty( $visible['display_tax'] ) ):
+						foreach ( $visible['display_tax'] as $taxonomy_id => $value ):
+							$taxonomy = get_taxonomy($taxonomy_id);
+							?>
+							<div class="profile-cct-search-<?php echo $taxonomy_id; ?> profile-cct-search-input">
+								<label for="profile-cct-<?php echo $taxonomy_id; ?>"><?php echo $taxonomy->label; ?></label>
+								<select name="<?php echo $taxonomy_id; ?>" id="profile-cct-<?php echo sanitize_html_class( $taxonomy->label ); ?>">
+									<option value="" selected="selected">All <?php echo $taxonomy->label; ?></option>
+									<?php
+									foreach ( get_terms( $taxonomy_id, array() ) as $term ):
+										?>
+										<option value="<?php echo $term->slug; ?>"><?php echo $term->name; ?></option>
+										<?php
+									endforeach;
+									?>
+								</select>
+							</div>
 							<?php
 						endforeach;
 					endif;

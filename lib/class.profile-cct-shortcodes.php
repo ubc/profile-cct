@@ -180,12 +180,23 @@ class Profile_CCT_Shortcodes {
 	}
 	
 	static function profile_search_shortcode( $atts ) {
-		return Profile_CCT_Widget::profile_search( true, false, false, false );
+		return Profile_CCT_Widget::profile_search( array( 'display_searchbox' => 'true' ) );
 	}
 	
 	static function profile_navigation_shortcode( $atts ) {
+		$profile = Profile_CCT::get_object();
 		
-		return Profile_CCT_Widget::profile_search( true, true, true, true );
+		if ( is_array( $atts ) ):
+			if ( isset( $atts['display_tax'] ) ):
+				foreach ( explode(",", $atts['display_tax']) as $taxonomy ):
+					$atts['display_tax'][$taxonomy] = 'true';
+				endforeach;
+			endif;
+		else:
+			$atts = $profile->settings['archive'];
+		endif;
+		
+		return Profile_CCT_Widget::profile_search( $atts );
 	}
 }
 

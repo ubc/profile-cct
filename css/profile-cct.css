@@ -207,14 +207,15 @@
 }
 .profile-cct-search-form .btn{
 	margin-bottom: 10px;
-	float: right;
 }
+
 .ui-autocomplete{
 	display: block;
 	border: 1px solid #CCC;
 	background: #FFF;
 }
-.ui-autocomplete .ui-menu-item{
+
+.ui-autocomplete .ui-menu-item {
 	background: #FFF;
 	list-style: none;
 	padding: 5px 10px;
