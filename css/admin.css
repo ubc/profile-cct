@@ -22,8 +22,7 @@
 #col-right {
 	float: left;
 	margin:0 10px 0 0;
-	width:150px;
-	
+	max-width:150px;
 }
 
 #col-middle {
@@ -32,18 +31,31 @@
     padding: 0;
 	width: 77%;
 	max-width: 960px;
- 
 }
 
-#page-shell #header-shell,
+
 #page-shell #bottom-shell,
-#normal-shell,
 #tabs {
 	float: left;
-    width: 68%;
+	max-width: 655px;
+	width: 100%;
+}
+#page-shell #header-shell,
+#normal-shell{
+	float: left;
 	max-width: 655px;
 }
+#preview-form #normal-shell,
+#preview-form #tabs{
+	width: 68%;
+}
 
+#side-shell .avatar{
+	max-width: 150px;
+	width: 90%;
+	height: auto;
+	
+}
 #tabs .ui-tabs-nav {
     margin-bottom: 10px;
     padding-bottom: 0;
