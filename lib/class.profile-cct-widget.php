@@ -4,67 +4,66 @@
  * 
  * @extends WP_Widget
  */
+ 
+ /*
+ function intercept_query_clauses( $pieces )
+{
+	echo '<style>#post-clauses-dump { display: block; background-color: #777; color: #fff; white-space: pre-line; }</style>';
+	// >>>> Inspect & Debug the Query 
+	// NEVER EVER show this to anyone else than an admin user - unless you're in your local installation
+	if ( current_user_can( 'manage_options' ) )
+	{
+		$dump = var_export( $pieces, true );
+		echo "< PRE id='post-clauses-dump'>{$dump}</ PRE >";
+	}
+
+	return $pieces;
+}*/
 class Profile_CCT_Widget extends WP_Widget {
 	function init() {
 		add_action( 'widgets_init',  array( __CLASS__, 'register' ) );
-		add_filter( 'posts_orderby', array( __CLASS__, 'sort_query' ), 10, 2 );
-		add_filter( 'the_posts',     array( __CLASS__, 'sort_posts' ), 10, 2 );
+	
+		add_action( 'pre_get_posts',  array( __CLASS__, 'filter_profile') , 10, 1 );
+		add_filter( 'posts_clauses',  array( __CLASS__, 'intercept_query_clauses'), 20, 2 );
 	}
 	
 	function register() {
 		register_widget( "Profile_CCT_Widget" );
 	}
 	
-	/**
-	 * Apply the orderby and order parameters that were given into this search.
-	 */
-	function sort_query( $orderby, $query ) {
-		global $wpdb;
+	function filter_profile($query){
+		if( !empty( $_GET['alphabet'] ) && !is_admin() && $query->is_main_query() && $query->get('post_type') == 'profile_cct'):
+			$query->set( 'meta_key' , 'profile_cct_last_name' );
+			$query->set( 'meta_value', $_GET['alphabet'].'%' );
 		
-		if ( ! is_admin() && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'profile_cct' ):
-			$order_by = ( ! Profile_CCT_Widget::starts_with( $_GET['orderby'], 'profile_cct_' ) ? $_GET['orderby'] : 'menu_order' );
-			$order    = ( $_GET['order'] == 'DESC' ? 'DESC' : 'ASC' );
-			$orderby  = $wpdb->prefix."posts.".$order_by." ".$order.", ".$orderby;
 		endif;
-		
-		return $orderby;
+		return;
 	}
 	
-	/**
-	 * Apply the orderby and order parameters that were given into this search.
-	 */
-	function sort_posts( $posts, $query ) {
-		if ( ! is_admin() && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'profile_cct' ):
-			if ( ! empty( $_GET['alphabet'] ) ):
-				foreach ( $posts as $index => $post ):
-					$last_name = get_post_meta( $post->ID, 'profile_cct_last_name', true );
-					if ( substr( $last_name, 0, 1 ) != $_GET['alphabet'] ) unset( $posts[$index] );
-				endforeach;
+	function intercept_query_clauses( $pieces, $query ) {
+		global $wpdb;
+		
+		// only apply this to post type = profile on the front end and on the main query
+		if( $query->get('post_type') == 'profile_cct' && !is_admin() && $query->is_main_query() ):
+		
+			if( 'DESC' == $_GET['order'] ):
+				$pieces['orderby'] = str_replace( ' ASC', ' DESC', $pieces['orderby'] );
+			
 			endif;
 			
-			if ( ! empty( $_GET['orderby'] ) && Profile_CCT_Widget::starts_with( $_GET['orderby'], 'profile_cct_' ) ):
-				$posts_copy = $posts;
-				unset( $posts );
-				$posts = array();
-				foreach ( $posts_copy as $index => $post ):
-					$last_name = get_post_meta( $post->ID, $_GET['orderby'], true );
-					$index = $last_name." ".$post->post_title;
-					$posts[$index] = $post;
-				endforeach;
+			if( !empty( $_GET['alphabet'] ) ):
 				
-				if ( $_GET['order'] == 'DESC' ):
-					krsort( $posts, SORT_STRING );
-				else:
-					ksort( $posts, SORT_STRING );
-				endif;
-			endif;
+				$pieces['where'] = str_replace( 'CAST('.$wpdb->postmeta.'.meta_value AS CHAR) =', $wpdb->postmeta.'.meta_value LIKE ', $pieces['where'] );
 			
-			$posts = array_values( $posts ); // Re-index the array
+			endif;
 		endif;
 		
-		return $posts;
+		return $pieces;
+		
 	}
+	
 
+	
 	/**
 	 * Register widget with WordPress.
 	 * 
@@ -159,20 +158,23 @@ class Profile_CCT_Widget extends WP_Widget {
 					
 					if ( $visible['display_orderby'] == 'true' ):
 						?>
+
 						<div class="profile-cct-search-orderby profile-cct-search-input">
 							<label for="profile-cct-orderby">Order by</label>
 							<select name="orderby" id="profile-cct-orderby">
 								<option value="menu_order" selected="selected">Default Order</option>
 								<option value="post_title">First Name</option>
-								<option value="profile_cct_last_name">Last Name</option>
+								<option value="meta_value">Last Name</option>
 								<option value="post_date">Date Added</option>
 							</select>
+					
 							<label for="profile-cct-order">Order</label>
 							<select name="order" id="profile-cct-order">
 								<option value="ASC" selected="selected">Ascending A - Z</option>
 								<option value="DESC">Descending Z - A</option>
 							</select>
 						</div>
+
 						<?php
 					endif;
 					
