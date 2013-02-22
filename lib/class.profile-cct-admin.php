@@ -161,13 +161,13 @@ class Profile_CCT_Admin {
 		// All the fields that are there.
 		$current_fields = array();
 		foreach ( $contexts as $context ):
-			foreach ( (array) Profile_CCT_Admin::get_option( $where, 'fields', $context ) as $field ):
+			foreach ( (array) self::get_option( $where, 'fields', $context ) as $field ):
 				$current_fields[] = $field['type'];
 			endforeach;
 		endforeach;
         // check to see if this field is alr
 		// don't forget the bench fields.
-		foreach ( Profile_CCT_Admin::get_option( $where, 'fields', 'bench' ) as $field ):
+		foreach ( self::get_option( $where, 'fields', 'bench' ) as $field ):
 			// lets make sure that for no reason duplicate fields end up in the bench 
 			if( ! in_array( $field['type'], $current_fields ) ):
 				$current_fields[] = $field['type'];
@@ -462,7 +462,9 @@ class Profile_CCT_Admin {
 			<tr <?php echo ( $alternate ? 'class="alternate"' : '' ) ?>>
 				<td><?php echo ucwords( $user ); ?></td>
 				<?php foreach ( $settings['permissions'][$user] as $action => $can ): ?>
-				<td><input type="checkbox" name="options[permissions][<?php echo esc_attr( $user ); ?>][<?php echo esc_attr( $action ); ?>]" <?php echo $disabled; ?> value="1" <?php checked( $can ); ?> /></td>
+					<td>
+						<input type="checkbox" name="options[permissions][<?php echo esc_attr( $user ); ?>][<?php echo esc_attr( $action ); ?>]" <?php echo $disabled; ?> value="1" <?php checked( $can ); ?> />
+					</td>
 				<?php endforeach; ?>
 			</tr>
 			<?php
@@ -522,7 +524,7 @@ class Profile_CCT_Admin {
 			$options = get_option( 'Profile_CCT_'.$type.'_'.$fields_or_tabs.'_'.$context );
             
 			// if we can't find one in the database
-			if ( ! is_array($options) ):
+			if ( ! is_array( $options ) ):
 				$default = Profile_CCT_Admin::default_options( $type );
                 
 				if ( $fields_or_tabs == 'fields' ):
@@ -536,11 +538,9 @@ class Profile_CCT_Admin {
 			/* CHECK to see if we need to do the merge */
 			$perform_merge = false;
             
-			// can we find the version settings
-			if ( ! isset( $profile->settings['version'][$type][$fields_or_tabs][$context] ) ):
+			if ( ! isset( $profile->settings['version'][$type][$fields_or_tabs][$context] ) ): // can we find the version settings
 				$perform_merge = true;
-			// are they less then the current version
-			elseif ( PROFILE_CCT_VERSION > $profile->settings['version'][$type][$fields_or_tabs][$context] ):
+			elseif ( PROFILE_CCT_VERSION > $profile->settings['version'][$type][$fields_or_tabs][$context] ): // are they less then the current version
 				$perform_merge = true;
 			endif;
             
@@ -555,8 +555,6 @@ class Profile_CCT_Admin {
 							$options[] = $field['field'];
 						endif;
 					endforeach;
-					//  why are we doing this...
-					// $this->update_option($type,$fields_or_tabs,$context,$options);
 				endif;
 			endif;
 		endif;
@@ -691,7 +689,7 @@ class Profile_CCT_Admin {
 		$index = array_search( 'tabs', $contexts );
 		
 		if ( is_numeric( $index ) ):
-			$tabs = Profile_CCT_Admin::get_option( $page, 'tabs' );
+			$tabs = self::get_option( $page, 'tabs' );
             
 			$tab_contexts = array();
 			if ( is_array( $tabs ) ):
@@ -776,14 +774,10 @@ class Profile_CCT_Admin {
 		if ( function_exists('profile_cct_'.$context.'_shell') ):
 			call_user_func( 'profile_cct_'.$context.'_shell', $data );
 		else:
+			$fields = self::get_option( self::$page, 'fields', $context );
 			
-			
-			$fields = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page, 'fields', $context );
-			
-			if( empty($fields) &&  'display' == self::$action  ):
-				return; // don't dispay the shell if it is empty… there is no need
-			endif;
-			if( 'display' == self::$action ):
+			if ( 'display' == self::$action ):
+				if ( empty( $fields ) ) return; // Don't dispay the shell if it is empty. There's no need.
 				$shell = '';
 				$end_shell = '';
 				$shell_class = 'class="profile-cct-shell"';
@@ -793,15 +787,11 @@ class Profile_CCT_Admin {
 				$shell_class = '';
 			endif;
 			
-			
 			?>
 			<div id="<?php echo $context; ?>-shell" <?php echo $shell_class; ?>>
-				<!--
 				<?php if ( self::$page == 'form' ): ?>
 				<span class="description-shell"><?php echo $context; ?></span>
 				<?php endif; ?>
-				-->
-				
 				
 				<?php
 				echo $shell;
@@ -895,7 +885,7 @@ class Profile_CCT_Admin {
 	}
 	
 	static function overwrite_previous_post_data( $post_id, $profile_cct ) {
-		$profile_cct_data_previous =  get_post_meta( $post_id, 'profile_cct', true );
+		$profile_cct_data_previous = get_post_meta( $post_id, 'profile_cct', true );
 		
 		if ( ! is_array($profile_cct_data_previous)):
 			$profile_cct_data_previous = array();
@@ -986,6 +976,7 @@ class Profile_CCT_Admin {
 	 * @return void
 	 */
 	static function update_fields() {
+		$profile = Profile_CCT::get_object();
 		$context = $_POST['context'];
 		
 		if ( in_array( $_POST['where'], array( 'form', 'page', 'list' ) ) ):
@@ -994,13 +985,13 @@ class Profile_CCT_Admin {
 			$where = 'form';
 		endif;
 		
-		if ( in_array( $_POST['width'], array('full', 'half', 'one-third', 'two-third') ) ):
+		if ( in_array( $_POST['width'], array( 'full', 'half', 'one-third', 'two-third' ) ) ):
 			$width = $_POST['width'];
 		else:
 			$width = 'full';
 		endif;
 		
-		$options = self::get_option($where, 'fields', $context);
+		$options = self::get_option( 'form', 'fields', $context );
 		
 		switch ( $_POST['method'] ):
 		case "update":
@@ -1010,27 +1001,28 @@ class Profile_CCT_Admin {
 					$options[$_POST['field_index']]['label']       = $_POST['label'];
 					$options[$_POST['field_index']]['description'] = $_POST['description'];
 					$options[$_POST['field_index']]['show']        = $_POST['show'];
-					$options[$_POST['field_index']]['multiple']    = isset($_POST['multiple']) && $_POST['multiple'] ? $_POST['multiple'] : 0;
+					$options[$_POST['field_index']]['multiple']    = isset( $_POST['multiple'] ) && $_POST['multiple'] ? $_POST['multiple'] : 0;
 					$options[$_POST['field_index']]['url_prefix']  = $_POST['url_prefix'];
 					
 					// Save the url prefix also in the settings array.
-					if ( ! is_array( Profile_CCT::$settings['data-url'] ) ):
-						Profile_CCT::$settings['data-url'] = array();
-						Profile_CCT::$settings['data-url'] = array_merge( Profile_CCT::$settings['data-url'], array( $_POST['type'] => trim($_POST['url_prefix']) ) );
-						update_option( PROFILE_CCT_SETTINGS, Profile_CCT::$settings );
+					if ( ! is_array( Profile_CCT::$settings['data_url'] ) ):
+						$profile->settings['data_url'] = array();
 					endif;
+					
+					$profile->settings['data_url'] = array_merge( $profile->settings['data_url'], array( $_POST['type'] => trim($_POST['url_prefix']) ) );
+					update_option( PROFILE_CCT_SETTINGS, $profile->settings );
 					break;
 				case "page":
 				case "list":
-					$options[$_POST['field_index']]['width']     = $width;
-					$options[$_POST['field_index']]['before']    = $_POST['before'];
-					$options[$_POST['field_index']]['after']     = $_POST['after'];
-					$options[$_POST['field_index']]['show']      = $_POST['show'];
-					$options[$_POST['field_index']]['link_to']   = $_POST['link_to'];
-					$options[$_POST['field_index']]['clear']     = $_POST['clear'];
-					$options[$_POST['field_index']]['text']      = $_POST['text'];
-					$options[$_POST['field_index']]['empty']     = $_POST['empty'];
-					$options[$_POST['field_index']]['seperator'] = $_POST['seperator'];
+					$options[$_POST['field_index']]['width']      = $width;
+					$options[$_POST['field_index']]['before']     = $_POST['before'];
+					$options[$_POST['field_index']]['after']      = $_POST['after'];
+					$options[$_POST['field_index']]['show']       = $_POST['show'];
+					$options[$_POST['field_index']]['link_to']    = $_POST['link_to'];
+					$options[$_POST['field_index']]['clear']      = $_POST['clear'];
+					$options[$_POST['field_index']]['text']       = $_POST['text'];
+					$options[$_POST['field_index']]['empty']      = $_POST['empty'];
+					$options[$_POST['field_index']]['seperator']  = $_POST['seperator'];
 					break;
 				endswitch;
 				$print = "updated";
@@ -1062,8 +1054,8 @@ class Profile_CCT_Admin {
 	 * @return void
 	 */
 	function update_tabs() {
-		$where = in_array( $_POST['where'], array('page', 'form') ) ? $_POST['where'] : 'form';
-		$tabs = self::get_option($where, 'tabs');
+		$where = in_array( $_POST['where'], array( 'page', 'form' ) ) ? $_POST['where'] : 'form';
+		$tabs = self::get_option( $where, 'tabs' );
 		
 		switch ( $_POST['method'] ):
 		case "update":
