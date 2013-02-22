@@ -1005,11 +1005,11 @@ class Profile_CCT_Admin {
 					$options[$_POST['field_index']]['url_prefix']  = $_POST['url_prefix'];
 					
 					// Save the url prefix also in the settings array.
-					if ( ! is_array( Profile_CCT::$settings['data_url'] ) ):
+					if ( ! is_array( $profile->settings['data_url'] ) ):
 						$profile->settings['data_url'] = array();
 					endif;
 					
-					$profile->settings['data_url'] = array_merge( $profile->settings['data_url'], array( $_POST['type'] => trim($_POST['url_prefix']) ) );
+					$profile->settings['data_url'][$_POST['type']] = trim( $_POST['url_prefix'] );
 					update_option( PROFILE_CCT_SETTINGS, $profile->settings );
 					break;
 				case "page":

@@ -49,6 +49,9 @@ Class Profile_CCT_Data extends Profile_CCT_Field {
 				$html->clear();
 			else:
 				echo "Couldn't access external data";
+				error_log( "Couldn't access external data" );
+				error_log( print_r( $this->type, TRUE ) );
+				error_log( print_r( $profile->settings['data_url'], TRUE ) );
 			endif;
 		endif;
 	}
