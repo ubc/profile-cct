@@ -633,7 +633,9 @@ class Profile_CCT {
         global $user_ID;
 		
         ?>
-        Make sure that you select who this is supposed to be.<br /><label class="screen-reader-text" for="post_author_override"><?php _e('Author'); ?></label>
+        Make sure that you select who this is supposed to be.
+		<br />
+		<label class="screen-reader-text" for="post_author_override"><?php _e('Author'); ?></label>
         <?php
 		
         wp_dropdown_users( array(

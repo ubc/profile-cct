@@ -160,7 +160,7 @@ class Profile_CCT_Field {
 						) );
 					endif;
 					
-					if ( isset($this->description) && 'form' == $this->page):
+					if ( isset( $this->description ) && 'form' == $this->page):
 						$this->input_textarea( array(
 							'name'         => 'description',
 							'size'         => 10,
@@ -193,7 +193,7 @@ class Profile_CCT_Field {
 						) );
 					endif;
 					
-					if ( isset($this->before) && 'form' != $this->page ):
+					if ( isset( $this->before ) && 'form' != $this->page ):
 						$this->input_textarea( array(
 							'name'         => 'before',
 							'size'         => 10,
@@ -204,7 +204,7 @@ class Profile_CCT_Field {
 						) );
 					endif;
 					
-					if ( isset($this->after) && 'form' != $this->page ):
+					if ( isset( $this->after ) && 'form' != $this->page ):
 						$this->input_textarea( array(
 							'name'         => 'after',
 							'size'         => 10,
@@ -215,7 +215,7 @@ class Profile_CCT_Field {
 						) );
 					endif;
 					
-					if ( isset( $this->empty) && 'form' != $this->page ):
+					if ( isset( $this->empty ) && 'form' != $this->page ):
 						$this->input_textarea( array(
 							'name'         => 'empty',
 							'size'         => 10,
@@ -226,7 +226,7 @@ class Profile_CCT_Field {
 						) );
 					endif;
 					
-					if ( $this->url_prefix && 'form' != $this->page ): // needed for the data field
+					if ( isset( $this->url_prefix ) && 'form' == $this->page ): // needed for the data field
 						$this->input_text( array(
 							'name'         => 'url_prefix',
 							'class'        => 'field-url-prefix',
@@ -284,14 +284,14 @@ class Profile_CCT_Field {
 		$multiple_class = ( $this->show_multiple ? "field-shell-multiple": "");
 		?>
 		<div class="field-shell field-shell-<?php echo $this->type.' '.$multiple_class; ?>">
-		<?php if( 'edit' == $this->action ): // only display it on the description ?>
-		<div class="description">
-			<?php if ( isset( $this->description ) && 'edit' == $this->action && ! empty( $this->description ) ) echo esc_html($this->description); ?>
-		</div>
+		
+		<?php if ( 'edit' == $this->action ): // only display it on the description ?>
+			<div class="description">
+				<?php if ( isset( $this->description ) && 'edit' == $this->action && ! empty( $this->description ) ) echo esc_html($this->description); ?>
+			</div>
 		<?php endif; ?>
-		<?php if( 'display' == $this->action && isset( $this->text ) && ! empty( $this->text ) ): 
-				// only display the span if there is something to display on the 
-		?>
+		
+		<?php if ( 'display' == $this->action && isset( $this->text ) && ! empty( $this->text ) ): ?> <!-- only display the span if there is something to display on the -->
 			<span class="text-input">
 				<?php echo esc_html( $this->text ); ?>
 			</span>
