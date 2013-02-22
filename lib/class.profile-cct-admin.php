@@ -462,7 +462,9 @@ class Profile_CCT_Admin {
 			<tr <?php echo ( $alternate ? 'class="alternate"' : '' ) ?>>
 				<td><?php echo ucwords( $user ); ?></td>
 				<?php foreach ( $settings['permissions'][$user] as $action => $can ): ?>
-				<td><input type="checkbox" name="options[permissions][<?php echo esc_attr( $user ); ?>][<?php echo esc_attr( $action ); ?>]" <?php echo $disabled; ?> value="1" <?php checked( $can ); ?> /></td>
+					<td>
+						<input type="checkbox" name="options[permissions][<?php echo esc_attr( $user ); ?>][<?php echo esc_attr( $action ); ?>]" <?php echo $disabled; ?> value="1" <?php checked( $can ); ?> />
+					</td>
 				<?php endforeach; ?>
 			</tr>
 			<?php
@@ -776,8 +778,6 @@ class Profile_CCT_Admin {
 		if ( function_exists('profile_cct_'.$context.'_shell') ):
 			call_user_func( 'profile_cct_'.$context.'_shell', $data );
 		else:
-			
-			
 			$fields = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page, 'fields', $context );
 			
 			if( empty($fields) &&  'display' == self::$action  ):
@@ -793,7 +793,6 @@ class Profile_CCT_Admin {
 				$shell_class = '';
 			endif;
 			
-			
 			?>
 			<div id="<?php echo $context; ?>-shell" <?php echo $shell_class; ?>>
 				<!--
@@ -801,7 +800,6 @@ class Profile_CCT_Admin {
 				<span class="description-shell"><?php echo $context; ?></span>
 				<?php endif; ?>
 				-->
-				
 				
 				<?php
 				echo $shell;
