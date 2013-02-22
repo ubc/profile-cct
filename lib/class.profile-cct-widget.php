@@ -4,27 +4,11 @@
  * 
  * @extends WP_Widget
  */
- 
- /*
- function intercept_query_clauses( $pieces )
-{
-	echo '<style>#post-clauses-dump { display: block; background-color: #777; color: #fff; white-space: pre-line; }</style>';
-	// >>>> Inspect & Debug the Query 
-	// NEVER EVER show this to anyone else than an admin user - unless you're in your local installation
-	if ( current_user_can( 'manage_options' ) )
-	{
-		$dump = var_export( $pieces, true );
-		echo "< PRE id='post-clauses-dump'>{$dump}</ PRE >";
-	}
-
-	return $pieces;
-}*/
 class Profile_CCT_Widget extends WP_Widget {
 	function init() {
 		add_action( 'widgets_init',  array( __CLASS__, 'register' ) );
-	
-		add_action( 'pre_get_posts',  array( __CLASS__, 'filter_profile') , 10, 1 );
-		add_filter( 'posts_clauses',  array( __CLASS__, 'intercept_query_clauses'), 20, 2 );
+		add_action( 'pre_get_posts', array( __CLASS__, 'filter_profile') , 10, 1 );
+		add_filter( 'posts_clauses', array( __CLASS__, 'intercept_query_clauses'), 20, 2 );
 	}
 	
 	function register() {
@@ -32,37 +16,28 @@ class Profile_CCT_Widget extends WP_Widget {
 	}
 	
 	function filter_profile($query){
-		if( !empty( $_GET['alphabet'] ) && !is_admin() && $query->is_main_query() && $query->get('post_type') == 'profile_cct'):
+		if ( !empty( $_GET['alphabet'] ) && !is_admin() && $query->is_main_query() && $query->get('post_type') == 'profile_cct' ):
 			$query->set( 'meta_key' , 'profile_cct_last_name' );
 			$query->set( 'meta_value', $_GET['alphabet'].'%' );
-		
 		endif;
-		return;
 	}
 	
 	function intercept_query_clauses( $pieces, $query ) {
 		global $wpdb;
 		
 		// only apply this to post type = profile on the front end and on the main query
-		if( $query->get('post_type') == 'profile_cct' && !is_admin() && $query->is_main_query() ):
-		
-			if( 'DESC' == $_GET['order'] ):
+		if ( $query->get('post_type') == 'profile_cct' && !is_admin() && $query->is_main_query() ):
+			if ( 'DESC' == $_GET['order'] ):
 				$pieces['orderby'] = str_replace( ' ASC', ' DESC', $pieces['orderby'] );
-			
 			endif;
 			
-			if( !empty( $_GET['alphabet'] ) ):
-				
+			if ( !empty( $_GET['alphabet'] ) ):
 				$pieces['where'] = str_replace( 'CAST('.$wpdb->postmeta.'.meta_value AS CHAR) =', $wpdb->postmeta.'.meta_value LIKE ', $pieces['where'] );
-			
 			endif;
 		endif;
 		
 		return $pieces;
-		
 	}
-	
-
 	
 	/**
 	 * Register widget with WordPress.
@@ -92,7 +67,7 @@ class Profile_CCT_Widget extends WP_Widget {
 		<h3 class="widget-title"><?php echo $profile->settings['widget_title']; ?></h3>
 		<?php
 		
-		echo Profile_CCT_Widget::profile_search( $profile->settings['archive'] );
+		echo self::profile_search( $profile->settings['archive'] );
 	}
 	
 	/**
@@ -158,7 +133,6 @@ class Profile_CCT_Widget extends WP_Widget {
 					
 					if ( $visible['display_orderby'] == 'true' ):
 						?>
-
 						<div class="profile-cct-search-orderby profile-cct-search-input">
 							<label for="profile-cct-orderby">Order by</label>
 							<select name="orderby" id="profile-cct-orderby">
@@ -167,14 +141,13 @@ class Profile_CCT_Widget extends WP_Widget {
 								<option value="meta_value">Last Name</option>
 								<option value="post_date">Date Added</option>
 							</select>
-					
+							
 							<label for="profile-cct-order">Order</label>
 							<select name="order" id="profile-cct-order">
 								<option value="ASC" selected="selected">Ascending A - Z</option>
 								<option value="DESC">Descending Z - A</option>
 							</select>
 						</div>
-
 						<?php
 					endif;
 					

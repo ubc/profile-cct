@@ -44,7 +44,7 @@ class Profile_CCT_Admin {
 		register_setting( 'Profile_CCT_list_page',   'Profile_CCT_list_page',   array( __CLASS__, 'validate_list_fields' ) );
 		
 		// redirect users to their profile page and create one if it doesn't exist
-		Profile_CCT_Admin::redirect_to_public_profile();
+		self::redirect_to_public_profile();
 		
 		add_action( 'wp_ajax_cct_update_fields',   array( __CLASS__, 'update_fields' ) );
 		add_action( 'wp_ajax_cct_update_tabs',     array( __CLASS__, 'update_tabs' ) );
@@ -155,7 +155,7 @@ class Profile_CCT_Admin {
 		endif;
        
 		// lets see what all the fields are that are suppoed to be there.
-		$contexts = Profile_CCT_Admin::get_contexts();
+		$contexts = self::get_contexts();
         
 		// CURRENT FIELDS
 		// All the fields that are there.
@@ -212,7 +212,7 @@ class Profile_CCT_Admin {
 		$default_fields = array();
         
 		// get the default
-		$default_options = Profile_CCT_Admin::default_options( $where );
+		$default_options = self::default_options( $where );
         
 		foreach ( $default_options['fields'] as $context => $fields ):
 			foreach ( $fields as $field ):
@@ -223,7 +223,7 @@ class Profile_CCT_Admin {
 		endforeach;
         
 		// also don't forget fields that are fields that were added later
-		$new_fields = Profile_CCT_Admin::default_options( 'new_fields' );
+		$new_fields = self::default_options( 'new_fields' );
 		foreach ( $new_fields as $version ):
 			foreach ( $version as $field ):
 				if ( in_array($where, $field['where']) ): // only add it if it supports the the current where state
@@ -245,7 +245,7 @@ class Profile_CCT_Admin {
 		if ( !empty($different) ):
 			// add the fields back to the banch the array...
 			foreach ( $different as $field ):
-				Profile_CCT_Admin::$option[$where]['fields']['bench'][] = $real_fields[$field];
+				self::$option[$where]['fields']['bench'][] = $real_fields[$field];
 			endforeach;
 		endif;
         
@@ -525,7 +525,7 @@ class Profile_CCT_Admin {
             
 			// if we can't find one in the database
 			if ( ! is_array( $options ) ):
-				$default = Profile_CCT_Admin::default_options( $type );
+				$default = self::default_options( $type );
                 
 				if ( $fields_or_tabs == 'fields' ):
 					$options = $default[$fields_or_tabs][$context];
@@ -720,38 +720,38 @@ class Profile_CCT_Admin {
 	static function generate_profile( $section, $data = null ) {
 		switch ( $section ):
 		case 'bench':
-			Profile_CCT_Admin::render_context( $section, false );
+			self::render_context( $section, false );
 			break;
 		case 'preview':
 			?>
-			<div id="<?php echo Profile_CCT_Admin::$page; ?>-shell">
+			<div id="<?php echo self::$page; ?>-shell">
 				<?php
 					foreach ( self::default_shells() as $context ):
-						Profile_CCT_Admin::render_context( $context );
+						self::render_context( $context );
 					endforeach;
 				?>
 			</div>
 			<?php
 			break;
 		case 'page':
-			Profile_CCT_Admin::$page = 'page';
+			self::$page = 'page';
 			?>
 			<div style="overflow: hidden">
 				<?php
 					foreach ( self::default_shells() as $context ):
-						Profile_CCT_Admin::render_context( $context, $data );
+						self::render_context( $context, $data );
 					endforeach;
 				?>
 			</div>
 			<?php
 			break;
 		case 'list':
-			Profile_CCT_Admin::$page = 'list';
+			self::$page = 'list';
 			?>
 			<div style="overflow: hidden">
 				<?php
 				foreach ( self::default_shells() as $context ):
-					Profile_CCT_Admin::render_context( $context, $data );
+					self::render_context( $context, $data );
 				endforeach;
 				?>
 			</div>
@@ -998,18 +998,20 @@ class Profile_CCT_Admin {
 			if ( is_numeric( $_POST['field_index'] ) ):
 				switch ($where):
 				case "form":
+					$url_prefix = trim( $_POST['url_prefix'] );
+					
 					$options[$_POST['field_index']]['label']       = $_POST['label'];
 					$options[$_POST['field_index']]['description'] = $_POST['description'];
 					$options[$_POST['field_index']]['show']        = $_POST['show'];
 					$options[$_POST['field_index']]['multiple']    = isset( $_POST['multiple'] ) && $_POST['multiple'] ? $_POST['multiple'] : 0;
-					$options[$_POST['field_index']]['url_prefix']  = $_POST['url_prefix'];
+					$options[$_POST['field_index']]['url_prefix']  = $url_prefix;
 					
 					// Save the url prefix also in the settings array.
 					if ( ! is_array( $profile->settings['data_url'] ) ):
 						$profile->settings['data_url'] = array();
 					endif;
 					
-					$profile->settings['data_url'][$_POST['type']] = trim( $_POST['url_prefix'] );
+					$profile->settings['data_url'][$_POST['type']] = $url_prefix;
 					update_option( PROFILE_CCT_SETTINGS, $profile->settings );
 					break;
 				case "page":
@@ -1109,3 +1111,8 @@ class Profile_CCT_Admin {
 if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT_Admin' ) ):
 	add_action( 'plugins_loaded', array( 'Profile_CCT_Admin', 'init' ) );
 endif;
+
+
+function string_starts_with( $haystack, $needle ) {
+    return ! strncmp( $haystack, $needle, strlen($needle) );
+}

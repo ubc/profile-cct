@@ -9,17 +9,13 @@ class Profile_CCT_Autocomplete {
 
     static function init() {
         //Register style - you can create your own jQuery UI theme and store it in the plug-in folder
-        // wp_register_style( 'jquery-ui-css', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css' );
         add_action( 'get_search_form',               array( __CLASS__, 'add_scripts_to_form' ) );
         add_action( 'wp_print_footer_scripts',       array( __CLASS__, 'print_footer_scripts' ), 9 );
         add_action( 'wp_ajax_profile_cct_autocomplete',        array( __CLASS__, 'autocomplete_suggestions' ) );
         add_action( 'wp_ajax_nopriv_profile_cct_autocomplete', array( __CLASS__, 'autocomplete_suggestions' ) );
 		
-		if( !is_admin()):
-        	
+		if ( ! is_admin()):
         	wp_register_script( 'profile-cct-autocomplete', PROFILE_CCT_DIR_URL.'/js/autocomplete.js', array( 'jquery-ui-autocomplete' ), PROFILE_CCT_VERSION, true );
-        	//wp_enqueue_style( 'jquery-ui-css' );
-			// wp_enqueue_style( 'profile-cct-autocomplete', PROFILE_CCT_DIR_URL.'/css/autocomplete.css' );
 		endif;
     }
 
@@ -30,10 +26,8 @@ class Profile_CCT_Autocomplete {
     }
 
     static function print_footer_scripts() {
-     		
-			$settings = array( 'admin_url' => admin_url( 'admin-ajax.php' ) );
-			
-			wp_localize_script( 'profile-cct-autocomplete', 'profile_cct_autocomple', $settings );
+		$settings = array( 'admin_url' => admin_url( 'admin-ajax.php' ) );
+		wp_localize_script( 'profile-cct-autocomplete', 'profile_cct_autocomple', $settings );
     }
 
     static function autocomplete_suggestions() {

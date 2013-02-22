@@ -1,6 +1,6 @@
 <?php 
 /**
- * Profile_CCT class.
+ * Profile_CCT_Taxonomy class.
  */
 class Profile_CCT_Taxonomy {
 	/**
@@ -14,11 +14,11 @@ class Profile_CCT_Taxonomy {
 		$profile = Profile_CCT::get_object();
 		
 		// remove some taxonomies
-		$profile->taxonomies = Profile_CCT_Taxonomy::remove( $profile->taxonomies );
+		$profile->taxonomies = self::remove( $profile->taxonomies );
 		
 		if ( is_array( $profile->taxonomies ) ):
 			foreach ( $profile->taxonomies as $taxonomy ):
-				Profile_CCT_Taxonomy::register( $taxonomy );
+				self::register( $taxonomy );
 			endforeach;
 		endif;
 		
@@ -30,7 +30,7 @@ class Profile_CCT_Taxonomy {
 		
 		if ( is_array( $profile->taxonomies ) ):
 			foreach ( $profile->taxonomies as $taxonomy ):
-				$id = Profile_CCT_Taxonomy::id($taxonomy['single']);
+				$id = self::id($taxonomy['single']);
 				
 				if ( $taxonomy['hierarchical'] == true ):
 					remove_meta_box( $id.'div', 'profile_cct', 'side' );
@@ -76,7 +76,7 @@ class Profile_CCT_Taxonomy {
 		$taxonomies[] = $new_taxonomy;
    		update_option( PROFILE_CCT_SETTING_TAXONOMY, $taxonomies );
    		
-		Profile_CCT_Taxonomy::register( $new_taxonomy );
+		self::register( $new_taxonomy );
    		flush_rewrite_rules();
 		return $taxonomies;
 	}
@@ -105,7 +105,7 @@ class Profile_CCT_Taxonomy {
 		);
 		
 		// finally register the taxonomy
-		register_taxonomy( Profile_CCT_Taxonomy::id( $taxonomy['single'] ), array( 'profile_cct' ), array(
+		register_taxonomy( self::id( $taxonomy['single'] ), array( 'profile_cct' ), array(
 			'hierarchical' => $taxonomy['hierarchical'] ? true : false,
 			'labels'       => $labels,
 			'show_ui'      => true,
@@ -127,6 +127,4 @@ class Profile_CCT_Taxonomy {
 	}
 }
 
-if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT_Taxonomy' ) ):	
-	add_action( 'init', array( 'Profile_CCT_Taxonomy', 'init' ) );
-endif;
+add_action( 'init', array( 'Profile_CCT_Taxonomy', 'init' ) );

@@ -33,7 +33,7 @@ class Profile_CCT_Field {
 	var $data;
 	
 	function __construct ( $options_or_post, $data ) {
-		if ( Profile_CCT_Field::is_post( $options_or_post ) ): 
+		if ( self::is_post( $options_or_post ) ): 
 			//This means the parameters were passed from do_meta_boxes, and are not correctly configured.
 			$options = $data['args']['options'];
 			$data = $data['args']['data'];

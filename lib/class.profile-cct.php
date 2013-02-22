@@ -14,6 +14,13 @@ class Profile_CCT {
 	static public  $option              = NULL;
 	static public  $current_form_fields = NULL; // stores the current state of the form field... the labels and if it is on the banch... 
     
+	function init() {
+		add_action( 'plugins_loaded', array( __CLASS__, 'get_object' ) );
+		register_activation_hook(   PROFILE_CCT_BASE_FILE, array( __CLASS__, 'install'    ) );
+		register_deactivation_hook( PROFILE_CCT_BASE_FILE, array( __CLASS__, 'deactivate' ) );
+		register_uninstall_hook(    PROFILE_CCT_BASE_FILE, array( __CLASS__, 'uninstall'  ) );
+	}
+	
 	/**
 	 * __construct function.
 	 * 
@@ -21,7 +28,7 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function __construct () {
-		add_action( 'init', array( $this, 'init' ) );
+		add_action( 'init', array( $this, 'load' ) );
 		$this->settings   = $this->get_settings( 'settings' );
 		$this->taxonomies = $this->get_settings( 'taxonomy' );
 	}
@@ -47,7 +54,7 @@ class Profile_CCT {
 	 * @static
 	 * @return void
 	 */
-	public function init() {
+	public function load() {
 		if ( is_admin() ):
 			add_action( 'wp_dashboard_setup',         array( $this, 'add_dashboard_widgets' ) );
 			add_action( 'edit_form_advanced',         array( $this, 'edit_post_advanced' ) );
@@ -65,12 +72,9 @@ class Profile_CCT {
 		$this->update();
 		$this->load_fields();
 		
-		
 		if ( function_exists( 'add_image_size' ) ) { 
 			add_image_size( 'profile-image', $this->settings['width'], $this->settings['height'] ); //300 pixels wide (and unlimited height)
-			
 		}
-		
 	}
 	
 	/*
@@ -307,7 +311,7 @@ class Profile_CCT {
 	 * @return void
 	 */
     static function install() {
-		$field = Profile_CCT::get_object();
+		$field = self::get_object();
 		$field->register_profiles();
 		flush_rewrite_rules();
 		
@@ -341,7 +345,7 @@ class Profile_CCT {
 	 */
 	static function deactivate() {
 		// remove permissions
-		$profile = Profile_CCT::get_object();
+		$profile = self::get_object();
 		$default = $profile->get_default_settings( 'settings' );
 		
 		foreach ( $default['permissions'] as $user => $permission_array ):
@@ -363,7 +367,7 @@ class Profile_CCT {
 	 */
 	static function uninstall() {
 		// remove permissions
-		$profile = Profile_CCT::get_object();
+		$profile = self::get_object();
 		$profile->deactivate();
 		$profile->delete_all_settings();
 	}
@@ -647,10 +651,4 @@ class Profile_CCT {
 	}
 }
 
-if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT' ) ):
-	add_action( 'plugins_loaded', array( 'Profile_CCT', 'get_object' ) );
-endif;
-
-register_activation_hook(   PROFILE_CCT_BASE_FILE, array( 'Profile_CCT', 'install'    ) );
-register_deactivation_hook( PROFILE_CCT_BASE_FILE, array( 'Profile_CCT', 'deactivate' ) );
-register_uninstall_hook(    PROFILE_CCT_BASE_FILE, array( 'Profile_CCT', 'uninstall'  ) );
+Profile_CCT::init();

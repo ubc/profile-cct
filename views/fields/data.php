@@ -30,7 +30,8 @@ Class Profile_CCT_Data extends Profile_CCT_Field {
 			) );
 		else:
 			$profile = Profile_CCT::get_object();
-			$url = 'http://'.$profile->settings['data_url'][$this->type].$this->data['url'];
+			$url = $profile->settings['data_url'][$this->type].$this->data['url'];
+			if ( ! string_starts_with( $url, 'http://') && ! string_starts_with( $url, 'https://' ) ) $url = 'http://'.$url;
 			
 			// Attempt to get page
 			if ( $html = file_get_html($url) ):
