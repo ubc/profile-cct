@@ -236,7 +236,7 @@ ul.sort .is-active .field-title {
     overflow: hidden;
 }
 
-/* ----- LABELS ----- */
+/* ----- Labels ----- */
 .form-builder li label {
 	margin: 0;
 	padding: 1px 0 10px;
@@ -333,14 +333,17 @@ ul.sort .is-active .field-title {
 	border-radius: 3px;
 	border: 1px solid #DFDFDF;
 }
+
 #preview-form .form-builder li div .street-2,
 #preview-form .form-builder li div .street-1 {
 	width: 100%;
 }
+
 #preview-form .form-builder li div .street-2 input,
 #preview-form .form-builder li div .street-1 input{
 	width: 98%;
 }
+
 .form-builder input.text,
 .form-builder textarea {
 	border: 1px solid #DFDFDF;
@@ -350,8 +353,7 @@ ul.sort .is-active .field-title {
 	border-radius: 4px;
 	background: #fff;
 	max-width: 74em;
-	margin-right: 10px;
-	
+	margin-right: 10px;	
 }
 
 .form-builder .select {
@@ -366,7 +368,7 @@ ul.sort .is-active .field-title {
 	margin: 1px 0;
 }
 
-/* ----- SIZES ----- */
+/* ----- Sizes ----- */
 .form-builder .half,
 .form-builder .one-third,
 .form-builder .two-third {
@@ -391,16 +393,22 @@ ul.sort .is-active .field-title {
 	width: 100%;
 }
 
+.form-builder .edit-shell .field-text {
+    width: 100%
+}
+
 .form-builder .inline .field-shell {
 	width: auto;
 	display: inline;
 }
 
-.form-builder input.small,.form-builder select.small {
+.form-builder input.small,
+.form-builder select.small {
 	width: 25%;
 }
 
-.form-builder input.medium,.form-builder select.medium {
+.form-builder input.medium,
+.form-builder select.medium {
 	width: 50%;
 }
 

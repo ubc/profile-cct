@@ -64,16 +64,24 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
      * @return void
      */
     function display() {
-		$first = true;
-		foreach ( $this->data as $term ):
-			if ( $first ):
-				$first = false;
-			else:
-				$term['separator'] = ", ";
-			endif;
-			
-			$this->display_link( $term );
-		endforeach;
+		$terms = get_terms( $this->options['type'] );
+		if ( empty( $terms ) ):
+			$this->display_text( array(
+				'default_text' => 'No '.$this->options['label'].' have been created.',
+				'value'        => '',
+			) );
+		else:
+			$first = true;
+			foreach ( $this->data as $term ):
+				if ( $first ):
+					$first = false;
+				else:
+					$term['separator'] = ", ";
+				endif;
+				
+				$this->display_link( $term );
+			endforeach;
+		endif;
 	}
 	
 	function add_taxonomy_fields( $fields ) {
@@ -127,8 +135,6 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 						'href'         => get_term_link( $term, $taxonomy ),
 					);
 				endforeach;
-			else:
-				$options['empty'] = "No ".$options['label']." have been created.";
 			endif;
 		endif;
 		

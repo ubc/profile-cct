@@ -226,7 +226,7 @@ class Profile_CCT_Field {
 						) );
 					endif;
 					
-					if ( isset( $this->url_prefix ) && 'form' == $this->page ): // needed for the data field
+					if ( isset( $this->default_options['url_prefix'] ) && 'form' == $this->page ): // needed for the data field
 						$this->input_text( array(
 							'name'         => 'url_prefix',
 							'class'        => 'field-url-prefix',
@@ -739,9 +739,9 @@ class Profile_CCT_Field {
 			$needed_attr['display'] = $attr['href'];
 		endif;
 		
-		$id    = ( isset( $attr['field_id'] ) ? ' id="'   . esc_attr($attr['field_id']).'" ' : ''               );
+		$id    = ( isset( $attr['field_id'] ) ? ' id="'   . esc_attr($attr['field_id']).'" ' : ''  );
 		$class = ( isset( $attr['class']    ) ? ' class="'. esc_attr( sanitize_html_class( $attr['class']))   .'" ' : ' class="field"' );
-	    $href  = ( isset( $attr['href']     ) ? ' href="' . esc_url( $attr['href'] )    .'" ' : ''               );
+	    $href  = ( isset( $attr['href']     ) ? ' href="' . esc_url( $attr['href'] )    .'" ' : '' );
 		
 		$needed_attr['field_attr'] = $id.$class.$href.' ';
 		
