@@ -24,7 +24,7 @@ Class Profile_CCT_Tabs {
 		if ( $display_tabs ):
 			if ( $editing ):
 				?>
-				<div id="tabs" class="tabs">
+				<div id="tabs" class="tabs context-shell">
 				<?php 
 			else: 
 				$profile_cct_tabs++;

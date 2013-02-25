@@ -1,64 +1,71 @@
 /**
  * Order Profile Page
  */
-
-.menu_order{
+.menu_order {
 	float: left;
-	margin:3px 0 0 0;
+	margin: 3px 0 0 0;
 }
-.menu_order input{
-	width:30px;
+
+.menu_order input {
+	width: 30px;
 }
-#order-arrow{
-	
+
+#order-arrow {
 	font-weight: bold;
 }
-.profile-item{
+
+.profile-item {
 	position: relative;
 	overflow: hidden;
-	border:1px solid #DFDFDF;
-	border-top:none;
-	padding:3px 10px 3px 10px;
+	border: 1px solid #DFDFDF;
+	border-top: none;
+	padding: 3px 10px 3px 10px;
 	height: 33px;
-	
 }
-.ui-sortable .profile-item{
+
+.ui-sortable .profile-item {
 	cursor: move;
 }
-.name{
+
+.name {
 	float: left;
-	margin:0 0 0 70px;
+	margin: 0 0 0 70px;
 	line-height: 30px;
 	display: block;
 }
-.name strong{ 
+
+.name strong {
 	text-transform: capitalize; 
-	color:#555;
-} 
-.wp-post-image{
+	color: #555;
+}
+
+.wp-post-image {
 	position: absolute;
-	top:2px;
-	left:61px;
-	border:1px solid #CCC;
+	top: 2px;
+	left: 61px;
+	border: 1px solid #CCC;
 	padding: 1px;
 }
-#profile-items .post-edit-link{
+
+#profile-items .post-edit-link {
 	line-height: 30px;
 }
-.ui-sortable-helper{
+
+.ui-sortable-helper {
 	border:1px solid #CFCFCF;
 	background: #EEE;
 }
 
-.widefat .order-head{
+.widefat .order-head {
     width: 90px;
 }
-.sorthelper{
+
+.sorthelper {
 	background: #CCF3FA;
 	position: relative;
 	overflow: hidden;
-	border:1px solid #DFDFDF;
-	border-top:none;
-	padding:3px 10px 3px 10px;
+	border: 1px solid #DFDFDF;
+	border-top: none;
+	padding: 3px 10px 3px 10px;
 	height: 33px;
 }

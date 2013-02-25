@@ -6,8 +6,8 @@
 @media screen and (-webkit-min-device-pixel-ratio: 2), screen and (max--moz-device-pixel-ratio: 2) {
 	#icon-edit.icon32-posts-profile_cct {
 		background-image: url(../icon-64.png);
-		background-position: 0 0;
 		background-size: 32px 32px;
+		background-position: 0 0;
 	}
 }
 
@@ -57,7 +57,7 @@
 }
 
 .field-item .textarea-shell {
-	margin-top:  -15px;
+	margin-top: -15px;
 }
 
 .field-shell-multiple .textarea-shell {
@@ -68,7 +68,7 @@
 	position: relative;
 	overflow: hidden;
 	padding-bottom: 5px;
-	border-bottom:1px dotted #CCC;
+	border-bottom: 1px dotted #CCC;
 	margin-bottom: 5px;
 }
 
@@ -114,11 +114,11 @@
 }
 
 #side-info-column .address div {
-	width:253px;
+	width: 253px;
 }
 
 #side-info-column .address input {
-	width:253px;
+	width: 253px;
 }
 
 #side-info-column .field-item textarea {
@@ -246,7 +246,7 @@
 	margin-top: 10px;
 }
 
-.attachment-profile-image{
+.attachment-profile-image {
 	max-width: 260px;
 	height: auto;
 }

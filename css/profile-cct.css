@@ -33,8 +33,8 @@
 
 .profile_cct:before,
 .profile_cct:after {
-    content: " "; /* 1 */
-    display: table; /* 2 */
+    content: " ";
+    display: table;
 }
 
 .profile_cct:after {
@@ -121,7 +121,7 @@
 }
 
 .type-profile_cct .ui-tabs-nav li.ui-state-active a {
-	color:#464646;
+	color: #464646;
 	padding: 4px 14px 6px 14px;
 }
 
@@ -142,15 +142,14 @@
 .user-avatar-display-image img{
 	max-width: 100%;
 	height: auto;
-	border:1px solid #CCC;
+	border: 1px solid #CCC;
 	
 }
 .user-avatar-display-image{
-	padding:0 10px;
+	padding: 0 10px;
 }
 
 /* Autocomplete */
-
 .profile-cct-search-form .ui-helper-hidden {
 	display: none;
 }
@@ -255,7 +254,7 @@
 	color: #c77405;
 	display: block;
 	background: #EEE;
-	color:#333;
+	color: #333;
 	margin: -5px -10px;
 	padding: 5px 10px;
 }

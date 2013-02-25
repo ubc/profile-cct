@@ -1,3 +1,7 @@
+/**
+ * Included whenever the profile plugin uses an autocomplete field on the page.
+ * Specifically this means whenever you use the Profile Navigation widget, or the profilesearch or profilenavigation shortcodes.
+ */
 input.profile-cct-search.ui-autocomplete-input {
     margin: 0;
 }

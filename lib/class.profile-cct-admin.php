@@ -724,7 +724,7 @@ class Profile_CCT_Admin {
 			break;
 		case 'preview':
 			?>
-			<div id="<?php echo self::$page; ?>-shell">
+			<div id="<?php echo self::$page; ?>-shell" class="preview-shell">
 				<?php
 					foreach ( self::default_shells() as $context ):
 						self::render_context( $context );
@@ -784,13 +784,13 @@ class Profile_CCT_Admin {
 			else:
 				$shell = '<ul class="sort '.$class.'" id="'.$context.'">';
 				$end_shell = '</ul>';
-				$shell_class = '';
+				$shell_class = 'class="context-shell"';
 			endif;
 			
 			?>
 			<div id="<?php echo $context; ?>-shell" <?php echo $shell_class; ?>>
 				<?php if ( self::$page == 'form' ): ?>
-				<span class="description-shell"><?php echo $context; ?></span>
+				<!--<span class="description-shell"><?php echo $context; ?></span>-->
 				<?php endif; ?>
 				
 				<?php

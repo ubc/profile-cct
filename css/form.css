@@ -1,5 +1,4 @@
 /* This file is being included on the form builder */
-
 #col-container .field-shell {
    pointer-events: none;
    padding: 5px 0;
@@ -26,7 +25,6 @@
 
 #normal-shell,
 #page-shell,
-#bench-shell,
 #side-shell {
   margin-top: -10px;
 }
@@ -84,6 +82,10 @@ ul.sort .is-active .field-title {
 	background-image: -webkit-linear-gradient(bottom, #BCD5E1 0%, #D3E3EB 100%);
 	background-image: -ms-linear-gradient(bottom, #BCD5E1 0%, #D3E3EB 100%);
 	background-image: -webkit-gradient( linear,left bottom,left top,color-stop(0, #BCD5E1),color-stop(1, #D3E3EB) );
+}
+
+ul.sort .is-active {
+    border-color: #BCD5E1;
 }
 
 .form-builder ul.sort > li {
