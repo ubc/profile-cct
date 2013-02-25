@@ -23,11 +23,13 @@
 	width: 99%;
 	zoom: 1;
 }
+
 #normal-shell,
 #page-shell,
 #side-shell{
   margin-top: -10px;
 }
+
 /* Sorting */
 ul.sort {
 	padding: 5px;
@@ -334,7 +336,7 @@ ul.sort .is-active .field-title {
 }
 
 #preview-form .form-builder li div .street-2 input,
-#preview-form .form-builder li div .street-1 input{
+#preview-form .form-builder li div .street-1 input {
 	width: 98%;
 }
 
@@ -581,6 +583,7 @@ li.ui-sortable-helper {
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
+
 #bench li {
 	width: 104px;
     margin-bottom: 4px;

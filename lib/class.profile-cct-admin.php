@@ -991,7 +991,7 @@ class Profile_CCT_Admin {
 			$width = 'full';
 		endif;
 		
-		$options = self::get_option( 'form', 'fields', $context );
+		$options = self::get_option( $where, 'fields', $context );
 		
 		switch ( $_POST['method'] ):
 		case "update":
@@ -1016,15 +1016,15 @@ class Profile_CCT_Admin {
 					break;
 				case "page":
 				case "list":
-					$options[$_POST['field_index']]['width']      = $width;
-					$options[$_POST['field_index']]['before']     = $_POST['before'];
-					$options[$_POST['field_index']]['after']      = $_POST['after'];
-					$options[$_POST['field_index']]['show']       = $_POST['show'];
-					$options[$_POST['field_index']]['link_to']    = $_POST['link_to'];
-					$options[$_POST['field_index']]['clear']      = $_POST['clear'];
-					$options[$_POST['field_index']]['text']       = $_POST['text'];
-					$options[$_POST['field_index']]['empty']      = $_POST['empty'];
-					$options[$_POST['field_index']]['seperator']  = $_POST['seperator'];
+					$options[$_POST['field_index']]['width']     = $width;
+					$options[$_POST['field_index']]['before']    = $_POST['before'];
+					$options[$_POST['field_index']]['after']     = $_POST['after'];
+					$options[$_POST['field_index']]['show']      = $_POST['show'];
+					$options[$_POST['field_index']]['link_to']   = $_POST['link_to'];
+					$options[$_POST['field_index']]['clear']     = $_POST['clear'];
+					$options[$_POST['field_index']]['text']      = $_POST['text'];
+					$options[$_POST['field_index']]['empty']     = $_POST['empty'];
+					$options[$_POST['field_index']]['seperator'] = $_POST['seperator'];
 					break;
 				endswitch;
 				$print = "updated";

@@ -1,7 +1,8 @@
 <?php
 	if ( isset( $_REQUEST['reset'] ) && isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'profile_cct_reset_fields' ) ):
+		Profile_CCT_Admin::delete_option( 'page', 'tabs', 'normal', $tabs ); // Reset to defaults.
 		foreach( self::get_contexts() as $context ):
-			Profile_CCT_Admin::delete_option( 'page', 'fields', $context, array() );
+			Profile_CCT_Admin::delete_option( 'page', 'fields', $context );
 		endforeach;
 		
 		?>
