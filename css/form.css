@@ -26,7 +26,8 @@
 
 #normal-shell,
 #page-shell,
-#side-shell{
+#bench-shell,
+#side-shell {
   margin-top: -10px;
 }
 
@@ -640,13 +641,13 @@ li.ui-sortable-helper {
 	display: none;
 }
 
-#list-shell .hover-expanded .field-title,
-#list-shell .hover-expanded .action-shell,
-#list-shell .hover .field-title,
-#list-shell .hover .action-shell,
-#page-shell .hover-expanded .field-title,
-#page-shell .hover-expanded .action-shell,
-#page-shell .hover .field-title,
-#page-shell .hover .action-shell {
+#list-shell li.hover-expanded .field-title,
+#list-shell li.hover-expanded .action-shell,
+#list-shell li:hover .field-title,
+#list-shell li:hover .action-shell,
+#page-shell li.hover-expanded .field-title,
+#page-shell li.hover-expanded .action-shell,
+#page-shell li:hover .field-title,
+#page-shell li:hover .action-shell {
 	display: inherit;
 }

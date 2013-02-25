@@ -7,7 +7,7 @@ var Profile_CCT_PROFILE ={
 		});
 		
 		jQuery('.edit').click(function() {
-			jQuery(this).parent().toggleClass('hover-expanded');
+			jQuery(this).parent().parent().toggleClass('hover-expanded');
 		});
 		
 		jQuery('select[name="width"]').change(function() {
