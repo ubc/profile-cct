@@ -298,12 +298,6 @@ ul.sort .is-active .field-title {
 	margin-right: 10px;
 }
 
-#side-shell .form-builder .text,
-#side-shell .form-builder textarea,
-#side-shell .form-builder .select {
-	max-width: 200px;
-}
-
 #wpcontent .form-builder select {
     font-size: 12px;
     height: 21px;

@@ -33,29 +33,20 @@
 	max-width: 960px;
 }
 
-
-#page-shell #bottom-shell,
+#header-shell,
+#normal-shell,
+#bottom-shell,
 #tabs {
 	float: left;
-	max-width: 655px;
-	width: 100%;
-}
-#page-shell #header-shell,
-#normal-shell{
-	float: left;
-	max-width: 655px;
-}
-#preview-form #normal-shell,
-#preview-form #tabs{
 	width: 68%;
 }
 
-#side-shell .avatar{
+#side-shell .avatar {
 	max-width: 150px;
 	width: 90%;
 	height: auto;
-	
 }
+
 #tabs .ui-tabs-nav {
     margin-bottom: 10px;
     padding-bottom: 0;
