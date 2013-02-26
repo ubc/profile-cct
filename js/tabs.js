@@ -16,11 +16,11 @@ var Profile_CCT_TABS = {
 		Profile_CCT_TABS.tab_counter = Profile_CCT_TABS.$tabs.tabs( "length" ); // count the tabs 
 		Profile_CCT_TABS.$tabs.tabs( "disable", Profile_CCT_TABS.tab_counter-1 ); // disable the 'add tab' as a tab
 		
-		jQuery( ".remove-tab"     ).live( "click",    Profile_CCT_TABS.removeTab );
-		jQuery( ".edit-tab"       ).live( "click",    Profile_CCT_TABS.editTab   );
-		jQuery( ".tab-link"       ).live( "dblclick", Profile_CCT_TABS.editTab   );
-		jQuery( ".edit-tab-input" ).live( "keypress", Profile_CCT_TABS.updateTab );
-		jQuery( ".edit-tab-save"  ).live( "click",    Profile_CCT_TABS.saveTab   );
+		jQuery( ".remove-tab"     ).live( "click",    Profile_CCT_TABS.removeTab            );
+		jQuery( ".edit-tab"       ).live( "click",    Profile_CCT_TABS.editTab              );
+		jQuery( ".tab-link"       ).live( "dblclick", Profile_CCT_TABS.editTab              );
+		jQuery( ".edit-tab-input" ).live( "keyup",    Profile_CCT_TABS.updateTabKeyEvent    );
+		jQuery( ".edit-tab-save"  ).live( "click",    Profile_CCT_TABS.updateTabButtonEvent );
 	},
     
 	addTab: function(e) {
@@ -70,41 +70,21 @@ var Profile_CCT_TABS = {
 		jQuery(this).parent().addClass('editing');
 	},
     
-	updateTab: function(e) {
+	updateTabKeyEvent: function(e) {
 		if (e.keyCode == 13) { // keyCode 13 is equivalent to the enter key.
-			Profile_CCT_FORM.showSpinner();
-            
-			var el = jQuery( this );
-			var tab_title = jQuery( this ).val();
-			var index = jQuery( "li",Profile_CCT_TABS.$tabs ).index( jQuery( this ).parent() );
-			var data = {
-				where:   ProfileCCT.page,
-				action: 'cct_update_tabs',
-				method: 'update',
-				title:  tab_title,
-				index:  index,
-			};
-			// don't submit the val
-			jQuery( "#form-builder").submit(function(e) { e.preventDefault(); });
-			
-			jQuery.post(ajaxurl, data, function(response) {	
-				if(response == "updated") {	
-					el.siblings('a').text( tab_title );
-         			el.parent().removeClass('editing'); 
-         			Profile_CCT_FORM.hideSpinner();
-         			
-         			Profile_CCT_Admin.show_refresh();
-         		}
-			});
+			Profile_CCT_TABS.saveTab( jQuery(this) );
         }
 	},
     
-	saveTab: function(e) {
+	updateTabButtonEvent: function(e) {
+		Profile_CCT_TABS.saveTab(jQuery(this).siblings('.edit-tab-input'));
+	},
+	
+	saveTab: function( input_element ) {
 		Profile_CCT_FORM.showSpinner();
-        // you pressed enter
-        var el = jQuery(this).siblings('.edit-tab-input');
-        var tab_title = el.val();
-        var index = jQuery( "li", Profile_CCT_TABS.$tabs ).index( jQuery(this).parent() );
+        
+        var tab_title = input_element.val();
+        var index = jQuery( "li", Profile_CCT_TABS.$tabs ).index( input_element.parent() );
         var data = {
             where:  ProfileCCT.page,
             action: 'cct_update_tabs',
@@ -115,8 +95,8 @@ var Profile_CCT_TABS = {
         
         jQuery.post(ajaxurl, data, function(response) {
             if (response == "updated") {	
-                el.siblings('a').text( tab_title );
-                el.parent().removeClass('editing'); 
+                input_element.siblings('a').text( tab_title );
+                input_element.parent().removeClass('editing'); 
                 Profile_CCT_FORM.hideSpinner();
                 
                 Profile_CCT_Admin.show_refresh();

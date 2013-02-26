@@ -89,9 +89,8 @@ ul.sort .is-active {
 }
 
 .form-builder ul.sort > li {
-	margin:0 5px 5px;
-	padding:0 0 15px 20px;
-	
+	margin: 0 5px 5px;
+	padding: 0 0 15px 20px;
 	clear: both;
 	position: relative;
 	border: 1px solid #DFDFDF;
