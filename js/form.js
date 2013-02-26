@@ -12,15 +12,15 @@ var Profile_CCT_FORM = {
             tolerance: 'pointer'
 		});
 			
-		formB.find(".edit").live("click", Profile_CCT_FORM.editField);
-		formB.find(".field-label").live("keyup", Profile_CCT_FORM.updateLabel);
-		formB.find(".field-description").live("keyup", Profile_CCT_FORM.updateDescription );
-		formB.find(".field-url-prefix").live("keyup", Profile_CCT_FORM.updateUrlPrefix );
-		formB.find(".field-show").live("click", Profile_CCT_FORM.updateShow);
-		formB.find(".field-multiple").live("click", Profile_CCT_FORM.multipleShow);
-		formB.find(".save-field-settings").live("click", Profile_CCT_FORM.updateField);
-		formB.find(".field-textarea").live('keyup', Profile_CCT_FORM.updateTextarea);
-		formB.find(".field-text").live('keyup', Profile_CCT_FORM.updateText);
+		formB.find( ".edit"                ).live( 'click', Profile_CCT_FORM.editField         );
+		formB.find( ".field-label"         ).live( 'keyup', Profile_CCT_FORM.updateLabel       );
+		formB.find( ".field-description"   ).live( 'keyup', Profile_CCT_FORM.updateDescription );
+		formB.find( ".field-url-prefix"    ).live( 'keyup', Profile_CCT_FORM.updateUrlPrefix   );
+		formB.find( ".field-show"          ).live( 'click', Profile_CCT_FORM.updateShow        );
+		formB.find( ".field-multiple"      ).live( 'click', Profile_CCT_FORM.multipleShow      );
+		formB.find( ".save-field-settings" ).live( 'click', Profile_CCT_FORM.updateField       );
+		formB.find( ".field-textarea"      ).live( 'keyup', Profile_CCT_FORM.updateTextarea    );
+		formB.find( ".field-text"          ).live( 'keyup', Profile_CCT_FORM.updateText        );
 		
 		jQuery(".edit", "#form-name").click(Profile_CCT_FORM.editField);
 	},
@@ -31,11 +31,6 @@ var Profile_CCT_FORM = {
 		element.insertBefore(previous);
 		var ul = element.parent();
 		Profile_CCT_FORM.updateSort( ul );
-		/*ul.children(".field-item").each(function() {
-			if (jQuery(this).is(':hover')) {
-				jQuery(this).mouseenter();
-			}
-		});*/
 	},
 	
 	moveDown: function(element) {
@@ -44,11 +39,6 @@ var Profile_CCT_FORM = {
 		element.insertAfter(next);
 		var ul = element.parent();
 		Profile_CCT_FORM.updateSort( ul );
-		/*ul.children(".field-item").each(function() {
-			if (jQuery(this).is(':hover')) {
-				jQuery(this).mouseenter();
-			}
-		});*/
 	},
 	
 	updateSortCallback: function( event, ui ) {
@@ -177,12 +167,12 @@ var Profile_CCT_FORM = {
 		var context = parent.parent().parent().attr('id');
 		var field_index = jQuery( ".field-item", parent.parent().parent() ).index( parent.parent() );
 		var data_set = {	
-            action: 'cct_update_fields',
-            method: 'update',
-            context: context,
-            field_index: field_index,
-            where: ProfileCCT.page,
-        };
+			action: 'cct_update_fields',
+			method: 'update',
+			context: context,
+			field_index: field_index,
+			where: ProfileCCT.page,
+		};
 		data_set = jQuery.param(data_set)+"&"+serialize;
 		
 		element.siblings('.spinner').show();		
