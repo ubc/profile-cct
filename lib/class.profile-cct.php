@@ -59,6 +59,8 @@ class Profile_CCT {
 			add_action( 'wp_dashboard_setup',         array( $this, 'add_dashboard_widgets' ) );
 			add_action( 'edit_form_advanced',         array( $this, 'edit_post_advanced' ) );
 			add_action( 'add_meta_boxes_profile_cct', array( $this, 'edit_post' ) );
+			
+			add_filter( 'post_row_actions',           array( __CLASS__, 'modify_row_actions' ), 10, 2);
 		else:
 			remove_filter( 'the_content', 'wpautop' );
 			remove_filter( 'the_excerpt', 'wpautop' );
@@ -388,29 +390,23 @@ class Profile_CCT {
 	}
 	
 	function get_dashboard_widget_content() {
-		$query = new WP_Query( array(
-			'author'         => wp_get_current_user()->ID,
-			'post_type'      => 'profile_cct',
-			'posts_per_page' => 1,
-			'nopaging'       => true,
-		) );
+		$profile = self::get_user_profile();
 		
-		if ( empty( $query->posts ) ):
+		if ( empty( $profile ) ):
 			?>
 			<div style="color: darkred;">
 				You do not have a profile.
 				<br /><br />
 			</div>
 			<div>
-				<a class="button-primary" href="<?php echo admin_url('post-new.php?post_type=profile_cct'); ?>">Create New</a>
+				<a class="button-primary" href="<?php echo admin_url('profile.php?page=public_profile'); ?>">Create New</a>
 			</div>
 			<?php
 		else:
 			?>
 			<div style="overflow: hidden">
 				<?php
-				$post = $query->posts[0];
-				echo $post->post_excerpt;
+				echo $profile->post_excerpt;
 				?>
 				<div class="actions">
 					<a class="button" href="<?php echo admin_url('users.php?page=public_profile'); ?>">Edit</a>
@@ -419,6 +415,24 @@ class Profile_CCT {
 			</div>
 			<?php
 		endif;
+	}
+	
+	function get_user_profile() {
+		global $current_user;
+		
+		$arguments = array(
+			'post_type'      => 'profile_cct',
+			'author'         => $current_user->ID,
+			'post_status'    => 'any',
+			'posts_per_page' => 1,
+			'orderby'        => 'ID',
+			'order'          => 'ASC',
+		);
+        
+		$query = new WP_Query( $arguments );
+		$results = $query->get_posts();
+		$profile = $results[0];
+		return $profile;
 	}
     
 	/**
@@ -631,6 +645,21 @@ class Profile_CCT {
 			</div>
 			<?php
 		endif;
+	}
+	
+	function modify_row_actions( $actions, $post ) {
+		global $current_user;
+		
+		if ( $post->post_type == "profile_cct" ) {
+			if ( ! $current_user->has_cap('edit_others_profile_cct') && $post->post_author != $current_user->ID ) {
+				unset($actions['edit']);
+				unset($actions['inline hide-if-no-js']);
+			}
+			error_log( print_r($post, TRUE));
+			error_log( print_r($current_user, TRUE));
+			error_log( print_r($actions, TRUE));
+		}
+		return $actions; 
 	}
     
     function post_author_meta_box($post) {

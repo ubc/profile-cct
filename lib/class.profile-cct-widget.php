@@ -17,7 +17,7 @@ class Profile_CCT_Widget extends WP_Widget {
 	
 	function filter_profile($query){
 		if ( !empty( $_GET['alphabet'] ) && !is_admin() && $query->is_main_query() && $query->get('post_type') == 'profile_cct' ):
-			$query->set( 'meta_key' , 'profile_cct_last_name' );
+			$query->set( 'meta_key',   'profile_cct_last_name' );
 			$query->set( 'meta_value', $_GET['alphabet'].'%' );
 		endif;
 	}

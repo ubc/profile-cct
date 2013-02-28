@@ -219,7 +219,7 @@
 			<tr>
 				<th>Role</th>
 				<th>Enable public profile</th>
-				<th>Manage own profiles</th>
+				<th>Create multiple profiles</th>
 				<th>Manage all profiles</th>
 				<th>Publish profile</th>
 				<th>Read private profile</th>

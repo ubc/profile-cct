@@ -70,18 +70,7 @@ class Profile_CCT_Admin {
 		global $plugin_page, $pagenow, $current_user;
         
 		if ( $plugin_page == 'public_profile' && in_array($pagenow, array('profile.php', 'users.php')) ):
-			$arguments = array(
-                'post_type'      => 'profile_cct',
-                'author'         => $current_user->ID,
-                'post_status'    => 'any',
-                'posts_per_page' => 1,
-            );
-            
-			$the_query = new WP_Query( $arguments );
-			while ( $the_query->have_posts() ):
-				$the_query->the_post();
-				$id = get_the_ID();
-			endwhile;
+			$id = Profile_CCT::get_user_profile()->ID;
             
 			// Reset Post Data
 			wp_reset_postdata();
@@ -89,12 +78,12 @@ class Profile_CCT_Admin {
 			if ( ! $id ):
 				// lets create public profile on the fly...
 				$post_arg = array(
-    				'post_author'  => $current_user->ID,  //The user ID number of the author.
-    				'post_content' => 'test', //The full text of the post.
-  					'post_excerpt' => 'test2', //For all your post excerpt needs.
-  					'post_status'  => 'draft',  //Set the status of the new post.
+    				'post_author'  => $current_user->ID,           //The user ID number of the author.
+    				'post_content' => 'Empty Profile',             //The full text of the post.
+  					'post_excerpt' => 'Empty Profile',             //For all your post excerpt needs.
+  					'post_status'  => 'draft',                     //Set the status of the new post.
   					'post_title'   => $current_user->display_name, //The title of your post.
-  					'post_type'    => 'profile_cct', //You may want to insert a regular post, page, link, a menu item or
+  					'post_type'    => 'profile_cct',               //You may want to insert a regular post, page, link, a menu item or
 				);
                 
 				$id = wp_insert_post( $post_arg );
@@ -169,7 +158,7 @@ class Profile_CCT_Admin {
 		// don't forget the bench fields.
 		foreach ( self::get_option( $where, 'fields', 'bench' ) as $field ):
 			// lets make sure that for no reason duplicate fields end up in the bench 
-			if( ! in_array( $field['type'], $current_fields ) ):
+			if ( ! in_array( $field['type'], $current_fields ) ):
 				$current_fields[] = $field['type'];
 				$bench_fields[] = $field;
 			endif;
@@ -183,7 +172,6 @@ class Profile_CCT_Admin {
 		// all the fields that get included
 		// - taxonomy fields
 		// - db fields (added via the add field function)
-		// all the once that are
 		$dynamic_fields = apply_filters( "profile_cct_dynamic_fields", array(), $where );
 		
 		$all_dynamic_fields = array();
@@ -242,7 +230,7 @@ class Profile_CCT_Admin {
 		$different = array_diff($default_fields, $current_fields);
         
 		unset($field);
-		if ( !empty($different) ):
+		if ( ! empty($different) ):
 			// add the fields back to the banch the array...
 			foreach ( $different as $field ):
 				self::$option[$where]['fields']['bench'][] = $real_fields[$field];
