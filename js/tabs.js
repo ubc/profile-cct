@@ -32,7 +32,7 @@ var Profile_CCT_TABS = {
             Profile_CCT_FORM.showSpinner();
             // remove tab from form
             var data = {
-				where:   ProfileCCT.page,
+				where:  ProfileCCT.page,
 				action: 'cct_update_tabs',
 				method: 'add',
 				title:  tab_title,
@@ -44,7 +44,7 @@ var Profile_CCT_TABS = {
                     Profile_CCT_TABS.$tabs.append('<div id="tabs-'+Profile_CCT_TABS.tab_counter+'"><ul id="tabbed-'+Profile_CCT_TABS.tab_counter+'"class="sort form-builder"></ul></div>');
                     // add tab to form
                     Profile_CCT_TABS.$tabs.tabs( "add", '#tabs-'+Profile_CCT_TABS.tab_counter, tab_title, index );
-                    Profile_CCT_TABS.$tabs.tabs( 'select', index);
+                    Profile_CCT_TABS.$tabs.tabs( 'select', index );
                     Profile_CCT_TABS.tab_counter++;
                     
                     // make sure that the newly added ul will be sortable
@@ -71,7 +71,7 @@ var Profile_CCT_TABS = {
 	},
     
 	updateTabKeyEvent: function(e) {
-		if (e.keyCode == 13) { // keyCode 13 is equivalent to the enter key.
+		if (e.keyCode == 13) { // keyCode 13 is indicates the return/enter key.
 			Profile_CCT_TABS.saveTab( jQuery(this) );
         }
 	},

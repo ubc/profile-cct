@@ -27,7 +27,7 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 			$id = Profile_CCT_Taxonomy::id( $taxonomy['single'] );
 			
 			add_action( 'profile_cct_'.$id.'_add_meta_box', array( __CLASS__, 'add_meta_box' ), 10, 3 );
-			add_action( 'profile_cct_shell_'.$id,           array( __CLASS__, 'shell'        ), 10, 3 );
+			add_action( 'profile_cct_shell_'.$id,           array( __CLASS__, 'shell'        ), 10, 2 );
 			add_action( 'edit_post',                        array( __CLASS__, 'edit_post'    ), 10, 2 );
 		endforeach;
 	}
@@ -126,12 +126,12 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 			<ul id="<?php echo $taxonomy; ?>checklist" class="categorychecklist form-no-clear" data-wp-lists="list:<?php echo $taxonomy; ?>">
 				<?php
 				wp_terms_checklist( $post->ID, array(
-					'descendants_and_self'  => 0,
-					'selected_cats'         => false,
-					'popular_cats'          => false,
-					'walker'                => new Profile_CCT_Walker(),
-					'taxonomy'              => $taxonomy,
-					'checked_ontop'         => false,
+					'descendants_and_self' => 0,
+					'selected_cats'        => false,
+					'popular_cats'         => false,
+					'walker'               => new Profile_CCT_Walker(),
+					'taxonomy'             => $taxonomy,
+					'checked_ontop'        => false,
 				) );
 				?>
 			</ul>
@@ -186,7 +186,42 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
     }
 }
 
-if ( is_admin() ) require_once( 'includes/template.php' );
+class Profile_CCT_Walker extends Walker {
+	var $tree_type = 'category';
+	var $db_fields = array ('parent' => 'parent', 'id' => 'term_id');
+	
+	function start_lvl( &$output, $depth = 0, $args = array() ) {
+		$indent = str_repeat("\t", $depth);
+		$output .= "$indent<ul class='children'>\n";
+	}
+	
+	function end_lvl( &$output, $depth = 0, $args = array() ) {
+		$indent = str_repeat("\t", $depth);
+		$output .= "$indent</ul>\n";
+	}
+	
+	function start_el( &$output, $category, $depth, $args, $id = 0 ) {
+		extract($args);
+		if ( empty($taxonomy) )
+		$taxonomy = 'category';
+		
+		if ( $taxonomy == 'category' ):
+			$name = 'post_category';
+		else:
+			$name = 'tax_input['.$taxonomy.']';
+		endif;
+		
+		$class = in_array( $category->term_id, $popular_cats ) ? ' class="popular-category"' : '';
+		$output .= "\n<li id='{$taxonomy}-{$category->term_id}'$class>" . '<label class="selectit"><input value="' . $category->term_id . '" type="checkbox" name="'.$name.'[]" id="in-'.$taxonomy.'-' . $category->term_id . '"' . checked( in_array( $category->term_id, $selected_cats ), true, false ) . ' /> ' . esc_html( apply_filters('the_category', $category->name )) . '</label>';
+	}
+	
+	function end_el( &$output, $category, $depth = 0, $args = array() ) {
+		$output .= "</li>\n";
+	}
+}
+
+/*
+include_once( 'includes/template.php' );
 	
 class Profile_CCT_Walker extends Walker_Category_Checklist {
 	function start_el( &$output, $category, $depth, $args, $id = 0 ) {
@@ -194,6 +229,7 @@ class Profile_CCT_Walker extends Walker_Category_Checklist {
 		parent::start_el( $output, $category, $depth, $args, $id = 0 );
 	}
 }
+*/
 
 if ( is_array( Profile_CCT::get_object()->taxonomies ) ):
 	Profile_CCT_Taxonomy_Field::init();

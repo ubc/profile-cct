@@ -571,7 +571,7 @@ li.ui-sortable-helper {
 	cursor: pointer;
 	height: 16px;
     width: 16px;
-	background: url(img/222222_256x240_icons_icons.png) no-repeat -80px -128px;
+	background: url(../img/icons.png) no-repeat -80px -128px;
     overflow: hidden;
     text-indent: -99999px;
 }

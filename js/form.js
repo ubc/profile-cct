@@ -5,13 +5,13 @@ var Profile_CCT_FORM = {
 		
 		jQuery( ".sort" ).sortable({
             placeholder: "ui-state-highlight",
-            forcePlaceholderSize: true,
-            handle: "label.field-title", 
-            update: Profile_CCT_FORM.updateSortCallback,
+            handle:      "label.field-title", 
+            update:      Profile_CCT_FORM.updateSortCallback,
             connectWith: '.sort',
-            tolerance: 'pointer'
+            tolerance:   'pointer',
+            forcePlaceholderSize: true,
 		});
-			
+		
 		formB.find( ".edit"                ).live( 'click', Profile_CCT_FORM.editField         );
 		formB.find( ".field-label"         ).live( 'keyup', Profile_CCT_FORM.updateLabel       );
 		formB.find( ".field-description"   ).live( 'keyup', Profile_CCT_FORM.updateDescription );
@@ -94,7 +94,7 @@ var Profile_CCT_FORM = {
 		el.parent().parent().addClass('changed');
 		setTimeout( function() {		
 			var text_label = el.val();
-			if ( text_label.length+1 > 0 ) {
+			if ( text_label.length + 1 > 0 ) {
 				jQuery(".description", el.parent().parent().parent()).text(text_label);
 			} else {
 				jQuery(".description", el.parent().parent().parent()).text(el.attr('title'));
@@ -121,7 +121,7 @@ var Profile_CCT_FORM = {
 		setTimeout(function() {		
 			var text_label = el.val();
 			
-			if ( text_label.length+1 > 0 ) {
+			if ( text_label.length + 1 > 0 ) {
 				jQuery( ".text-input", el.parent().parent().parent() ).text(text_label);
 			} else {
 				jQuery( ".text-input", el.parent().parent().parent() ).text(el.attr('title'));

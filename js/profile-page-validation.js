@@ -71,9 +71,9 @@ var Profile_CCT_PAGE_Validation = {
 	
 	check_regex: function( element, new_character ) {
 		var character_regex = element.data("accepts");
-		var flags = character_regex.replace(/.*\/([gimy]*)$/, '$1');
-		var pattern = character_regex.replace(new RegExp('^/(.*?)/'+flags+'$'), '$1');
-		character_regex = new RegExp(pattern, flags);
+		var flags = character_regex.replace( /.*\/([gimy]*)$/, '$1' );
+		var pattern = character_regex.replace( new RegExp( '^/(.*?)/'+flags+'$' ), '$1' );
+		character_regex = new RegExp( pattern, flags );
 		
 		return character_regex.test(new_character);
 	},

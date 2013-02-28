@@ -28,11 +28,11 @@ get_header();
 			<?php else: ?>
 				<div id="post-<?php the_ID(); ?>" class="<?php hybrid_entry_class(); ?>">
 					<?php get_the_image( array( 'custom_key' => array( 'Thumbnail' ), 'default_size' => 'thumbnail' ) ); ?>
+					
 					<?php hybrid_before_entry(); // Before entry hook ?>
 					<div class="entry-summary entry">
 						<?php the_excerpt(); ?>
 					</div>
-					
 					<?php hybrid_after_entry(); // After entry hook ?>
 				</div>
 			<?php endif; ?>

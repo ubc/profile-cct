@@ -1,6 +1,7 @@
 jQuery(document).ready( function($) {
 	var ajaxurl = profile_cct_autocomple.admin_url;
 	var ajaxaction = 'profile_cct_autocomplete';
+	
 	$(".profile-cct-search-form input.profile-cct-search").each( function() {
 		jQuery(this).autocomplete( {
 			delay: 0,
