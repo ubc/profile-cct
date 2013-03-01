@@ -1,7 +1,7 @@
 /* This file is being included on the form builder */
 #col-container .field-shell {
    pointer-events: none;
-   padding: 5px 0;
+   padding: 5px 10px;
 }
 
 /* ----- Field Structure ----- */
@@ -38,7 +38,6 @@ ul.sort {
 }
 
 ul.sort > li {
-	padding: 0 0 0 20px;
 	clear: both;
 	position: relative;
 	border: 1px solid #DFDFDF;
@@ -58,12 +57,10 @@ ul.sort .field-title {
     font-size: 15px;
     font-weight: normal;
     line-height: 1;
-    margin: 0 0 0 -20px;
     padding: 7px 10px;
 	color: #464646;
 	text-transform: capitalize;
 	cursor: move;
-	width: 100%;
 	display: block;
     background-color: #F1F1F1;
 	background-image: -ms-linear-gradient(top,#F9F9F9,#ECECEC);
@@ -280,12 +277,10 @@ ul.sort .is-active {
     font-size: 15px;
     font-weight: normal;
     line-height: 1;
-    margin: 0 0 10px -20px;
     padding: 7px 0 7px 20px;
 	color: #464646;
 	text-transform: capitalize;
 	cursor: move;
-	width: 100%;
 	display: block;
 	border-bottom-color: #DFDFDF;
     box-shadow: 0 1px 0 #FFFFFF;
@@ -587,7 +582,6 @@ li.ui-sortable-helper {
 }
 
 #bench li {
-	width: 104px;
     margin-bottom: 4px;
 }
 
