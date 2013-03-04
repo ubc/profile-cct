@@ -8,7 +8,7 @@ var Profile_CCT_TABS = {
 		jQuery( "#add-tab" ).click( Profile_CCT_TABS.addTab );
 		var tab_shell = jQuery( "#tabs" );
 		Profile_CCT_TABS.$tabs = tab_shell.tabs({
-            tabTemplate: '<li><a href="#{href}" class="tab-link">#{label}</a>  <span class="remove-tab">Remove Tab</span> <span class="edit-tab">Edit</span><input type="text" class="edit-tab-input" value="#{label}" /><input type="button" class="edit-tab-save button" value="Save" /></li>',
+            tabTemplate: '<li><a href="#{href}" class="tab-link">#{label}</a>  <span class="remove-tab">Remove Tab</span> <span class="edit-tab">Edit</span></li>',
         });
 		
 		Profile_CCT_TABS.selected_tab = jQuery(".tab-link:first", Profile_CCT_TABS.$tabs); 
@@ -16,11 +16,9 @@ var Profile_CCT_TABS = {
 		Profile_CCT_TABS.tab_counter = Profile_CCT_TABS.$tabs.tabs( "length" ); // count the tabs 
 		Profile_CCT_TABS.$tabs.tabs( "disable", Profile_CCT_TABS.tab_counter-1 ); // disable the 'add tab' as a tab
 		
-		jQuery( ".remove-tab"     ).live( "click",    Profile_CCT_TABS.removeTab            );
-		jQuery( ".edit-tab"       ).live( "click",    Profile_CCT_TABS.editTab              );
-		jQuery( ".tab-link"       ).live( "dblclick", Profile_CCT_TABS.editTab              );
-		jQuery( ".edit-tab-input" ).live( "keyup",    Profile_CCT_TABS.updateTabKeyEvent    );
-		jQuery( ".edit-tab-save"  ).live( "click",    Profile_CCT_TABS.updateTabButtonEvent );
+		jQuery( ".remove-tab"     ).live( "click",    Profile_CCT_TABS.removeTab );
+		jQuery( ".edit-tab"       ).live( "click",    Profile_CCT_TABS.editTab   );
+		jQuery( ".tab-link"       ).live( "dblclick", Profile_CCT_TABS.editTab   );
 	},
     
 	addTab: function(e) {
@@ -65,43 +63,29 @@ var Profile_CCT_TABS = {
 	},
     
 	editTab: function() {
-		var index = jQuery( "li", Profile_CCT_TABS.$tabs ).index( jQuery( this ).parent() );
-		jQuery(this).siblings('.edit-tab-input').focus();
-		jQuery(this).parent().addClass('editing');
-	},
-    
-	updateTabKeyEvent: function(e) {
-		if (e.keyCode == 13) { // keyCode 13 is indicates the return/enter key.
-			Profile_CCT_TABS.saveTab( jQuery(this) );
-        }
-	},
-    
-	updateTabButtonEvent: function(e) {
-		Profile_CCT_TABS.saveTab(jQuery(this).siblings('.edit-tab-input'));
-	},
-	
-	saveTab: function( input_element ) {
-		Profile_CCT_FORM.showSpinner();
+        var tab_title = prompt("Rename your tab");
         
-        var tab_title = input_element.val();
-        var index = jQuery( "li", Profile_CCT_TABS.$tabs ).index( input_element.parent() );
-        var data = {
-            where:  ProfileCCT.page,
-            action: 'cct_update_tabs',
-            method: 'update',
-            title:  tab_title,
-            index:  index,
-        };
-        
-        jQuery.post(ajaxurl, data, function(response) {
-            if (response == "updated") {	
-                input_element.siblings('a').text( tab_title );
-                input_element.parent().removeClass('editing'); 
-                Profile_CCT_FORM.hideSpinner();
-                
-                Profile_CCT_Admin.show_refresh();
-            }
-        });
+		if (tab_title) {
+			Profile_CCT_FORM.showSpinner();
+			
+			var element = jQuery(this);
+			var index = jQuery( "li", Profile_CCT_TABS.$tabs ).index( element.parent() );
+			var data = {
+				where:  ProfileCCT.page,
+				action: 'cct_update_tabs',
+				method: 'update',
+				title:  tab_title,
+				index:  index,
+			};
+			jQuery.post(ajaxurl, data, function(response) {
+				if (response == "updated") {	
+					element.parent().children('a').text( tab_title );
+					Profile_CCT_FORM.hideSpinner();
+					
+					Profile_CCT_Admin.show_refresh();
+				}
+			});
+		}
 	},
     
 	removeTab: function(e) {
