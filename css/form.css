@@ -1,20 +1,22 @@
 /* This file is being included on the form builder */
-#col-container .field-shell {
-   pointer-events: none;
-   padding: 5px 10px;
-}
 
 /* ----- Field Structure ----- */
 .profile-view-builder .field-item {
     margin: 0;
 }
 
-#col-container.profile-view-builder .field-shell {
-    padding: 7px 0;
+#col-container .field-shell {
+    pointer-events: none;
+    padding: 5px 10px;
+}
+
+.field {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .form-builder {
-	list-style-type:none;
+	list-style-type: none;
 }
 
 * html .form-builder {
@@ -231,6 +233,11 @@ ul.sort .is-active {
 	font-size: 16px;
 }
 
+/* ----- Picture Field Structuure ----- */
+.form-builder .shell-picture img {
+	max-width: 100%;
+}
+
 /* ----- Taxonomy Field ----- */
 #preview-form .form-builder .tabs-panel {
     width: 85%;
@@ -371,15 +378,15 @@ ul.sort .is-active {
 }
 
 .form-builder .one-third {
-	width: 29%;
+	width: 33%;
 }
 
 .form-builder .two-third {
-	width: 62%;
+	width: 66%;
 }
 
 .form-builder .half {
-	width: 46%;
+	width: 49.6%;
 }
 
 .form-builder .field-item textarea {
@@ -438,7 +445,6 @@ ul.sort .is-active {
 
 .form-builder li .edit-shell {
 	background: #EAF2FA;
-	margin: 0 0 0 -20px;
 	padding: 10px;
 }
 
