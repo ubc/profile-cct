@@ -200,6 +200,7 @@ var Profile_CCT_FORM = {
 		} else {
 			if (edit_shell.hasClass('changed')) {
 				if ( confirm("There are some unsaved chages.\nWould you like to save them?") ) {
+					edit_shell.parent().toggleClass('hover-expanded');
 					edit_shell.find('.save-field-settings').trigger('click');
 					return;
 				}
