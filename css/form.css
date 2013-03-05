@@ -181,7 +181,7 @@ ul.sort .is-active {
 }
 
 .form-builder li .textarea-shell {
-	width: 96%;
+	width: 100%;
 }
 
 .form-builder .description {
@@ -451,7 +451,7 @@ ul.sort .is-active {
 }
 
 .edit-shell span {
-	width: 96%;
+	width: 100%;
 }
 
 /* ----- Sorting ----- */

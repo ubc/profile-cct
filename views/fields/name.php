@@ -75,7 +75,7 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
 		$this->input_text( array(
 			'field_id' => 'credentials',
 			'label'    => 'Credentials',
-			'size'     => 7,
+			'size'     => 6,
 			'data'      => array(
 				'accepts' => '/[a-zA-Z.]/',
 				'limit'   => 10,

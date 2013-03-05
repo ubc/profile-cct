@@ -112,7 +112,7 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 			array( 	"type"        => "twitter", 		
 					"label"       => "Twitter",
 					"service_url" => "http://twitter.com/",			
-					"user_url"    => "http://twitter.com/#!/{value}" ),
+					"user_url"    => "http://twitter.com/{value}" ),
 			array( 	"type"        => "facebook",		
 					"label"       => "Facebook",
 					"service_url" => "http://www.facebook.com/",			
