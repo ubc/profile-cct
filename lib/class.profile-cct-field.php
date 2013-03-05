@@ -64,7 +64,14 @@ class Profile_CCT_Field {
 		$this->multiple      = ( isset( $this->options['multiple'] ) ? $this->options['multiple'] : false );
 		$this->data          = $data;
 		
+		
+		ob_start();
 		$this->start_field();
+		$echo_start_field = ob_get_contents();
+		ob_end_clean();
+		
+		
+		ob_start();
 		
 		if ( $this->show_multiple && isset( $data ) ):
 			$first = true;
@@ -88,7 +95,16 @@ class Profile_CCT_Field {
 		else:
 			$this->create_subfield();
 		endif;
-		$this->end_field();
+		
+		$echo_field_content = ob_get_contents();
+		
+		ob_end_clean();
+		
+		if( !empty( $echo_field_content ) ):
+			echo $echo_start_field;
+			echo $echo_field_content;
+			$this->end_field();
+		endif;
 	}
 	
 	/**
@@ -99,33 +115,43 @@ class Profile_CCT_Field {
 	 * @return void
 	 */
 	function create_subfield( $enable_remove = false ) {
-		?>
-		<div class="field" data-count="<?php echo $this->subfield_counter; ?>">
-			<?php
+			$start_div = '<div class="field" data-count="'.$this->subfield_counter.'">';
+			$end_div = "</div>";
 			if ( 'form' == $this->page || false == $this->page ):
-				$this->field();
+				echo $start_div;
+					$this->field();
+					
+					if ( $enable_remove ):	?>
+						<a href="#" class="remove-fields button">Remove</a>
+						<?php
+					endif;
+					
+				echo $end_div;
+				
 			else:
+				
 				ob_start();
 				$this->display();
 				$contents = ob_get_contents();
 				ob_end_clean();
 				
-				if ( trim( strip_tags( $contents, '<img>' ) ) == '' ):
-					echo $this->empty;
+				if ( trim( strip_tags( $contents, '<img>' ) ) == '' || empty( $contents ) ):
+					if( !empty($this->empty)):
+						echo $start_div;
+						echo $this->empty;
+						echo $end_div;
+					endif;
 				else:
+					echo $start_div;
 					if ( isset( $this->shell ) ) $this->display_shell( $this->shell );
 					echo $contents;
 					if ( isset( $this->shell ) ) $this->display_end_shell( $this->shell );
+					
+					echo $end_div;
 				endif;
+				
 			endif;
 			
-			if ( $enable_remove ):	?>
-				<a href="#" class="remove-fields button">Remove</a>
-				<?php
-			endif;
-			?>
-		</div>
-		<?php
 	}
 	
 	public static function is_post( $options_or_post ){
