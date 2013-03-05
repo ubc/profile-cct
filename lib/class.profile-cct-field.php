@@ -574,7 +574,11 @@ class Profile_CCT_Field {
 			printf( "<span %s>", $attr['field_shell_attr'] );
 			if ( ! empty($attr['display']) ):
 		    	$this->display_separator( array( 'separator' => $attr['separator'], 'class' => $attr['class'] ) );
-				echo "<".$attr['tag']." ".$attr['field_attr'].">".$attr['display']."</".$attr['tag'].">";
+		    	if('div' == $attr['tag']):
+					echo "<".$attr['tag']." ".$attr['field_attr'].">". wpautop( $attr['display'] ) ."</".$attr['tag'].">";
+				else:
+					echo "<".$attr['tag']." ".$attr['field_attr'].">".$attr['display']."</".$attr['tag'].">";
+				endif;
 				$this->display_separator( array( 'separator' => $attr['post_separator'], 'class' => $attr['class'] ) );
 			endif;
 			printf( "</span>" );
