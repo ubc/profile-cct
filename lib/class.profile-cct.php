@@ -496,18 +496,18 @@ class Profile_CCT {
 		else:
 			// Get the option using Wordpress' built-in function.
 			$options = get_option( 'Profile_CCT_'.$type.'_'.$subtype.'_'.$context );
-				
+			// var_dump('Profile_CCT_'.$type.'_'.$subtype.'_'.$context);
 			// Check for success. If this if statement fails, it indicates that the option is not present in the database.
 			if ( ! is_array( $options ) ):
                 //Get the default values for this option type.
 				$default = $this->default_options( $type );
                 
 				if ( $subtype == 'fields' ):
-					$options = $default[$subtype][$context];
+					$options = $default[$type][$subtype][$context];
 				else:
 					$options = $default[$subtype];
                 endif;
-			endif;
+  			endif;
             
             if ( $context == 'bench' ):
                 // Check to see if the plugin has been updated since this code last ran. And if so, merge the settings.
@@ -547,7 +547,7 @@ class Profile_CCT {
 	 */
 	function default_options( $type = 'form' ) {
 		require( PROFILE_CCT_DIR_PATH.'default-options.php' ); // $options is defined in this file.
-		return apply_filters( 'profile_cct_default_options', $options, $type );
+		return apply_filters( 'profile_cct_default_options', $option, $type );
 	}
 	
 	/**
@@ -570,9 +570,11 @@ class Profile_CCT {
 		remove_meta_box( 'submitdiv', 'profile_cct', 'side' );
         
 		$contexts = $this->get_contexts();
+		
 		if ( is_array( $contexts ) ):
 			foreach ( $contexts as $context ):
 				$fields = $this->get_option( 'form', 'fields', $context );
+				
 				if ( $fields ):
 					foreach ( $fields as $field ):
 						$data = ( isset( $user_data[$field['type']] ) ? $user_data[$field['type']] : null );
@@ -596,6 +598,7 @@ class Profile_CCT {
 				endif;
 			endforeach;
 		endif;
+		
 		
 		remove_meta_box( 'authordiv', 'post', 'normal' );
 		if ( is_super_admin() || current_user_can( $post_type_object->cap->edit_others_posts ) || current_user_can( 'administrator' ) ):
