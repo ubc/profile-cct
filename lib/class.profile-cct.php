@@ -558,6 +558,9 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function edit_post() {
+		
+		Profile_CCT_Admin::recount_field( 'form' );
+		
 		global $post, $post_new_file, $pagenow, $current_user, $post_type_object;
 		$post_new_file = '#';
 		
@@ -565,7 +568,6 @@ class Profile_CCT {
 			wp_die( 'You are not allow to edit this profile.' );
 		endif;
 		
-		$this->form_fields = get_option( 'Profile_CCT_form_fields' );
 		$user_data = get_post_meta( $post->ID, 'profile_cct', true );
 		
 		remove_meta_box( 'submitdiv', 'profile_cct', 'side' );
@@ -574,13 +576,14 @@ class Profile_CCT {
 		
 		if ( is_array( $contexts ) ):
 			foreach ( $contexts as $context ):
-				$fields = $this->get_option( 'form', 'fields', $context );
-				
+				$fields = Profile_CCT_Admin::get_option( 'form', 'fields', $context );
+								
 				if ( $fields ):
 					foreach ( $fields as $field ):
 						$data = ( isset( $user_data[$field['type']] ) ? $user_data[$field['type']] : null );
 						
                         $callback = 'profile_cct_'.$field['type'].'_shell';
+                        
 						if ( function_exists( $callback ) ):
                             $id = $field['type']."-".$i.'-'.rand(0, 999);
                             $title = $field['label'];
