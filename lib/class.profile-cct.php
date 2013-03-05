@@ -563,8 +563,11 @@ class Profile_CCT {
 	 */
 	function edit_post() {
 		
+		
+        Profile_CCT_Admin::$page = 'form';
 		Profile_CCT_Admin::recount_field( 'form' );
 		
+				
 		global $post, $post_new_file, $pagenow, $current_user, $post_type_object;
 		$post_new_file = '#';
 		
@@ -575,13 +578,13 @@ class Profile_CCT {
 		$user_data = get_post_meta( $post->ID, 'profile_cct', true );
 		
 		remove_meta_box( 'submitdiv', 'profile_cct', 'side' );
-        
+		
 		$contexts = $this->get_contexts();
 		
 		if ( is_array( $contexts ) ):
 			foreach ( $contexts as $context ):
 				$fields = Profile_CCT_Admin::get_option( 'form', 'fields', $context );
-								
+				
 				if ( $fields ):
 					foreach ( $fields as $field ):
 						$data = ( isset( $user_data[$field['type']] ) ? $user_data[$field['type']] : null );
