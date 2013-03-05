@@ -65,13 +65,20 @@ class Profile_CCT_Field {
 		$this->data          = $data;
 		
 		$this->start_field();
+		
 		if ( $this->show_multiple && isset( $data ) ):
 			$first = true;
 			
-			foreach ( $data as $this->data ):
-				$this->create_subfield( ! $first && ! in_array( $this->page, array('page', 'list') ) );
+			foreach ( $data as $singular_data ):
+				if( !is_array( $singular_data ) ):
+					echo $this->data = $data;
+				else:
+					$this->data = $singular_data;
+				endif;
+				
+				$this->create_subfield( ! $first && ! in_array( $this->page, array('page', 'list') ) ); 
 				$this->subfield_counter++;
-				if ($first):
+				if ( $first ):
 					if ( $this->multiple == false ) break;
 					$first = false;
 				endif;
