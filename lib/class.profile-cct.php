@@ -243,8 +243,11 @@ class Profile_CCT {
 	
 	function get_settings( $type = 'settings' ) {
 		// if non exist get the default settings 
+		$settings = get_option( 'Profile_CCT_'.$type );
 		if ( $settings = get_option( 'Profile_CCT_'.$type ) ):
-			return $settings;
+			// make sure that we always retun 
+			return wp_parse_args( $settings, $this->get_default_settings($type) );
+			
         else:
             return $this->get_default_settings($type);
         endif;
@@ -253,6 +256,7 @@ class Profile_CCT {
 	function get_default_settings( $type = 'settings' ) {
         // load the default options array 
         require( PROFILE_CCT_DIR_PATH.'default-options.php' );
+        
         return $option[$type];
 	}
 	
