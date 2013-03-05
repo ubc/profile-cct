@@ -55,6 +55,12 @@
     padding-bottom: 0;
     height: 27px;
 	border-bottom: 1px solid #CCCCCC;
+    white-space: nowrap;
+}
+
+#tabs .nav-tabs-wrapper {
+    overflow: scroll;
+    overflow-y: hidden;
 }
 
 #notify {

@@ -33,29 +33,31 @@ Class Profile_CCT_Tabs {
 				<?php
 			endif; 
 			?>
-			<ul class="nav nav-tabs">
-				<?php 
-				$count = 1;
-				if ( is_array( $tabs ) ):
-					$first = true;
-					foreach( $tabs as $tab ): 
-						?>
-						<li <?php if ($first) echo 'class="active"'; $first = false; ?>>
-							<a href="#tabs-<?php echo $count; ?>" data-toggle="tab" class="tab-link"><?php echo $tab; ?></a>
-							<?php if ( $editing ): ?>
-								<span class="remove-tab">Remove Tab</span> <span class="edit-tab">Edit</span><input type="text" class="edit-tab-input" value="<?php echo esc_attr($tab); ?>" /><input type="button" class="edit-tab-save button" value="Save" />
-							<?php endif; ?>
-						</li>
-						<?php
-						$count++;
-					endforeach;
-				endif;
-				?>
-				
-				<?php if ( $editing ): ?>
-					<li id="add-tab-shell"><a href="#add-tabshell" id="add-tab" title="Add Tab">Add Tab</a></li>
-				<?php endif; ?>
-			</ul>
+			<div class="nav-tabs-wrapper">
+				<ul class="nav nav-tabs">
+					<?php 
+					$count = 1;
+					if ( is_array( $tabs ) ):
+						$first = true;
+						foreach( $tabs as $tab ): 
+							?>
+							<li <?php if ($first) echo 'class="active"'; $first = false; ?>>
+								<a href="#tabs-<?php echo $count; ?>" data-toggle="tab" class="tab-link"><?php echo $tab; ?></a>
+								<?php if ( $editing ): ?>
+									<span class="remove-tab">Remove Tab</span> <span class="edit-tab">Edit</span><input type="text" class="edit-tab-input" value="<?php echo esc_attr($tab); ?>" /><input type="button" class="edit-tab-save button" value="Save" />
+								<?php endif; ?>
+							</li>
+							<?php
+							$count++;
+						endforeach;
+					endif;
+					?>
+					
+					<?php if ( $editing ): ?>
+						<li id="add-tab-shell"><a href="#add-tabshell" id="add-tab" title="Add Tab">Add Tab</a></li>
+					<?php endif; ?>
+				</ul>
+			</div>
 			<div class="tab-content">
 				<?php
 					$count = 1;
