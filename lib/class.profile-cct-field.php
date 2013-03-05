@@ -70,8 +70,10 @@ class Profile_CCT_Field {
 			$first = true;
 			
 			foreach ( $data as $singular_data ):
+				
 				if( !is_array( $singular_data ) ):
-					echo $this->data = $data;
+					$this->multiple = false;
+					$this->data = $data;
 				else:
 					$this->data = $singular_data;
 				endif;
@@ -581,8 +583,8 @@ class Profile_CCT_Field {
 			printf( "<span %s>", $attr['field_shell_attr'] );
 			if ( ! empty($attr['display']) ):
 		    	$this->display_separator( array( 'separator' => $attr['separator'], 'class' => $attr['class'] ) );
-		    	if('div' == $attr['tag']):
-					echo "<".$attr['tag']." ".$attr['field_attr'].">". wpautop( $attr['display'] ) ."</".$attr['tag'].">";
+		    	if( !empty( $attr['filter_text'] ) ):
+					echo "<".$attr['tag']." ".$attr['field_attr'].">". call_user_func ( $attr['filter_text'], $attr['display'] ) ."</".$attr['tag'].">";
 				else:
 					echo "<".$attr['tag']." ".$attr['field_attr'].">".$attr['display']."</".$attr['tag'].">";
 				endif;
@@ -635,6 +637,7 @@ class Profile_CCT_Field {
 	function display_textfield( $attr ) {
 		$attr['tag'] = 'div';
 		
+		$attr['filter_text'] = 'wpautop';
 		// what we want to display should be filtered using the special filter
 		$this->display_text( $attr );
 	}
@@ -745,6 +748,7 @@ class Profile_CCT_Field {
 		$needed_attr['post_separator']   = ( isset( $attr['post_separator'] ) ? $attr['post_separator'] : ''     );
 		$needed_attr['separator']        = ( isset( $attr['separator'] )      ? $attr['separator']      : ''     );
 		$needed_attr['class']            = ( isset( $attr['class'] )          ? $attr['class']          : ''     );
+		$needed_attr['filter_text']      = ( isset( $attr['filter_text'] )          ? $attr['filter_text']          : ''     );
 		
 		if ( ( ! isset( $needed_attr['display'] ) || $needed_attr['display'] == '' ) && isset( $attr['href'] ) ):
 			$needed_attr['display'] = $attr['href'];
@@ -753,6 +757,7 @@ class Profile_CCT_Field {
 		$id    = ( isset( $attr['field_id'] ) ? ' id="'   . esc_attr($attr['field_id']).'" ' : ''  );
 		$class = ( isset( $attr['class']    ) ? ' class="'. esc_attr( sanitize_html_class( $attr['class']))   .'" ' : ' class="field"' );
 	    $href  = ( isset( $attr['href']     ) ? ' href="' . esc_url( $attr['href'] )    .'" ' : '' );
+	    
 		
 		$needed_attr['field_attr'] = $id.$class.$href.' ';
 		
