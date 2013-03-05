@@ -59,7 +59,7 @@
 }
 
 #tabs .nav-tabs-wrapper {
-    overflow: scroll;
+    overflow: auto;
     overflow-y: hidden;
 }
 
