@@ -14,11 +14,11 @@ var Profile_CCT_TABS = {
 		Profile_CCT_TABS.selected_tab = jQuery(".tab-link:first", Profile_CCT_TABS.$tabs); 
 		Profile_CCT_TABS.$tabs.bind( "tabsselect", Profile_CCT_TABS.selectTab);
 		Profile_CCT_TABS.tab_counter = Profile_CCT_TABS.$tabs.tabs( "length" ); // count the tabs 
-		Profile_CCT_TABS.$tabs.tabs( "disable", Profile_CCT_TABS.tab_counter-1 ); // disable the 'add tab' as a tab
+		Profile_CCT_TABS.$tabs.tabs( "disable", Profile_CCT_TABS.tab_counter - 1 ); // disable the 'add tab' as a tab
 		
-		jQuery( ".remove-tab"     ).live( "click",    Profile_CCT_TABS.removeTab );
-		jQuery( ".edit-tab"       ).live( "click",    Profile_CCT_TABS.editTab   );
-		jQuery( ".tab-link"       ).live( "dblclick", Profile_CCT_TABS.editTab   );
+		jQuery( ".remove-tab" ).live( "click",    Profile_CCT_TABS.removeTab );
+		jQuery( ".edit-tab"   ).live( "click",    Profile_CCT_TABS.editTab   );
+		jQuery( ".tab-link"   ).live( "dblclick", Profile_CCT_TABS.editTab   );
 	},
     
 	addTab: function(e) {
