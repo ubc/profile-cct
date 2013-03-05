@@ -100,7 +100,10 @@ var Profile_CCT_PAGE = {
 	updateSocialLabel: function(e) {
 		var value = jQuery(this).val();
 		var label = jQuery(this).parent().next().children("label");
-		label.text(socialArray[value].user_url);
+		if( value ){
+			label.text(socialArray[value].user_url);
+		}
+		
 	},
 	
 	clearSocialLabel: function(e) {
