@@ -495,8 +495,9 @@ class Profile_CCT {
 			return $this->option[$type][$subtype][$context]; // return the value from the stored options array.
 		else:
 			// Get the option using Wordpress' built-in function.
+			
 			$options = get_option( 'Profile_CCT_'.$type.'_'.$subtype.'_'.$context );
-			// var_dump('Profile_CCT_'.$type.'_'.$subtype.'_'.$context);
+			
 			// Check for success. If this if statement fails, it indicates that the option is not present in the database.
 			if ( ! is_array( $options ) ):
                 //Get the default values for this option type.
@@ -505,7 +506,7 @@ class Profile_CCT {
 				if ( $subtype == 'fields' ):
 					$options = $default[$type][$subtype][$context];
 				else:
-					$options = $default[$subtype];
+					$options = $default[$type][$subtype];
                 endif;
   			endif;
             
