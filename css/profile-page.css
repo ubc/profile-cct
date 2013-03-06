@@ -98,6 +98,9 @@
 	border-top: 1px solid rgba(0, 0, 0, 0.1);
 	border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
+.wp-list-table #thumb{
+	width:60px;
+}
 #post-body-content{
 	margin-bottom: 0; 
 }
@@ -213,8 +216,7 @@
 	margin-bottom: 10px;
 }
 
-.picture a.button {
-    display: block;
+.picture .button {
     line-height: 15px;
     margin: 2px 0;
     padding: 3px 10px;
