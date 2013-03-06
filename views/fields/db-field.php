@@ -30,6 +30,7 @@ class Profile_CCT_DB_Field {
 		$profile_cct = Profile_CCT::get_object();
 		
 		foreach ( $profile_cct->settings['clone_fields'] as $field_key => $field_data ):
+			stripslashes_deep($field_data);
 			if ( ! is_numeric($field_key) ):
 				$fields[] = array(
 					"type"  => $field_data['type'],
@@ -37,7 +38,10 @@ class Profile_CCT_DB_Field {
 				);
 			else:
 				//This removes old and invalid fields that are left over from previous versions of the plugin.
-				unset($profile_cct->settings['clone_fields'][$field_key]);
+				// unset($profile_cct->settings['clone_fields'][$field_key]);
+				
+				$fields[] = array( "type"=> $field_data['type'], "label"=> $field_data['label']);
+				
 			endif;
 		endforeach;
 		

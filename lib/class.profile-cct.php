@@ -62,8 +62,10 @@ class Profile_CCT {
 			
 			add_filter( 'post_row_actions',           array( __CLASS__, 'modify_row_actions' ), 10, 2);
 		else:
-			remove_filter( 'the_content', 'wpautop' );
-			remove_filter( 'the_excerpt', 'wpautop' );
+			add_filter('the_content', array( $this,'control_filter'), 1);
+			
+			
+			
 			wp_enqueue_script( 'jquery-ui-tabs' );
 			wp_enqueue_style( 'profile-cct', PROFILE_CCT_DIR_URL.'/css/profile-cct.css' );
 		endif;
@@ -77,6 +79,28 @@ class Profile_CCT {
 		if ( function_exists( 'add_image_size' ) ) { 
 			add_image_size( 'profile-image', $this->settings['width'], $this->settings['height'] ); //300 pixels wide (and unlimited height)
 		}
+	}
+	
+	/**
+	 * control_filter function.
+	 * 
+	 * @access public
+	 * @param mixed $content
+	 * @return void
+	 */
+	function control_filter($content){
+		global $post;
+		
+		if('profile_cct' == $post->post_type ):
+			remove_filter( 'the_content', 'wpautop' );
+			remove_filter( 'the_excerpt', 'wpautop' );
+		else:
+			add_filter( 'the_content', 'wpautop' );
+			add_filter( 'the_excerpt', 'wpautop' );
+		endif;
+		
+		return $content;
+	
 	}
 	
 	/*

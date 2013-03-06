@@ -102,8 +102,9 @@
 			$count = 0;
 			foreach ( $global_settings['clone_fields'] as $field ):
 				
-				
+				$field = stripslashes_deep( $field );
 				$enabled = ( isset( $field['blogs'][$blog_id] ) && $field['blogs'][$blog_id] == true );
+							
 				?>
 					<tr class="<?php if ( $count % 2 ) echo 'alternate'; ?> <?php if ( ! $enabled ) echo 'disabled'; ?>">
 						<td >
@@ -139,7 +140,7 @@
 <?php else: ?>
 	<p>There are no duplicated fields</p>
 <?php endif; ?>
-	
+
 <h3>Create a new Field</h3>
 <form method="post" action="<?php echo admin_url( 'edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASEADMIN.'&view=fields' ); ?>">
 	<?php wp_nonce_field( 'add_profile_field', 'add_profile_fields_field' ); ?>

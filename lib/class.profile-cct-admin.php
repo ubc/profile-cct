@@ -53,6 +53,8 @@ class Profile_CCT_Admin {
 		add_action( 'wp_ajax_cct_needs_refresh',   array( __CLASS__, 'set_profiles_need_refresh' ) );
         
         // double check that the fields don't display twice
+        
+        add_action( 'profile_cct_before_page',     array( __CLASS__, 'update_clone_fields' ), 10, 1 );
 		add_action( 'profile_cct_before_page',     array( __CLASS__, 'recount_field' ), 10, 1 );
 		add_action( 'profile_cct_before_page',     array( __CLASS__, 'display_fields_check' ), 11, 1 );
 		
@@ -129,7 +131,55 @@ class Profile_CCT_Admin {
             
 		endif;
     }
+	/**
+	 * update_clone_fileds function.
+	 * This funtion was needed when you are updating from version 1.1 or 1.2 to 1.3
+	 * @access public
+	 * @return void
+	 */
+	function update_clone_fields(){
+		global $blog_id;
+		$profile = Profile_CCT::get_object();
+		
+		
+		if( isset( $profile->settings['updated_clone_fields'] ) )
+			return;
+			
+		$global_settings = get_site_option( PROFILE_CCT_SETTING_GLOBAL, array() );
+		
+		if ( is_array( $global_settings['clone_fields'] ) && ! empty( $global_settings['clone_fields'] ) ):
+			
+			foreach ( $global_settings['clone_fields'] as $field ):
+				$enabled = ( isset( $field['blogs'][$blog_id] ) && $field['blogs'][$blog_id] == true );
+				
+				if( $enabled ):
+					unset($field["blogs"]);
+					$current_fields[$field['type']] = $field;
+					
+				endif;	
+				
+			endforeach;
+			
+			foreach( $current_fields as $current_field_key => $current_field_data ):
+			
+				if( isset( $profile->settings['clone_fields'][$current_field_key] ) && is_array( $profile->settings['clone_fields'][$current_field_key] )):
+					$merge_current_fields[$current_field_key] = shortcode_atts($profile->settings['clone_fields'][$current_field_key], $current_field_data );
+				else:
+					$merge_current_fields[$current_field_key] = $current_field_data;
+				endif;
+			
+			endforeach;
+			
+			$profile->settings['clone_fields'] = $merge_current_fields;
+			
+			$profile->settings['updated_clone_fields'] = PROFILE_CCT_VERSION;
+			// echo "updated clone fields";
+			self::ask_user_to_update_profiles();
+			update_option( PROFILE_CCT_SETTINGS, $profile->settings );
+			
+		endif;
 	
+	}
 	/**
 	 * recount_field function.
 	 * 
@@ -623,7 +673,7 @@ class Profile_CCT_Admin {
 	static function set_profiles_need_refresh() {
 		if ( isset($_POST['needs_refresh']) ):
 			$key = 'Profile_CCT_needs_refresh';
-			$expiration = 3*DAY_IN_SECONDS; //Expires in 3 days.
+			$expiration = 3*86400; //Expires in 3 days.
 			
 			if ( $_POST['needs_refresh'] ):
 				$value = get_transient( $key );
@@ -633,6 +683,14 @@ class Profile_CCT_Admin {
 				delete_transient( $key );
 			endif;
 		endif;
+	}
+	
+	static function ask_user_to_update_profiles() {
+		$key = 'Profile_CCT_needs_refresh';
+		$expiration = 3*86400; //Expires in 3 days.
+		$value = 'update-all';
+		set_transient( $key, $value, $expiration );
+	
 	}
 
 	
@@ -1094,6 +1152,9 @@ class Profile_CCT_Admin {
 		echo $print;
 		die();
 	}
+	
+	
+	
 }
 
 if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT_Admin' ) ):

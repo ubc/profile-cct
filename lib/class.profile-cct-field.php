@@ -42,6 +42,9 @@ class Profile_CCT_Field {
 		endif;
 		
 		$this->options       = ( is_array( $options ) ? array_merge( $this->default_options, $options ): $this->default_options );
+		
+		$this->options       = stripslashes_deep($this->options); 
+		
 		$this->action        = ( isset( Profile_CCT_Admin::$action ) ? Profile_CCT_Admin::$action : 'edit' );
 		$this->page          = ( isset( $this->options['page'] ) ? $this->options['page'] : ( isset( Profile_CCT_Admin::$page ) ? Profile_CCT_Admin::$page : false ) );
 		$this->type          = ( isset( $this->options['type'] ) ? $this->options['type'] : null );

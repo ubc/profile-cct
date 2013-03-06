@@ -10,6 +10,11 @@
 			You need to update profiles so that they will run smoothly with the latest version of the plugin.
 			<a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>
 		</div>
+	<?php elseif ( 'update-all' == get_transient('Profile_CCT_needs_refresh') ): ?>
+	<div id="update-profile-shell" class="update-profiles info">
+			Profile plugin requires you to update your profile. 
+			<a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>
+		</div>
 	<?php elseif ( false !== ( $where = get_transient('Profile_CCT_needs_refresh') ) ): ?>
 		<?php
 			$where = array_keys($where);
@@ -32,9 +37,10 @@
 			endif;
 		?>
 		<div id="update-profile-shell" class="update-profiles info">
-			The profile <?php echo $where_out." ".$has; ?> been changed.
+			The profile <?php echo $where_out." ".$has; ?> changed.
 			<a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>
 		</div>
+	
 	<?php endif; ?>
 	<h3 class="nav-tab-wrapper">
 		<a class="nav-tab <?php if( ! isset($_GET['view']) ) { echo "nav-tab-active"; } ?>"
