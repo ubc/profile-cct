@@ -70,6 +70,17 @@
     margin-top: 0;
     padding-top: 0;
 }
+.field-shell .field, .field-shell .text-input{
+    float: left;
+    margin-right: 5px;
+}
+.field-shell-name .field,
+.field-shell-name .text-input,
+.field-shell-multiple .field,
+.field-shell-multiple .text-input{
+	float: none;
+	margin-right: 0;
+}
 
 .field-shell-projects .field,
 .field-shell-courses .field {
@@ -142,7 +153,6 @@
 .user-avatar-display-image img{
 	max-width: 100%;
 	height: auto;
-	border: 1px solid #CCC;	
 }
 
 /* Autocomplete */

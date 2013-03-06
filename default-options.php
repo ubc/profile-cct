@@ -113,6 +113,7 @@ $option = array(
 		"archive" => array(
 			
 		),
+		'sort_order_by' => 'manual',
 		'slug' => 'person',
 		"permissions" => array(
 			'administrator' => array(
