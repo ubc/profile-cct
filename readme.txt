@@ -122,8 +122,8 @@ eg. [profilenavigation display_searchbox="true" display_tax="location, position"
 = [profilefield] shortcode =
 
 This shortcode can only be used on a profile page. It pulls specific fields from the profile and render it at the shortcode. The display will mirror the settings that you configure in the Profile View Builder. These are the available parameters for the profilefield shortcode
-* type, set the id of the field that you want to get.
-* show, determines which parts of a field are displayed. This corresponds to the "show / hide input area" checkboxes when you edit a field in the Profile View Builder. So for example, for the "name" field type, the valid options are "salutations", "middle", and credentials". The show parameter should be set to a comma separated list of the sections that you want to display, and will override the settings that you configured on the Profile View Builder.
+* type, set the id of the field that you want to get. (eg. name, bio, email, clone_lab_phone, phone)
+* show, determines which parts of a field are displayed. This corresponds to the "show / hide input area" checkboxes when you edit a field in the Profile View Builder. So for example, for the "name" field type, the valid options are "salutations", "middle", and "credentials". The show parameter should be set to a comma separated list of the sections that you want to display, and will override the settings that you configured on the Profile View Builder.
 * html, if you set html="false" then all html tags will be stripped out of the field. Allowing you to just get the information.
 * width, the width of this field. Valid options are "full", "one-third", "two-third", or "half". Note that if html=false then this option will do nothing.
 
