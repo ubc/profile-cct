@@ -67,6 +67,7 @@ class Profile_CCT_Field {
 		$this->multiple      = ( isset( $this->options['multiple'] ) ? $this->options['multiple'] : false );
 		$this->data          = $data;
 		
+		
 		ob_start();
 		$this->start_field();
 		$echo_start_field = ob_get_contents();
@@ -312,8 +313,9 @@ class Profile_CCT_Field {
 				<label class="field-title"><?php echo $this->label; ?></label>
 		<?php
 		else:
+			$taxonomy_class = ( Profile_CCT::string_starts_with( $this->type, PROFILE_CCT_TAXONOMY_PREFIX) ? 'field-item-taxonomy' : "");
 			?>
-			<div class="<?php echo esc_attr( $this->type ); ?> field-item <?php echo $this->class." ".$this->width; ?>">
+			<div class="<?php echo esc_attr( $this->type ); ?> field-item <?php echo $this->class." ".$taxonomy_class." ".$this->width; ?>">
 			<?php
 			echo $this->before;
 		endif;

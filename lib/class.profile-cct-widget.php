@@ -180,9 +180,6 @@ class Profile_CCT_Widget extends WP_Widget {
 		return ob_get_clean();
 	}
 	
-	function starts_with( $haystack, $needle ) {
-		return ! strncmp( $haystack, $needle, strlen( $needle ) );
-	}
 }
 
 // Lets initate the widget

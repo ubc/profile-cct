@@ -234,7 +234,7 @@ class Profile_CCT_Admin {
                 
 				if ( ! in_array( $field['type'], $current_fields ) ): // add to the current_fields array
 					$current_fields[] = $field['type'];
-					if ( $where == 'form' && ! strncmp($field['type'], PROFILE_CCT_TAXONOMY_PREFIX, strlen('profile_cct_') ) ):
+					if ( $where == 'form' && Profile_CCT::string_starts_with( $field['type'], PROFILE_CCT_TAXONOMY_PREFIX ) ):
 						self::$option[$where]['fields']['side'][] = $field;
 					else:
 						self::$option[$where]['fields']['bench'][] = $field;
@@ -1162,6 +1162,3 @@ if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT_Admin' ) ):
 endif;
 
 
-function string_starts_with( $haystack, $needle ) {
-    return ! strncmp( $haystack, $needle, strlen($needle) );
-}

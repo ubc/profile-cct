@@ -143,7 +143,7 @@ class Profile_CCT {
 		
 		if ( ! isset( $this->settings['version']['taxonomy'] ) || version_compare( '1.3', $this->settings['version']['taxonomy'], '>' ) ):
 			foreach ( $bench_fields as $key => $field ):
-				if ( ! strncmp($field['type'], PROFILE_CCT_TAXONOMY_PREFIX, strlen(PROFILE_CCT_TAXONOMY_PREFIX) ) ):
+				if ( Profile_CCT::string_starts_with( $field['type'], PROFILE_CCT_TAXONOMY_PREFIX ) ):
 					$side_fields[] = $field;
 					unset( $bench_fields[$key] );
 				endif;
@@ -716,6 +716,12 @@ class Profile_CCT {
             'include_selected' => true
         ) );
 	}
+	
+	function string_starts_with( $haystack, $needle ) {
+    	return ! strncmp( $haystack, $needle, strlen($needle) );
+	}
 }
 
 Profile_CCT::init();
+
+

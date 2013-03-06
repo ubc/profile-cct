@@ -71,17 +71,10 @@
     padding-top: 0;
 }
 
-.field-shell .field, .field-shell .text-input{
+.field-item-taxonomy .field, 
+.field-item-taxonomy .text-input{
     float: left;
     margin-right: 5px;
-}
-
-.field-shell-name .field,
-.field-shell-name .text-input,
-.field-shell-multiple .field,
-.field-shell-multiple .text-input{
-	float: none;
-	margin-right: 0;
 }
 
 .field-shell-projects .field,
