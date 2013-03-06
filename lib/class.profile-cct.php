@@ -269,7 +269,7 @@ class Profile_CCT {
 	function delete_all_settings(){
 		// only administator can do this… 
 		if ( current_user_can('administrator') ):
-			foreach ( array( "form", "page", "list" ) as $where):
+			foreach ( array( "form", "page", "list" ) as $where ):
 				// delete all the fields
 				foreach ( self::get_contexts( $where ) as $context ):
 					self::delete_option( $where, 'fields', $context );

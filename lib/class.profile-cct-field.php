@@ -64,7 +64,6 @@ class Profile_CCT_Field {
 		$this->multiple      = ( isset( $this->options['multiple'] ) ? $this->options['multiple'] : false );
 		$this->data          = $data;
 		
-		
 		ob_start();
 		$this->start_field();
 		$echo_start_field = ob_get_contents();

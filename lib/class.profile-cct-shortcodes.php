@@ -13,6 +13,7 @@ class Profile_CCT_Shortcodes {
 		add_shortcode( 'profile', 			array( __CLASS__, 'profile_single_shortcode' ) );
 		add_shortcode( 'profilesearch',  	array( __CLASS__, 'profile_search_shortcode' ) );
 		add_shortcode( 'profilenavigation', array( __CLASS__, 'profile_navigation_shortcode' ) );
+		add_shortcode( 'profilefield',      array( __CLASS__, 'profile_field_shortcode' ) );
 	}
 	
 	/**
@@ -188,7 +189,7 @@ class Profile_CCT_Shortcodes {
 		
 		if ( is_array( $atts ) ):
 			if ( isset( $atts['display_tax'] ) ):
-				foreach ( explode(",", $atts['display_tax']) as $taxonomy ):
+				foreach ( explode( ",", $atts['display_tax'] ) as $taxonomy ):
 					$atts['display_tax'][$taxonomy] = 'true';
 				endforeach;
 			endif;
@@ -197,6 +198,55 @@ class Profile_CCT_Shortcodes {
 		endif;
 		
 		return Profile_CCT_Widget::profile_search( $atts );
+	}
+	
+	static function profile_field_shortcode( $atts ) {
+		if ( get_post_type() == 'profile_cct' ):
+			// Since these parameters will be passed directly into our field functions, let's filter out any unintended parameters (particularly, url_prefix)
+			foreach ( $atts as $key => $att ):
+				if ( ! in_array( $key, array( 'type', 'show', 'width', 'html' ) ) ):
+					unset( $atts[$key] );
+				endif;
+			endforeach;
+			
+			$data = get_post_meta( get_the_ID(), 'profile_cct', true );
+			Profile_CCT_Admin::$action = 'display';
+			Profile_CCT_Admin::$page   = 'page';
+			
+			if ( isset( $atts['show'] ) ):
+				$atts['show'] = array_map( 'trim', explode( ",", $atts['show'] ) );
+			endif;
+			
+			$options = array();
+			foreach ( Profile_CCT_Admin::default_shells() as $context ):
+				$fields = Profile_CCT_Admin::get_option( 'page', 'fields', $context );
+				foreach ( $fields as $field ):
+					if ( $field['type'] == $atts['type'] ):
+						$options = $field;
+						break 2;
+					endif;
+				endforeach;
+			endforeach;
+			
+			$options = array_merge( $options, $atts ); 
+			
+			ob_start();
+			
+			if ( function_exists( 'profile_cct_'.$atts['type'].'_shell' ) ):
+				call_user_func( 'profile_cct_'.$atts['type'].'_shell', $options, $data[ $atts['type'] ] );
+			else:
+				do_action( 'profile_cct_shell_'.$atts['type'], $options, $data[ $atts['type'] ] );
+			endif;
+			
+			$out = ob_get_contents();
+			ob_end_clean();
+			
+			if ( $atts['html'] == 'false' ):
+				$out = strip_tags( $out );
+			endif;
+			
+			return $out;
+		endif;
 	}
 }
 

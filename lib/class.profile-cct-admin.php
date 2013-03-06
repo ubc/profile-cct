@@ -177,7 +177,7 @@ class Profile_CCT_Admin {
 		$all_dynamic_fields = array();
         $real_fields = array(); // array of all the default fields containing the field array with the key field['type']
         
-		if ( is_array($dynamic_fields) ):
+		if ( is_array( $dynamic_fields ) ):
 			foreach ( $dynamic_fields as $field ):
 				$all_dynamic_fields[] 		 = $field['type'];
 				$real_fields[$field['type']] = $field;
