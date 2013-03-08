@@ -63,8 +63,7 @@ class Profile_CCT {
 			add_filter( 'post_row_actions',           array( __CLASS__, 'modify_row_actions' ), 10, 2);
 		else:
 			add_filter('the_content', array( $this,'control_filter'), 1);
-			
-			
+			add_filter('the_excerpt', array( $this,'control_filter'), 1);
 			
 			wp_enqueue_script( 'jquery-ui-tabs' );
 			wp_enqueue_style( 'profile-cct', PROFILE_CCT_DIR_URL.'/css/profile-cct.css' );
