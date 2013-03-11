@@ -324,9 +324,13 @@ class Profile_CCT_Field {
 		?>
 		<div class="field-shell field-shell-<?php echo $this->type.' '.$multiple_class; ?>">
 		
-		<?php if ( 'edit' == $this->action ): // only display it on the description ?>
+		<?php if ( 'form' == $this->page ): ?>
 			<div class="description">
-				<?php if ( isset( $this->description ) && 'edit' == $this->action && ! empty( $this->description ) ) echo esc_html($this->description); ?>
+				<?php
+					if ( ! empty( $this->description ) ):
+						echo esc_html($this->description);
+					endif;
+				?>
 			</div>
 		<?php endif; ?>
 		

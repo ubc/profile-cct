@@ -10,7 +10,6 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 		'type'         => 'taxonomy',
 		'label'        => 'taxonomy',
 		'class'        => 'taxonomy',
-		'description'  => '',
 		'width'        => 'full',
 		'before'       => '',
 		'empty'        => '',
@@ -219,17 +218,6 @@ class Profile_CCT_Walker extends Walker {
 		$output .= "</li>\n";
 	}
 }
-
-/*
-include_once( 'includes/template.php' );
-	
-class Profile_CCT_Walker extends Walker_Category_Checklist {
-	function start_el( &$output, $category, $depth, $args, $id = 0 ) {
-		unset($args['disabled']);
-		parent::start_el( $output, $category, $depth, $args, $id = 0 );
-	}
-}
-*/
 
 if ( is_array( Profile_CCT::get_object()->taxonomies ) ):
 	Profile_CCT_Taxonomy_Field::init();
