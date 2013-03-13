@@ -34,6 +34,7 @@ class Profile_CCT_Autocomplete {
         $posts = get_posts( array(
             's' => trim( esc_attr( strip_tags( $_REQUEST['term'] ) ) ),
 			'post_type' => 'profile_cct',
+			'order'=> 'ASC', 'orderby' => 'title',
         ) );
         $suggestions = array();
 		
