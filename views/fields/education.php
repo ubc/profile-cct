@@ -33,7 +33,7 @@ Class Profile_CCT_Education extends Profile_CCT_Field {
 		$this->input_select( array(
 			'field_id'   => 'year',
 			'label'      => 'Year',
-			'all_fields' => $this->list_of_years(),
+			'all_fields' => $this->list_of_years( 3, -70 ),
 		) );
 		$this->input_text( array(
 			'field_id' => 'degree',
