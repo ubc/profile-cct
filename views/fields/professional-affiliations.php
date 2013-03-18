@@ -70,31 +70,31 @@ Class Profile_CCT_Professionalaffiliations extends Profile_CCT_Field {
 	 */
 	function display() {
 		$this->display_link( array(
-			'field_id'       => 'affiliation',
-			'class'          => 'affiliation',
-			'default_text'   => 'Wayne Healthcare',
-			'maybe_link'     => true,
+			'field_id'     => 'affiliation',
+			'class'        => 'affiliation',
+			'default_text' => 'Wayne Healthcare',
+			'maybe_link'   => true,
 			'href'         => ( empty( $this->data['affiliation-website'] ) ? '' : $this->data['affiliation-website'] ),
-			'post_separator' => ', ',
 		) );
 		$this->display_text( array(
-			'field_id'       => 'affiliation-role',
-			'class'          => 'affiliation-role',
-			'default_text'   => 'Public Speaker',
-			'tag'            => 'strong',
-			'post_separator' => ', ',
+			'field_id'     => 'affiliation-role',
+			'class'        => 'affiliation-role',
+			'default_text' => 'Public Speaker',
+			'tag'          => 'strong',
+			'separator'    => ', ',
 		));
 		$this->display_text( array(
-			'field_id'       => 'active-date-month',
-			'class'          => 'active-date-month',
-			'default_text'   => 'January',
-			'post_separator' => ' ',
+			'field_id'     => 'active-date-month',
+			'class'        => 'active-date-month',
+			'default_text' => 'January',
+			'separator'    => ', ',
 		) );
 		$this->display_text( array(
 			'field_id'     => 'active-date-year',
 			'field_type'   => $type,
 			'class'        => 'active-date-year',
 			'default_text' => '1951',
+			'separator'    => ' ',
 		) );
 	}
 	

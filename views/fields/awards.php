@@ -42,13 +42,23 @@ Class Profile_CCT_Awards extends Profile_CCT_Field {
 	}
 	
 	function display() {
-		$this->display_link( array(
-			'field_id'       => 'award-name',
-			'class'          => 'award-name',
-			'default_text'   => 'Gotham Prize for Cancer Research',
-			'href'           => ( empty( $this->data['award-website'] ) ? '' : $this->data['award-website'] ),
-			'post_separator' => ' ',
-		) );
+		if ( empty( $this->data['award-website'] ) ):
+			$this->display_text( array(
+				'field_id'       => 'award-name',
+				'class'          => 'award-name',
+				'default_text'   => 'Gotham Prize for Cancer Research',
+				'post_separator' => ' ',
+			) );
+		else:
+			$this->display_link( array(
+				'field_id'       => 'award-name',
+				'class'          => 'award-name',
+				'default_text'   => 'Gotham Prize for Cancer Research',
+				'href'           => $this->data['award-website'],
+				'post_separator' => ' ',
+			) );
+		endif;
+		
 		$this->display_text( array(
 			'field_id'     => 'receival-date-month',
 			'class'        => 'receival-date-month',
