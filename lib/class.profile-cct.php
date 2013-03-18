@@ -445,7 +445,11 @@ class Profile_CCT {
 	}
 	
 	function get_user_profile() {
-		global $current_user;
+		$current_user = wp_get_current_user();
+		if ( ! ( $current_user instanceof WP_User ) ):
+			error_log("Profile CCT Dashboard Widget: Could not retrieve current user.");
+			return;
+		endif;
 		
 		$arguments = array(
 			'post_type'      => 'profile_cct',
