@@ -3,6 +3,7 @@
  * Profile_CCT_Taxonomy class.
  */
 class Profile_CCT_Taxonomy {
+	
 	/**
 	 * init function.
 	 * 
@@ -111,7 +112,7 @@ class Profile_CCT_Taxonomy {
 			'show_ui'      => true,
 			'query_var'    => true,
 			'rewrite'      => array( 'slug' => sanitize_title( $taxonomy['single'] ) ),
-		));
+		) );
 	}
 	
 	/**

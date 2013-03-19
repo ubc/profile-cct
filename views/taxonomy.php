@@ -1,11 +1,12 @@
 <?php 
-	$field = Profile_CCT::get_object();
-	$taxonomies = $field->taxonomies; 
+	$profile = Profile_CCT::get_object();
+	$taxonomies = $profile->taxonomies; 
 
 	// Add taxonomy
 	if ( ! empty($_POST) && check_admin_referer( 'add_profile_taxonomy', 'add_profile_taxonomy_field' ) ):
 		$error = array();
 		$hierarchical = ( is_numeric( $_POST['hierarchical'] ) ? $_POST['hierarchical'] : 0 );
+		$display = ( ! empty( $_POST['display'] ) ? $_POST['display'] : 'tags' );
 		$plural = trim( strip_tags( $_POST['plural-name'] ) );
 		
 		if ( empty($plural) ):
@@ -23,6 +24,7 @@
 				'plural'       => $plural,
 				'single'       => $single,
 				'hierarchical' => $hierarchical,
+				'display'      => $display,
 			);
 			
 			foreach ( $taxonomies as $taxonomy ):
@@ -43,16 +45,16 @@
 <p><strong>Tax&middot;on&middot;o&middot;my</strong> - The classification of something, a way to group things and be able to filter them later.</p>
 <?php echo $note; ?>
 <h3>Current Taxonomies </h3>
-<?php if ( is_array($taxonomies) && ! empty($taxonomies) ): ?>
-<pre>
-</pre>
+<?php if ( is_array( $taxonomies ) && ! empty( $taxonomies ) ): ?>
 	<table class="widefat">
 		<thead>
-		<tr>
-			<th class="row-title">Name</th>
-			<th>Hierarchical</th>
-		</tr>
+			<tr>
+				<th class="row-title">Name</th>
+				<th>Hierarchical</th>
+				<th>Display</th>
+			</tr>
 		</thead>
+		
 		<tbody>
 		<?php 
 			$count = 0;
@@ -75,7 +77,10 @@
 						</div>
 					</td>
 					<td>
-						<?php echo( $taxonomy['hierarchical'] ? "Yes": "No" ); ?>
+						<?php echo ( $taxonomy['hierarchical'] ? "Yes": "No" ); ?>
+					</td>
+					<td>
+						<?php echo ( $taxonomy['display'] ? $taxonomy['display']: "default" ); ?>
 					</td>
 				</tr>
 				<?php 
@@ -88,6 +93,7 @@
 			<tr>
 				<th class="row-title">Name</th>
 				<th>Hierarchical</th>
+				<th>Display</th>
 			</tr>
 		</tfoot>
 	</table>
@@ -151,6 +157,21 @@
 					<label><input type="radio" name="hierarchical" value="1" /> <span>Yes - Works like Post Categories</span></label>
 					<br />
 					<label><input type="radio" name="hierarchical" value="0" checked="checked" /> <span>No - Works like Post Tags</span></label>
+				</fieldset>
+			</td>
+		</tr>
+		
+		<tr valign="top">
+			<th scope="row">
+				Display Type
+			</th>
+			<td>
+				<fieldset>
+					<legend class="screen-reader-text"><span>Display Type</span></legend>
+					<select name="display">
+						<option value="">Default</option>
+						<option value="dropdown">Dropdown</option>
+					</select>
 				</fieldset>
 			</td>
 		</tr>

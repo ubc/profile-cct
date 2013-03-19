@@ -110,7 +110,7 @@ class Profile_CCT {
 		$bench_fields = get_option( 'Profile_CCT_form_fields_bench', array() );
 		$side_fields = get_option( 'Profile_CCT_form_fields_side', array() );
 		
-		if ( ! isset( $this->settings['version']['clone_fields'] ) || version_compare( PROFILE_CCT_VERSION, $this->settings['version']['clone_fields'], '>' ) ):
+		if ( ! isset( $this->settings['version']['clone_fields'] ) || version_compare( '1.3', $this->settings['version']['clone_fields'], '>' ) ):
 			error_log("Updated cloned fields to 1.3 standards");
 			
 			if ( isset( $this->settings['clone_fields'] ) ):

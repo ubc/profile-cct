@@ -50,7 +50,29 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 			),
 		);
 		
-		if ( is_taxonomy_hierarchical( $this->options['type'] ) ):
+		$profile = Profile_CCT::get_object();
+		foreach ( $profile->taxonomies as $taxonomy ):
+			if ( $this->options['type'] == Profile_CCT_Taxonomy::id( $taxonomy['single'] ) ):
+				$display = ( isset( $taxonomy['display'] ) ? $taxonomy['display'] : 'default' );
+			endif;
+		endforeach;
+		
+		if ( $display == 'dropdown' ):
+			?>
+			<select>
+				<?php
+					wp_terms_checklist( $post->ID, array(
+						'descendants_and_self' => 0,
+						'selected_cats'        => false,
+						'popular_cats'         => false,
+						'walker'               => new Profile_CCT_Dropdown_Walker(),
+						'taxonomy'             => $this->options['type'],
+						'checked_ontop'        => false,
+					) );
+				?>
+			</select>
+			<?php
+		elseif ( is_taxonomy_hierarchical( $this->options['type'] ) ):
 			call_user_func( 'post_categories_meta_box', $post, $data );
 		else:
 			call_user_func( 'post_tags_meta_box', $post, $data );
@@ -102,56 +124,106 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 	public static function add_meta_box( $field, $context, $data ) {
 		global $current_user;
 		
+		$taxonomy_id = $field['type'];
 		$callback_args = array(
 			'taxonomy' => $field['type'],
 		);
 		
-		if ( $current_user->has_cap( 'manage_categories' ) ):
+		$profile = Profile_CCT::get_object();
+		$taxonomies = $profile->taxonomies;
+		
+		foreach ( $taxonomies as $taxonomy ):
+			if ( Profile_CCT_Taxonomy::id( $taxonomy['single'] ) == $field['type'] ):
+				$callback_args['display'] = ( empty( $taxonomy['display'] ) ? 'default' : $taxonomy['display'] );
+				break;
+			endif;
+		endforeach;
+		
+		if ( $callback_args['display'] == 'default' && $current_user->has_cap( 'manage_categories' ) ):
 			if ( is_taxonomy_hierarchical( $field['type'] ) ):
-				add_meta_box( $field['type'], $field['label'], 'post_categories_meta_box', 'profile_cct', $context, 'core', $callback_args );
+				$callback = 'post_categories_meta_box';
 			else:
-				add_meta_box( 'tagsdiv-'.$field['type'].'div', $field['label'], 'post_tags_meta_box', 'profile_cct', $context, 'core', $callback_args );
+				$taxonomy_id = 'tagsdiv-'.$taxonomy_id.'div';
+				$callback = 'post_tags_meta_box';
 			endif;
 		else:
-			add_meta_box( $field['type'], $field['label'], array( __CLASS__, 'meta_box_content' ), 'profile_cct', $context, 'core', $callback_args );
-		endif;		
+			$callback = array( __CLASS__, 'meta_box_content' );
+		endif;
+		
+		add_meta_box( $taxonomy_id, $field['label'], $callback, 'profile_cct', $context, 'core', $callback_args );
 	}
 	
 	public static function meta_box_content( $post, $args ) {
 		$taxonomy = $args['args']['taxonomy'];
+		$display = $args['args']['display'];
 		
 		?>
 		<div id="taxonomy-<?php echo $taxonomy; ?>" class="categorydiv">
-			<ul id="<?php echo $taxonomy; ?>checklist" class="categorychecklist form-no-clear" data-wp-lists="list:<?php echo $taxonomy; ?>">
-				<?php
-				wp_terms_checklist( $post->ID, array(
-					'descendants_and_self' => 0,
-					'selected_cats'        => false,
-					'popular_cats'         => false,
-					'walker'               => new Profile_CCT_Walker(),
-					'taxonomy'             => $taxonomy,
-					'checked_ontop'        => false,
-				) );
+			<input type="hidden" name="tax_data[<?php echo $taxonomy; ?>][display]" value="<?php echo $display; ?>" />
+			<?php
+			switch ( $display ):
+			case 'dropdown':
 				?>
-			</ul>
+				<select id="<?php echo $taxonomy; ?>dropdown" name="tax_input[<?php echo $taxonomy; ?>][]" class="categorychecklist form-no-clear" data-wp-lists="list:<?php echo $taxonomy; ?>">
+					<option value="">None</option>
+					<?php
+						wp_terms_checklist( $post->ID, array(
+							'descendants_and_self' => 0,
+							'selected_cats'        => false,
+							'popular_cats'         => false,
+							'walker'               => new Profile_CCT_Dropdown_Walker(),
+							'taxonomy'             => $taxonomy,
+							'checked_ontop'        => false,
+						) );
+					?>
+				</select>
+				<?php
+				break;
+			default:
+				?>
+				<ul id="<?php echo $taxonomy; ?>checklist" class="categorychecklist form-no-clear" data-wp-lists="list:<?php echo $taxonomy; ?>">
+					<?php
+						wp_terms_checklist( $post->ID, array(
+							'descendants_and_self' => 0,
+							'selected_cats'        => false,
+							'popular_cats'         => false,
+							'walker'               => new Profile_CCT_Checkbox_Walker(),
+							'taxonomy'             => $taxonomy,
+							'checked_ontop'        => false,
+						) );
+					?>
+				</ul>
+				<?php
+			endswitch;
+			?>
 		</div>
 		<?php
 	}
 	
 	public static function edit_post( $post_id, $post ) {
 		global $current_user;
-		if ( ! $current_user->has_cap( 'manage_categories' ) ) {
+		
+		if ( ! empty( $_POST['tax_input'] ) ):
 			foreach ( $_POST['tax_input'] as $taxonomy => $terms ):
-				if ( ! is_taxonomy_hierarchical( $taxonomy ) ):
+				$display = ( isset( $_POST['tax_data'][$taxonomy]['display'] ) ? $_POST['tax_data'][$taxonomy]['display'] : 'default' );
+				
+				if ( $display != 'default' || ! $current_user->has_cap( 'manage_categories' ) ):
 					foreach ( $terms as $index => $term_id ):
 						$term = get_term( $term_id, $taxonomy );
-						$terms[$index] = $term->name;
+						
+						if ( ! is_taxonomy_hierarchical( $taxonomy ) ):
+							$terms[$index] = $term->name;
+						endif;
+						
+						if ( ! term_exists( $term->slug, $taxonomy ) ):
+							unset( $terms[$index] );
+						endif;
 					endforeach;
+					
+					wp_set_post_terms( $post_id, $terms, $taxonomy );
 				endif;
-				
-				wp_set_post_terms( $post_id, $terms, $taxonomy );
 			endforeach;
-		}
+		endif;
 	}
 
     public static function shell( $options, $data ) {
@@ -160,12 +232,12 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 		$options['multiple'] = false;
 		
 		if ( empty( $data ) ):
-			$taxonomy = $options['type'];
+			$taxonomy_id = $options['type'];
 			
 			if ( isset( $post ) ):
-				$terms = get_the_terms( $post->ID, $taxonomy );
+				$terms = get_the_terms( $post->ID, $taxonomy_id );
 			else:
-				$terms = get_terms( $taxonomy, array( 'number' => 5, 'hide_empty' => false ) );
+				$terms = get_terms( $taxonomy_id, array( 'number' => 5, 'hide_empty' => false ) );
 			endif;
 			
 			$data = array();
@@ -175,7 +247,7 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 						'class'        => $term->slug,
 						'value'        => $term->name,
 						'default_text' => $term->name,
-						'href'         => get_term_link( $term, $taxonomy ),
+						'href'         => get_term_link( $term, $taxonomy_id ),
 					);
 				endforeach;
 			endif;
@@ -185,18 +257,29 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
     }
 }
 
-class Profile_CCT_Walker extends Walker {
-	var $tree_type = 'category';
-	var $db_fields = array ('parent' => 'parent', 'id' => 'term_id');
+class Profile_CCT_Checkbox_Walker extends Walker {
+	var $db_fields = array ( 'parent' => 'parent', 'id' => 'term_id' );
 	
 	function start_lvl( &$output, $depth = 0, $args = array() ) {
-		$indent = str_repeat("\t", $depth);
-		$output .= "$indent<ul class='children'>\n";
+		$indent = str_repeat( "\t", $depth );
+		ob_start();
+		
+		echo $indent;
+		?>
+		<ul class='children'>
+		<?php
+		$output .= ob_get_clean();
 	}
 	
 	function end_lvl( &$output, $depth = 0, $args = array() ) {
 		$indent = str_repeat("\t", $depth);
-		$output .= "$indent</ul>\n";
+		ob_start();
+		
+		echo $indent;
+		?>
+		</ul>
+		<?php
+		$output .= ob_get_clean();
 	}
 	
 	function start_el( &$output, $category, $depth, $args, $id = 0 ) {
@@ -204,18 +287,55 @@ class Profile_CCT_Walker extends Walker {
 		if ( empty($taxonomy) )
 		$taxonomy = 'category';
 		
-		if ( $taxonomy == 'category' ):
-			$name = 'post_category';
-		else:
-			$name = 'tax_input['.$taxonomy.']';
-		endif;
-		
+		$name = 'tax_input['.$taxonomy.']';
 		$class = in_array( $category->term_id, $popular_cats ) ? ' class="popular-category"' : '';
-		$output .= "\n<li id='{$taxonomy}-{$category->term_id}'$class>" . '<label class="selectit"><input value="' . $category->term_id . '" type="checkbox" name="'.$name.'[]" id="in-'.$taxonomy.'-' . $category->term_id . '"' . checked( in_array( $category->term_id, $selected_cats ), true, false ) . ' /> ' . esc_html( apply_filters('the_category', $category->name )) . '</label>';
+		
+		ob_start();
+		
+		echo $indent;
+		?>
+		<li id="<?php echo $taxonomy; ?>-<?php echo $category->term_id; ?>" <?php echo $class; ?>>
+			<label class="selectit">
+				<input value="<?php echo $category->term_id; ?>" type="checkbox" name="<?php echo $name; ?>[]" id="in-<?php echo $taxonomy; ?>-<?php echo $category->term_id; ?>" <?php checked( in_array( $category->term_id, $selected_cats ), true, false ); ?> />
+				<?php echo esc_html( apply_filters( 'the_category', $category->name ) ); ?>
+			</label>
+		<?php
+		$output .= ob_get_clean();
 	}
 	
 	function end_el( &$output, $category, $depth = 0, $args = array() ) {
-		$output .= "</li>\n";
+		ob_start();
+		?>
+		</li>
+		<?php
+		$output .= ob_get_clean();
+	}
+}
+
+class Profile_CCT_Dropdown_Walker extends Walker {
+	var $db_fields = array ( 'parent' => 'parent', 'id' => 'term_id' );
+	
+	function start_el( &$output, $category, $depth, $args, $id = 0 ) {
+		extract($args);
+		
+		print_r($args);
+		
+		ob_start();
+		?>
+		<option id="<?php echo $taxonomy; ?>-<?php echo $category->term_id; ?>" value="<?php echo $category->term_id; ?>" <?php selected( in_array( $category->term_id, $selected_cats ) ); ?> >
+		<?php
+		echo str_repeat( "-", $depth )." ";
+		echo $category->name;
+		
+		$output .= ob_get_clean();
+	}
+	
+	function end_el( &$output, $category, $depth = 0, $args = array() ) {
+		ob_start();
+		?>
+		</option>
+		<?php
+		$output .= ob_get_clean();
 	}
 }
 

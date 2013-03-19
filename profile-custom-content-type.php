@@ -28,6 +28,7 @@ define( 'PROFILE_CCT_SETTING_TAXONOMY', 'Profile_CCT_taxonomy' );
 define( 'PROFILE_CCT_SETTING_GLOBAL', 'Profile_CCT_global_settings' );
 
 define( 'PROFILE_CCT_TAXONOMY_PREFIX', 'profile_cct_' );
+define( 'PROFILE_CCT_TAXONOMY_META', 'profile_cct_taxonomy' );
 
 require( PROFILE_CCT_DIR_PATH . 'lib/class.profile-cct.php' );
 require( PROFILE_CCT_DIR_PATH . 'lib/class.profile-cct-admin.php' );
