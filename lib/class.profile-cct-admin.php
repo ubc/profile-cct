@@ -131,8 +131,9 @@ class Profile_CCT_Admin {
             
 		endif;
     }
+	
 	/**
-	 * update_clone_fileds function.
+	 * update_clone_fields function.
 	 * This funtion was needed when you are updating from version 1.1 or 1.2 to 1.3
 	 * @access public
 	 * @return void
@@ -141,14 +142,13 @@ class Profile_CCT_Admin {
 		global $blog_id;
 		$profile = Profile_CCT::get_object();
 		
-		
-		if( isset( $profile->settings['updated_clone_fields'] ) )
+		if ( isset( $profile->settings['updated_clone_fields'] ) ):
 			return;
-			
+		endif;
+		
 		$global_settings = get_site_option( PROFILE_CCT_SETTING_GLOBAL, array() );
 		
 		if ( is_array( $global_settings['clone_fields'] ) && ! empty( $global_settings['clone_fields'] ) ):
-			
 			foreach ( $global_settings['clone_fields'] as $field ):
 				$enabled = ( isset( $field['blogs'][$blog_id] ) && $field['blogs'][$blog_id] == true );
 				
@@ -160,26 +160,24 @@ class Profile_CCT_Admin {
 				
 			endforeach;
 			
-			foreach( $current_fields as $current_field_key => $current_field_data ):
-			
-				if( isset( $profile->settings['clone_fields'][$current_field_key] ) && is_array( $profile->settings['clone_fields'][$current_field_key] )):
-					$merge_current_fields[$current_field_key] = shortcode_atts($profile->settings['clone_fields'][$current_field_key], $current_field_data );
-				else:
-					$merge_current_fields[$current_field_key] = $current_field_data;
-				endif;
-			
-			endforeach;
+			if ( is_array( $current_fields ) ):
+				foreach ( $current_fields as $current_field_key => $current_field_data ):
+					if ( isset( $profile->settings['clone_fields'][$current_field_key] ) && is_array( $profile->settings['clone_fields'][$current_field_key] )):
+						$merge_current_fields[$current_field_key] = shortcode_atts($profile->settings['clone_fields'][$current_field_key], $current_field_data );
+					else:
+						$merge_current_fields[$current_field_key] = $current_field_data;
+					endif;
+				endforeach;
+			endif;
 			
 			$profile->settings['clone_fields'] = $merge_current_fields;
-			
 			$profile->settings['updated_clone_fields'] = PROFILE_CCT_VERSION;
-			// echo "updated clone fields";
+			
 			self::ask_user_to_update_profiles();
 			update_option( PROFILE_CCT_SETTINGS, $profile->settings );
-			
 		endif;
-	
 	}
+	
 	/**
 	 * recount_field function.
 	 * 
@@ -204,6 +202,7 @@ class Profile_CCT_Admin {
 				$current_fields[] = $field['type'];
 			endforeach;
 		endforeach;
+		
         // check to see if this field is alr
 		// don't forget the bench fields.
 		foreach ( self::get_option( $where, 'fields', 'bench' ) as $field ):
