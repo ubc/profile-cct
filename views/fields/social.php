@@ -171,11 +171,11 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 					"user_url"    => "http://www.slideshare.net/{value}" ),
 		);
 		
-		$return = array();
-		
 		if ( $what == 'all' && $type == null ):
-			$return = $all;
+			return $all;
 		else:
+			$return = array();
+			
 			$what_is_valid = in_array( $what, array( 'type', 'label', 'service_url', 'user_url' ) );
 			foreach ( $all as $service ):
 				if ( $type == null ):
@@ -185,12 +185,16 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 						$return[] = $service;
 					endif;
 				elseif ( $service['label'] == $type ):
-					return $service;
+					if ( $what_is_valid ):
+						return $service[$what];
+					else:
+						return $service;
+					endif;
 				endif;
 			endforeach;
+			
+			return $return;
 		endif;
-		
-		return $return;
 	}
 	
 	/**

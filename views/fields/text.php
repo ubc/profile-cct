@@ -46,7 +46,7 @@ Class Profile_CCT_Text extends Profile_CCT_Field {
 	function display() {
 		$this->display_text( array(
 			'class'        => 'text text',
-			'default_text' => 'lorem ipsum',
+			'default_text' => 'Lorem ipsum dolor sit amet.',
 		) );
 	}
 	
