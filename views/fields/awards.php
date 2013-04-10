@@ -9,6 +9,8 @@ Class Profile_CCT_Awards extends Profile_CCT_Field {
 		'multiple'      => true,
 		'show_multiple' => true,
 		'width'         => 'full',
+		'show_link_to' => false,
+		'link_to'      => false,
 		'before'        => '',
 		'empty'         => '',
 		'after'         => '',
@@ -42,22 +44,17 @@ Class Profile_CCT_Awards extends Profile_CCT_Field {
 	}
 	
 	function display() {
-		if ( empty( $this->data['award-website'] ) ):
-			$this->display_text( array(
-				'field_id'       => 'award-name',
-				'class'          => 'award-name',
-				'default_text'   => 'Gotham Prize for Cancer Research',
-				'post_separator' => ' ',
-			) );
-		else:
-			$this->display_link( array(
-				'field_id'       => 'award-name',
-				'class'          => 'award-name',
-				'default_text'   => 'Gotham Prize for Cancer Research',
-				'href'           => $this->data['award-website'],
-				'post_separator' => ' ',
-			) );
-		endif;
+		
+		
+		$this->display_link( array(
+			'maybe_link'     => true,
+			'field_id'       => 'award-name',
+			'class'          => 'award-name',
+			'default_text'   => 'Gotham Prize for Cancer Research',
+			'href'           => $this->data['award-website'],
+			'post_separator' => ' ',
+		) );
+		
 		
 		$this->display_text( array(
 			'field_id'     => 'receival-date-month',
