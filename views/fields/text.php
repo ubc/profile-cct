@@ -15,7 +15,7 @@ Class Profile_CCT_Text extends Profile_CCT_Field {
 		'width'         => 'full',
 		'before'        => '',
 		'empty'         => '',
-		'after'         => '',
+		'after'         =>'',
 	);
 	
 	var $shell = array(
@@ -44,12 +44,7 @@ Class Profile_CCT_Text extends Profile_CCT_Field {
 	 * @return void
 	 */
 	function display() {
-		
-		$text = ( empty( $this->data['text']) ? null : $this->data['text'] );
-		
 		$this->display_text( array(
-			'field_id' => 'text',
-			'value'	   => $text,
 			'class'        => 'text text',
 			'default_text' => 'Lorem ipsum dolor sit amet.',
 		) );
