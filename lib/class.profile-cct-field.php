@@ -730,6 +730,9 @@ class Profile_CCT_Field {
 			$needed_attr['name'] = ( ! empty( $attr['name'] ) ? $attr['name']      : 'profile_cct['.$this->type.']['.$needed_attr['id'].']' );
 		endif;
 		
+		if( $needed_attr['id'] == 'text' )
+			$needed_attr['id'] = 'profile-cct-'.$this->type.'-'.$field_type.'-'.$this->field_counter;
+		
 		if ( isset( $attr['value'] ) && $attr['value'] != '' ):
 			$needed_attr['value'] = $attr['value'];
 		elseif ( isset( $this->data[$needed_attr['id']] ) ):
