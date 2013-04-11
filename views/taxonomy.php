@@ -6,7 +6,7 @@
 	if ( ! empty($_POST) && check_admin_referer( 'add_profile_taxonomy', 'add_profile_taxonomy_field' ) ):
 		$error = array();
 		$hierarchical = ( is_numeric( $_POST['hierarchical'] ) ? $_POST['hierarchical'] : 0 );
-		$display = ( ! empty( $_POST['display'] ) ? $_POST['display'] : 'tags' );
+		$display = ( ! empty( $_POST['display'] ) ? $_POST['display'] : 'default' );
 		$plural = trim( strip_tags( $_POST['plural-name'] ) );
 		
 		if ( empty($plural) ):
@@ -119,9 +119,10 @@
 				<span class="required">*</span>
 			</th>
 			<td>
-				<input type="text" value="" id="single-name" name="single-name" class="all-options" /> 
+				<input type="text" value="" id="single-name" name="single-name" class="all-options" maxlength="20" /> 
 				<span class="description">For example: Research Interest</span>
 				<br />
+				<small>The maximum length is 20 characters.</small>
 				<?php if ( isset( $error['single'] ) ): ?>
 					<span class='form-invalid' style='padding:2px;'>
 						<?php echo $error['single']; ?>

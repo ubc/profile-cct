@@ -121,14 +121,13 @@ class Profile_CCT_Admin {
 				'href'   => admin_url('users.php?page=public_profile'),
 			));
             
-			// Remove and readd the logout button, in order to ensure, that Log Out appears at the bottom of the list.
+			// Remove and re-add the logout button, in order to ensure, that Log Out appears at the bottom of the list.
 			$wp_admin_bar->add_node( array(
 				'parent' => 'user-actions',
 				'id'     => 'logout',
 				'title'  => __( 'Log Out' ),
 				'href'   => wp_logout_url(),
 			));
-            
 		endif;
     }
 	
@@ -1151,9 +1150,6 @@ class Profile_CCT_Admin {
 		echo $print;
 		die();
 	}
-	
-	
-	
 }
 
 if ( function_exists( 'add_action' ) && class_exists( 'Profile_CCT_Admin' ) ):
