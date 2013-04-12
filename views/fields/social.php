@@ -59,7 +59,8 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 	function display_social_link( $attr ) {
 		
 		if ( isset( $this->data ) ):
-			$service = $this->social_options( 'user_url',  $this->data['option'] );
+			$service = $this->social_options( 'all',  $this->data['option'] );
+			
 			if ( ! empty($this->data['username']) ):
 				$attr['href'] = str_replace( '{value}', $this->data['username'], $service['user_url'] );
 				$attr['value'] = '<img src="'.PROFILE_CCT_DIR_URL.'/img/'.$service['type'].'.png" /><strong>'.$this->data['option'].'</strong>/ '.$this->data['username'];
