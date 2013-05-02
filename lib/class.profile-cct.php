@@ -87,7 +87,7 @@ class Profile_CCT {
 	 * @param mixed $content
 	 * @return void
 	 */
-	function control_filter($content){
+	function control_filter( $content ) {
 		global $post;
 		
 		if('profile_cct' == $post->post_type ):
@@ -111,8 +111,9 @@ class Profile_CCT {
 		$side_fields = get_option( 'Profile_CCT_form_fields_side', array() );
 		
 		if ( ! isset( $this->settings['version']['clone_fields'] ) || version_compare( '1.3', $this->settings['version']['clone_fields'], '>' ) ):
-			error_log("Updated cloned fields to 1.3 standards");
-			
+			if( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG):
+				error_log("Updated cloned fields to 1.3 standards");
+			endif;
 			if ( isset( $this->settings['clone_fields'] ) ):
 				foreach ( $this->settings['clone_fields'] as $key => $field ):
 					if ( is_numeric( $key ) ):
@@ -447,7 +448,9 @@ class Profile_CCT {
 	function get_user_profile() {
 		$current_user = wp_get_current_user();
 		if ( ! ( $current_user instanceof WP_User ) ):
-			error_log("Profile CCT Dashboard Widget: Could not retrieve current user.");
+			if( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG):
+				error_log("Profile CCT Dashboard Widget: Could not retrieve current user.");
+			endif;
 			return;
 		endif;
 		
@@ -696,9 +699,12 @@ class Profile_CCT {
 				unset($actions['edit']);
 				unset($actions['inline hide-if-no-js']);
 			}
-			error_log( print_r($post, TRUE));
-			error_log( print_r($current_user, TRUE));
-			error_log( print_r($actions, TRUE));
+			
+			if( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG ) {
+				error_log( print_r($post, TRUE));
+				error_log( print_r($current_user, TRUE));
+				error_log( print_r($actions, TRUE));
+			}
 		}
 		return $actions; 
 	}

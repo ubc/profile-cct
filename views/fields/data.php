@@ -50,9 +50,11 @@ Class Profile_CCT_Data extends Profile_CCT_Field {
 				$html->clear();
 			else:
 				echo "Couldn't access external data";
-				error_log( "Couldn't access external data" );
-				error_log( print_r( $this->type, TRUE ) );
-				error_log( print_r( $profile->settings['data_url'], TRUE ) );
+				if( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG):
+					error_log( "Couldn't access external data" );
+					error_log( print_r( $this->type, TRUE ) );
+					error_log( print_r( $profile->settings['data_url'], TRUE ) );
+				endif;
 			endif;
 		endif;
 	}
