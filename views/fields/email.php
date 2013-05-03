@@ -73,7 +73,7 @@ Class Profile_CCT_Email extends Profile_CCT_Field {
         endif;
 		
 		$attr['value'] = $value;
-		$attr['href']  = ( empty( $attr['mailto'] ) ? '' : 'mailto:'.sanitize_email($attr['mailto']) );
+		$attr['href']  = ( empty( $attr['mailto'] ) ? '' : 'mailto:'.antispambot(sanitize_email($attr['mailto']),1) );
 		
 		$this->display_link( $attr );
 	}
