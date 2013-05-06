@@ -159,7 +159,17 @@ class Profile_CCT {
 	}
 	
 	function sort_posts( $query ) {
-		if ( $query->is_main_query() && is_post_type_archive( 'profile_cct' ) && ! is_admin() ):
+	
+		$is_taxonomy = false;
+		foreach($this->taxonomies as $taxonomy){
+			if( is_tax( Profile_CCT_Taxonomy::id( $taxonomy['single'] ) ) ){
+				$is_taxonomy = true;
+				break;
+			}
+		}
+		
+		
+		if ( $query->is_main_query() && ( $is_taxonomy || is_post_type_archive( 'profile_cct' ) ) && ! is_admin() ):
 			$order = in_array( $this->settings['sort_order'], array( 'ASC', 'DESC' ) ) ? $this->settings['sort_order'] : null;
 			
 			switch ( $this->settings['sort_order_by'] ):
