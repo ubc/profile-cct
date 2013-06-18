@@ -111,15 +111,19 @@ class Profile_CCT {
 		$side_fields = get_option( 'Profile_CCT_form_fields_side', array() );
 		
 		if ( ! isset( $this->settings['version']['general'] ) || version_compare( '1.3.1', $this->settings['version']['general'], '>' ) ):
-			error_log("Reregister Profiles");
+			if ( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG):
+				error_log("Profile CCT: Reregistered custom content type. To fix a bug for 1.3.1");
+			endif;
+			
 			$this->register_profiles();
 			flush_rewrite_rules();
 		endif;
 		
 		if ( ! isset( $this->settings['version']['clone_fields'] ) || version_compare( '1.3', $this->settings['version']['clone_fields'], '>' ) ):
 			if ( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG):
-				error_log("Updated cloned fields to 1.3 standards");
+				error_log("Profile CCT: Updated cloned fields to 1.3 standards");
 			endif;
+			
 			if ( isset( $this->settings['clone_fields'] ) ):
 				foreach ( $this->settings['clone_fields'] as $key => $field ):
 					if ( is_numeric( $key ) ):
