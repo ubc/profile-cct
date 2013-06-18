@@ -110,6 +110,12 @@ class Profile_CCT {
 		$bench_fields = get_option( 'Profile_CCT_form_fields_bench', array() );
 		$side_fields = get_option( 'Profile_CCT_form_fields_side', array() );
 		
+		if ( ! isset( $this->settings['version']['general'] ) || version_compare( '1.3.1', $this->settings['version']['general'], '>' ) ):
+			error_log("Reregister Profiles");
+			$this->register_profiles();
+			flush_rewrite_rules();
+		endif;
+		
 		if ( ! isset( $this->settings['version']['clone_fields'] ) || version_compare( '1.3', $this->settings['version']['clone_fields'], '>' ) ):
 			if ( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG):
 				error_log("Updated cloned fields to 1.3 standards");
@@ -150,6 +156,7 @@ class Profile_CCT {
 			endforeach;
 		endif;
 		
+		$this->settings['version']['general'] = PROFILE_CCT_VERSION;
 		$this->settings['version']['clone_fields'] = PROFILE_CCT_VERSION;
 		$this->settings['version']['taxonomy'] = PROFILE_CCT_VERSION;
 		update_option( 'Profile_CCT_form_fields_bench', $bench_fields );
@@ -224,7 +231,7 @@ class Profile_CCT {
 			'parent_item_colon'  => _x( 'Parent Profile:', 'profile_cct' ),
 			'menu_name'          => _x( 'Profiles', 'profile_cct' ),
 		);
-
+		
 		$args = array(
 			'labels'              => $labels,
 			'hierarchical'        => false,
