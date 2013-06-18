@@ -90,7 +90,7 @@ class Profile_CCT {
 	function control_filter( $content ) {
 		global $post;
 		
-		if('profile_cct' == $post->post_type ):
+		if ( 'profile_cct' == $post->post_type ):
 			remove_filter( 'the_content', 'wpautop' );
 			remove_filter( 'the_excerpt', 'wpautop' );
 		else:
@@ -111,7 +111,7 @@ class Profile_CCT {
 		$side_fields = get_option( 'Profile_CCT_form_fields_side', array() );
 		
 		if ( ! isset( $this->settings['version']['clone_fields'] ) || version_compare( '1.3', $this->settings['version']['clone_fields'], '>' ) ):
-			if( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG):
+			if ( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG):
 				error_log("Updated cloned fields to 1.3 standards");
 			endif;
 			if ( isset( $this->settings['clone_fields'] ) ):
@@ -159,14 +159,13 @@ class Profile_CCT {
 	}
 	
 	function sort_posts( $query ) {
-	
 		$is_taxonomy = false;
-		foreach($this->taxonomies as $taxonomy){
-			if( is_tax( Profile_CCT_Taxonomy::id( $taxonomy['single'] ) ) ){
+		foreach ( $this->taxonomies as $taxonomy ):
+			if ( is_tax( Profile_CCT_Taxonomy::id( $taxonomy['single'] ) ) ):
 				$is_taxonomy = true;
 				break;
-			}
-		}
+			endif;
+		endforeach;
 		
 		
 		if ( $query->is_main_query() && ( $is_taxonomy || is_post_type_archive( 'profile_cct' ) ) && ! is_admin() ):
@@ -267,10 +266,12 @@ class Profile_CCT {
 		if ( $handle = opendir( PROFILE_CCT_DIR_PATH . 'views/fields/' ) ) :
 			// This is the correct way to loop over the directory.
 			while ( false !== ( $file = readdir( $handle ) ) ):
-				if( substr($file,0,1) != "." )
-					if( !is_dir( PROFILE_CCT_DIR_PATH . 'views/fields/' . $file ) )
+				if ( substr($file,0,1) != "." ):
+					if ( ! is_dir( PROFILE_CCT_DIR_PATH . 'views/fields/' . $file ) ):
 						require( PROFILE_CCT_DIR_PATH . 'views/fields/' . $file );
-				endwhile;
+					endif;
+				endif;
+			endwhile;
 			closedir( $handle );
 		endif;
 	}
@@ -281,7 +282,6 @@ class Profile_CCT {
 		if ( $settings = get_option( 'Profile_CCT_'.$type ) ):
 			// make sure that we always retun 
 			return wp_parse_args( $settings, $this->get_default_settings($type) );
-			
         else:
             return $this->get_default_settings($type);
         endif;
@@ -356,7 +356,7 @@ class Profile_CCT {
 		flush_rewrite_rules();
 		
 		// set up the permissions
-		if ( !is_array( $field->settings['permissions'] ) ):
+		if ( ! is_array( $field->settings['permissions'] ) ):
 			$settings = $field->get_default_settings( 'settings' );
 			$field->settings['permissions'] = $settings['permissions'];
 		endif;
@@ -364,9 +364,9 @@ class Profile_CCT {
 		foreach ( $field->settings['permissions'] as $user => $permission_array ):
 			$role = get_role( $user );
 			
-			foreach($permission_array as $permission => $can):
+			foreach ($permission_array as $permission => $can):
 				// add the new capability
-				if( $field->settings['permissions'][$user][$permission] ):
+				if ( $field->settings['permissions'][$user][$permission] ):
 					$role->add_cap( $permission );
 				else: // or remove it
 					$role->remove_cap( $permission );
@@ -395,8 +395,6 @@ class Profile_CCT {
 				$role->remove_cap( $permission );	
 			endforeach;
 		endforeach;
-		
-		//$profile->delete_all_settings();
 	}
 	
 	/**
@@ -458,7 +456,7 @@ class Profile_CCT {
 	function get_user_profile() {
 		$current_user = wp_get_current_user();
 		if ( ! ( $current_user instanceof WP_User ) ):
-			if( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG):
+			if ( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG):
 				error_log("Profile CCT Dashboard Widget: Could not retrieve current user.");
 			endif;
 			return;
@@ -564,7 +562,7 @@ class Profile_CCT {
                 endif;
                 
                 // Merge the stored settings with any new settings introduced by the new version.
-                if( $perform_merge ):
+                if ( $perform_merge ):
                     $new_fields = $this->default_options('new_fields');
                     
                     // Lets add the new fields from this version to the bench.
@@ -710,7 +708,7 @@ class Profile_CCT {
 				unset($actions['inline hide-if-no-js']);
 			}
 			
-			if( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG ) {
+			if ( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG ) {
 				error_log( print_r($post, TRUE));
 				error_log( print_r($current_user, TRUE));
 				error_log( print_r($actions, TRUE));

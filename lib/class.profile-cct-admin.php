@@ -907,7 +907,6 @@ class Profile_CCT_Admin {
 			
 			//Ensure there is no slug conflict
 			$post_data['post_name'] = wp_unique_post_slug( $post_data['post_name'], $postarr['ID'], 'publish', 'profile_cct', 0 );
-			
 			$post_data['post_content'] = self::generate_content($profile_cct_data, 'page');
 			$post_data['post_excerpt'] = self::generate_content($profile_cct_data, 'list');
 			

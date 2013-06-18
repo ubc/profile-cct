@@ -220,12 +220,14 @@ class Profile_CCT_Shortcodes {
 			$options = array();
 			foreach ( Profile_CCT_Admin::default_shells() as $context ):
 				$fields = Profile_CCT_Admin::get_option( 'page', 'fields', $context );
-				foreach ( $fields as $field ):
-					if ( $field['type'] == $atts['type'] ):
-						$options = $field;
-						break 2;
-					endif;
-				endforeach;
+				if ( is_array( $fields ) ):
+					foreach ( $fields as $field ):
+						if ( $field['type'] == $atts['type'] ):
+							$options = $field;
+							break 2;
+						endif;
+					endforeach;
+				endif;
 			endforeach;
 			
 			$options = array_merge( $options, $atts ); 
