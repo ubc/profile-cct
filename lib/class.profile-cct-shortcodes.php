@@ -62,6 +62,10 @@ class Profile_CCT_Shortcodes {
 			$query['post__in'] = explode( ",", $atts['include'] );
 		endif;
 		
+		if ( $atts['limit'] && is_numeric( $atts['limit'] ) ):
+			$query['posts_per_page'] = $atts['limit'];
+		endif;
+		
 		if ( $atts['orderby'] ):
 			switch ( $atts['orderby'] ):
 				case 'first_name':
