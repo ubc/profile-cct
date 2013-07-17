@@ -178,7 +178,6 @@ class Profile_CCT {
 			endif;
 		endforeach;
 		
-		
 		if ( $query->is_main_query() && ( $is_taxonomy || is_post_type_archive( 'profile_cct' ) ) && ! is_admin() ):
 			$order = in_array( $this->settings['sort_order'], array( 'ASC', 'DESC' ) ) ? $this->settings['sort_order'] : null;
 			
@@ -611,12 +610,9 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function edit_post() {
-		
-		
         Profile_CCT_Admin::$page = 'form';
 		Profile_CCT_Admin::recount_field( 'form' );
 		
-				
 		global $post, $post_new_file, $pagenow, $current_user, $post_type_object;
 		$post_new_file = '#';
 		
@@ -659,11 +655,12 @@ class Profile_CCT {
 			endforeach;
 		endif;
 		
-		
 		remove_meta_box( 'authordiv', 'post', 'normal' );
+		
 		if ( is_super_admin() || current_user_can( $post_type_object->cap->edit_others_posts ) || current_user_can( 'administrator' ) ):
 			add_meta_box( 'authordiv', __('Author'), array( $this, 'post_author_meta_box' ), null, 'side', 'low' );
         endif;
+		
 		add_meta_box( 'submitdiv', __('Publish'), 'post_submit_meta_box', null, 'side', 'high' );
 	}
     
@@ -751,5 +748,3 @@ class Profile_CCT {
 }
 
 Profile_CCT::init();
-
-

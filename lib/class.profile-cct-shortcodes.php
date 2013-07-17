@@ -23,7 +23,7 @@ class Profile_CCT_Shortcodes {
 	 * @param mixed $atts
 	 * @return void
 	 */
-	static function profile_list_shortcode( $atts ){
+	static function profile_list_shortcode( $atts ) {
 		$tax_query = array();
 		$taxonomies = get_taxonomies();
 		if ( $atts ):
@@ -104,15 +104,15 @@ class Profile_CCT_Shortcodes {
 				<?php
 			elseif ( $atts['display'] == 'full' ):
 				?>
-				<div id="post-<?php the_ID(); ?>" class="post-<?php the_ID(); ?> profile_cct type-profile_cct">
-					<?php the_content(); ?>
-				</div>
+					<div id="post-<?php the_ID(); ?>" class="post-<?php the_ID(); ?> profile_cct type-profile_cct">
+						<?php the_content(); ?>
+					</div>
 				<?php
 			else:
 				?>
-				<div id="post-<?php the_ID(); ?>" class="post-<?php the_ID(); ?> profile_cct type-profile_cct ">
-					<?php the_excerpt(); ?>
-				</div>
+					<div id="post-<?php the_ID(); ?>" class="post-<?php the_ID(); ?> profile_cct type-profile_cct ">
+						<?php the_excerpt(); ?>
+					</div>
 				<?php
 			endif;
 		endwhile;

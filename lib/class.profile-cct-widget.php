@@ -101,7 +101,7 @@ class Profile_CCT_Widget extends WP_Widget {
 		ob_start();
 		?>
 		<div class="profile-cct-search-form">
-			<form action="<?php echo get_bloginfo('siteurl'); ?>" method="get">
+			<form action="<?php echo get_bloginfo( 'siteurl' ); ?>" method="get">
 				<?php
 					if ( $visible['display_searchbox'] == 'true' ):
 						?>

@@ -645,16 +645,15 @@ class Profile_CCT_Field {
 		// todo: implement maybe_link - this might be a link or not favour the text 
 		// todo: implement force_link - this should be a link if not next use the url as the link - example website
 		
-		if( isset( $attr['force_link'] ) && $attr['force_link'] ):
-			if( isset( $attr['value'] ) && $attr['value'] ):
+		if ( isset( $attr['force_link'] ) && $attr['force_link'] ):
+			if ( isset( $attr['value'] ) && $attr['value'] ):
 				$attr['display'] = $attr['value'];
 			else:
 				$attr['display'] = ( 'edit' == $this->action ? $attr['default_text'] : $this->data[$attr['field_id']] );
-			
 			endif;
 		endif;
 		
-		if( isset( $attr['maybe_link'] ) && $attr['maybe_link'] &&  empty( $attr['href'] )):
+		if ( isset( $attr['maybe_link'] ) && $attr['maybe_link'] &&  empty( $attr['href'] ) ):
 			$attr['tag'] = 'span';
 		else:
 			$attr['tag'] = 'a';
@@ -664,7 +663,6 @@ class Profile_CCT_Field {
 			$attr['href'] = ( 'edit' == $this->action ? $attr['default_text'] : $this->data[$attr['field_id']] );
 		endif;
 		
-		//endif;
 		$this->display_text( $attr );
 	}
 	

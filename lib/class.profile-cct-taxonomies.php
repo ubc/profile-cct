@@ -2,8 +2,7 @@
 /**
  * Profile_CCT_Taxonomy class.
  */
-class Profile_CCT_Taxonomy {
-	
+class Profile_CCT_Taxonomy {	
 	/**
 	 * init function.
 	 * 

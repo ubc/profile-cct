@@ -900,15 +900,15 @@ class Profile_CCT_Admin {
 				$post_data['post_title'] = $profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last'];
 				$post_data['post_name'] = sanitize_title($profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last']);
 			else:
-				$userdata = get_userdata($post_data['post_author']);
+				$userdata = get_userdata( $post_data['post_author'] );
 				$post_data['post_title'] = $userdata->user_nicename;
-				$post_data['post_name'] = sanitize_title($userdata->user_nicename);
+				$post_data['post_name'] = sanitize_title( $userdata->user_nicename );
 			endif;
 			
 			//Ensure there is no slug conflict
 			$post_data['post_name'] = wp_unique_post_slug( $post_data['post_name'], $postarr['ID'], 'publish', 'profile_cct', 0 );
-			$post_data['post_content'] = self::generate_content($profile_cct_data, 'page');
-			$post_data['post_excerpt'] = self::generate_content($profile_cct_data, 'list');
+			$post_data['post_content'] = self::generate_content( $profile_cct_data, 'page' );
+			$post_data['post_excerpt'] = self::generate_content( $profile_cct_data, 'list' );
 			
 			self::store_post_data( $postarr['ID'], $profile_cct_data );
 			
