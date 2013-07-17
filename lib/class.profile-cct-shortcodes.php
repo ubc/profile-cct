@@ -78,6 +78,12 @@ class Profile_CCT_Shortcodes {
 				case 'date':
 					$query['orderby'] = 'post_date';
 					break;
+				case 'random':
+					$query['orderby'] = 'rand';
+					break;
+				default:
+					$query['orderby'] = $atts['orderby'];
+					break;
 			endswitch;
 		endif;
 		
