@@ -68,7 +68,7 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
 			'size'     => 17,
 			'default'  => $current_user->user_lastname,
 			'data'      => array(
-				'accepts' => '/[a-zA-Z]/',
+				'accepts' => "/[a-zA-Z-']/",
 				'limit'   => 22,
 			),
 		) );
