@@ -121,6 +121,10 @@ $option = array(
 			
 		),
 		'sort_order_by' => 'manual',
+		'wp_editor' => array(
+				'media_buttons' => false,
+				'advanced'		=> false,
+			),
 		'slug' => 'person',
 		"permissions" => array(
 			'administrator' => array(

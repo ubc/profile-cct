@@ -61,6 +61,11 @@ class Profile_CCT {
 			add_action( 'add_meta_boxes_profile_cct', array( $this, 'edit_post' ) );
 			
 			add_filter( 'post_row_actions',           array( __CLASS__, 'modify_row_actions' ), 10, 2);
+			//add_filter( 'map_meta_cap', 			  array( $this, 'map_meta_cap' ) , 10, 3 );
+			
+			//add_filter( 'role_has_cap', array( $this, 'has_cap' ), 10, 3 ); //$this->capabilities, $cap, $this->name )
+			add_filter( 'user_has_cap', array( $this, 'has_cap' ), 0, 3 );
+			
 		else:
 			add_filter('the_content', array( $this,'control_filter'), 1);
 			add_filter('the_excerpt', array( $this,'control_filter'), 1);
@@ -271,6 +276,48 @@ class Profile_CCT {
 		register_post_type( 'profile_cct', $args );
 	}
 	
+	/**
+	 * map_meta_cap function.
+	 * 
+	 * @access public
+	 * @param mixed $caps
+	 * @param mixed $cap
+	 * @param mixed $user_id
+	 * @param mixed $args
+	 * @return void
+	 */
+	function map_meta_cap($caps, $cap, $user_id, $args) {
+		global $post, $pagenow;
+		/*
+		if( 'upload_files' == $cap && user_can( $user_id, 'publish_profile_cct' ) ):
+			$caps = array( 'publish_profile_cct', 'edit_profile_cct' );
+		endif;
+		*/
+		return $caps;
+	}
+	
+	/**
+	 * has_cap function.
+	 * 
+	 * @access public
+	 * @param mixed $caps
+	 * @param mixed $cap
+	 * @param mixed $name
+	 * @return void
+	 */
+	function has_cap( $caps, $cap, $name ){
+		if( $caps['publish_profile_cct'] && in_array( 'upload_files', $cap) )
+			$caps['upload_files'] = true;
+		
+		return $caps;
+	}
+	
+	/**
+	 * load_fields function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function load_fields() {
 		// include all files in the fields folder
 		if ( $handle = opendir( PROFILE_CCT_DIR_PATH . 'views/fields/' ) ) :
@@ -286,6 +333,13 @@ class Profile_CCT {
 		endif;
 	}
 	
+	/**
+	 * get_settings function.
+	 * 
+	 * @access public
+	 * @param string $type (default: 'settings')
+	 * @return void
+	 */
 	function get_settings( $type = 'settings' ) {
 		// if non exist get the default settings 
 		$settings = get_option( 'Profile_CCT_'.$type );
@@ -297,6 +351,13 @@ class Profile_CCT {
         endif;
 	}
 	
+	/**
+	 * get_default_settings function.
+	 * 
+	 * @access public
+	 * @param string $type (default: 'settings')
+	 * @return void
+	 */
 	function get_default_settings( $type = 'settings' ) {
         // load the default options array 
         require( PROFILE_CCT_DIR_PATH.'default-options.php' );
