@@ -8,6 +8,8 @@ Class Profile_CCT_Tabs {
 	 * @return void
 	 */
 	public static function shell( $data ) {
+		global $post;
+		$post_id = ( isset( $post->ID) ? $post->ID : 0 ); 
 		$editing = ( 'edit' == Profile_CCT_Admin::$action ?  true : false );
 		$tabs = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page, 'tabs' ); // get back all the tabs for that page
 		
@@ -29,10 +31,11 @@ Class Profile_CCT_Tabs {
 			else: 
 				$profile_cct_tabs++;
 				?>
-				<div id="<?php echo "tab-id-".$profile_cct_tabs; ?>" class="profile-cct-shell tabs" >
+				<div id="<?php echo "tab-id-".$profile_cct_tabs; ?>" class="profile-cct-shell profile-cct-shell-tabs" >
 				<?php
 			endif; 
 			?>
+
 			<div class="nav-tabs-wrapper">
 				<ul class="nav nav-tabs">
 					<?php 
@@ -42,7 +45,7 @@ Class Profile_CCT_Tabs {
 						foreach( $tabs as $tab ): 
 							?>
 							<li <?php if ($first) echo 'class="active"'; $first = false; ?>>
-								<a href="#tabs-<?php echo $count; ?>" data-toggle="tab" class="tab-link"><?php echo $tab; ?></a>
+								<a href="#tabs-<?php echo $post_id; ?>-<?php echo $count; ?>" data-toggle="tab" class="tab-link"><?php echo $tab; ?></a>
 								<?php if ( $editing ): ?>
 									<span class="remove-tab">Remove Tab</span> <span class="edit-tab">Edit</span><input type="text" class="edit-tab-input" value="<?php echo esc_attr($tab); ?>" /><input type="button" class="edit-tab-save button" value="Save" />
 								<?php endif; ?>
@@ -65,7 +68,7 @@ Class Profile_CCT_Tabs {
 						$first = true;
 						foreach ( $tabs as $tab ) :
 							?>
-							<div id="tabs-<?php echo $count?>" class="tab-pane <?php if ($first) echo 'active'; $first = false; ?>">
+							<div id="tabs-<?php echo $post_id; ?>-<?php echo $count; ?>" class="tab-pane <?php if ($first) echo 'active'; $first = false; ?>">
 							<?php if ($editing): ?>
 								<input type="hidden" name="form_field[tabs][]" value="<?php echo esc_attr($tab); ?>" />
 							<?php endif; ?>
@@ -86,7 +89,7 @@ Class Profile_CCT_Tabs {
 			<?php elseif ( $theme_support[0] != 'twitter-bootstrap' ): ?>
 				<script type="text/javascript">
 					jQuery(document).ready(function() {
-						jQuery("#<?php echo "tab-id-".$profile_cct_tabs; ?>").tabs();
+						jQuery(".profile-cct-shell-tabs").tabs();
 					});
 				</script>
 			<?php endif; ?>

@@ -63,6 +63,15 @@
 				endforeach;
 			endif;
 		endforeach;
+
+		// Lets save the editor options
+		
+		$wp_editor = array(
+				'media_buttons' => ( isset( $_POST['wp_editor']['media_buttons'] ) ? true : false),
+				'advanced' => ( isset( $_POST['wp_editor']['advanced'] ) ? true : false),
+				 );
+		
+		$profile->settings['wp_editor'] = $wp_editor;
 		
 		// Store updated options
         update_option( 'Profile_CCT_settings', $profile->settings );
@@ -236,6 +245,27 @@
 			?>
 		</tbody>
 	</table>
+	
+	<h3><abbr title="What You See Is What You Get">WYSIWYG</abbr> Editor Options </h3>
+	<table class="form-table">
+        <tbody>
+            <tr valign="top">
+                <th scope="row"><label for="wp_editor_mediabutton">Enable Media Upload</label></th>
+                <td>
+                    <input type="checkbox" name="wp_editor[media_buttons]" id="wp_editor_mediabutton" value="true" <?php checked( $profile->settings['wp_editor']['media_buttons'], true); ?> /> 
+                    <small>Allow users that can <strong>publish</strong> thier profile to upload media files</small>.
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="wp_editor_advanced">Advanced Editor Options</label></th>
+                <td>
+                    <input type="checkbox" name="wp_editor[advanced]" id="wp_editor_simple" value="true" <?php checked($profile->settings['wp_editor']['advanced'], true); ?> />
+                    <small>The <abbr title="What You See Is What You Get">WYSIWYG</abbr> editor will have more formating options available for the profile builder.</small>
+                </td>
+            </tr>
+     
+        </tbody>
+    </table>
 	<br/>
 	<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
 </form>	

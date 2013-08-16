@@ -3,7 +3,7 @@ Contributors: enej, ejackisch, alekarsovski, devindra, ctlt-dev, ubcdev
 Tags: profile, user
 Requires at least: 3.2
 Tested up to: 3.4.1
-Stable tag: 1.3
+Stable tag: 1.3.2
 
 Manage and display advanced user profiles on your website.
 
@@ -148,6 +148,13 @@ eg. [profilefield type=name show="salutations, middle", html=false] will show th
 
 
 == Change log ==
+= Version 1.3.2 =
+* More Editor Options, Allow users to upload Media, Allow for more advanced media options.  
+
+= Version 1.3.1 =
+* bug fix: shortcode full width now supports tabs as well. 
+
+
 = Version 1.3 =
 * The source code has been rewritten, improving stability, and fixing a variety of bugs.
 * Added [profilenavigation] short code.

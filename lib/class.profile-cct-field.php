@@ -493,6 +493,9 @@ class Profile_CCT_Field {
 	 * @return void
 	 */
 	function input_textarea( $attr ) {
+		$profile = Profile_CCT::get_object();
+		$options = $profile->settings['wp_editor'];
+
 		$attr = $this->field_attr( $attr, 'textarea' );
 		
 		?>
@@ -507,10 +510,9 @@ class Profile_CCT_Field {
 		else:
 			$args = array(
 				'textarea_name' => $attr['name'],
-				'teeny'         => true,
-				'media_buttons' => false,
+				'teeny'         => !$options['advanced'],
+				'media_buttons' => $options['media_buttons']
 			);
-			
 			wp_editor( $attr['value'], $attr['id'], $args );
 		endif;
         
