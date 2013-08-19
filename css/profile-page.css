@@ -30,8 +30,7 @@
 }
 
 /* Name */
-.name span input,
-.project-title input {
+.name span input{
 	font-size: 22px;
 	padding: 5px 2px 1px;
 }
@@ -79,6 +78,7 @@
 .field-item .textarea-shell textarea {
     width: 100%;
     resize: vertical;
+    min-height:150px;
 }
 
 .field-item .textarea-shell .mceIframeContainer {
