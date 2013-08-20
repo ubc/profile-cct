@@ -42,9 +42,7 @@ class Profile_CCT_Field {
 		endif;
 		
 		$this->options       = ( is_array( $options ) ? array_merge( $this->default_options, $options ): $this->default_options );
-		
 		$this->options       = stripslashes_deep($this->options); 
-		
 		$this->action        = ( isset( Profile_CCT_Admin::$action ) ? Profile_CCT_Admin::$action : 'edit' );
 		$this->page          = ( isset( $this->options['page'] ) ? $this->options['page'] : ( isset( Profile_CCT_Admin::$page ) ? Profile_CCT_Admin::$page : false ) );
 		$this->type          = ( isset( $this->options['type'] ) ? $this->options['type'] : null );
@@ -495,7 +493,6 @@ class Profile_CCT_Field {
 	function input_textarea( $attr ) {
 		$profile = Profile_CCT::get_object();
 		$options = $profile->settings['wp_editor'];
-
 		$attr = $this->field_attr( $attr, 'textarea' );
 		
 		?>
@@ -510,8 +507,8 @@ class Profile_CCT_Field {
 		else:
 			$args = array(
 				'textarea_name' => $attr['name'],
-				'teeny'         => !$options['advanced'],
-				'media_buttons' => $options['media_buttons']
+				'teeny'         => ! $options['advanced'],
+				'media_buttons' => $options['media_buttons'],
 			);
 			wp_editor( $attr['value'], $attr['id'], $args );
 		endif;

@@ -155,3 +155,7 @@
 tr.disabled td {
     color: #BBBBBB;
 }
+
+#mce_fullscreen_add_media {
+    display: none;
+}
