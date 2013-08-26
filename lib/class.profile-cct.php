@@ -14,7 +14,7 @@ class Profile_CCT {
 	static public  $option              = NULL;
 	static public  $current_form_fields = NULL; // stores the current state of the form field... the labels and if it is on the banch... 
     
-	function init() {
+	static function init() {
 		add_action( 'plugins_loaded', array( __CLASS__, 'get_object' ) );
 		register_activation_hook(   PROFILE_CCT_BASE_FILE, array( __CLASS__, 'install'    ) );
 		register_deactivation_hook( PROFILE_CCT_BASE_FILE, array( __CLASS__, 'deactivate' ) );
