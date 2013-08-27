@@ -61,7 +61,7 @@ class Profile_CCT {
 			add_action( 'add_meta_boxes_profile_cct', array( $this, 'edit_post' ) );
 			
 			add_filter( 'post_row_actions',           array( __CLASS__, 'modify_row_actions' ), 10, 2);
-			//add_filter( 'map_meta_cap', 			  array( $this, 'map_meta_cap' ) , 10, 3 );
+			
 			
 			//add_filter( 'role_has_cap', array( $this, 'has_cap' ), 10, 3 ); //$this->capabilities, $cap, $this->name )
 			add_filter( 'user_has_cap', array( $this, 'has_cap' ), 0, 3 );
@@ -75,13 +75,15 @@ class Profile_CCT {
 		endif;
 		
 		add_action( 'pre_get_posts', array( $this, 'sort_posts' ) );
+		add_action('wp_ajax_profile-cct-export', array( $this, 'export_settings') );
+		add_action('wp_ajax_nopriv_profile-cct-export', array( $this, 'export_settings') );
 		
 		$this->register_profiles();
 		$this->update();
 		$this->load_fields();
 		
 		if ( function_exists( 'add_image_size' ) ) { 
-			add_image_size( 'profile-image', $this->settings['width'], $this->settings['height'] ); //300 pixels wide (and unlimited height)
+			add_image_size( 'profile-image', $this->settings['picture']['width'], $this->settings['picture']['height'] ); //300 pixels wide (and unlimited height)
 		}
 	}
 	
@@ -174,6 +176,13 @@ class Profile_CCT {
 		update_site_option( PROFILE_CCT_SETTING_GLOBAL, $global_settings );
 	}
 	
+	/**
+	 * sort_posts function.
+	 * 
+	 * @access public
+	 * @param mixed $query
+	 * @return void
+	 */
 	function sort_posts( $query ) {
 		$is_taxonomy = false;
 		foreach ( $this->taxonomies as $taxonomy ):
@@ -212,6 +221,48 @@ class Profile_CCT {
 		endif;
 	}
 	
+	/**
+	 * export_settings function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	function export_settings(){
+		global $blog_id;
+		$md5 =  md5( $blog_id );
+		if( $md5 =! $_GET['s'] )
+		return ;
+		
+		$settings = array( 'taxonomy'=> $this->taxonomies, 'settings' => $this->settings, 'version' =>  $this->version());
+	
+		
+		foreach ( array( "form", "page", "list" ) as $where ):
+			// delete all the fields
+			foreach ( self::get_contexts( $where ) as $context ):
+				$con_settings = self::get_option( $where, 'fields', $context );
+				if( !empty( $con_settings ) ) {
+					$settings[$where."_fields_".$context] = $con_settings;
+				}
+				
+			endforeach;
+			
+			// bench
+			$bench = self::get_option( $where, 'fields', 'bench' );
+			if(  !empty($bench) ) {
+				$settings[ $where. '_fields_bench' ] = $bench;
+			}
+			
+			// tabs
+			$tabs = self::get_option( $where, 'tabs' );
+			if( !empty( $tabs ) ) {			
+				$settings[ $where. '_tabs_normal' ] = $tabs;
+			}
+
+		endforeach;
+				
+		echo json_encode( $settings );
+		die();
+	}
 	/**
 	 * register_profiles function.
 	 * 
@@ -276,25 +327,6 @@ class Profile_CCT {
 		register_post_type( 'profile_cct', $args );
 	}
 	
-	/**
-	 * map_meta_cap function.
-	 * 
-	 * @access public
-	 * @param mixed $caps
-	 * @param mixed $cap
-	 * @param mixed $user_id
-	 * @param mixed $args
-	 * @return void
-	 */
-	function map_meta_cap($caps, $cap, $user_id, $args) {
-		global $post, $pagenow;
-		/*
-		if( 'upload_files' == $cap && user_can( $user_id, 'publish_profile_cct' ) ):
-			$caps = array( 'publish_profile_cct', 'edit_profile_cct' );
-		endif;
-		*/
-		return $caps;
-	}
 	
 	/**
 	 * has_cap function.
@@ -524,6 +556,12 @@ class Profile_CCT {
 		endif;
 	}
 	
+	/**
+	 * get_user_profile function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function get_user_profile() {
 		$current_user = wp_get_current_user();
 		if ( ! ( $current_user instanceof WP_User ) ):
@@ -786,6 +824,13 @@ class Profile_CCT {
 		return $actions; 
 	}
     
+    /**
+     * post_author_meta_box function.
+     * 
+     * @access public
+     * @param mixed $post
+     * @return void
+     */
     function post_author_meta_box($post) {
         global $user_ID;
 		
@@ -803,8 +848,161 @@ class Profile_CCT {
         ) );
 	}
 	
+	/**
+	 * string_starts_with function.
+	 * 
+	 * @access public
+	 * @param mixed $haystack
+	 * @param mixed $needle
+	 * @return void
+	 */
 	function string_starts_with( $haystack, $needle ) {
     	return ! strncmp( $haystack, $needle, strlen($needle) );
+	}
+	
+	
+	/**
+	 * add_global_field function.
+	 * 
+	 *	$field = array(
+	 *			'type'        => $field_type,
+	 *			'label'       => $field_label,
+	 *			'field_clone' => $field_clone,
+	 *			'description' => $field_description,
+	 *			'blogs'       => array(),
+	 *		);
+	 *  $field_index should be an integer
+	 * @access public
+	 * @param mixed $field
+	 * @return void
+	 */
+	function add_global_field( $field, $field_index = NULL, $skip_local ) {
+		global $blog_id;
+		$global_settings = get_site_option( PROFILE_CCT_SETTING_GLOBAL, array() );
+		
+		if(  'skip' == $skip_local && $field_index == NULL )
+			$field_index = $this->find_global_field_index( $field['type'],$global_settings  );
+			
+		if(  $field_index === NULL ):
+			$field['blogs'][$blog_id] = true;
+			$global_settings['clone_fields'][] = $field;
+			
+		else:
+			
+			$blogs = $this->convert_blog_list_into_blog_array( $field_index, $global_settings );
+			$blogs[$blog_id] = true;
+			$global_settings['clone_fields'][$field_index]['blogs'] = $blogs;
+			
+		endif;
+		
+		unset($field['blogs']);
+		if( 'skip' != $skip_local ):
+			$this->settings['clone_fields'][$field['type']] = $field;			
+			update_option( PROFILE_CCT_SETTINGS, $this->settings );
+			
+		endif;
+		
+		update_site_option( PROFILE_CCT_SETTING_GLOBAL, $global_settings );
+		return  $global_settings;
+	}
+		
+	/**
+	 * find_global_field_index function.
+	 * 
+	 * @access public
+	 * @param mixed $field_type
+	 * @param mixed $global_settings
+	 * @return void
+	 */
+	function find_global_field_index( $field_type, $global_settings ){
+		
+		foreach($global_settings['clone_fields'] as $field_index => $field):
+			if( $field['type'] == $field_type )
+				return $field_index;
+		endforeach;
+		return NULL;
+	}
+	
+	/**
+	 * remove_global_field function.
+	 * 
+	 * @access public
+	 * @param mixed $field
+	 * @param mixed $field_index
+	 * @return void
+	 */
+	function remove_global_field( $field, $field_index, $skip_local ) {
+		
+		$global_settings = get_site_option( PROFILE_CCT_SETTING_GLOBAL, array() );
+		global $blog_id;
+		
+		$blogs = $this->convert_blog_list_into_blog_array( $field_index, $global_settings );
+		
+		if( $blogs[$blog_id] ): // we accually have the blog set up as true
+			unset($blogs[$blog_id]);
+			unset( $this->settings['clone_fields'][$field['type']]);
+			
+			if ( empty($blogs) ):
+				unset($global_settings['clone_fields'][$field_index]);
+				$global_settings['clone_fields'] = array_values( array_filter( $global_settings['clone_fields'] ) ); // Reindex the array.
+			else:
+				$global_settings['clone_fields'][$field_index]['blogs'] = $blogs;
+			endif;
+			
+			if( 'skip' == $skip_local)
+				update_option( PROFILE_CCT_SETTINGS, $this->settings );
+			
+			update_site_option( PROFILE_CCT_SETTING_GLOBAL, $global_settings );
+		endif;
+		return  $global_settings;
+	}
+	
+	/**
+	 * remove_all_global_fields function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	function remove_all_global_fields(){
+		global $blog_id;
+		
+		$global_settings = get_site_option( PROFILE_CCT_SETTING_GLOBAL, array() );
+		
+		foreach( $global_settings['clone_fields'] as $field_index => $field):
+			$this->remove_global_field( $field, $field_index, 'skip' );
+		endforeach; 
+		
+		$this->settings['clone_fields'] = array();
+		update_option( PROFILE_CCT_SETTINGS, $this->settings );
+		
+
+	}
+	
+	/**
+	 * convert_blog_list_into_blog_array function.
+	 * 
+	 * @access public
+	 * @param mixed $field_index
+	 * @return void
+	 */
+	function convert_blog_list_into_blog_array( $field_index, $global_settings ) {
+		global $blog_id;
+		// convert global 
+		$blogs = array();
+		// convert global 
+		if ( is_array( $global_settings['clone_fields'][$field_index]['blogs'] ) ):
+			$blogs = $global_settings['clone_fields'][$field_index]['blogs'];
+		elseif ( ! is_array( $global_settings['clone_fields'][$field_index]['blogs'] ) ):
+			$blogs_ids = explode( ',', $global_settings['clone_fields'][$field_index]['blogs'] );
+			
+			foreach ( $blogs_ids as $id ):
+				$id = trim($id);
+				if ( ! empty($id) ):
+					$blogs[$id] = true;
+				endif;
+			endforeach;
+		endif;
+		return $blogs; 
 	}
 }
 

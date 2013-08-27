@@ -4,8 +4,63 @@
 	*/
 	$note = '';
 	$profile = Profile_CCT::get_object();
+    global $blog_id;
     
-	if ( ! empty($_POST) && wp_verify_nonce( $_POST['update_settings_nonce_field'], 'update_settings_nonce' ) ):
+    
+    /**
+     * IMPORT SETTINGS
+     * 
+     *
+     **/
+    if ( isset( $_POST['import_settings_nonce_field'] ) && wp_verify_nonce( $_POST['import_settings_nonce_field'], 'import_settings_nonce' ) && isset( $_POST['agree'] ) && 'iagree' == $_POST['agree'] ):
+    	$import_url = trim( $_POST['import-url'] );
+    	// $import_url = 'http://local.dev/profile/wp-admin/admin-ajax.php?action=profile-cct-export';
+    	
+    	if( !empty( $import_url ) ):
+    	
+    		$remote = wp_remote_get($import_url);
+    		if ( is_wp_error($remote) ):
+    			
+    			echo '<div class="update-nag"><p>An error cccurred and settings were not updated, make sure that your url is valid!</p></div>';
+    		else:
+    			$settings = json_decode( $remote['body'], true );
+    		
+	    		$profile->remove_all_global_fields();
+	    		if( is_array( $settings) ):
+	    		foreach( $settings as $setting_name => $setting_value ) {
+	    			
+	    			if(  'settings' == $setting_name) :
+	    				$profile->settings = $setting_value;
+	    				foreach ($setting_value['clone_fields'] as $field_type => $field):
+	    					$profile->add_global_field( $field, null, 'skip' );
+	    				endforeach;
+	    			endif;
+	    			
+	    			update_option( 'Profile_CCT_'.$setting_name, $setting_value );
+	    		}
+	    			echo '<div id="message" class="updated below-h2"><p>Settings Were Update!</p></div>';
+	    		else:
+	    			echo '<div id="message" class="error below-h2"><p>Settings were not updated</p></div>';
+	    		endif;
+    			
+    		endif;
+    		
+    		
+    	else:
+    		echo '<div id="message" class="error below-h2"><p>Please enter an import url</p></div>';
+    	endif;
+    
+    elseif( isset( $_POST['import_settings_nonce_field'] ) && wp_verify_nonce( $_POST['import_settings_nonce_field'], 'import_settings_nonce' ) ):
+    	echo '<div id="message" class="error below-h2"><p>Please check the box that says that you understand how the settings will be changed.</p></div>';
+    	
+    endif;
+    
+    /**
+     * SAVE SETTINGS 
+     *
+     *
+     **/
+	if ( ! empty($_POST) && isset($_POST['update_settings_nonce_field']) && wp_verify_nonce( $_POST['update_settings_nonce_field'], 'update_settings_nonce' ) ):
 		//Validate pic options
 		$width = intval( $_POST['picture_width'] );
 		$height = intval( $_POST['picture_height'] );
@@ -88,6 +143,9 @@
 	if ( ! isset( $profile->settings['slug'] ) )              $profile->settings['slug'] = 'person';
 	if ( ! isset( $profile->settings['sort_order_by'] ) )     $profile->settings['sort_order_by'] = 'first_name';
 	if ( ! isset( $profile->settings['sort_order'] ) )        $profile->settings['sort_order'] = 'ASC';
+	
+	$global_settings = get_site_option( PROFILE_CCT_SETTING_GLOBAL, array() );
+	
 ?>
 <h2>General Settings</h2>
 <?php echo $note; ?>
@@ -171,7 +229,7 @@
                 <th scope="row"><label for="widget-title">Widget Title</label></th>
                 <td>
 					<?php
-					if ( empty( $profile->settings['widget_title'] ) ) $profile->settings['widget_title'] = "Profile Navigation"
+					if ( empty( $profile->settings['widget_title'] ) ) $profile->settings['widget_title'] = "Profile Navigation";
 					?>
                     <input type="text" name="widget_title" id="widget-title" value="<?php echo esc_attr($profile->settings['widget_title']); ?>" />
                 </td>
@@ -179,19 +237,19 @@
             <tr valign="top">
                 <th scope="row"><label for="archive_display_searchbox">Show Search Box</label></th>
                 <td>
-                    <input type="checkbox" name="archive[display_searchbox]" id="archive_display_searchbox" value="true" <?php checked($profile->settings['archive']['display_searchbox'], 'true'); ?> />
+                    <input type="checkbox" name="archive[display_searchbox]" id="archive_display_searchbox" value="true" <?php checked( !empty( $profile->settings['archive']['display_searchbox']) ); ?> />
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row"><label for="archive_display_alphabet">Show Alphabet Listing</label></th>
                 <td>
-                    <input type="checkbox" name="archive[display_alphabet]" id="archive_display_alphabet" value="true" <?php checked($profile->settings['archive']['display_alphabet'], 'true'); ?> />
+                    <input type="checkbox" name="archive[display_alphabet]" id="archive_display_alphabet" value="true" <?php checked( !empty($profile->settings['archive']['display_alphabet'])); ?> />
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row"><label for="archive_display_orderby">Show Order By</label></th>
                 <td>
-                    <input type="checkbox" name="archive[display_orderby]" id="archive_display_orderby" value="true" <?php checked($profile->settings['archive']['display_orderby'], 'true'); ?> />
+                    <input type="checkbox" name="archive[display_orderby]" id="archive_display_orderby" value="true" <?php checked(!empty($profile->settings['archive']['display_orderby'])); ?> />
                 </td>
             </tr>
             <tr valign="top">
@@ -269,3 +327,27 @@
 	<br/>
 	<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
 </form>	
+<h3>Import Settings</h3>
+	<table class="form-table">
+        <tbody>
+            <tr valign="top">
+                <th scope="row"><label for="wp_editor_mediabutton">Export Settings URL</label></th>
+                <td>
+                	<?php echo admin_url('admin-ajax.php?action=profile-cct-export'); ?>&s=<?php echo md5($blog_id); ?>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="wp_editor_advanced">Import Settings URL</label></th>
+                <td>
+                	<form action="" method="post">
+                    <input type="text" name="import-url" size="70" /><br />
+                    
+                    <label><input type="checkbox" name="agree" class="checkbox" value="iagree" /> I understand that this will <strong>overwrite ALL my current settings</strong>, such as <em>taxonomies, forms,  page and list view as well as fields</em>.<br /> <strong>There is no UNDO. PROCEED   WITH CAUTION</strong> </label><br />
+                    <input type="submit" value="Import Settings" class="button" />
+                    <?php wp_nonce_field( 'import_settings_nonce', 'import_settings_nonce_field' ); ?>
+                    </form>
+                </td>
+            </tr>
+     
+        </tbody>
+    </table>

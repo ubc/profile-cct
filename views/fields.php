@@ -3,6 +3,7 @@
 	$global_settings = get_site_option( PROFILE_CCT_SETTING_GLOBAL, array() );
 	$profile = Profile_CCT::get_object();
 	
+
 	// Add Field
 	if ( ! empty($_POST) && check_admin_referer( 'add_profile_field', 'add_profile_fields_field' ) ):
 		// Creating a new field.
@@ -18,6 +19,7 @@
 		
 		if ( empty($error) ):
 			$field_type = "clone_".strtolower( preg_replace( '/[^A-Za-z0-9]+/', '_', $field_label ) );
+			
 			$field = array(
 				'type'        => $field_type,
 				'label'       => $field_label,
@@ -25,13 +27,8 @@
 				'description' => $field_description,
 				'blogs'       => array(),
 			);
-			$field['blogs'][$blog_id] = true;
-			$global_settings['clone_fields'][] = $field;
-			unset($field['blogs']);
-			$profile->settings['clone_fields'][$field['type']] = $field;
 			
-			update_option( PROFILE_CCT_SETTINGS, $profile->settings );
-			update_site_option( PROFILE_CCT_SETTING_GLOBAL, $global_settings );
+			$global_settings = $profile->add_global_field($field);
 			
 			// Unset these fields in order to empty the form on this page.
 			unset($field_label);
@@ -39,46 +36,20 @@
 			unset($field_description);
 		endif;
 	elseif ( wp_verify_nonce( $_GET['_wpnonce'], 'profile_cct_toggle_field' ) ):
-		$field_index = $_GET['field'];
-		$field_action = $_GET['action'];
+		
+		$field_index = (int)$_GET['field'];
+		
 		$field = $global_settings['clone_fields'][$field_index];
-		$blogs = array();
 		
-		if ( is_array( $global_settings['clone_fields'][$field_index]['blogs'] ) ):
-			$blogs = $global_settings['clone_fields'][$field_index]['blogs'];
-		elseif ( ! is_array( $global_settings['clone_fields'][$field_index]['blogs'] ) ):
-			$blogs_ids = explode( ',', $global_settings['clone_fields'][$field_index]['blogs'] );
-			
-			foreach ( $blogs_ids as $id ):
-				$id = trim($id);
-				if ( ! empty($id) ):
-					$blogs[$id] = true;
-				endif;
-			endforeach;
-		endif;
-		
-		switch ($field_action):
-		case 'add':
-			$blogs[$blog_id] = true;
-			$global_settings['clone_fields'][$field_index]['blogs'] = $blogs;
-			unset($field['blogs']);
-			$profile->settings['clone_fields'][$field['type']] = $field;
+		switch ( $_GET['action'] ):
+			case 'add':
+				$global_settings = $profile->add_global_field( $field, $field_index );
 			break;
-		case 'remove':
-			unset($blogs[$blog_id]);
-			unset($profile->settings['clone_fields'][$field['type']]);
-			
-			if ( empty($blogs) ):
-				unset($global_settings['clone_fields'][$field_index]);
-				$global_settings['clone_fields'] = array_values(array_filter($global_settings['clone_fields'])); // Reindex the array.
-			else:
-				$global_settings['clone_fields'][$field_index]['blogs'] = $blogs;
-			endif;
+			case 'remove':
+				$global_settings = $profile->remove_global_field( $field, $field_index );
 			break;
 		endswitch;
 		
-		update_option( PROFILE_CCT_SETTINGS, $profile->settings );
-		update_site_option( PROFILE_CCT_SETTING_GLOBAL, $global_settings );
 	endif;
 ?>
 <h2>Fields Builder</h2>
