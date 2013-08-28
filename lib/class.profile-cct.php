@@ -31,6 +31,7 @@ class Profile_CCT {
 		add_action( 'init', array( $this, 'load' ) );
 		$this->settings   = $this->get_settings( 'settings' );
 		$this->taxonomies = $this->get_settings( 'taxonomy' );
+		
 	}
 	
 	/**
@@ -59,7 +60,7 @@ class Profile_CCT {
 			add_action( 'wp_dashboard_setup',         array( $this, 'add_dashboard_widgets' ) );
 			add_action( 'edit_form_advanced',         array( $this, 'edit_post_advanced' ) );
 			add_action( 'add_meta_boxes_profile_cct', array( $this, 'edit_post' ) );
-			
+			add_action( 'edit_form_after_title', array( $this, 'edit_form_after_title' ), 10, 1 );
 			add_filter( 'post_row_actions',           array( __CLASS__, 'modify_row_actions' ), 10, 2);
 			
 			
@@ -78,6 +79,8 @@ class Profile_CCT {
 		add_action('wp_ajax_profile-cct-export', array( $this, 'export_settings') );
 		add_action('wp_ajax_nopriv_profile-cct-export', array( $this, 'export_settings') );
 		
+		add_filter( 'wp_import_post_meta', array( $this, 'wp_import_post_meta'), 10, 3);
+				
 		$this->register_profiles();
 		$this->update();
 		$this->load_fields();
@@ -85,6 +88,47 @@ class Profile_CCT {
 		if ( function_exists( 'add_image_size' ) ) { 
 			add_image_size( 'profile-image', $this->settings['picture']['width'], $this->settings['picture']['height'] ); //300 pixels wide (and unlimited height)
 		}
+	}
+	
+
+	
+	/**
+	 * wp_import_post_meta function.
+	 * 
+	 * @access public
+	 * @param mixed $postmeta
+	 * @param mixed $post_id
+	 * @param mixed $post
+	 * @return void
+	 */
+	function wp_import_post_meta( $postmeta, $post_id, $post) {
+		
+		if( 'profile_cct' == $post['post_type']):
+			$count = 0;
+			foreach( $postmeta as $meta ):
+				
+				if( 'profile_cct' == $meta['key'] )
+					$counter = $count;
+					
+				$count++;
+			endforeach;
+			
+			// solution found via this ticket - https://core.trac.wordpress.org/ticket/23275
+			$value = maybe_unserialize( str_replace( array("\r\n", "\r", "\n"), "\r\n", $postmeta[$counter]['value'] ) ); 
+			
+			if( empty( $value ) ):
+				$value = maybe_unserialize( 
+ 					preg_replace( // e flag deprecated in PHP 5.5.0 I think 
+ 					'!s:(\d+):"(.*?)";!se', 
+ 					"'s:'.strlen('$2').':\"$2\";'", 
+ 					$postmeta[$counter]['value']  
+ 					));
+			endif;
+				
+			$postmeta[$counter]['value'] = $value;
+			
+		endif;
+		return $postmeta;
 	}
 	
 	/**
@@ -528,6 +572,12 @@ class Profile_CCT {
 		$wp_meta_boxes['dashboard']['side']['core'] = array_merge( array('profile_cct' => $profile_cct_widget), $wp_meta_boxes['dashboard']['side']['core'] );
 	}
 	
+	/**
+	 * get_dashboard_widget_content function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function get_dashboard_widget_content() {
 		$profile = self::get_user_profile();
 		
@@ -702,6 +752,14 @@ class Profile_CCT {
 		return apply_filters( 'profile_cct_default_options', $option, $type );
 	}
 	
+	
+	function edit_form_after_title( $post ) {
+		
+		if( 'profile_cct' == $post->post_type ): ?>
+		<a class="button" style="position:absolute; top:45px; left:235px;" href="<?php get_permalink($post->ID ); ?>">View Profile</a> 
+		<?php
+		endif;
+	}
 	/**
 	 * edit_post function.
 	 *
@@ -709,6 +767,7 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function edit_post() {
+		
         Profile_CCT_Admin::$page = 'form';
 		Profile_CCT_Admin::recount_field( 'form' );
 		

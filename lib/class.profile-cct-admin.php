@@ -59,7 +59,9 @@ class Profile_CCT_Admin {
 		add_action( 'profile_cct_before_page',     array( __CLASS__, 'display_fields_check' ), 11, 1 );
 		
 		// save the date 
-		add_action( 'wp_insert_post_data',         array( __CLASS__, 'save_post_data'), 10, 2 );
+		// add_action( 'wp_insert_post_data',         array( __CLASS__, 'save_post_data'), 10, 2 );
+		// save the date
+		add_action( 'wp_insert_post',         array( __CLASS__, 'insert_post'), 10, 2 );
 	}
 
 	/**
@@ -881,7 +883,7 @@ class Profile_CCT_Admin {
 	
 	/**
 	 * save_post_data function.
-	 *
+	 * 
 	 * @access public
 	 * @param mixed $data
 	 * @param mixed $postarr
@@ -918,6 +920,66 @@ class Profile_CCT_Admin {
 		return $post_data;
 	}
 	
+	/**
+	 * insert_post function.
+	 * update the post once it is created again
+	 * @access public
+	 * @param mixed $post_id
+	 * @param mixed $post_data
+	 * @return void
+	 */
+	function insert_post( $post_id, $post_data ) {
+	
+		global $wpdb;
+		
+		
+		if ( isset( $_POST["profile_cct"] )):
+			kses_remove_filters();
+			
+			$profile_cct_data = self::overwrite_previous_post_data( $post_id, $_POST["profile_cct"] );
+			
+			// save the name of the person as the title
+			if ( is_array( $profile_cct_data["name"]) || !empty($profile_cct_data["name"]) ):
+				$data['post_title'] = $profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last'];
+				$data['post_name'] = sanitize_title( $profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last'] );
+			else:
+				$userdata = get_userdata( $post_data->post_author );
+				$data['post_title'] = $userdata->user_nicename;
+				$data['post_name'] = sanitize_title( $userdata->user_nicename );
+			endif;
+			
+			//Ensure there is no slug conflict
+			$data['post_name'] = wp_unique_post_slug( $data['post_name'], $post_id, 'publish', 'profile_cct', 0 );
+			$data['post_content'] = self::generate_content( $profile_cct_data, 'page' );
+			$data['post_excerpt'] = self::generate_content( $profile_cct_data, 'list' );
+			
+			
+			self::store_post_data( $post_id, $profile_cct_data );
+			
+			$where = array( 'ID' =>  $post_id );
+			
+			$wpdb->update( $wpdb->posts, array( 
+								'post_name' => $data['post_name'],
+								'post_content' => $data ['post_content'],
+								'post_excerpt' => $data ['post_excerpt'],
+								'post_title'   => $data['post_title']
+								 ), $where );
+			
+			kses_init_filters();
+		endif;		
+	
+	
+	}
+	
+	/**
+	 * generate_content function.
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $profile_cct_data
+	 * @param mixed $where
+	 * @return void
+	 */
 	static function generate_content( $profile_cct_data, $where ) {
 		ob_start();
 		self::generate_profile( $where, $profile_cct_data );
@@ -927,6 +989,15 @@ class Profile_CCT_Admin {
 		return $contents;
 	}
 	
+	/**
+	 * overwrite_previous_post_data function.
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $post_id
+	 * @param mixed $profile_cct
+	 * @return void
+	 */
 	static function overwrite_previous_post_data( $post_id, $profile_cct ) {
 		$profile_cct_data_previous = get_post_meta( $post_id, 'profile_cct', true );
 		

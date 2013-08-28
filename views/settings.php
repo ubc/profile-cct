@@ -39,6 +39,7 @@
 	    			update_option( 'Profile_CCT_'.$setting_name, $setting_value );
 	    		}
 	    			echo '<div id="message" class="updated below-h2"><p>Settings Were Update!</p></div>';
+	    			flush_rewrite_rules();
 	    		else:
 	    			echo '<div id="message" class="error below-h2"><p>Settings were not updated</p></div>';
 	    		endif;
