@@ -756,7 +756,7 @@ class Profile_CCT {
 	function edit_form_after_title( $post ) {
 		
 		if( 'profile_cct' == $post->post_type ): ?>
-		<a class="button" style="position:absolute; top:45px; left:235px;" href="<?php get_permalink($post->ID ); ?>">View Profile</a> 
+		<a class="button" style="position:absolute; top:45px; left:235px;" href="<?php echo get_permalink($post->ID ); ?>">View Profile</a> 
 		<?php
 		endif;
 	}

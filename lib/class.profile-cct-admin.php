@@ -939,7 +939,7 @@ class Profile_CCT_Admin {
 			$profile_cct_data = self::overwrite_previous_post_data( $post_id, $_POST["profile_cct"] );
 			
 			// save the name of the person as the title
-			if ( is_array( $profile_cct_data["name"]) || !empty($profile_cct_data["name"]) ):
+			if ( is_array( $profile_cct_data["name"]) || !empty( $profile_cct_data["name"] ) ):
 				$data['post_title'] = $profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last'];
 				$data['post_name'] = sanitize_title( $profile_cct_data["name"]['first']." ".$profile_cct_data["name"]['last'] );
 			else:
@@ -954,10 +954,14 @@ class Profile_CCT_Admin {
 			$data['post_excerpt'] = self::generate_content( $profile_cct_data, 'list' );
 			
 			
+			
 			self::store_post_data( $post_id, $profile_cct_data );
 			
-			$where = array( 'ID' =>  $post_id );
+			$data = sanitize_post( $data, 'db');
+			$data = stripslashes_deep( $data );
 			
+			$where = array( 'ID' =>  $post_id );
+						
 			$wpdb->update( $wpdb->posts, array( 
 								'post_name' => $data['post_name'],
 								'post_content' => $data ['post_content'],
