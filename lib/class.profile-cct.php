@@ -599,7 +599,7 @@ class Profile_CCT {
 				?>
 				<div class="actions">
 					<a class="button" href="<?php echo admin_url('users.php?page=public_profile'); ?>">Edit</a>
-					<a class="button-primary" href="<?php echo get_permalink( $post->ID ); ?>">View</a>
+					<a class="button-primary" href="<?php echo get_permalink( $profile->ID ); ?>">View</a>
 				</div>
 			</div>
 			<?php

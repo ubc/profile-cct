@@ -1,9 +1,9 @@
 === Profile CCT ===
-Contributors: enej, ejackisch, alekarsovski, devindra, ctlt-dev, ubcdev
+Contributors: enej, ejackisch, alekarsovski, devindra, ctlt-dev, ubcdev, loongchan
 Tags: profile, user
-Requires at least: 3.2
-Tested up to: 3.4.1
-Stable tag: 1.3.2
+Requires at least: 3.6
+Tested up to: 3.6.1
+Stable tag: 1.3.3
 
 Manage and display advanced user profiles on your website.
 
@@ -148,6 +148,10 @@ eg. [profilefield type=name show="salutations, middle", html=false] will show th
 
 
 == Change log ==
+= Version 1.3.3 =
+* Updated code to fix tab issues because of Wordpress update of jQueryUI.
+* View button in Your Public Profile section of Dashboard Home page now links to correct page.
+
 = Version 1.3.2 =
 * More Editor Options, Allow users to upload Media, Allow for more advanced media options.  
 

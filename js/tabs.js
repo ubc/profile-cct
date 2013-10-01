@@ -2,20 +2,19 @@ var Profile_CCT_TABS = {
 	selected_tab: 0,
     tabs: 0,
     tab_counter: 0,
-    
+    tabs_global_template: '<li><a href="#{href}" class="tab-link">#{label}</a>  <span class="remove-tab">Remove Tab</span> <span class="edit-tab">Edit</span></li>',
+
 	onReady: function() {
 		// tabs
 		jQuery( "#add-tab" ).click( Profile_CCT_TABS.addTab );
 		var tab_shell = jQuery( "#tabs" );
-		Profile_CCT_TABS.$tabs = tab_shell.tabs({
-            tabTemplate: '<li><a href="#{href}" class="tab-link">#{label}</a>  <span class="remove-tab">Remove Tab</span> <span class="edit-tab">Edit</span></li>',
-        });
+		Profile_CCT_TABS.$tabs = tab_shell.tabs();
 		
 		Profile_CCT_TABS.selected_tab = jQuery(".tab-link:first", Profile_CCT_TABS.$tabs); 
 		Profile_CCT_TABS.$tabs.bind( "tabsselect", Profile_CCT_TABS.selectTab);
-		Profile_CCT_TABS.tab_counter = Profile_CCT_TABS.$tabs.tabs( "length" ); // count the tabs 
+		Profile_CCT_TABS.tab_counter = Profile_CCT_TABS.$tabs.find('ul.nav li').length; // count the tabs 
 		Profile_CCT_TABS.$tabs.tabs( "disable", Profile_CCT_TABS.tab_counter - 1 ); // disable the 'add tab' as a tab
-		
+
 		jQuery( ".remove-tab" ).live( "click",    Profile_CCT_TABS.removeTab );
 		jQuery( ".edit-tab"   ).live( "click",    Profile_CCT_TABS.editTab   );
 		jQuery( ".tab-link"   ).live( "dblclick", Profile_CCT_TABS.editTab   );
@@ -39,10 +38,12 @@ var Profile_CCT_TABS = {
             
             jQuery.post(ajaxurl, data, function(response) {
                 if (response == "added") {
+                    //add tab content
                     Profile_CCT_TABS.$tabs.append('<div id="tabs-'+Profile_CCT_TABS.tab_counter+'"><ul id="tabbed-'+Profile_CCT_TABS.tab_counter+'"class="sort form-builder"></ul></div>');
                     // add tab to form
-                    Profile_CCT_TABS.$tabs.tabs( "add", '#tabs-'+Profile_CCT_TABS.tab_counter, tab_title, index );
-                    Profile_CCT_TABS.$tabs.tabs( 'select', index );
+                    jQuery("'"+Profile_CCT_TABS._getTabTemplate('#tabs-'+Profile_CCT_TABS.tab_counter, tab_title)+"'").insertBefore('li#add-tab-shell');
+                    Profile_CCT_TABS.$tabs.tabs("refresh");
+                    Profile_CCT_TABS.$tabs.tabs("option", "active", index );
                     Profile_CCT_TABS.tab_counter++;
                     
                     // make sure that the newly added ul will be sortable
@@ -112,7 +113,8 @@ var Profile_CCT_TABS = {
                 var html_list = jQuery("#tabs div.ui-tabs-panel").eq( index ).find('ul').html();
                 jQuery("#bench").append(html_list);
                 
-                Profile_CCT_TABS.$tabs.tabs( "remove", index );
+                Profile_CCT_TABS.$tabs.find('ul.nav li:eq('+index+')').remove();
+                Profile_CCT_TABS.$tabs.tabs('refresh');
                 Profile_CCT_FORM.hideSpinner();
                 Profile_CCT_Admin.show_refresh();
             }
@@ -124,6 +126,10 @@ var Profile_CCT_TABS = {
 	selectTab: function(e, ui) {
 		Profile_CCT_TABS.selected_tab = jQuery(ui.tab);
 	},
+
+	_getTabTemplate: function(url, title) {
+		return Profile_CCT_TABS.tabs_global_template.replace('#{href}', url).replace('#{label}', title);
+	}
 };
 
 jQuery(document).ready(Profile_CCT_TABS.onReady);
