@@ -74,24 +74,24 @@ For other uses you can use the [profilelist] and [profile] shortcodes to display
 
 [profilelist] by default shows all profiles in list view format
 
-** Filtering by taxonomy **:`[profilelist {taxonomyname} = "{taxonomyvalue}"]` shows profiles that meet the specified criteria
+**Filtering by taxonomy**:`[profilelist {taxonomyname} = "{taxonomyvalue}"]` shows profiles that meet the specified criteria
 
 You can specify multiple taxonomies to filter by, by default then only profiles that meet ALL the specified criteria will be displayed. Alternatively you can also add query="or" to the shortcode to show
  profiles meeting at least one of the criterias.
 
- ** Filtering by letter **:
+ **Filtering by letter**:
  `[profilelist letter="a"]` returns all profiles where last name starts with letter 'a'.
 
- ** Ordering results: **
+ **Ordering results:**
  `[profilelist orderby = orderfield]` where 'orderfield' is either first_name, last_name, or date. By default it will use the manual ordering specified on the Profiles->Order Profiles page
  You can also show results in descending order, eg `[profilelist orderby='first_name' order='desc']`
 
 
- ** Displaying more details: **
+ **Displaying more details:**
  use display="full" to show full profiles, or display="name" to only shows names. Default behaviour shows the list view as set in the settings.
 
 
- ** Show a specific set of people: **
+ **Show a specific set of people:**
  `[profilelist include="id, id2, id3..."]`
  Displays the people with the corresponding id
 
