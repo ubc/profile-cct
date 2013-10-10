@@ -9,6 +9,7 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
     var $default_options = array(
 		'type'         => 'taxonomy',
 		'label'        => 'taxonomy',
+		'description'   => '',
 		'class'        => 'taxonomy',
 		'width'        => 'full',
 		'before'       => '',
@@ -127,6 +128,7 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 		$taxonomy_id = $field['type'];
 		$callback_args = array(
 			'taxonomy' => $field['type'],
+			'description' => $field['description'],
 		);
 		
 		$profile = Profile_CCT::get_object();
@@ -141,63 +143,67 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 		
 		if ( $callback_args['display'] == 'default' && $current_user->has_cap( 'manage_categories' ) ):
 			if ( is_taxonomy_hierarchical( $field['type'] ) ):
-				$callback = 'post_categories_meta_box';
+				$callback_args['callback'] = 'post_categories_meta_box';
 			else:
 				$taxonomy_id = 'tagsdiv-'.$taxonomy_id.'div';
-				$callback = 'post_tags_meta_box';
+				$callback_args['callback'] = 'post_tags_meta_box';
 			endif;
-		else:
-			$callback = array( __CLASS__, 'meta_box_content' );
 		endif;
 		
-		add_meta_box( $taxonomy_id, $field['label'], $callback, 'profile_cct', $context, 'core', $callback_args );
+		add_meta_box( $taxonomy_id, $field['label'], array( __CLASS__, 'meta_box_content' ), 'profile_cct', $context, 'core', $callback_args );
 	}
 	
 	public static function meta_box_content( $post, $args ) {
 		$taxonomy = $args['args']['taxonomy'];
 		$display = $args['args']['display'];
-		
 		?>
-		<div id="taxonomy-<?php echo $taxonomy; ?>" class="categorydiv">
-			<input type="hidden" name="tax_data[<?php echo $taxonomy; ?>][display]" value="<?php echo $display; ?>" />
-			<?php
-			switch ( $display ):
-			case 'dropdown':
-				?>
-				<select id="<?php echo $taxonomy; ?>dropdown" name="tax_input[<?php echo $taxonomy; ?>][]" class="categorychecklist form-no-clear" data-wp-lists="list:<?php echo $taxonomy; ?>">
-					<option value="">None</option>
-					<?php
-						wp_terms_checklist( $post->ID, array(
-							'descendants_and_self' => 0,
-							'selected_cats'        => false,
-							'popular_cats'         => false,
-							'walker'               => new Profile_CCT_Dropdown_Walker(),
-							'taxonomy'             => $taxonomy,
-							'checked_ontop'        => false,
-						) );
-					?>
-				</select>
-				<?php
-				break;
-			default:
-				?>
-				<ul id="<?php echo $taxonomy; ?>checklist" class="categorychecklist form-no-clear" data-wp-lists="list:<?php echo $taxonomy; ?>">
-					<?php
-						wp_terms_checklist( $post->ID, array(
-							'descendants_and_self' => 0,
-							'selected_cats'        => false,
-							'popular_cats'         => false,
-							'walker'               => new Profile_CCT_Checkbox_Walker(),
-							'taxonomy'             => $taxonomy,
-							'checked_ontop'        => false,
-						) );
-					?>
-				</ul>
-				<?php
-			endswitch;
-			?>
-		</div>
+		<div class="description"><?php echo $args['args']['description']; ?></div>
 		<?php
+		if( isset( $args['args']['callback'] ) ):
+			call_user_func( $args['args']['callback'], $post, $args );
+		else:
+			?>
+			<div id="taxonomy-<?php echo $taxonomy; ?>" class="categorydiv">
+				<input type="hidden" name="tax_data[<?php echo $taxonomy; ?>][display]" value="<?php echo $display; ?>" />
+				<?php
+				switch ( $display ):
+				case 'dropdown':
+					?>
+					<select id="<?php echo $taxonomy; ?>dropdown" name="tax_input[<?php echo $taxonomy; ?>][]" class="categorychecklist form-no-clear" data-wp-lists="list:<?php echo $taxonomy; ?>">
+						<option value="">None</option>
+						<?php
+							wp_terms_checklist( $post->ID, array(
+								'descendants_and_self' => 0,
+								'selected_cats'        => false,
+								'popular_cats'         => false,
+								'walker'               => new Profile_CCT_Dropdown_Walker(),
+								'taxonomy'             => $taxonomy,
+								'checked_ontop'        => false,
+							) );
+						?>
+					</select>
+					<?php
+					break;
+				default:
+					?>
+					<ul id="<?php echo $taxonomy; ?>checklist" class="categorychecklist form-no-clear" data-wp-lists="list:<?php echo $taxonomy; ?>">
+						<?php
+							wp_terms_checklist( $post->ID, array(
+								'descendants_and_self' => 0,
+								'selected_cats'        => false,
+								'popular_cats'         => false,
+								'walker'               => new Profile_CCT_Checkbox_Walker(),
+								'taxonomy'             => $taxonomy,
+								'checked_ontop'        => false,
+							) );
+						?>
+					</ul>
+					<?php
+				endswitch;
+				?>
+			</div>
+			<?php
+		endif;
 	}
 	
 	public static function edit_post( $post_id, $post ) {
