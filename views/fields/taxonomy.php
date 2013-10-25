@@ -302,7 +302,7 @@ class Profile_CCT_Checkbox_Walker extends Walker {
 		?>
 		<li id="<?php echo $taxonomy; ?>-<?php echo $category->term_id; ?>" <?php echo $class; ?>>
 			<label class="selectit">
-				<input value="<?php echo $category->term_id; ?>" type="checkbox" name="<?php echo $name; ?>[]" id="in-<?php echo $taxonomy; ?>-<?php echo $category->term_id; ?>" <?php checked( in_array( $category->term_id, $selected_cats ), true, false ); ?> />
+				<input value="<?php echo $category->term_id; ?>" type="checkbox" name="<?php echo $name; ?>[]" id="in-<?php echo $taxonomy; ?>-<?php echo $category->term_id; ?>" <?php checked( in_array( $category->term_id, $selected_cats ) ); ?> />
 				<?php echo esc_html( apply_filters( 'the_category', $category->name ) ); ?>
 			</label>
 		<?php
