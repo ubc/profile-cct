@@ -46,7 +46,7 @@ Class Profile_CCT_Courses extends Profile_CCT_Field {
 			'label'    => 'Course #',
 			'size'     => 3,
 			'data'     => array(
-				'accepts' => '/[0-9]/',
+				'accepts' => '/[0-9a-zA-Z]/',
 				'limit'   => 6,
 			),
 		) );
