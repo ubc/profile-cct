@@ -56,10 +56,10 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
 		$this->input_text( array(
 			'field_id' => 'middle',
 			'label'    => 'Middle',
-			'size'     => 3,
+			'size'     => 5,
 			'data'      => array(
 				'accepts' => '/[a-zA-Z.]/',
-				'limit'   => 6,
+				'limit'   => 10,
 			),
 		) );
 		$this->input_text( array(
