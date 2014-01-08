@@ -7,7 +7,7 @@
 
 #col-container .field-shell {
     pointer-events: none;
-    padding: 5px 10px;
+    padding: 10px 10px 5px 20px;
 }
 
 .field {
@@ -43,19 +43,13 @@ ul.sort > li {
 	clear: both;
 	position: relative;
 	border: 1px solid #DFDFDF;
-    border-radius: 3px 3px 3px 3px;
+    
     box-shadow: 0 1px 0 #FFFFFF inset;
-	background-color: #F1F1F1;
-	background-image: -ms-linear-gradient(top,#F9F9F9,#ECECEC);
-	background-image: -moz-linear-gradient(top,#F9F9F9,#ECECEC);
-	background-image: -o-linear-gradient(top,#F9F9F9,#ECECEC);
-	background-image: -webkit-gradient(linear,left top,left bottom,from(#F9F9F9),to(#ECECEC));
-	background-image: -webkit-linear-gradient(top,#F9F9F9,#ECECEC);
-	background-image: linear-gradient(top,#F9F9F9,#ECECEC);
-}
+	background-color: #FFF;
+	}
 
-ul.sort .field-title {
-	font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
+.sort .field-title {
+	
     font-size: 15px;
     font-weight: normal;
     line-height: 1;
@@ -64,23 +58,13 @@ ul.sort .field-title {
 	text-transform: capitalize;
 	cursor: move;
 	display: block;
-    background-color: #F1F1F1;
-	background-image: -ms-linear-gradient(top,#F9F9F9,#ECECEC);
-	background-image: -moz-linear-gradient(top,#F9F9F9,#ECECEC);
-	background-image: -o-linear-gradient(top,#F9F9F9,#ECECEC);
-	background-image: -webkit-gradient(linear,left top,left bottom,from(#F9F9F9),to(#ECECEC));
-	background-image: -webkit-linear-gradient(top,#F9F9F9,#ECECEC);
-	background-image: linear-gradient(top,#F9F9F9,#ECECEC);
+    background-color: #FFF;
+	
 }
 
 ul.sort .is-active .field-title {
-	background-color: #D3E3EB;
-	background-image: linear-gradient(bottom, #BCD5E1 0%, #D3E3EB 100%);
-	background-image: -o-linear-gradient(bottom, #BCD5E1 0%, #D3E3EB 100%);
-	background-image: -moz-linear-gradient(bottom, #BCD5E1 0%, #D3E3EB 100%);
-	background-image: -webkit-linear-gradient(bottom, #BCD5E1 0%, #D3E3EB 100%);
-	background-image: -ms-linear-gradient(bottom, #BCD5E1 0%, #D3E3EB 100%);
-	background-image: -webkit-gradient( linear,left bottom,left top,color-stop(0, #BCD5E1),color-stop(1, #D3E3EB) );
+	background-color: #FFF;
+
 }
 
 ul.sort .is-active {
@@ -93,15 +77,9 @@ ul.sort .is-active {
 	clear: both;
 	position: relative;
 	border: 1px solid #DFDFDF;
-    border-radius: 3px 3px 3px 3px;
+    
     box-shadow: 0 1px 0 #FFFFFF inset;
-	background-color: #F1F1F1;
-	background-image: -ms-linear-gradient(top,#F9F9F9,#ECECEC);
-	background-image: -moz-linear-gradient(top,#F9F9F9,#ECECEC);
-	background-image: -o-linear-gradient(top,#F9F9F9,#ECECEC);
-	background-image: -webkit-gradient(linear,left top,left bottom,from(#F9F9F9),to(#ECECEC));
-	background-image: -webkit-linear-gradient(top,#F9F9F9,#ECECEC);
-	background-image: linear-gradient(top,#F9F9F9,#ECECEC);
+	background-color: #FFF;
 }
 
 .form-builder li hr {
@@ -282,20 +260,21 @@ ul.sort .is-active {
 }
 
 .form-builder .field-title {
-	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
+	
     font-size: 15px;
     font-weight: normal;
     line-height: 1;
     padding: 7px 0 7px 20px;
-	color: #464646;
+	color: #222;
 	text-transform: capitalize;
 	cursor: move;
 	display: block;
-	border-bottom-color: #DFDFDF;
+	border-bottom:1px solid #EEE;
+	
     box-shadow: 0 1px 0 #FFFFFF;
     text-shadow: 0 1px 0 #FFFFFF;
-    background-color: #F1F1F1;
-    background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
+    background-color: #FFF;
+
 }
 
 .form-builder li .days.multiple-shell label {
@@ -329,10 +308,7 @@ ul.sort .is-active {
 	color: #333;
 	margin: 0;
 	padding: 2px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-khtml-border-radius: 3px;
-	border-radius: 3px;
+	
 	border: 1px solid #DFDFDF;
 }
 
@@ -349,10 +325,7 @@ ul.sort .is-active {
 .form-builder input.text,
 .form-builder textarea {
 	border: 1px solid #DFDFDF;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	-khtml-border-radius: 4px;
-	border-radius: 4px;
+	
 	background: #fff;
 	max-width: 74em;
 	margin-right: 10px;	
@@ -423,26 +396,33 @@ ul.sort .is-active {
     top: 0;
     right: 0;
 }
+.action-shell .dashicons{
+	font-size: 20px;
+	margin-right: 5px;
+	margin-top:-3px;
+}
 
 .form-builder li .action {
     height: 16px;
 	font-size: 10px;
 	margin: 0;
 }
-
-.form-builder li .action.edit {
+.form-builder  .move-arrow{
+	text-decoration: none;
+}
+.form-builder .edit {
 	font-size: 10px;
     margin: 0 5px;
 	position: relative;
     top: -5px;
 }
 
-.form-builder li .action.arrow {
-	visibility: hidden;
+.form-builder li .move-arrow {
+	
 }
 
-.form-builder li:hover .action.arrow {
-	visibility: visible;
+.form-builder li:hover .move-arrow {
+	
 }
 
 .form-builder li .edit-shell {
@@ -477,14 +457,19 @@ li.ui-sortable-helper {
     height: 27px;
     margin-bottom: 5px;
 }
-
+.ui-tabs-nav li.ui-state-active{
+	background: #F1F1F1;
+}
 .ui-tabs-nav li.ui-state-active,
 .ui-tabs-nav li a:hover {
-	border-color: #CCCCCC #CCCCCC #FFFFFF;
+	border-color: #CCCCCC #CCCCCC #F1F1F1;
 }
-
+.ui-tabs-nav li a:hover{
+	background: #FFF;
+	color: #222;
+}
 .ui-tabs-nav li {
-    border-color: #DFDFDF #DFDFDF #CCC;
+    border-color: #CCC;
     border-radius: 3px 3px 0 0;
     border-style: solid;
     border-width: 1px;
@@ -496,6 +481,7 @@ li.ui-sortable-helper {
     text-decoration: none;
     text-shadow: 0 1px 0 #FFFFFF;
     font-weight: bold;
+    background: #E4E4E4;
 }
 
 .ui-tabs-nav li a {
@@ -503,11 +489,13 @@ li.ui-sortable-helper {
 	text-decoration: none;
 	float: left;
 	padding: 4px 14px 6px 14px;
+	background: #E4E4E4;
 }
 
 .ui-tabs-nav li.ui-state-active a {
 	color: #464646;
 	padding: 4px 4px 6px 14px;
+	background: #F1F1F1;
 }
 
 .ui-statehover {
@@ -562,6 +550,8 @@ li.ui-sortable-helper {
 
 #add-tab-shell a {
 	padding: 4px 14px 6px 14px;
+	background: #F1F1F1;
+	border-bottom: 1px solid #CCC;
 }
 
 #add-tab-shell {
@@ -585,8 +575,7 @@ li.ui-sortable-helper {
 	border: 0;
 	padding: 5px 5px 2px;
 	min-height: 400px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
+	
 }
 
 #bench li {

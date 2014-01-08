@@ -338,7 +338,7 @@ class Profile_CCT {
 		$args = array(
 			'labels'              => $labels,
 			'hierarchical'        => false,
-			'menu_icon'           => PROFILE_CCT_DIR_URL.'/icon.png',
+			'menu_icon'           => 'dashicons-id-alt',
 			'supports'            => array( 'author' ),
 			'public'              => true,
 			'show_ui'             => true,
@@ -756,7 +756,7 @@ class Profile_CCT {
 	function edit_form_after_title( $post ) {
 		
 		if( 'profile_cct' == $post->post_type ): ?>
-		<a class="button" style="position:absolute; top:45px; left:235px;" href="<?php echo get_permalink($post->ID ); ?>">View Profile</a> 
+		<a class="button" style="position:absolute; top:1.8em; left:235px;" href="<?php echo get_permalink($post->ID ); ?>">View Profile</a> 
 		<?php
 		endif;
 	}

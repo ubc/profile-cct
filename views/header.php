@@ -2,7 +2,6 @@
 	do_action( 'profile_cct_admin_pages', Profile_CCT_Admin::$page );
 ?>
 <div class="wrap">
-	<?php Profile_CCT_Admin::icon();?>
 	<h2 id="profile-setting">Settings</h2>
 	
 	<?php if ( version_compare( PROFILE_CCT_VERSION, Profile_CCT::version(), '>' ) ): ?>
@@ -11,10 +10,11 @@
 			<a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>
 		</div>
 	<?php elseif ( 'update-all' == get_transient('Profile_CCT_needs_refresh') ): ?>
-	<div id="update-profile-shell" class="update-profiles info">
-			Profile plugin requires you to update your profile. 
-			<a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>
+		<div id="update-profile-shell" class="error below-h2">
+			<p>Profile plugin requires you to update your profile. 
+			<a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a></p>
 		</div>
+		<br />
 	<?php elseif ( false !== ( $where = get_transient('Profile_CCT_needs_refresh') ) ): ?>
 		<?php
 			$where = array_keys($where);
