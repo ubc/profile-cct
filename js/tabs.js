@@ -15,9 +15,10 @@ var Profile_CCT_TABS = {
 		Profile_CCT_TABS.tab_counter = Profile_CCT_TABS.$tabs.find('ul.nav li').length; // count the tabs 
 		Profile_CCT_TABS.$tabs.tabs( "disable", Profile_CCT_TABS.tab_counter - 1 ); // disable the 'add tab' as a tab
 
-		jQuery( ".remove-tab" ).live( "click",    Profile_CCT_TABS.removeTab );
-		jQuery( ".edit-tab"   ).live( "click",    Profile_CCT_TABS.editTab   );
-		jQuery( ".tab-link"   ).live( "dblclick", Profile_CCT_TABS.editTab   );
+		jQuery(document).on('click', 	'.remove-tab', 	Profile_CCT_TABS.removeTab	);
+		jQuery(document).on('click', 	'.edit-tab', 	Profile_CCT_TABS.editTab	);
+		jQuery(document).on('dblclick', '.tab-link', 	Profile_CCT_TABS.editTab	);
+
 	},
     
 	addTab: function(e) {

@@ -7,9 +7,9 @@ var Profile_CCT_PAGE = {
 		Profile_CCT_PAGE.startTabs();
 		
 		jQuery('.add-multiple').click(Profile_CCT_PAGE.addFields);
-		jQuery('.remove-fields').live( 'click', Profile_CCT_PAGE.removeFields );
-		jQuery(".field-shell-social select").live('change', Profile_CCT_PAGE.updateSocialLabel);
-		jQuery(".add-multiple").live( 'click', Profile_CCT_PAGE.clearSocialLabel );
+		jQuery(document).on('click', '.remove-fields', Profile_CCT_PAGE.removeFields);
+		jQuery(document).on('change', '.field-shell-social select', Profile_CCT_PAGE.updateSocialLabel);
+		jQuery(document).on('click', '.add-multiple', Profile_CCT_PAGE.clearSocialLabel);
 		
 		// placed right after tb_show call
 		if ( typeof window.tb_remove == 'function' ) {
@@ -31,7 +31,7 @@ var Profile_CCT_PAGE = {
 		
 		Profile_CCT_PAGE.tabs_shell.tabs();
 	},
-	
+
 	addFields: function(e) {
 		e.preventDefault();
 		var link = jQuery(this);

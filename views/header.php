@@ -5,7 +5,7 @@
 	<h2 id="profile-setting">Settings</h2>
 	
 	<?php if ( version_compare( PROFILE_CCT_VERSION, Profile_CCT::version(), '>' ) ): ?>
-		<div class="update-profiles info" id="update-profile-shell">
+		<div class="update-nag update-profiles info update-new" id="update-profile-shell">
 			You need to update profiles so that they will run smoothly with the latest version of the plugin.
 			<a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>
 		</div>
@@ -36,7 +36,7 @@
 				$where_out = $where[0];
 			endif;
 		?>
-		<div id="update-profile-shell" class="update-profiles info">
+		<div id="update-profile-shell" class="update-nag update-profiles info update-new">
 			The profile <?php echo $where_out." ".$has; ?> changed.
 			<a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>
 		</div>

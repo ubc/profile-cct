@@ -1,7 +1,6 @@
 var Profile_CCT_FORM = {
 	onReady: function() {
 		var tab_shell = jQuery( "#tabs" );
-		var formB = jQuery(".form-builder");
 		
 		jQuery( ".sort" ).sortable({
             placeholder: "ui-state-highlight",
@@ -12,15 +11,15 @@ var Profile_CCT_FORM = {
             forcePlaceholderSize: true,
 		});
 		
-		formB.find( ".edit"                ).live( 'click', Profile_CCT_FORM.editField         );
-		formB.find( ".field-label"         ).live( 'keyup', Profile_CCT_FORM.updateLabel       );
-		formB.find( ".field-description"   ).live( 'keyup', Profile_CCT_FORM.updateDescription );
-		formB.find( ".field-url-prefix"    ).live( 'keyup', Profile_CCT_FORM.updateUrlPrefix   );
-		formB.find( ".field-show"          ).live( 'click', Profile_CCT_FORM.updateShow        );
-		formB.find( ".field-multiple"      ).live( 'click', Profile_CCT_FORM.multipleShow      );
-		formB.find( ".save-field-settings" ).live( 'click', Profile_CCT_FORM.updateField       );
-		formB.find( ".field-textarea"      ).live( 'keyup', Profile_CCT_FORM.updateTextarea    );
-		formB.find( ".field-text"          ).live( 'keyup', Profile_CCT_FORM.updateText        );
+		jQuery(document).on('click', '.form-builder .edit', 				Profile_CCT_FORM.editField			);
+		jQuery(document).on('click', '.form-builder .field-label', 			Profile_CCT_FORM.updateLabel		);
+		jQuery(document).on('click', '.form-builder .field-description', 	Profile_CCT_FORM.updateDescription	);
+		jQuery(document).on('click', '.form-builder .field-url-prefix', 	Profile_CCT_FORM.updateUrlPrefix	);
+		jQuery(document).on('click', '.form-builder .field-show', 			Profile_CCT_FORM.updateShow			);
+		jQuery(document).on('click', '.form-builder .field-multiple', 		Profile_CCT_FORM.multipleShow		);
+		jQuery(document).on('click', '.form-builder .save-field-settings', 	Profile_CCT_FORM.updateField		);
+		jQuery(document).on('click', '.form-builder .field-textarea', 		Profile_CCT_FORM.updateTextarea		);
+		jQuery(document).on('click', '.form-builder .field-text', 			Profile_CCT_FORM.updateText			);
 		
 		jQuery(".edit", "#form-name").click(Profile_CCT_FORM.editField);
 	},

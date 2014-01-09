@@ -109,6 +109,12 @@
 	padding: 20px 10px;
 }
 
+.update-new {
+	margin: 0;
+	display: block;
+	border-radius: 0;
+}
+
 .profile-version {
 	clear: both;
 	margin-top: 10px;

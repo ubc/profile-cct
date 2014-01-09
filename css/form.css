@@ -124,6 +124,10 @@ ul.sort .is-active {
 	display: inline-block;
 }
 
+ul.form-builder {
+	background-color: white;	
+}
+
 .form-builder li div {
 	margin: 0;
 	padding: 0;
