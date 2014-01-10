@@ -118,15 +118,15 @@
 	<table class="form-table">
 		<tr valign="top">
 			<th scope="row"><label for="label">Name</label><span class="required">*</span></th>
-			<td>
+			<td<?php if (isset($error['label'])) { echo ' class="form-invalid "';}?>>
 				<input type="text" value="<?php echo esc_attr($field_label); ?>" id="label" name="label" class="all-options"  /> <span class="description">For example: Lab Phone</span>
 				<br />
-				<?php if (isset($error['label'])) echo "<span class='form-invalid' style='padding:2px;'>".$error['label']."</span>"; ?>
+				<?php if (isset($error['label'])) echo "<span class='form-invalid'>".$error['label']."</span>"; ?>
 			</td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><label for="field_clone">Field To Duplicate</label><span class="required">*</span></th>
-			<td>
+			<td<?php if (isset($error['field_clone'])) { echo ' class="form-invalid "';}?>>
 				<select name="field_clone" id="field_clone" class="all-options">
 					<?php foreach(Profile_CCT_Admin::fields_to_clone() as $field_to_clone): ?>
 						<option value="<?php echo esc_attr($field_to_clone['type']);?>" <?php selected($field_clone, $field_to_clone['type']); ?>><?php echo esc_attr($field_to_clone['type']);?></option>
@@ -139,7 +139,7 @@
 		</tr>
 		<tr valign="top">
 			<th scope="row"><label for="description">Description</label><span class="required">*</span></th>
-			<td>
+			<td<?php if (isset($error['description'])) { echo ' class="form-invalid "';}?>>
 				<textarea name="description" id="description" class="large-text" cols="30" rows="5"><?php echo esc_textarea($field_description); ?></textarea>
 				<br />
 				<span class="description">Describe what this field is used for.</span>

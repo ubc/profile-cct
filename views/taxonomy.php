@@ -118,13 +118,14 @@
 				<label for="single-name">Singular Name</label>
 				<span class="required">*</span>
 			</th>
-			<td>
+			<td<?php if (isset($error['single'])) { echo ' class="form-invalid"';}?>>
 				<input type="text" value="" id="single-name" name="single-name" class="all-options" maxlength="20" /> 
 				<span class="description">For example: Research Interest</span>
 				<br />
 				<small>The maximum length is 20 characters.</small>
 				<?php if ( isset( $error['single'] ) ): ?>
-					<span class='form-invalid' style='padding:2px;'>
+					<br>
+					<span class='form-invalid'>
 						<?php echo $error['single']; ?>
 					</span>
 				<?php endif; ?>
@@ -136,12 +137,12 @@
 				<label for="plural-name">Plural Name</label>
 				<span class="required">*</span>
 			</th>
-			<td>
+			<td<?php if (isset($error['plural'])) { echo ' class="form-invalid"';}?>>
 				<input type="text" value="" id="plural-name" name="plural-name" class="all-options" /> 
 				<span class="description">For example: Research Interests</span>	
 				<br />
 				<?php if ( isset( $error['plural'] ) ): ?>
-					<span class='form-invalid' style='padding:2px;'>
+					<span class='form-invalid'>
 						<?php echo $error['plural']; ?>
 					</span>
 				<?php endif; ?>
