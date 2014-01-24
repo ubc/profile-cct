@@ -14,7 +14,7 @@
 ?>
 <h2>Profile View Builder</h2>
 <div id="notify">
-	<span id="spinner" class="update"><img src="<?php echo admin_url(); ?>/images/wpspin_light.gif" alt="spinner" /> thinking...</span>	
+	<span id="spinner" class="update"><span class="spinner" style="display:inline;"></span> thinking...</span>	
 </div>
 <div class="updated">
 <p > Drag and drop the fields into place, just the way you want to. Don't forget to click the edit button for some customization. Also you don't have to click a save button. Enjoy</p>

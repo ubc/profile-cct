@@ -1,7 +1,7 @@
 var Profile_CCT_FORM = {
 	onReady: function() {
 		var tab_shell = jQuery( "#tabs" );
-		
+
 		jQuery( ".sort" ).sortable({
             placeholder: "ui-state-highlight",
             handle:      "label.field-title", 
@@ -174,7 +174,7 @@ var Profile_CCT_FORM = {
 		};
 		data_set = jQuery.param(data_set)+"&"+serialize;
 		
-		element.siblings('.spinner').show();		
+		element.siblings('.spinner-shell').show();		
      	
      	parent.parent().data('options', serialize); // update the serialized data 
 		
@@ -182,7 +182,7 @@ var Profile_CCT_FORM = {
      	jQuery.post(ajaxurl, data_set, function(response) {
 			if (response == 'updated') {
 				parent.removeClass('changed');
-			 	element.siblings('.spinner').hide();
+			 	element.siblings('.spinner-shell').hide();
 				element.parent().siblings('.action-shell').children('.edit').trigger("click");
 			 	Profile_CCT_Admin.show_refresh();
 			}

@@ -32,14 +32,14 @@
 }
 
 /* Sorting */
-ul.sort {
+.sort {
 	padding: 5px;
-	border: 1px dashed #DDD;
+	border: 1px dashed #CCC;
 	margin-bottom: 16px;
 	overflow: hidden;
 }
 
-ul.sort > li {
+.sort > li {
 	clear: both;
 	position: relative;
 	border: 1px solid #DFDFDF;
@@ -123,9 +123,9 @@ ul.sort .is-active {
 *+html .form-builder li div {
 	display: inline-block;
 }
-
-ul.form-builder {
-	background-color: white;	
+#list-shell .form-builder,
+#page-shell .form-builder {
+	background: #fff;
 }
 
 .form-builder li div {

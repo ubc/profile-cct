@@ -4,7 +4,7 @@ Contributors: enej, ejackisch, alekarsovski,  ctlt-dev, ubcdev, loongchan
 Tags: profile, user
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 1.3.2
+Stable tag: 1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 ```
@@ -151,6 +151,9 @@ eg. `[profilefield type=name show="salutations, middle", html=false]` will show 
 
 
 ## Change log 
+### Version 1.4
+* Added support for WP 3.8
+
 ### Version 1.3.3
 * Updated code to fix tab issues because of Wordpress update of jQueryUI.
 * View button in Your Public Profile section of Dashboard Home page now links to correct page.

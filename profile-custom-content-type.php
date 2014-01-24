@@ -1,14 +1,14 @@
 <?php
 /**
-  Plugin Name: Profile Custom Content Type
-  Plugin URI: https://github.com/ubc/profile-cct
-  Version: 1.3.2
-  Description: Allows administrators to manage user profiles better in order to display them on their websites
-  Author: Enej Bajgoric, Devindra Payment, Eric Jackish, Aleksandar Arsovski,  CTLT, UBC
-  Author URI: http://ctlt.ubc.ca
-  Text Domain: profile_cct
-  Domain Path: /languages
-  Licence: GPLv2
+ * Plugin Name: Profile Custom Content Type
+ * Plugin URI: https://github.com/ubc/profile-cct
+ * Version: 1.3.4
+ * Description: Allows administrators to manage user profiles better in order to display them on their websites
+ * Author: Enej Bajgoric, Devindra Payment, Eric Jackish, Aleksandar Arsovski,  CTLT, UBC
+ * Author URI: http://ctlt.ubc.ca
+ * Text Domain: profile_cct
+ * Domain Path: /languages
+ * Licence: GPLv2
  */
 
 if ( ! defined( 'ABSPATH' ) )

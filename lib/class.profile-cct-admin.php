@@ -6,6 +6,7 @@ define( 'PROFILE_CCT_BASEADMIN', plugin_basename(__FILE__) );
  * Profile_CCT_Admin class.
  */
 class Profile_CCT_Admin {
+
 	static public $action = 'display';
 	static public $option = NULL;
 	static public $page   = NULL;
@@ -25,7 +26,27 @@ class Profile_CCT_Admin {
         
 		// function removed the edit Public profile from everyone but the person who can really edit it
 		add_action( 'wp_before_admin_bar_render', array( __CLASS__, 'edit_admin_bar_render' ), 20 );
+
+		// Add an action link pointing to the options page.
+        add_filter( 'plugin_action_links', array( __CLASS__, 'add_action_links' ) );
 	}
+	/**
+	 *
+	 *
+	 */
+	static function add_action_links( $links ) {
+		var_dump($links);
+
+		return array_merge(
+                array(
+                        'settings' => '<a href="' . admin_url( 'edit.php?post_type=profile_cct&page=profile-cct/lib/class.profile-cct-admin.php' ) . '">' . __( 'Settings', 'profile-cct' ) . '</a>'
+                ),
+         		$links 
+        );
+
+
+	}
+
 
 	/**
 	 * admin_init function.

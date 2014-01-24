@@ -306,7 +306,7 @@ class Profile_CCT_Field {
 					endif;
 					?>
 					<input type="button" value="Save" class="button save-field-settings" />
-					<span class="spinner" style="display:none;"><img src="<?php echo admin_url('/images/wpspin_light.gif'); ?>" alt="spinner" /> saving...</span>
+					<div class="spinner-shell" style="display:none;"><span class="spinner" style="display:inline;"></span> Saving...</span></div>
 				</div>
 				<label class="field-title"><?php echo $this->label; ?></label>
 		<?php
