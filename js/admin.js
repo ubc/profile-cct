@@ -6,11 +6,11 @@ var Profile_CCT_Admin = {
 	},
     
 	prep: function( where ) {
-		var html = 'The profile '+where+' layout has been changed. <a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>';
+		var html = '<p>The profile '+where+' layout has been changed. <a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a></p>';
 		if ( jQuery('#update-profile-shell').length ) { //ie. #update-profile-shell already exists.
 			jQuery('#update-profile-shell').html(html);
 		} else { 
-			jQuery('#profile-setting').after('<div id="update-profile-shell" class="update-profiles info">'+html+'</div>');
+			jQuery('#profile-setting').after('<div id="update-profile-shell" class="update-profiles info update-nag">'+html+'</div>');
 		}
 	},
 	

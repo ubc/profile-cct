@@ -1,3 +1,8 @@
+/* work a little better by default */
+.type-profile_cct .entry-title{
+	display: none;
+}
+
 /**
  * Used to display content on the profile
  */

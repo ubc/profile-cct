@@ -1,7 +1,7 @@
 
 <h2>Form Builder</h2>
 <div id="notify">
-	<span id="spinner" class="update"><span class="spinner" style="display:inline;"></span> thinking...</span>	
+	<span id="spinner" class="update"><em class="spinner" style="display:inline;"></em> Saving...</span>	
 </div>
 <div class="updated">
 <p > Drag and drop the fields into place, just the way you want to. Don't forget to click the edit button for some customization. Also you don't have to click a save button. Enjoy</p>

@@ -67,7 +67,7 @@ var Profile_CCT_FORM = {
                 Profile_CCT_FORM.hideSpinner();
                 Profile_CCT_Admin.show_refresh();
             } else {
-				alert("Failed to save.");
+				alert( "Failed to save." );
 			}
 		});
 	},

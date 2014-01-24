@@ -10,7 +10,7 @@
 			<a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>
 		</div>
 	<?php elseif ( 'update-all' == get_transient('Profile_CCT_needs_refresh') ): ?>
-		<div id="update-profile-shell" class="error below-h2">
+		<div id="update-profile-shell" class="update-nag update-profiles info update-new">
 			<p>Profile plugin requires you to update your profile. 
 			<a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a></p>
 		</div>
@@ -37,8 +37,8 @@
 			endif;
 		?>
 		<div id="update-profile-shell" class="update-nag update-profiles info update-new">
-			The profile <?php echo $where_out." ".$has; ?> changed.
-			<a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a>
+			<p>The profile <?php echo $where_out." ".$has; ?> changed.
+			<a href="#nogo" id="refresh-profiles" class="button">Update All Profiles</a> </p>
 		</div>
 	
 	<?php endif; ?>

@@ -578,7 +578,7 @@ class Profile_CCT_Field {
 		
 		printf( '<%s %s>', $tag, $class_attr );
 		if ( $this->link_to ):
-			printf( '<a href="%s">', get_permalink() ); // this should always just link to the profile
+			printf( '<a href="%s" class="profile-permalink">', get_permalink() ); // this should always just link to the profile
         endif;
 	}
 	

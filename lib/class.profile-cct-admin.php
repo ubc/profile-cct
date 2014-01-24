@@ -28,13 +28,13 @@ class Profile_CCT_Admin {
 		add_action( 'wp_before_admin_bar_render', array( __CLASS__, 'edit_admin_bar_render' ), 20 );
 
 		// Add an action link pointing to the options page.
-        add_filter( 'plugin_action_links', array( __CLASS__, 'add_action_links' ) );
+        add_filter( 'plugin_action_links_profile-cct/profile-custom-content-type.php', array( __CLASS__, 'add_action_links' ) );
 	}
 	/**
 	 *
 	 *
 	 */
-	static function add_action_links( $links ) {
+	static function add_action_links( $links) {
 		var_dump($links);
 
 		return array_merge(
@@ -952,8 +952,14 @@ class Profile_CCT_Admin {
 	function insert_post( $post_id, $post_data ) {
 	
 		global $wpdb;
-		
-		
+		if( !empty( $_POST["profile_cct"] ) ) {
+			##var_dump( $_POST["profile_cct"], $post_data, empty( $post_data->post_content ) );
+			##die();
+		}
+
+		if( empty( $post_data->post_content )  )
+			add_filter( 'post_type_link' , array( __CLASS__, 'simple_link' ), 10, 2 );
+
 		if ( isset( $_POST["profile_cct"] )):
 			kses_remove_filters();
 			
@@ -987,13 +993,24 @@ class Profile_CCT_Admin {
 								'post_name' => $data['post_name'],
 								'post_content' => $data ['post_content'],
 								'post_excerpt' => $data ['post_excerpt'],
-								'post_title'   => $data['post_title']
+								'post_title'   => $data ['post_title']
 								 ), $where );
 			
 			kses_init_filters();
 		endif;		
 	
 	
+	}
+
+	/**
+	 * bug fix: when you are first saving the profile the get_permalink points to auto-draft
+	 * @param  string $permalink 
+	 * @param  Post Object $post      
+	 * @return permanlink - that just works
+	 */
+	static function simple_link( $permalink, $post ) {
+
+		return home_url('?p=' . $post->ID);
 	}
 	
 	/**
