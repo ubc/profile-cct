@@ -35,8 +35,7 @@ class Profile_CCT_Admin {
 	 *
 	 */
 	static function add_action_links( $links) {
-		var_dump($links);
-
+	
 		return array_merge(
                 array(
                         'settings' => '<a href="' . admin_url( 'edit.php?post_type=profile_cct&page=profile-cct/lib/class.profile-cct-admin.php' ) . '">' . __( 'Settings', 'profile-cct' ) . '</a>'
@@ -952,10 +951,6 @@ class Profile_CCT_Admin {
 	function insert_post( $post_id, $post_data ) {
 	
 		global $wpdb;
-		if( !empty( $_POST["profile_cct"] ) ) {
-			##var_dump( $_POST["profile_cct"], $post_data, empty( $post_data->post_content ) );
-			##die();
-		}
 
 		if( empty( $post_data->post_content )  )
 			add_filter( 'post_type_link' , array( __CLASS__, 'simple_link' ), 10, 2 );
