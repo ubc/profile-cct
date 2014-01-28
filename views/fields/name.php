@@ -49,7 +49,7 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
 			'size'     => 13,
 			'default'  => $current_user->user_firstname,
 			'data'      => array(
-				'accepts' => '/[a-zA-Z]/',
+				'accepts' => '/[a-zA-Z.\`\']/',
 				'limit'   => 16,
 			),
 		) );
@@ -58,7 +58,7 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
 			'label'    => 'Middle',
 			'size'     => 5,
 			'data'      => array(
-				'accepts' => '/[a-zA-Z.]/',
+				'accepts' => '/[a-zA-Z.\`\']/',
 				'limit'   => 10,
 			),
 		) );
@@ -68,7 +68,7 @@ Class Profile_CCT_Name extends Profile_CCT_Field {
 			'size'     => 17,
 			'default'  => $current_user->user_lastname,
 			'data'      => array(
-				'accepts' => "/[a-zA-Z- ']/",
+				'accepts' => "/[a-zA-Z.\`\']/",
 				'limit'   => 22,
 			),
 		) );
