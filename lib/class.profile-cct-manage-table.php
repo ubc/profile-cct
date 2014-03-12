@@ -4,6 +4,11 @@ class Profile_CCT_Table {
 		add_filter( 'manage_edit-profile_cct_columns',        array( __CLASS__, 'register' ) );
 		add_action( 'manage_profile_cct_posts_custom_column', array( __CLASS__, 'display_thumb' ), 10, 2 );
 		//add_action( 'manage_profile_cct_posts_custom_column', array( __CLASS__, 'display_last_name' ), 10, 2 );
+		
+		global $coauthors_plus;
+		if ( class_exists('coauthors_plus') && isset($coauthors_plus) ) {
+			add_filter ('manage_edit-profile_cct_columns',		array( $coauthors_plus, '_filter_manage_posts_columns') );
+		}
 	}
 	
 	function register( $columns ) {
