@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Profile Custom Content Type
  * Plugin URI: https://github.com/ubc/profile-cct
- * Version: 1.3.4
+ * Version: 1.4.1
  * Description: Allows administrators to manage user profiles better in order to display them on their websites
  * Author: Enej Bajgoric, Devindra Payment, Eric Jackish, Aleksandar Arsovski,  CTLT, UBC
  * Author URI: http://ctlt.ubc.ca
@@ -18,7 +18,7 @@ define( 'PROFILE_CCT_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'PROFILE_CCT_BASENAME', plugin_basename( __FILE__ ) );
 define( 'PROFILE_CCT_DIR_URL', plugins_url( '', PROFILE_CCT_BASENAME ) );
 define( 'PROFILE_CCT_BASE_FILE', __FILE__ );
-define( 'PROFILE_CCT_VERSION', '1.3.1' );
+define( 'PROFILE_CCT_VERSION', '1.4.1' );
 
 define( 'PROFILE_CCT_SETTINGS', 'Profile_CCT_settings' );
 define( 'PROFILE_CCT_SETTING_VERSION', 'Profile_CCT_version' );
