@@ -97,10 +97,14 @@
     margin-top: 0;
     padding: 2px 4px;
 }
-
+/* coauthor-plus */
+#coauthors-list .coauthor-suggest {
+	border:1px solid #DFDFDF;
+}
 /* Address */
 .address {
-	width: 533px;
+	max-width: 628px;
+	width: 100%;
 }
 
 #side-info-column .address div {

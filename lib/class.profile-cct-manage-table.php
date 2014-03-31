@@ -6,7 +6,7 @@ class Profile_CCT_Table {
 		//add_action( 'manage_profile_cct_posts_custom_column', array( __CLASS__, 'display_last_name' ), 10, 2 );
 		
 		global $coauthors_plus;
-		if ( class_exists('coauthors_plus') && isset($coauthors_plus) ) {
+		if ( class_exists('coauthors_plus') && isset( $coauthors_plus ) ) {
 			// Show multiple authors in dashboard profile listing
 			add_filter ( 'manage_edit-profile_cct_columns',	array( $coauthors_plus, '_filter_manage_posts_columns') );
 			// Customize dashboard listing table
@@ -17,6 +17,7 @@ class Profile_CCT_Table {
 			add_filter ( 'add_meta_boxes_profile_cct', 		array( __CLASS__, 'remove_authors_box'), 11 );
 			// Add co-author box to users who can create multiple profiles (or manage all profiles - disable)
 			add_action ( 'coauthors_plus_edit_authors', 	array( __CLASS__, 'coauthors_plus_edit_authors') );
+			add_action ( 'coauthors_meta_box_context', array( __CLASS__, 'coauthors_meta_box_context' ) );
 		}
 	}
 
@@ -163,6 +164,10 @@ class Profile_CCT_Table {
 	function coauthors_plus_edit_authors ($post_types) {
 		//return current_user_can('edit_profiles_cct') || current_user_can('edit_others_profile_cct');
 		return current_user_can('edit_profiles_cct');
+	}
+
+	function coauthors_meta_box_context( $context ) {
+		return 'side';
 	}
 	
 	function remove_authors_box() {

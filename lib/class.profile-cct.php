@@ -613,6 +613,7 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function get_user_profile() {
+		
 		$current_user = wp_get_current_user();
 		if ( ! ( $current_user instanceof WP_User ) ):
 			if ( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG):
@@ -629,10 +630,28 @@ class Profile_CCT {
 			'orderby'        => 'ID',
 			'order'          => 'ASC',
 		);
-        
+
 		$query = new WP_Query( $arguments );
 		$results = $query->get_posts();
 		$profile = $results[0];
+
+		// lets try to find it again
+		if( empty($profile) && class_exists('coauthors_plus') ) {
+			global $coauthors_plus;
+			if (  isset( $coauthors_plus ) ) {
+				$arguments['tax_query'] = array(
+					array(
+						'taxonomy' => $coauthors_plus->coauthor_taxonomy,
+						'field' => 'slug',
+						'terms' => 'cap-'.$current_user->user_login
+					) );
+				unset( $arguments['author' ] );
+				$query = new WP_Query( $arguments );
+				$results = $query->get_posts();
+				$profile = $results[0];
+			}
+		}
+		
 		return $profile;
 	}
     
