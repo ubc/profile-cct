@@ -62,7 +62,12 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 			$service = $this->social_options( 'all',  $this->data['option'] );
 			
 			if ( ! empty($this->data['username']) ):
-				$attr['href'] = str_replace( '{value}', $this->data['username'], $service['user_url'] );
+				//if one uses http then we'll use that instead for href (maybe use preg_filter if > 5.3 only?)
+				if (preg_match('/^http/i', $this->data['username'])) {
+					$attr['href'] = $this->data['username'];
+				} else {
+					$attr['href'] = str_replace( '{value}', $this->data['username'], $service['user_url'] );
+				}
 				$attr['value'] = '<img src="'.PROFILE_CCT_DIR_URL.'/img/'.$service['type'].'.png" /><strong>'.$this->data['option'].'</strong>/ '.$this->data['username'];
 			endif;
 			$this->display_link( $attr );
@@ -124,8 +129,8 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 					"user_url"    => "http://plus.google.com/{value}" ),
 			array( 	"type"        => "linked-in",	
 					"label"       => "LinkedIn",
-					"service_url" => "http://www.linkedin.com/",			
-					"user_url"    => "http://www.linkedin.com/in/{value}" ), 
+					"service_url" => "http:/ca.linkedin.com/",			
+					"user_url"    => "http://ca.linkedin.com/in/{value}" ), 
 			array( 	"type"        => "delicious",	
 					"label"       => "Delicious",
 					"service_url" => "http://www.delicious.com/",			
