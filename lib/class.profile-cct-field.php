@@ -50,8 +50,8 @@ class Profile_CCT_Field {
 		$this->description   = ( isset( $this->options['description'] ) ? $this->options['description'] : null );
 		$this->show_link_to  = ( isset( $this->options['show_link_to'] ) ? $this->options['show_link_to'] : false );
 		$this->link_to       = ( isset( $this->options['link_to'] ) && $this->options['link_to']  ? true : false );
-		$this->show          = ( is_array( $this->options['show'] ) ? $this->options['show'] : array() ) ;
-		$this->show_fields   = ( is_array( $this->options['show_fields'] ) ? $this->options['show_fields'] : array() ) ;
+		$this->show          = ( isset( $this->options['show'] ) && is_array( $this->options['show'] ) ? $this->options['show'] : array() ) ;
+		$this->show_fields   = ( isset( $this->options['show_fields'] ) && is_array( $this->options['show_fields'] ) ? $this->options['show_fields'] : array() ) ;
 		$this->class         = ( isset( $this->options['class'] ) ? $this->options['class'] : "" );
 		$this->hide_label    = ( isset( $this->options['hide_label'] ) && $this->options['hide_label'] ? true: false );
 		$this->width         = ( isset( $this->options['width'] ) ? $this->options['width'] : false );
@@ -76,23 +76,26 @@ class Profile_CCT_Field {
 		
 		if ( $this->show_multiple && isset( $data ) ):
 			$first = true;
-			
-			foreach ( $data as $singular_data ):
-				
-				if( !is_array( $singular_data ) ):
-					$this->multiple = false;
-					$this->data = $data;
-				else:
-					$this->data = $singular_data;
-				endif;
-				
-				$this->create_subfield( ! $first && ! in_array( $this->page, array('page', 'list') ) ); 
-				$this->subfield_counter++;
-				if ( $first ):
-					if ( $this->multiple == false ) break;
-					$first = false;
-				endif;
-			endforeach;
+			if( isset( $data ) && is_array( $data ) ) :
+
+				foreach ( $data as $singular_data ):
+					
+					if( !is_array( $singular_data ) ):
+						$this->multiple = false;
+						$this->data = $data;
+					else:
+						$this->data = $singular_data;
+					endif;
+					
+					$this->create_subfield( ! $first && ! in_array( $this->page, array('page', 'list') ) ); 
+					$this->subfield_counter++;
+					if ( $first ):
+						if ( $this->multiple == false ) break;
+						$first = false;
+					endif;
+				endforeach;
+
+			endif;
 		else:
 			$this->create_subfield();
 		endif;
@@ -135,8 +138,10 @@ class Profile_CCT_Field {
 				$this->display();
 				$contents = ob_get_contents();
 				ob_end_clean();
-				
-				if ( trim( strip_tags( $contents, '<img>' ) ) == '' || empty( $contents ) ):
+
+				// Which empty tags should we allow in the editor? 			
+				if ( trim( strip_tags( $contents, apply_filters( 'profile_cct_strip_tags', '<img>' ) ) ) == '' || empty( $contents ) ):
+
 					if( !empty($this->empty)):
 						echo $start_div;
 						echo $this->empty;
@@ -170,7 +175,7 @@ class Profile_CCT_Field {
 		if ( 'edit' == $this->action ): ?>
 			<?php
 				$shell_type = 'shell-'.esc_attr( $this->type );
-				$is_active = ( ( isset( Profile_CCT_Admin::$current_form_fields ) && Profile_CCT_Admin::$current_form_fields[$this->type]['is_active'] == 1 ) ? "is-active" : "" );
+				$is_active = ( ( isset( Profile_CCT_Admin::$current_form_fields ) && isset( Profile_CCT_Admin::$current_form_fields[$this->type] ) && Profile_CCT_Admin::$current_form_fields[$this->type]['is_active'] == 1 ) ? "is-active" : "" );
 			?>
 	 		<li class="field-item <?php echo $shell_type." ".$this->width." ".$this->class." ".$is_active; ?>" for="cct-<?php echo esc_attr( $this->type ); ?>" data-options="<?php echo esc_attr( $this->serialize( $this->options ) ); ?>" >
 				<div class="action-shell">
@@ -744,8 +749,8 @@ class Profile_CCT_Field {
 		$cols  = ( isset( $attr['cols']        ) ? ' cols="' . $attr['cols']       .'" ' : ''                    );
 		$class = ( isset( $attr['class']       ) ? ' class="'. $attr['class']      .'" ' : ' class="field text"' );
 		
-		if ( is_array( $attr['data'] ) ):
-			$data = "";
+		$data = "";
+		if ( isset( $attr['data'] ) && is_array( $attr['data'] ) ):
 			foreach ( $attr['data'] as $key => $value ):
 				$data .= 'data-'.$key.'="'.$value.'" ';
 			endforeach;
@@ -768,12 +773,12 @@ class Profile_CCT_Field {
 	 */
 	function display_attr( $attr, $field_type ) {
 		$lorem_ipsum  = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et tempor lorem. Nam eget sapien sit amet risus porttitor pellentesque. Sed vestibulum tellus et quam faucibus vel tristique metus sagittis. Integer neque justo, suscipit sit amet lobortis eu, aliquet imperdiet sapien. Morbi id tellus quis nisl tempor semper.</p><p>Nunc sed diam sit amet augue venenatis scelerisque quis eu ante. Cras mattis auctor turpis, non congue nibh auctor at. Nulla libero ante, dapibus a tristique eu, semper ac odio. Nulla ultrices dui et velit eleifend congue. Mauris vel mauris eu justo lobortis semper. Duis lacinia faucibus nibh, ac sodales leo condimentum id. Suspendisse commodo mattis dui, eu rutrum sapien vehicula a. Proin iaculis sollicitudin lacus vitae commodo.</p>';
-		$default_text = ( 'lorem ipsum' == $attr['default_text'] ? $lorem_ipsum : $attr['default_text'] );
+		$default_text = ( isset( $attr['default_text'] ) && 'lorem ipsum' == $attr['default_text'] ) ? $attr['default_text'] : $lorem_ipsum;
 		
 		$show = ( isset( $attr['field_id'] ) && ! in_array( $attr['field_id'], $this->show ) && in_array( $attr['field_id'], $this->show_fields )  ? ' style="display:none;"' : '' ); // should this field be displayed
 		
 		$needed_attr['id']               = ( isset( $attr['field_id'] ) && $attr['field_id'] ? $attr['field_id'] : '' );
-	    $needed_attr['display']          = ( 'edit' == $this->action          ? $default_text           : ( isset($attr['value']) ? $attr['value'] : $this->data[$needed_attr['id']] ) );
+	    $needed_attr['display']          = ( 'edit' == $this->action          ? $default_text           : ( isset($attr['value']) ? $attr['value'] : ( isset( $this->data[$needed_attr['id']] ) ? $this->data[$needed_attr['id']] : false ) ) );
 		$needed_attr['field_shell_attr'] = ( isset( $attr['field_id'] )       ? ' class="'.$attr['field_id'].' '.$field_type.'-shell"' : ' class="'.$this->type.' '.$field_type.'-shell"' ).$show;
 	    $needed_attr['tag']              = ( isset( $attr['tag'] )            ? $attr['tag']            : 'span' );
 		$needed_attr['post_separator']   = ( isset( $attr['post_separator'] ) ? $attr['post_separator'] : ''     );

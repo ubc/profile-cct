@@ -6,12 +6,12 @@ class Profile_CCT {
 	static private $classobj            = NULL; // refence for itself
 	static public  $textdomain          = NULL;
 	static public  $action              = NULL;
-	static public  $settings            = NULL; // renamed from  $settings_options
+	public  $settings            = NULL; // renamed from  $settings_options
 	static public  $form_fields         = NULL;
-	static public  $taxonomies          = NULL;
+	public  $taxonomies          = NULL;
 	static public  $is_main_query       = false;
 	static public  $form_field_options  = NULL;
-	static public  $option              = NULL;
+	public  $option              = NULL;
 	static public  $current_form_fields = NULL; // stores the current state of the form field... the labels and if it is on the banch... 
     
 	static function init() {
@@ -40,7 +40,7 @@ class Profile_CCT {
 	 * @access public
 	 * @return void
 	 */
-	function get_object() {
+	static function get_object() {
 		if ( self::$classobj === NULL ):
 			self::$classobj = new self;
         endif;
@@ -89,8 +89,6 @@ class Profile_CCT {
 			add_image_size( 'profile-image', $this->settings['picture']['width'], $this->settings['picture']['height'] ); //300 pixels wide (and unlimited height)
 		}
 	}
-	
-
 	
 	/**
 	 * wp_import_post_meta function.
@@ -814,7 +812,7 @@ class Profile_CCT {
                         $callback = 'profile_cct_'.$field['type'].'_shell';
                         
 						if ( function_exists( $callback ) ):
-                            $id = $field['type']."-".$i.'-'.rand(0, 999);
+                            $id = $field['type']."-".rand(0, 999);
                             $title = $field['label'];
                             $post_type = 'profile_cct';
                             $priority = 'core';
@@ -825,7 +823,7 @@ class Profile_CCT {
 							
 							add_meta_box( $id, $title, $callback, $post_type, $context, $priority, $callback_args );
 						else:
-							do_action( "profile_cct_".$field['type']."_add_meta_box", $field, $context, $data, $i );
+							do_action( "profile_cct_".$field['type']."_add_meta_box", $field, $context, $data );
 						endif;
 					endforeach;
 				endif;
@@ -884,7 +882,7 @@ class Profile_CCT {
 		endif;
 	}
 	
-	function modify_row_actions( $actions, $post ) {
+	static function modify_row_actions( $actions, $post ) {
 		global $current_user;
 		
 		if ( $post->post_type == "profile_cct" ) {
@@ -893,11 +891,11 @@ class Profile_CCT {
 				unset($actions['inline hide-if-no-js']);
 			}
 			
-			if ( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG ) {
+			/*if ( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG ) {
 				error_log( print_r($post, TRUE));
 				error_log( print_r($current_user, TRUE));
 				error_log( print_r($actions, TRUE));
-			}
+			}*/
 		}
 		return $actions; 
 	}
@@ -934,7 +932,7 @@ class Profile_CCT {
 	 * @param mixed $needle
 	 * @return void
 	 */
-	function string_starts_with( $haystack, $needle ) {
+	static function string_starts_with( $haystack, $needle ) {
     	return ! strncmp( $haystack, $needle, strlen($needle) );
 	}
 	
@@ -954,7 +952,7 @@ class Profile_CCT {
 	 * @param mixed $field
 	 * @return void
 	 */
-	function add_global_field( $field, $field_index = NULL, $skip_local ) {
+	function add_global_field( $field, $field_index = NULL, $skip_local = false ) {
 		global $blog_id;
 		$global_settings = get_site_option( PROFILE_CCT_SETTING_GLOBAL, array() );
 		
@@ -1009,14 +1007,14 @@ class Profile_CCT {
 	 * @param mixed $field_index
 	 * @return void
 	 */
-	function remove_global_field( $field, $field_index, $skip_local ) {
+	function remove_global_field( $field, $field_index, $skip_local = false ) {
 		
 		$global_settings = get_site_option( PROFILE_CCT_SETTING_GLOBAL, array() );
 		global $blog_id;
 		
 		$blogs = $this->convert_blog_list_into_blog_array( $field_index, $global_settings );
 		
-		if( $blogs[$blog_id] ): // we accually have the blog set up as true
+		if( isset( $blogs[$blog_id] ) && $blogs[$blog_id] ): // we accually have the blog set up as true
 			unset($blogs[$blog_id]);
 			unset( $this->settings['clone_fields'][$field['type']]);
 			
@@ -1063,14 +1061,14 @@ class Profile_CCT {
 	 * @param mixed $field_index
 	 * @return void
 	 */
-	function convert_blog_list_into_blog_array( $field_index, $global_settings ) {
+	function convert_blog_list_into_blog_array( $field_index = '', $global_settings ) {
 		global $blog_id;
 		// convert global 
 		$blogs = array();
 		// convert global 
-		if ( is_array( $global_settings['clone_fields'][$field_index]['blogs'] ) ):
+		if ( isset( $global_settings['clone_fields'][$field_index] ) && is_array( $global_settings['clone_fields'][$field_index]['blogs'] ) ):
 			$blogs = $global_settings['clone_fields'][$field_index]['blogs'];
-		elseif ( ! is_array( $global_settings['clone_fields'][$field_index]['blogs'] ) ):
+		elseif ( isset( $global_settings['clone_fields'][$field_index] ) && !is_array( $global_settings['clone_fields'][$field_index]['blogs'] ) ):
 			$blogs_ids = explode( ',', $global_settings['clone_fields'][$field_index]['blogs'] );
 			
 			foreach ( $blogs_ids as $id ):

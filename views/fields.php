@@ -35,11 +35,11 @@
 			unset($field_clone);
 			unset($field_description);
 		endif;
-	elseif ( wp_verify_nonce( $_GET['_wpnonce'], 'profile_cct_toggle_field' ) ):
+	elseif ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'profile_cct_toggle_field' ) ):
 		
-		$field_index = (int)$_GET['field'];
+		$field_index = ( isset( $_GET['field'] ) ) ? (int)$_GET['field'] : false;
 		
-		$field = $global_settings['clone_fields'][$field_index];
+		$field = ( isset( $global_settings['clone_fields'][$field_index] ) ) ? $global_settings['clone_fields'][$field_index] : false;
 		
 		switch ( $_GET['action'] ):
 			case 'add':
@@ -53,13 +53,13 @@
 	endif;
 ?>
 <h2>Fields Builder</h2>
-<?php echo $note; ?>
+<?php if( isset( $note ) ) : echo $note; endif; ?>
 
 <h3>Available Fields</h3>
 <pre>
-<?php print_r($local_clone_fields); ?>
+<?php if( isset( $local_clone_fields ) ) : print_r($local_clone_fields); endif; ?>
 </pre>
-<?php if ( is_array( $global_settings['clone_fields'] ) && ! empty( $global_settings['clone_fields'] ) ): ?>
+<?php if ( isset( $global_settings['clone_fields'] ) && is_array( $global_settings['clone_fields'] ) && ! empty( $global_settings['clone_fields'] ) ): ?>
 	<table class="widefat">
 		<thead>
 			<tr>
@@ -119,7 +119,7 @@
 		<tr valign="top">
 			<th scope="row"><label for="label">Name</label><span class="required">*</span></th>
 			<td<?php if (isset($error['label'])) { echo ' class="form-invalid "';}?>>
-				<input type="text" value="<?php echo esc_attr($field_label); ?>" id="label" name="label" class="all-options"  /> <span class="description">For example: Lab Phone</span>
+				<input type="text" value="<?php if( isset( $field_label ) ) : echo esc_attr($field_label); endif; ?>" id="label" name="label" class="all-options"  /> <span class="description">For example: Lab Phone</span>
 				<br />
 				<?php if (isset($error['label'])) echo "<span class='form-invalid'>".$error['label']."</span>"; ?>
 			</td>
@@ -128,8 +128,8 @@
 			<th scope="row"><label for="field_clone">Field To Duplicate</label><span class="required">*</span></th>
 			<td<?php if (isset($error['field_clone'])) { echo ' class="form-invalid "';}?>>
 				<select name="field_clone" id="field_clone" class="all-options">
-					<?php foreach(Profile_CCT_Admin::fields_to_clone() as $field_to_clone): ?>
-						<option value="<?php echo esc_attr($field_to_clone['type']);?>" <?php selected($field_clone, $field_to_clone['type']); ?>><?php echo esc_attr($field_to_clone['type']);?></option>
+					<?php foreach(Profile_CCT_Admin::fields_to_clone() as $field_to_clone): if( !isset( $field_clone ) ) : $field_clone = false; endif; ?>
+						<option value="<?php if( isset( $field_to_clone['type'] ) ) : echo esc_attr($field_to_clone['type']); endif; ?>" <?php selected($field_clone, $field_to_clone['type']); ?>><?php echo esc_attr($field_to_clone['type']);?></option>
 					<?php endforeach; ?>
 				</select>
 				<span class="description">Select the field that you want to mimic in functionality.</span>
@@ -140,7 +140,7 @@
 		<tr valign="top">
 			<th scope="row"><label for="description">Description</label><span class="required">*</span></th>
 			<td<?php if (isset($error['description'])) { echo ' class="form-invalid "';}?>>
-				<textarea name="description" id="description" class="large-text" cols="30" rows="5"><?php echo esc_textarea($field_description); ?></textarea>
+				<textarea name="description" id="description" class="large-text" cols="30" rows="5"><?php if( isset( $field_description ) ) : echo esc_textarea($field_description); endif; ?></textarea>
 				<br />
 				<span class="description">Describe what this field is used for.</span>
 				<br />

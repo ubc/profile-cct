@@ -63,8 +63,8 @@
      **/
 	if ( ! empty($_POST) && isset($_POST['update_settings_nonce_field']) && wp_verify_nonce( $_POST['update_settings_nonce_field'], 'update_settings_nonce' ) ):
 		//Validate pic options
-		$width = intval( $_POST['picture_width'] );
-		$height = intval( $_POST['picture_height'] );
+		$width = ( isset( $_POST['picture_width'] ) ) ? intval( $_POST['picture_width'] ) : '';
+		$height = ( isset( $_POST['picture_height'] ) ) ? intval( $_POST['picture_height'] ) : '';
 		if ( $width >= 100 && $width <= 560 && $height >= 100 && $height <= 560 ):
 			$picture_options = array( 'width' => $width, 'height' => $height );
 			$profile->settings['picture'] = $picture_options;
@@ -72,24 +72,24 @@
 			$note = '<div class="error settings-error"><p>Picture dimensions should be between 100x100 and 560x560</p></div>';
 		endif;
 		
-		$slug = trim( $_POST['slug'] );
+		$slug = ( isset( $_POST['slug'] ) ) ? trim( $_POST['slug'] ) : false;
 		if ( ! empty( $slug ) ):
 			$profile->settings['slug'] = trim( sanitize_title( $_POST['slug'] ) );
 		else:
 			$profile->settings['slug'] = 'person';
 		endif;
 		
-		$order_by = $_POST['sort_order_by'];
+		$order_by = ( isset( $_POST['sort_order_by'] ) ) ? $_POST['sort_order_by'] : false;
 		$order = in_array( $_POST['sort_order'], array( 'ASC', 'DESC' ) ) ? $_POST['sort_order'] : null ;
 		if ( in_array( $order_by, array( "manual", "first_name", "last_name", "date" ) ) ):
 			$profile->settings['sort_order_by'] = $order_by;
 			$profile->settings['sort_order'] = $order;
 		endif;
 		
-		$widget_title = $_POST['widget_title'];
+		$widget_title = ( isset( $_POST['widget_title'] ) ) ? $_POST['widget_title'] : false;
 		$profile->settings['widget_title'] = $widget_title;
 		
-		$archive = $_POST['archive'];
+		$archive = ( isset( $_POST['archive'] ) ) ? $_POST['archive'] : false;
 		$profile->settings['archive'] = $archive;
 		
 		// Lets deal with permissions	
@@ -101,9 +101,11 @@
 				
 				foreach ( $permission_array as $permission => $can ):
 					if ( isset( $profile->settings['permissions'][$user][$permission] ) ): // Does the permission exist in the settings
-						$profile->settings['permissions'][$user][$permission] = (bool) $post_permissions[$user][$permission];
+						$profile->settings['permissions'][$user][$permission] = ( isset( $post_permissions[$user][$permission] ) ) ? (bool) $post_permissions[$user][$permission] : false;
+						// $profile->settings['permissions'][$user][$permission] = (bool) $post_permissions[$user][$permission];
 						// Add the new capability
-						if ( (bool) $post_permissions[$user][$permission] ): 
+						// if ( (bool) $post_permissions[$user][$permission] ): 
+						if ( isset( $post_permissions[$user][$permission] ) ? (bool)$post_permissions[$user][$permission] : false ): 
 							$role->add_cap( $permission );
 						else:
   							$role->remove_cap( $permission );
@@ -258,7 +260,7 @@
                 <td>
                     <?php foreach ( $profile->taxonomies as $taxonomy ): ?>
 						<?php $taxonomy_id = Profile_CCT_Taxonomy::id( $taxonomy['single'] ); ?>
-						<input type="checkbox" name="archive[display_tax][<?php echo $taxonomy_id; ?>]" id="archive_display_tax_<?php echo $taxonomy_id; ?>" value="true" <?php checked($profile->settings['archive']['display_tax'][$taxonomy_id], 'true'); ?> />
+						<input type="checkbox" name="archive[display_tax][<?php echo $taxonomy_id; ?>]" id="archive_display_tax_<?php echo $taxonomy_id; ?>" value="true" <?php if( isset( $profile->settings['archive'] ) && isset( $profile->settings['archive']['display_tax'] ) && isset( $profile->settings['archive']['display_tax'][$taxonomy_id] ) ) : checked($profile->settings['archive']['display_tax'][$taxonomy_id], 'true'); endif; ?> />
 						<label style="padding-left:6px;" for="archive_display_tax_<?php echo $taxonomy_id; ?>"><?php echo $taxonomy['plural']; ?></label>
 						<br />
 					<?php endforeach; ?>

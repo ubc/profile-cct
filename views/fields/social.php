@@ -105,7 +105,7 @@ Class Profile_CCT_Social extends Profile_CCT_Field {
 	 * @access public
 	 * @return void
 	 */
-	function social_options( $what = 'all', $type = null ) {
+	static function social_options( $what = 'all', $type = null ) {
 		$all = array(
 			array( 	"type"        => "ubc-blog", 	
 					"label"       => "UBC Blog", 

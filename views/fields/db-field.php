@@ -1,6 +1,6 @@
 <?php 
 class Profile_CCT_DB_Field {
-	function init() {
+	static function init() {
 		add_filter( 'profile_cct_dynamic_fields', array( __CLASS__, 'add_custom_fields' ) );
 		
 		$profile = Profile_CCT::get_object();
@@ -15,7 +15,7 @@ class Profile_CCT_DB_Field {
 		endforeach;
 		
 		foreach( $profile->settings['clone_fields'] as $field ):
-			add_action( 'profile_cct_'.$field['type'].'_add_meta_box', array( __CLASS__, 'add_db_meta_box' ), 10, 4 );
+			add_action( 'profile_cct_'.$field['type'].'_add_meta_box', array( __CLASS__, 'add_db_meta_box' ), 10, 3);
 		endforeach;
 	}
 	
@@ -26,7 +26,7 @@ class Profile_CCT_DB_Field {
 	 * @param mixed $fields
 	 * @return void
 	 */
-	function add_custom_fields( $fields ) {
+	static function add_custom_fields( $fields ) {
 		$profile_cct = Profile_CCT::get_object();
 		
 		foreach ( $profile_cct->settings['clone_fields'] as $field_key => $field_data ):
@@ -58,13 +58,13 @@ class Profile_CCT_DB_Field {
 	 * @param mixed $i
 	 * @return void
 	 */
-	function add_db_meta_box( $field, $context, $data, $i ) {
+	function add_db_meta_box( $field, $context, $data ) {
 		$profile = Profile_CCT::get_object();
 		
 		if ( isset( $profile->settings['clone_fields'][$field['type']] ) ):
 			$custom_field = $profile->settings['clone_fields'][$field['type']];
 			
-			$id = $field['type']."-".$i.'-'.rand( 0, 999 );
+			$id = $field['type'].'-'.rand( 0, 999 );
 			$type = $field['label'];
 			$callback = 'profile_cct_'.$custom_field['field_clone'].'_shell';
 			$post_type = 'profile_cct';
@@ -79,6 +79,6 @@ class Profile_CCT_DB_Field {
 	}
 }
 
-if ( is_array( Profile_CCT::get_object()->settings['clone_fields'] ) ):
+if ( ( array_key_exists( 'clone_fields', Profile_CCT::get_object()->settings ) ) && is_array( Profile_CCT::get_object()->settings['clone_fields'] ) ):
 	Profile_CCT_DB_Field::init();
 endif;

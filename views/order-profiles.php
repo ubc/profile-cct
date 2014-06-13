@@ -44,7 +44,7 @@
 						$taxonomy = Profile_CCT_Taxonomy::id( $tax['single'] );
 						$taxonomy_names[] = $taxonomy;
 						
-						if ( is_integer( (int) $_GET[$taxonomy] )):
+						if ( isset( $_GET[$taxonomy] ) && is_integer( (int) $_GET[$taxonomy] ) ):
 							$cat = (int)$_GET[$taxonomy];
 						endif;
 						

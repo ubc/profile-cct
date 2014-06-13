@@ -28,7 +28,10 @@ Class Profile_CCT_Tabs {
 				?>
 				<div id="tabs" class="tabs context-shell">
 				<?php 
-			else: 
+			else:
+				if( !isset( $profile_cct_tabs ) ){
+					$profile_cct_tabs = 0;
+				}
 				$profile_cct_tabs++;
 				?>
 				<div id="<?php echo "tab-id-".$profile_cct_tabs; ?>" class="profile-cct-shell profile-cct-shell-tabs" >

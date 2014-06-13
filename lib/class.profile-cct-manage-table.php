@@ -1,6 +1,6 @@
 <?php
 class Profile_CCT_Table {
-	function init() {
+	static function init() {
 		add_filter( 'manage_edit-profile_cct_columns',        array( __CLASS__, 'register' ) );
 		add_action( 'manage_profile_cct_posts_custom_column', array( __CLASS__, 'display_thumb' ), 10, 2 );
 		//add_action( 'manage_profile_cct_posts_custom_column', array( __CLASS__, 'display_last_name' ), 10, 2 );
@@ -174,7 +174,7 @@ class Profile_CCT_Table {
 		remove_meta_box ( 'authordiv', 'profile_cct', 'side' );
 	}
 	
-	function register( $columns ) {
+	static function register( $columns ) {
 		unset($columns);
 		
 		$columns["cb"]        = '<input type="checkbox" />';
@@ -188,7 +188,7 @@ class Profile_CCT_Table {
 		return $columns;
 	}
 	
-	function display_thumb( $column_name, $post_id ) {
+	static function display_thumb( $column_name, $post_id ) {
 		if ( 'thumb' != $column_name ) return;
 		
 		echo get_the_post_thumbnail( $post_id, array( 50 , 50 ) );

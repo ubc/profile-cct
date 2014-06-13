@@ -5,29 +5,29 @@
  * @extends WP_Widget
  */
 class Profile_CCT_Widget extends WP_Widget {
-	function init() {
+	static function init() {
 		add_action( 'widgets_init',  array( __CLASS__, 'register' ) );
 		add_action( 'pre_get_posts', array( __CLASS__, 'filter_profile') , 10, 1 );
 		add_filter( 'posts_clauses', array( __CLASS__, 'intercept_query_clauses'), 20, 2 );
 	}
 	
-	function register() {
+	static function register() {
 		register_widget( "Profile_CCT_Widget" );
 	}
 	
-	function filter_profile($query){
+	static function filter_profile($query){
 		if ( !empty( $_GET['alphabet'] ) && !is_admin() && $query->is_main_query() && $query->get('post_type') == 'profile_cct' ):
 			$query->set( 'meta_key',   'profile_cct_last_name' );
 			$query->set( 'meta_value', $_GET['alphabet'].'%' );
 		endif;
 	}
 	
-	function intercept_query_clauses( $pieces, $query ) {
+	static function intercept_query_clauses( $pieces, $query ) {
 		global $wpdb;
 		
 		// only apply this to post type = profile on the front end and on the main query
 		if ( $query->get('post_type') == 'profile_cct' && !is_admin() && $query->is_main_query() ):
-			if ( 'DESC' == $_GET['order'] ):
+			if ( isset( $_GET['order'] ) && 'DESC' == $_GET['order'] ):
 				$pieces['orderby'] = str_replace( ' ASC', ' DESC', $pieces['orderby'] );
 			endif;
 			

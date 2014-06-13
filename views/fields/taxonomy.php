@@ -40,6 +40,12 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
      */
     function field() {
 		global $post;
+
+		// Ensure we have a post object (not available on options screen, but will be available when editing post)
+		if( !isset( $post ) || !is_object( $post ) ){
+			$post = new stdClass();
+			$post->ID = null;
+		}
 		
 		if ( is_file( 'includes/meta-boxes.php' ) ):
 			require_once('includes/meta-boxes.php');
@@ -107,7 +113,7 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 		endif;
 	}
 	
-	function add_taxonomy_fields( $fields ) {
+	static function add_taxonomy_fields( $fields ) {
 		$profile = Profile_CCT::get_object();
 		
 		foreach ( $profile->taxonomies as $taxonomy ):
@@ -288,7 +294,7 @@ class Profile_CCT_Checkbox_Walker extends Walker {
 		$output .= ob_get_clean();
 	}
 	
-	function start_el( &$output, $category, $depth, $args, $id = 0 ) {
+	function start_el( &$output, $category, $depth = 0, $args = array(), $id = 0 ) {
 		extract($args);
 		if ( empty($taxonomy) )
 		$taxonomy = 'category';
@@ -321,7 +327,7 @@ class Profile_CCT_Checkbox_Walker extends Walker {
 class Profile_CCT_Dropdown_Walker extends Walker {
 	var $db_fields = array ( 'parent' => 'parent', 'id' => 'term_id' );
 	
-	function start_el( &$output, $category, $depth, $args, $id = 0 ) {
+	function start_el( &$output, $category, $depth = 0, $args = array(), $id = 0 ) {
 		extract($args);
 		
 		print_r($args);

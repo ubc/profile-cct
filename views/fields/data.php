@@ -10,6 +10,15 @@ Class Profile_CCT_Data extends Profile_CCT_Field {
 	);
 	
 	function field() {
+
+		if( !isset( $this->data['url'] ) ){
+			$this->data['url'] = '';
+		}
+
+		if( !isset( $this->options['url_prefix'] ) ){
+			$this->options['url_prefix'] = '';
+		}
+
 		$this->input_text( array(
 			'field_id' => 'url',
 			'label'    => 'Website - '.$this->options['url_prefix'],
@@ -50,11 +59,11 @@ Class Profile_CCT_Data extends Profile_CCT_Field {
 				$html->clear();
 			else:
 				echo "Couldn't access external data";
-				if( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG):
+				/*if( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG):
 					error_log( "Couldn't access external data" );
 					error_log( print_r( $this->type, TRUE ) );
 					error_log( print_r( $profile->settings['data_url'], TRUE ) );
-				endif;
+				endif;*/
 			endif;
 		endif;
 	}

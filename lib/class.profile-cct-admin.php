@@ -159,7 +159,7 @@ class Profile_CCT_Admin {
 	 * @access public
 	 * @return void
 	 */
-	function update_clone_fields(){
+	static function update_clone_fields(){
 		global $blog_id;
 		$profile = Profile_CCT::get_object();
 		
@@ -169,7 +169,7 @@ class Profile_CCT_Admin {
 		
 		$global_settings = get_site_option( PROFILE_CCT_SETTING_GLOBAL, array() );
 		
-		if ( is_array( $global_settings['clone_fields'] ) && ! empty( $global_settings['clone_fields'] ) ):
+		if ( isset( $global_settings['clone_fields'] ) && is_array( $global_settings['clone_fields'] ) && ! empty( $global_settings['clone_fields'] ) ):
 			foreach ( $global_settings['clone_fields'] as $field ):
 				$enabled = ( isset( $field['blogs'][$blog_id] ) && $field['blogs'][$blog_id] == true );
 				
@@ -223,6 +223,10 @@ class Profile_CCT_Admin {
 				$current_fields[] = $field['type'];
 			endforeach;
 		endforeach;
+
+		if( !isset( $bench_fields ) ){
+			$bench_fields = array();
+		}
 		
         // check to see if this field is alr
 		// don't forget the bench fields.
@@ -235,8 +239,11 @@ class Profile_CCT_Admin {
 			
 		endforeach;
 		
-		// correct the bench fields 
-		self::$option[$where]['fields']['bench'] = $bench_fields;
+		// correct the bench fields
+
+		if( isset( self::$option[$where] ) ){
+			self::$option[$where]['fields']['bench'] = $bench_fields;
+		}
         
 		// DYNAMIC FIELDS
 		// all the fields that get included
@@ -449,7 +456,7 @@ class Profile_CCT_Admin {
 	 */
 	public static function admin_pages() {
 		self::$action = 'edit';
-		self::$page = ( in_array( $_GET['view'], array( 'form', 'page', 'list', 'taxonomy', 'fields', 'settings' ) ) ? $_GET['view'] : 'about' );
+		self::$page = ( isset( $_GET['view'] ) && in_array( $_GET['view'], array( 'form', 'page', 'list', 'taxonomy', 'fields', 'settings' ) ) ? $_GET['view'] : 'about' );
         
 		// the header file determins what other files should be loaded here
 		require( PROFILE_CCT_DIR_PATH.'views/header.php' );
@@ -464,16 +471,19 @@ class Profile_CCT_Admin {
 	public static function admin_styles() {
 		// todo: this could be done with one css file
 		wp_enqueue_style( 'profile-cct-admin', PROFILE_CCT_DIR_URL.'/css/admin.css' );
-		switch( $_GET['view'] ):
-		case "form":
-		case "page":
-		case "list":
-			wp_enqueue_style( 'profile-cct-form', PROFILE_CCT_DIR_URL.'/css/form.css' );
-			break;
-		default:
-			// wp_enqueue_style( 'profile-cct-settings', PROFILE_CCT_DIR_URL.'/css/settings.css' );
-            break;
-		endswitch;
+		
+		if( isset( $_GET['view'] ) ) :
+			switch( $_GET['view'] ):
+			case "form":
+			case "page":
+			case "list":
+				wp_enqueue_style( 'profile-cct-form', PROFILE_CCT_DIR_URL.'/css/form.css' );
+				break;
+			default:
+				// wp_enqueue_style( 'profile-cct-settings', PROFILE_CCT_DIR_URL.'/css/settings.css' );
+	            break;
+			endswitch;
+		endif;
 	}
     
 	/**
@@ -483,24 +493,29 @@ class Profile_CCT_Admin {
 	 * @return void
 	 */
 	public static function admin_scripts() {
-		switch( $_GET['view'] ):
-		case "form":
-			wp_enqueue_script( 'profile-cct-form', PROFILE_CCT_DIR_URL.'/js/form.js',array('jquery', 'jquery-ui-sortable') );
-			wp_enqueue_script( 'profile-cct-tabs', PROFILE_CCT_DIR_URL.'/js/tabs.js',array('jquery', 'jquery-ui-tabs') );
-			wp_localize_script( 'profile-cct-form', 'ProfileCCT', array( 'page' => 'form' ) );
-			break;
-		case "page":
-			wp_enqueue_script( 'profile-cct-tabs', PROFILE_CCT_DIR_URL.'/js/tabs.js', array('jquery', 'jquery-ui-tabs') );
-			wp_enqueue_script( 'profile-cct-form', PROFILE_CCT_DIR_URL.'/js/form.js', array('jquery', 'jquery-ui-sortable') );
-			wp_enqueue_script( 'profile-cct-profile', PROFILE_CCT_DIR_URL.'/js/profile.js', array('jquery') );
-			wp_localize_script( 'profile-cct-form', 'ProfileCCT', array( 'page' => 'page' ) );
-			break;
-		case "list":
-			wp_enqueue_script( 'profile-cct-form', PROFILE_CCT_DIR_URL.'/js/form.js', array('jquery', 'jquery-ui-sortable') );
-			wp_enqueue_script( 'profile-cct-profile', PROFILE_CCT_DIR_URL.'/js/profile.js', array('jquery') );
-			wp_localize_script( 'profile-cct-form', 'ProfileCCT', array( 'page' => 'list' ) );
-			break;
-		endswitch;
+
+		if( isset( $_GET['view'] ) ) :
+	
+			switch( $_GET['view'] ):
+			case "form":
+				wp_enqueue_script( 'profile-cct-form', PROFILE_CCT_DIR_URL.'/js/form.js',array('jquery', 'jquery-ui-sortable') );
+				wp_enqueue_script( 'profile-cct-tabs', PROFILE_CCT_DIR_URL.'/js/tabs.js',array('jquery', 'jquery-ui-tabs') );
+				wp_localize_script( 'profile-cct-form', 'ProfileCCT', array( 'page' => 'form' ) );
+				break;
+			case "page":
+				wp_enqueue_script( 'profile-cct-tabs', PROFILE_CCT_DIR_URL.'/js/tabs.js', array('jquery', 'jquery-ui-tabs') );
+				wp_enqueue_script( 'profile-cct-form', PROFILE_CCT_DIR_URL.'/js/form.js', array('jquery', 'jquery-ui-sortable') );
+				wp_enqueue_script( 'profile-cct-profile', PROFILE_CCT_DIR_URL.'/js/profile.js', array('jquery') );
+				wp_localize_script( 'profile-cct-form', 'ProfileCCT', array( 'page' => 'page' ) );
+				break;
+			case "list":
+				wp_enqueue_script( 'profile-cct-form', PROFILE_CCT_DIR_URL.'/js/form.js', array('jquery', 'jquery-ui-sortable') );
+				wp_enqueue_script( 'profile-cct-profile', PROFILE_CCT_DIR_URL.'/js/profile.js', array('jquery') );
+				wp_localize_script( 'profile-cct-form', 'ProfileCCT', array( 'page' => 'list' ) );
+				break;
+			endswitch;
+
+		endif;
         
 		wp_enqueue_script( 'profile-cct-settings', PROFILE_CCT_DIR_URL.'/js/admin.js' );
 	}
@@ -575,7 +590,7 @@ class Profile_CCT_Admin {
 	static function get_option( $type = 'form', $fields_or_tabs = 'fields', $context = 'normal' ){
 		$profile = Profile_CCT::get_object();
 		// return the options from the array stored
-		if ( is_array( self::$option[$type][$fields_or_tabs][$context] ) ):
+		if ( isset( self::$option[$type] ) && isset( self::$option[$type][$fields_or_tabs] ) && isset( self::$option[$type][$fields_or_tabs][$context] ) && is_array( self::$option[$type][$fields_or_tabs][$context] ) ):
 			return self::$option[$type][$fields_or_tabs][$context];
 		else:
 			// get the option
@@ -586,7 +601,7 @@ class Profile_CCT_Admin {
 				$default = self::default_options( $type );
                 
 				if ( $fields_or_tabs == 'fields' ):
-					$options = $default[$fields_or_tabs][$context];
+					$options = ( isset( $default[$fields_or_tabs] ) && isset( $default[$fields_or_tabs][$context] ) ) ? $default[$fields_or_tabs][$context] : false;
 				else:
 					$options = $default[$fields_or_tabs];
                 endif;
@@ -607,7 +622,7 @@ class Profile_CCT_Admin {
 				$new_fields = self::default_options( 'new_fields' );
                 
 				// lets add the new fields in this version to the banch
-				if ( is_array( $new_fields[PROFILE_CCT_VERSION] ) ):
+				if ( isset( $new_fields[PROFILE_CCT_VERSION] ) && is_array( $new_fields[PROFILE_CCT_VERSION] ) ):
 					foreach ( $new_fields[PROFILE_CCT_VERSION] as $field ) :
 						if ( in_array( $type , $field['where'] ) ):
 							$options[] = $field['field'];
@@ -680,7 +695,7 @@ class Profile_CCT_Admin {
 	 * @access public
 	 * @return void
 	 */
-	function icon() {
+	static function icon() {
 		printf( '<img src="%s/icon-64.png" class="icon32" width="32" height="32" />', PROFILE_CCT_DIR_URL );
 	}
 	
@@ -863,6 +878,11 @@ class Profile_CCT_Admin {
 				echo $shell;
 				if ( is_array( $fields ) ):
 					foreach ( $fields as $field ):
+
+						if( !isset( $data[ $field['type'] ] ) ){
+							$data[ $field['type'] ] = '';
+						}
+
 						if ( function_exists( 'profile_cct_'.$field['type'].'_shell' ) ):
 							call_user_func( 'profile_cct_'.$field['type'].'_shell', $field, $data[ $field['type'] ] );
 						else:
@@ -948,7 +968,7 @@ class Profile_CCT_Admin {
 	 * @param mixed $post_data
 	 * @return void
 	 */
-	function insert_post( $post_id, $post_data ) {
+	static function insert_post( $post_id, $post_data ) {
 	
 		global $wpdb;
 
@@ -974,8 +994,6 @@ class Profile_CCT_Admin {
 			$data['post_name'] = wp_unique_post_slug( $data['post_name'], $post_id, 'publish', 'profile_cct', 0 );
 			$data['post_content'] = self::generate_content( $profile_cct_data, 'page' );
 			$data['post_excerpt'] = self::generate_content( $profile_cct_data, 'list' );
-			
-			
 			
 			self::store_post_data( $post_id, $profile_cct_data );
 			
@@ -1128,15 +1146,21 @@ class Profile_CCT_Admin {
 	 */
 	static function update_fields() {
 		$profile = Profile_CCT::get_object();
+
+		if( !isset( $_POST['context'] ) ){
+			echo 'Failure';
+			die();
+		}
+
 		$context = $_POST['context'];
-		
+
 		if ( in_array( $_POST['where'], array( 'form', 'page', 'list' ) ) ):
 			$where = $_POST['where'];
 		else:
 			$where = 'form';
 		endif;
 		
-		if ( in_array( $_POST['width'], array( 'full', 'half', 'one-third', 'two-third' ) ) ):
+		if ( isset( $_POST['width'] ) && in_array( $_POST['width'], array( 'full', 'half', 'one-third', 'two-third' ) ) ):
 			$width = $_POST['width'];
 		else:
 			$width = 'full';
@@ -1149,16 +1173,16 @@ class Profile_CCT_Admin {
 			if ( is_numeric( $_POST['field_index'] ) ):
 				switch ($where):
 				case "form":
-					$url_prefix = trim( $_POST['url_prefix'] );
+					$url_prefix = ( isset( $_POST['url_prefix'] ) ) ? trim( $_POST['url_prefix'] ) : false;
 					
-					$options[$_POST['field_index']]['label']       = $_POST['label'];
-					$options[$_POST['field_index']]['description'] = $_POST['description'];
-					$options[$_POST['field_index']]['show']        = $_POST['show'];
+					$options[$_POST['field_index']]['label']       = ( isset( $_POST['label'] ) ) ? $_POST['label'] : false;
+					$options[$_POST['field_index']]['description'] = ( isset( $_POST['description'] ) ) ? $_POST['description'] : false;
+					$options[$_POST['field_index']]['show']        = ( isset( $_POST['show'] ) ) ? $_POST['show'] : false;
 					$options[$_POST['field_index']]['multiple']    = isset( $_POST['multiple'] ) && $_POST['multiple'] ? $_POST['multiple'] : 0;
 					$options[$_POST['field_index']]['url_prefix']  = $url_prefix;
 					
 					// Save the url prefix also in the settings array.
-					if ( ! is_array( $profile->settings['data_url'] ) ):
+					if ( isset( $profile->settings['data_url'] ) && ! is_array( $profile->settings['data_url'] ) ):
 						$profile->settings['data_url'] = array();
 					endif;
 					
@@ -1168,14 +1192,14 @@ class Profile_CCT_Admin {
 				case "page":
 				case "list":
 					$options[$_POST['field_index']]['width']     = $width;
-					$options[$_POST['field_index']]['before']    = $_POST['before'];
-					$options[$_POST['field_index']]['after']     = $_POST['after'];
-					$options[$_POST['field_index']]['show']      = $_POST['show'];
-					$options[$_POST['field_index']]['link_to']   = $_POST['link_to'];
-					$options[$_POST['field_index']]['clear']     = $_POST['clear'];
-					$options[$_POST['field_index']]['text']      = $_POST['text'];
-					$options[$_POST['field_index']]['empty']     = $_POST['empty'];
-					$options[$_POST['field_index']]['seperator'] = $_POST['seperator'];
+					$options[$_POST['field_index']]['before']    = ( isset( $_POST['before'] ) ? $_POST['before'] : false ) ;
+					$options[$_POST['field_index']]['after']     = ( isset( $_POST['after'] ) ? $_POST['after'] : false ) ;
+					$options[$_POST['field_index']]['show']      = ( isset( $_POST['show'] ) ? $_POST['show'] : false ) ;
+					$options[$_POST['field_index']]['link_to']   = ( isset( $_POST['link_to'] ) ? $_POST['link_to'] : false ) ;
+					$options[$_POST['field_index']]['clear']     = ( isset( $_POST['clear'] ) ? $_POST['clear'] : false ) ;
+					$options[$_POST['field_index']]['text']      = ( isset( $_POST['text'] ) ? $_POST['text'] : false ) ;
+					$options[$_POST['field_index']]['empty']     = ( isset( $_POST['empty'] ) ? $_POST['empty'] : false ) ;
+					$options[$_POST['field_index']]['seperator'] = ( isset( $_POST['seperator'] ) ? $_POST['seperator'] : false ) ;
 					break;
 				endswitch;
 				$print = "updated";
@@ -1206,7 +1230,7 @@ class Profile_CCT_Admin {
 	 * @access public
 	 * @return void
 	 */
-	function update_tabs() {
+	static function update_tabs() {
 		$where = in_array( $_POST['where'], array( 'page', 'form' ) ) ? $_POST['where'] : 'form';
 		$tabs = self::get_option( $where, 'tabs' );
 		

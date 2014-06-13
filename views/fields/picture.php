@@ -17,7 +17,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		'after'        => '',
 	);
 	
-	function init() {
+	static function init() {
 		add_action( 'wp_ajax_profile_cct_picture_add_photo',   array( 'Profile_CCT_Picture', 'add_picture' ) );
 		add_action( 'wp_ajax_profile_cct_picture_delete_ajax', array( 'Profile_CCT_Picture', 'remove_picture' ) );
 		add_action( 'profile_cct_picture_iframe_head',         array( 'Profile_CCT_Picture', 'init_iframe' ) );
@@ -37,7 +37,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 	}
 	
 	function picture() {
-		global $post;
+		global $post, $current_user;
 		
 		$image = ( isset( $post ) ? Profile_CCT_Picture::get_the_post_thumbnail( $post->ID, 'profile-image' ) : get_avatar( $current_user->user_email, 150 ) );
 		?>
@@ -113,7 +113,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 	 * @access public
 	 * @return void
 	 */
-	function init_iframe() {
+	static function init_iframe() {
 		wp_enqueue_style( 'global' );
 		wp_enqueue_style( 'wp-admin' );
 		wp_enqueue_style( 'colors' );
@@ -126,9 +126,12 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		do_action( 'admin_head' );
 	}
 	
-	function add_picture() {
-		global $current_user;
+	static function add_picture() {
+		global $current_user, $current_screen, $wp_locale;
 		$post_id = $_GET['post_id'];
+
+		// Not sure what this is but it's undefined
+		$admin_body_class = '';
 		
 		?>
 		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -160,7 +163,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 						'time':'<?php echo time() ?>'
 					};
 					var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
-					var pagenow = '<?php echo $current_screen->id; ?>';
+					var pagenow = '<?php if( isset( $current_screen ) && isset( $current_screen->id ) ){ echo $current_screen->id; } ?>';
 					var typenow = '<?php if ( isset($current_screen->post_type) ) echo $current_screen->post_type; ?>';
 					var adminpage = '<?php echo $admin_body_class; ?>';
 					var thousandsSeparator = '<?php echo addslashes( $wp_locale->number_format['thousands_sep'] ); ?>';
@@ -216,7 +219,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		die();
 	}
 	
-	function update_picture( $post_id, $new_attachment_id ) {
+	static function update_picture( $post_id, $new_attachment_id ) {
 		global $post;
 		$post = get_post( $post_id );
 		

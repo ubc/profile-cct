@@ -52,7 +52,12 @@ var Profile_CCT_TABS = {
 						placeholder: "ui-state-highlight",
 						forcePlaceholderSize: true,
 						handle: "label.field-title", 
-						update: Profile_CCT_FORM.updateSort,
+						update: function( event, ui ){
+
+							var newIndex = index+1;
+							Profile_CCT_FORM.updateSort( jQuery( 'ul#bench' ) );
+							Profile_CCT_FORM.updateSort( jQuery( 'ul#tabbed-' + newIndex ) );
+						},
 						connectWith: '.sort',
 						tolerance: 'pointer',
                     });

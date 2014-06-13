@@ -45,6 +45,12 @@ var Profile_CCT_FORM = {
 	},
     
 	updateSort: function( element ) {
+
+		if( element == undefined || !element.hasOwnProperty( 'context' ) ){
+			console.log( 'Error: element is possibly undefined in form.js - ' + element );
+			return;
+		}
+
 		Profile_CCT_FORM.showSpinner();
 		
 		var data = new Array();
@@ -67,7 +73,19 @@ var Profile_CCT_FORM = {
                 Profile_CCT_FORM.hideSpinner();
                 Profile_CCT_Admin.show_refresh();
             } else {
-				alert( "Failed to save." );
+				alert( "Failed to save. Please refresh and try again." );
+				console.log( 'data_set: ' );
+				console.log( data_set );
+				console.log( 'ajaxurl: ' );
+				console.log( ajaxurl );
+				console.log( 'response: ' );
+				console.log( response );
+				console.log( 'context: ' );
+				console.log( context );
+				console.log( 'element: ' );
+				console.log( element );
+				console.log( 'data: ' );
+				console.log( data );
 			}
 		});
 	},

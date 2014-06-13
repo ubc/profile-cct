@@ -43,7 +43,7 @@
 ?>
 <h2>Taxonomy Builder</h2>
 <p><strong>Tax&middot;on&middot;o&middot;my</strong> - The classification of something, a way to group things and be able to filter them later.</p>
-<?php echo $note; ?>
+<?php if( isset( $note ) ) : echo $note; endif; ?>
 <h3>Current Taxonomies </h3>
 <?php if ( is_array( $taxonomies ) && ! empty( $taxonomies ) ): ?>
 	<table class="widefat">
