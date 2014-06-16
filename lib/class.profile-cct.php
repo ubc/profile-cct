@@ -380,7 +380,7 @@ class Profile_CCT {
 	 * @return void
 	 */
 	function has_cap( $caps, $cap, $name ){
-		if( $caps['publish_profile_cct'] && in_array( 'upload_files', $cap) )
+		if( isset( $caps['publish_profile_cct'] ) && $caps['publish_profile_cct'] && in_array( 'upload_files', $cap) )
 			$caps['upload_files'] = true;
 		
 		return $caps;
@@ -631,7 +631,7 @@ class Profile_CCT {
 
 		$query = new WP_Query( $arguments );
 		$results = $query->get_posts();
-		$profile = $results[0];
+		$profile = ( isset( $results[0] ) ) ? $results[0] : false;
 
 		// lets try to find it again
 		if( empty($profile) && class_exists('coauthors_plus') ) {
