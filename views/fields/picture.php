@@ -1,4 +1,4 @@
-<?php 
+<?php
 if ( ! defined( 'PROFILE_CCT_FULL_WIDTH'         ) ) define( 'PROFILE_CCT_FULL_WIDTH',         150 );
 if ( ! defined( 'PROFILE_CCT_FULL_HEIGHT'        ) ) define( 'PROFILE_CCT_FULL_HEIGHT',        150 );
 if ( ! defined( 'PROFILE_CCT_MAX_PREVIEW_WIDTH'  ) ) define( 'PROFILE_CCT_MAX_PREVIEW_WIDTH',  400 );
@@ -16,13 +16,13 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		'empty'        => '',
 		'after'        => '',
 	);
-	
-	function init() {
+
+	public static function init() {
 		add_action( 'wp_ajax_profile_cct_picture_add_photo',   array( 'Profile_CCT_Picture', 'add_picture' ) );
 		add_action( 'wp_ajax_profile_cct_picture_delete_ajax', array( 'Profile_CCT_Picture', 'remove_picture' ) );
 		add_action( 'profile_cct_picture_iframe_head',         array( 'Profile_CCT_Picture', 'init_iframe' ) );
 	}
-	
+
 	function field() {
 		$this->picture();
 		$this->update_picture_field();
@@ -31,14 +31,14 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		<em>This change will take effect immediately.</em>
 		<?php
 	}
-	
+
 	function display() {
 		$this->picture();
 	}
-	
+
 	function picture() {
 		global $post;
-		
+
 		$image = ( isset( $post ) ? Profile_CCT_Picture::get_the_post_thumbnail( $post->ID, 'profile-image' ) : get_avatar( $current_user->user_email, 150 ) );
 		?>
 		<div class="user-avatar-display-image">
@@ -46,13 +46,13 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		</div>
 		<?php
 	}
-	
+
 	function update_picture_field() {
 		global $post;
-		
+
 		$picture_options = $this->picture_options();
 		$iframe_width = $picture_options['width'] + 520;
-		
+
 		if ( empty( $post ) ): // If you are viewing the preview.
 			?>
 			<span class="add-multiple">
@@ -61,7 +61,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 			<?php
 			return;
 		endif;
-		
+
 		$update_url = admin_url( 'admin-ajax.php?action=profile_cct_picture_add_photo&step=1&post_id='.$post->ID.'&TB_iframe=true&width='.$iframe_width.'&height=520' );
 		$remove_url = admin_url( 'admin-ajax.php?action=profile_cct_picture_delete_ajax&post='.$post->ID.'&_nonce='.wp_create_nonce('profile_cct_picture') );
 		$remove_link = '<a id="user-avatar-remove" class="deleteaction" href="'.$remove_url.'" title="Remove Profile Image" onclick="return profile_cct_picture_remove_image();">Remove</a>';
@@ -75,7 +75,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 			<a id="user-avatar-link" class="button thickbox" href="<?php echo $update_url; ?>" title="Upload and Crop an Image to be Displayed">Add Picture</a>
 			<?php
 		endif;
-		
+
 		?>
 		<script type="text/javascript">
 			function profile_cct_picture_refresh_image( img ) {
@@ -83,13 +83,13 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 				jQuery( '#user-avatar-link' ).text( "Update Picture" );
 				profile_cct_add_remove_avatar_link();
 			}
-			
+
 			function profile_cct_add_remove_avatar_link() {
 				if ( jQuery( '#user-avatar-remove' ).length == 0 ) {
 					jQuery( '#user-avatar-link' ).after( '<?php echo $remove_link; ?>')
 				}
 			}
-			
+
 			function profile_cct_picture_remove_image() {
 				jQuery.ajax({
 					type: "get",
@@ -100,13 +100,13 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 						jQuery( '#user-avatar-remove' ).remove();
 					}
 				});
-				
+
 				return false;
 			}
 		</script>
 		<?php
 	}
-	
+
 	/**
 	 * init_iframe function.
 	 * Description: Initializing user avatar style.
@@ -125,11 +125,11 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		do_action( 'admin_print_scripts' );
 		do_action( 'admin_head' );
 	}
-	
+
 	function add_picture() {
 		global $current_user;
 		$post_id = $_GET['post_id'];
-		
+
 		?>
 		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 		<html xmlns="http://www.w3.org/1999/xhtml" <?php do_action('admin_xml_ns'); ?> <?php language_attributes(); ?>>
@@ -138,7 +138,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 				<title>
 					<?php bloginfo('name') ?> &rsaquo; <?php _e('Uploads'); ?> &#8212; <?php _e('WordPress'); ?>
 				</title>
-				
+
 				<script type="text/javascript">
 					addLoadEvent = function(func) {
 						if ( typeof jQuery != "undefined" ) {
@@ -153,7 +153,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 							}
 						}
 					};
-					
+
 					var userSettings = {
 						'url': '<?php echo SITECOOKIEPATH; ?>',
 						'uid': '<?php if ( ! isset($current_user) ) $current_user = wp_get_current_user(); echo $current_user->ID; ?>',
@@ -184,7 +184,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 							profile_cct_picture_add_photo_step3($post_id);
 							break;
 					endswitch;
-					
+
 					do_action('admin_print_footer_scripts');
 				?>
 				<script type="text/javascript">
@@ -193,61 +193,61 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 			</body>
 		</html>
 		<?php
-		
+
 		die();
 	}
-	
+
 	function remove_picture() {
 		global $pagenow;
-		
+
 		if ( ! is_numeric( $_GET['post'] ) ):
 			return;
 		endif;
-		
+
 		$current_user = wp_get_current_user();
 		$post = wp_get_single_post( $_GET['post'] );
 		$post_author = $post->post_author;
-		
+
 		// If user clicks the remove avatar button, then in the URL deleter_avatar=true
 		if ( wp_verify_nonce( $_GET['_nonce'], 'profile_cct_picture' ) && $post_author == $current_user->id || current_user_can('edit_users') ):
 			Profile_CCT_Picture::update_picture( $_GET['post'], '' );
 		endif;
-		
+
 		die();
 	}
-	
+
 	function update_picture( $post_id, $new_attachment_id ) {
 		global $post;
 		$post = get_post( $post_id );
-		
+
 		Profile_CCT_Picture::delete_files( $post->ID, get_post_meta( $post->ID, '_thumbnail_id', true ) );
 		set_post_thumbnail( $post->ID, $new_attachment_id );
 		Profile_CCT_Admin::update_profile( $post, false );
 	}
-	
+
 	/**
 	 * picture_options function.
-	 * 
+	 *
 	 * @access public
 	 * @return void
 	 */
 	static function picture_options() {
 		$profile = Profile_CCT::get_object();
 		$options = $profile->settings;
-		
+
 		if ( ! isset( $options['picture'] ) ):
 			$options['picture'] = array(
 				'width'  => PROFILE_CCT_FULL_WIDTH,
 				'height' => PROFILE_CCT_FULL_HEIGHT,
 			);
 		endif;
-		
+
 		return $options['picture'];
 	}
-	
+
 	/**
 	 * delete_files function.
-	 * 
+	 *
 	 * @access public
 	 * @param $u
 	 * @return void
@@ -256,7 +256,7 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 		wp_delete_attachment( $img );
 		wp_update_attachment_metadata( $post, null );
 	}
-	
+
 	/**
 	 * get_the_post_thumbnail function.
 	 * Description: Display post thumbnail if supported by theme, else an error message.
@@ -273,10 +273,10 @@ Class Profile_CCT_Picture extends Profile_CCT_Field {
 			return "<p></p>";
 		endif;
 	}
-	
+
 	/**
 	 * shell function.
-	 * 
+	 *
 	 * @access public
 	 * @static
 	 * @param mixed $options
@@ -296,7 +296,7 @@ Profile_CCT_Picture::init();
 
 /**
  * profile_cct_picture_add_photo_step1 function.
- * The First Step in the process 
+ * The First Step in the process
  * Description: Displays the users photo and they can choose to upload another if they please.
  * @access public
  * @param mixed $uid
@@ -314,7 +314,7 @@ function profile_cct_picture_add_photo_step1( $post_id ) {
 			</label>
 			<br />
 			<input type="file" id="upload" name="uploadedfile" />
-			
+
 			<?php wp_nonce_field('user-avatar') ?>
 			<p class="submit">
 				<input type="submit" value="<?php esc_attr_e('Upload'); ?>" />
@@ -326,15 +326,15 @@ function profile_cct_picture_add_photo_step1( $post_id ) {
 
 /**
  * profile_cct_picture_add_photo_step2 function.
- * The Second Step in the process 
+ * The Second Step in the process
  * Description: Takes the uploaded photo and saves it to database.
  * @access public
  * @param mixed $uid
  * @return void
  */
 function profile_cct_picture_add_photo_step2( $post_id ) {
-	$picture_options = Profile_CCT_Picture::picture_options();	
-	
+	$picture_options = Profile_CCT_Picture::picture_options();
+
 	if ( ! in_array( $_FILES["uploadedfile"]["type"], array( "image/gif", "image/jpeg", "image/png", "image/pjpeg", "image/x-png" ) ) ):
 		?>
 			<div class='error'>
@@ -344,14 +344,14 @@ function profile_cct_picture_add_photo_step2( $post_id ) {
 		profile_cct_picture_add_photo_step1( $post_id );
 		die();
 	endif;
-	
+
 	$overrides = array( 'test_form' => false );
 	$file = wp_handle_upload( $_FILES['uploadedfile'], $overrides );
-	
+
 	if ( isset($file['error']) ): // die on error
 		die( $file['error'] );
 	endif;
-	
+
 	$url      = $file['url'];
 	$type     = $file['type'];
 	$file     = $file['file'];
@@ -369,7 +369,7 @@ function profile_cct_picture_add_photo_step2( $post_id ) {
 	$id = wp_insert_attachment( $object, $file );
 
 	list( $width, $height, $type, $attr ) = getimagesize( $file );
-	
+
 	//If the image is below the minimum width or height
 	if ( $width < $picture_options['width'] || $height < $picture_options['height'] ):
 		?>
@@ -382,13 +382,13 @@ function profile_cct_picture_add_photo_step2( $post_id ) {
 		profile_cct_picture_add_photo_step1($post_id);
 		return;
 	endif;
-	
+
 	//If the image is exactly the right size
 	if ( $width == $picture_options['width'] && $height == $picture_options['height'] ):
 		profile_cct_picture_add_photo_step3( $post_id, true, $id );
 		return;
 	endif;
-	
+
 	if ( $width > 500 ):
 		$oitar = $width / 500;
 		$image = wp_crop_image( $file, 0, 0, $width, $height, 500, $height / $oitar, false, str_replace( basename($file), 'midsize-'.basename($file), $file ) );
@@ -398,22 +398,22 @@ function profile_cct_picture_add_photo_step2( $post_id ) {
 	else:
 		$oitar = 1;
 	endif;
-	
+
 	$preview_width = $picture_options['width'];
 	if ( $preview_width > PROFILE_CCT_MAX_PREVIEW_WIDTH ):
 		$ratio = $preview_width / PROFILE_CCT_MAX_PREVIEW_WIDTH;
-		
+
 		$preview_width = $preview_width / $ratio;
 		$preview_height = min( $picture_options['height'], PROFILE_CCT_MAX_PREVIEW_HEIGHT ) / $ratio;
 	else:
 		$ratio = 1;
 		$preview_height = min( $picture_options['height'], PROFILE_CCT_MAX_PREVIEW_HEIGHT );
 	endif;
-	
+
 	?>
 		<form id="iframe-crop-form" method="POST" action="<?php echo admin_url('admin-ajax.php'); ?>?action=profile_cct_picture_add_photo&step=3&post_id=<?php echo esc_attr($post_id); ?>">
 			<div style="float:left;">
-				<h4 style=""><?php _e( 'Choose the part of the image you want to use as your profile image.', 'user-avatar' ); ?></h4> 
+				<h4 style=""><?php _e( 'Choose the part of the image you want to use as your profile image.', 'user-avatar' ); ?></h4>
 				<div id="wrap">
 					<img src="<?php echo $url; ?>" id="upload" width="<?php echo esc_attr($width); ?>" height="<?php echo esc_attr($height); ?>" />
 				</div>
@@ -447,14 +447,14 @@ function profile_cct_picture_add_photo_step2( $post_id ) {
 				jQuery( '#width' ).val(coords.w);
 				jQuery( '#height' ).val(coords.h);
 			}
-			
+
 			jQuery(document).ready(function() {
 				var xinit = <?php echo $picture_options['width']; ?>;
 				var yinit = <?php echo $picture_options['height']; ?>;
 				var ratio = xinit / yinit;
 				var ximg = jQuery('img#upload').width();
 				var yimg = jQuery('img#upload').height();
-				
+
 				if ( yimg < yinit || ximg < xinit ) {
 					if ( ximg / yimg > ratio ) {
 						yinit = yimg;
@@ -464,7 +464,7 @@ function profile_cct_picture_add_photo_step2( $post_id ) {
 						yinit = xinit / ratio;
 					}
 				}
-				
+
 				jQuery('img#upload').imgAreaSelect({
 					handles: true,
 					keys: true,
@@ -483,11 +483,11 @@ function profile_cct_picture_add_photo_step2( $post_id ) {
 						jQuery('#y1').val(coords.y1);
 						jQuery('#width').val(coords.width);
 						jQuery('#height').val(coords.height);
-						
+
 						if ( ! coords.width || ! coords.height ) {
 							return;
 						}
-						
+
 						//Scale the picture based on either the maximum preview size or the true picture size (whichever is smaller)
 						<?php
 							$scale_width  = min( PROFILE_CCT_MAX_PREVIEW_WIDTH, $picture_options['width'] );
@@ -495,7 +495,7 @@ function profile_cct_picture_add_photo_step2( $post_id ) {
 						?>
 						var scaleX = <?php echo $scale_width; ?> / coords.width;
 						var scaleY = <?php echo $picture_options['height'] / ( $picture_options['width'] / $scale_width); ?> / coords.height;
-						
+
 						jQuery('#preview img').css({
 							width:        Math.round( scaleX * <?php echo $width; ?> ),
 							height:       Math.round( scaleY * <?php echo $height; ?> ),
@@ -512,25 +512,25 @@ function profile_cct_picture_add_photo_step2( $post_id ) {
 /**
  * profile_cct_picture_add_photo_step3 function.
  * The Third Step in the Process
- * Description: Deletes previous uploaded picture and creates a new cropped image in its place. 
+ * Description: Deletes previous uploaded picture and creates a new cropped image in its place.
  * @access public
  * @param mixed $uid
  * @return void
  */
 function profile_cct_picture_add_photo_step3( $post_id, $no_crop = false, $attachment_id = 0 ) {
 	$picture_options = Profile_CCT_Picture::picture_options();
-	
+
 	if ( $_POST['oitar'] > 1 ):
 		$_POST['x1']     = $_POST['x1'] * $_POST['oitar'];
 		$_POST['y1']     = $_POST['y1'] * $_POST['oitar'];
 		$_POST['width']  = $_POST['width'] * $_POST['oitar'];
 		$_POST['height'] = $_POST['height'] * $_POST['oitar'];
 	endif;
-	
+
 	if ( $no_crop ):
 		$_POST['attachment_id'] = $attachment_id;
-	endif;	
-	
+	endif;
+
 	$original = get_attached_file( $_POST['attachment_id'] );
 
 	if ( $no_crop ):
@@ -538,7 +538,7 @@ function profile_cct_picture_add_photo_step3( $post_id, $no_crop = false, $attac
 	else:
 		$cropped = wp_crop_image( $_POST['attachment_id'], $_POST['x1'], $_POST['y1'], $_POST['width'], $_POST['height'], $picture_options['width'], $picture_options['height'] );
 	endif;
-	
+
 	if ( is_wp_error( $cropped ) ):
 		wp_die( __( 'Image could not be processed. Please go back and try again.' ), __( 'Image Processing Error' ) );
 	endif;
@@ -556,7 +556,7 @@ function profile_cct_picture_add_photo_step3( $post_id, $no_crop = false, $attac
 		'post_mime_type' => 'image/jpeg',
 		'guid'           => $url,
 	);
-	
+
 	// Update the attachment
 	wp_insert_attachment( $object, $cropped, $post_id );
 	wp_update_attachment_metadata( $_POST['attachment_id'], wp_generate_attachment_metadata( $_POST['attachment_id'], $cropped ) );
@@ -565,13 +565,13 @@ function profile_cct_picture_add_photo_step3( $post_id, $no_crop = false, $attac
 	$medium = str_replace( basename($original), 'midsize-'.basename($original), $original );
 	@unlink( apply_filters( 'wp_delete_file', $medium ) );
 	@unlink( apply_filters( 'wp_delete_file', $original ) );
-	
+
 	Profile_CCT_Picture::update_picture( $post_id, $_POST['attachment_id'] );
-	
+
 	if ( is_wp_error( $cropped ) ):
 		wp_die( __( 'Image could not be processed. Please go back and try again.' ), __( 'Image Processing Error' ) );
 	endif;
-	
+
 	?>
 	<script type="text/javascript">
 		self.parent.profile_cct_picture_refresh_image('<?php echo Profile_CCT_Picture::get_the_post_thumbnail($post_id, 'thumbnail'); ?>');
@@ -587,5 +587,5 @@ function profile_cct_picture_add_photo_step3( $post_id, $no_crop = false, $attac
 		<a id="user-avatar-step3-close" class="button" style="cursor: pointer;" onclick="self.parent.tb_remove();" ><?php _e( 'Close', 'user-avatar' ); ?></a>
 	</div>
 	-->
-	<?php	
+	<?php
 }

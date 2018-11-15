@@ -1,10 +1,10 @@
 <?php
 class Profile_CCT_Table {
-	function init() {
+	public static function init() {
 		add_filter( 'manage_edit-profile_cct_columns',        array( __CLASS__, 'register' ) );
 		add_action( 'manage_profile_cct_posts_custom_column', array( __CLASS__, 'display_thumb' ), 10, 2 );
 		//add_action( 'manage_profile_cct_posts_custom_column', array( __CLASS__, 'display_last_name' ), 10, 2 );
-		
+
 		global $coauthors_plus;
 		if ( class_exists('coauthors_plus') && isset( $coauthors_plus ) ) {
 			// Show multiple authors in dashboard profile listing
@@ -12,7 +12,7 @@ class Profile_CCT_Table {
 			// Customize dashboard listing table
 			add_filter ( 'manage_edit-profile_cct_columns', array( __CLASS__, 'manage_profile_columns') );
 			add_action ( 'manage_profile_cct_posts_custom_column', array( __CLASS__, 'replace_title_column'), 10, 2);
-			
+
 			// Hide default author box
 			add_filter ( 'add_meta_boxes_profile_cct', 		array( __CLASS__, 'remove_authors_box'), 11 );
 			// Add co-author box to users who can create multiple profiles (or manage all profiles - disable)
@@ -35,15 +35,15 @@ class Profile_CCT_Table {
 	}
 
 	function replace_title_column( $column_name, $post_id ) {
-		
+
 		if ( strcasecmp($column_name, "person-name") != 0 )
 			return;
-		
+
 		global $post;
 		//print_r ($post);
 		$level = 0;
 		$have_access = false;
-		
+
 		$edit_link = get_edit_post_link( $post->ID );
 		$title = _draft_or_post_title();
 		$lock_holder = wp_check_post_lock( $post->ID );
@@ -52,14 +52,14 @@ class Profile_CCT_Table {
 			$classes .= ' wp-locked';
 			$lock_holder = get_userdata( $lock_holder );
 		}
-		
+
 		$coauthors = get_coauthors( $post_id );
 		foreach( $coauthors as $user ) {
 			if ( current_user_can('edit_others_profile_cct') || $user->data->ID ==get_current_user_id() ) {
 				$have_access = true;
 			}
 		}
-		
+
 		if (!$have_access) {
 			echo "<strong>".$title."</strong>";
 			if ( $post->post_status != 'trash' ) {
@@ -131,7 +131,7 @@ class Profile_CCT_Table {
 					$actions['view'] = '<a href="' . get_permalink( $post->ID ) . '" title="' . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), $title ) ) . '" rel="permalink">' . __( 'View' ) . '</a>';
 				}
 			}
-// 
+//
 			if ( is_post_type_hierarchical( $post->post_type ) ) {
 
 
@@ -140,7 +140,7 @@ class Profile_CCT_Table {
 
 				$actions = apply_filters( 'post_row_actions', $actions, $post );
 			}
-			
+
 			$action_count = count($actions);
 			$i = 0;
 			if ($action_count > 0) {
@@ -156,10 +156,10 @@ class Profile_CCT_Table {
 			//echo $this->row_actions( $actions );
 
 			get_inline_data( $post );
-		  
+
 		}
-	} 
-	
+	}
+
 	// Added co-authors box to users who can "Create multiple profiles" (OR "Manage all profiles")
 	function coauthors_plus_edit_authors ($post_types) {
 		//return current_user_can('edit_profiles_cct') || current_user_can('edit_others_profile_cct');
@@ -169,34 +169,34 @@ class Profile_CCT_Table {
 	function coauthors_meta_box_context( $context ) {
 		return 'side';
 	}
-	
+
 	function remove_authors_box() {
 		remove_meta_box ( 'authordiv', 'profile_cct', 'side' );
 	}
-	
-	function register( $columns ) {
+
+	public static function register( $columns ) {
 		unset($columns);
-		
+
 		$columns["cb"]        = '<input type="checkbox" />';
 		$columns['thumb']     = __( 'Picture', 'profile_cct' );
 		$columns['title']     = __( "Name" );
 		//$columns['last_name'] = __( "Last Name" );
-		
-		$columns['author']    = __( "Author" );     
+
+		$columns['author']    = __( "Author" );
 		$columns['date']      = __( "Date" );
-	  
+
 		return $columns;
 	}
-	
+
 	function display_thumb( $column_name, $post_id ) {
 		if ( 'thumb' != $column_name ) return;
-		
+
 		echo get_the_post_thumbnail( $post_id, array( 50 , 50 ) );
 	}
-	
+
 	function display_last_name( $column_name, $post_id ) {
 		if ( 'last_name' != $column_name ) return;
-		
+
 		echo get_post_meta( $post_id, 'profile_cct_last_name', true);
 	}
 }

@@ -2,18 +2,18 @@
 Class Profile_CCT_Tabs {
 	/**
 	 * shell function.
-	 * 
+	 *
 	 * @access public
 	 * @static
 	 * @return void
 	 */
 	public static function shell( $data ) {
 		global $post;
-		$post_id = ( isset( $post->ID) ? $post->ID : 0 ); 
+		$post_id = ( isset( $post->ID) ? $post->ID : 0 );
 		$editing = ( 'edit' == Profile_CCT_Admin::$action ?  true : false );
 		$tabs = Profile_CCT_Admin::get_option( Profile_CCT_Admin::$page, 'tabs' ); // get back all the tabs for that page
-		
-		// check if we even want to display the tabs. 
+
+		// check if we even want to display the tabs.
 		$display_tabs = true;
 		$count = 1;
 		if ( is_array($tabs) ):
@@ -22,27 +22,27 @@ Class Profile_CCT_Tabs {
 				$count++;
 			endforeach;
 		endif;
-		
+
 		if ( $display_tabs ):
 			if ( $editing ):
 				?>
 				<div id="tabs" class="tabs context-shell">
-				<?php 
-			else: 
-				$profile_cct_tabs++;
-				?>
-				<div id="<?php echo "tab-id-".$profile_cct_tabs; ?>" class="profile-cct-shell profile-cct-shell-tabs" >
 				<?php
-			endif; 
+			else:
+				$count++;
+				?>
+				<div id="<?php echo "tab-id-".$count; ?>" class="profile-cct-shell profile-cct-shell-tabs" >
+				<?php
+			endif;
 			?>
 
 			<div class="nav-tabs-wrapper">
 				<ul class="nav nav-tabs">
-					<?php 
+					<?php
 					$count = 1;
 					if ( is_array( $tabs ) ):
 						$first = true;
-						foreach( $tabs as $tab ): 
+						foreach( $tabs as $tab ):
 							?>
 							<li <?php if ($first) echo 'class="active"'; $first = false; ?>>
 								<a href="#tabs-<?php echo $post_id; ?>-<?php echo $count; ?>" data-toggle="tab" class="tab-link"><?php echo $tab; ?></a>
@@ -55,7 +55,7 @@ Class Profile_CCT_Tabs {
 						endforeach;
 					endif;
 					?>
-					
+
 					<?php if ( $editing ): ?>
 						<li id="add-tab-shell"><a href="#add-tabshell" id="add-tab" title="Add Tab">Add Tab</a></li>
 					<?php endif; ?>
@@ -79,7 +79,7 @@ Class Profile_CCT_Tabs {
 							</div>
 							<?php
 							$count++;
-						endforeach; 
+						endforeach;
 					endif;
 				?>
 			</div>
@@ -94,14 +94,14 @@ Class Profile_CCT_Tabs {
 				</script>
 			<?php endif; ?>
 			</div>
-			<?php 
+			<?php
 		endif;
 	}
 }
 
 /**
  * profile_cct_tabs_shell function.
- * 
+ *
  * @access public
  * @return void
  */

@@ -1,61 +1,61 @@
-<?php 
+<?php
 /**
  * Profile_CCT_Widget class.
- * 
+ *
  * @extends WP_Widget
  */
 class Profile_CCT_Widget extends WP_Widget {
-	function init() {
+	public static function init() {
 		add_action( 'widgets_init',  array( __CLASS__, 'register' ) );
 		add_action( 'pre_get_posts', array( __CLASS__, 'filter_profile') , 10, 1 );
 		add_filter( 'posts_clauses', array( __CLASS__, 'intercept_query_clauses'), 20, 2 );
 	}
-	
-	function register() {
+
+	public static function register() {
 		register_widget( "Profile_CCT_Widget" );
 	}
-	
-	function filter_profile($query){
+
+	public static function filter_profile($query){
 		if ( !empty( $_GET['alphabet'] ) && !is_admin() && $query->is_main_query() && $query->get('post_type') == 'profile_cct' ):
 			$query->set( 'meta_key',   'profile_cct_last_name' );
 			$query->set( 'meta_value', $_GET['alphabet'].'%' );
 		endif;
 	}
-	
-	function intercept_query_clauses( $pieces, $query ) {
+
+	public static function intercept_query_clauses( $pieces, $query ) {
 		global $wpdb;
-		
+
 		// only apply this to post type = profile on the front end and on the main query
 		if ( $query->get('post_type') == 'profile_cct' && !is_admin() && $query->is_main_query() ):
-			if ( 'DESC' == $_GET['order'] ):
+			if ( isset( $_GET['order'] ) && 'DESC' === $_GET['order'] ) :
 				$pieces['orderby'] = str_replace( ' ASC', ' DESC', $pieces['orderby'] );
 			endif;
-			
+
 			if ( !empty( $_GET['alphabet'] ) ):
 				$pieces['where'] = str_replace( 'CAST('.$wpdb->postmeta.'.meta_value AS CHAR) =', $wpdb->postmeta.'.meta_value LIKE ', $pieces['where'] );
 			endif;
 		endif;
-		
+
 		return $pieces;
 	}
-	
+
 	/**
 	 * Register widget with WordPress.
-	 * 
+	 *
 	 * @access public
 	 * @return void
 	 */
 	function __construct() {
-		parent::__construct( 
+		parent::__construct(
 	 		'profile_cct_navigation', // Base ID
 			'Profile Navigation', // Name
 			array( 'description' => __( 'Allows the user to search through the list of public profiles.', 'profile_cct' ), ) // Args
 		);
 	}
-	
+
 	/**
 	 * Front-end display of widget.
-	 * 
+	 *
 	 * @access public
 	 * @param mixed $args
 	 * @param mixed $instance
@@ -66,13 +66,13 @@ class Profile_CCT_Widget extends WP_Widget {
 		?>
 		<h3 class="widget-title"><?php echo $profile->settings['widget_title']; ?></h3>
 		<?php
-		
+
 		echo self::profile_search( $profile->settings['archive'] );
 	}
-	
+
 	/**
 	 * Sanitize widget form values as they are saved.
-	 * 
+	 *
 	 * @access public
 	 * @param mixed $new_instance
 	 * @param mixed $old_instance
@@ -81,10 +81,10 @@ class Profile_CCT_Widget extends WP_Widget {
 	function update( $new_instance, $old_instance ) {
 		// there is nothing to update for now
 	}
-	
+
 	/**
 	 * Back-end widget form.
-	 * 
+	 *
 	 * @access public
 	 * @param mixed $instance
 	 * @return void
@@ -94,10 +94,10 @@ class Profile_CCT_Widget extends WP_Widget {
 		Customize in <a href="<?php echo admin_url( 'edit.php?post_type=profile_cct&page='.PROFILE_CCT_BASEADMIN.'&view=settings' ); ?>">Profiles Settings</a>
 		<?php
 	}
-	
+
 	function profile_search( $visible ) {
 		$profile = Profile_CCT::get_object();
-		
+
 		ob_start();
 		?>
 		<div class="profile-cct-search-form">
@@ -109,10 +109,10 @@ class Profile_CCT_Widget extends WP_Widget {
 							<input type="text" name="s" class="profile-cct-search" placeholder="Search Profiles"/>
 						</div>
 						<?php
-						
+
 						wp_enqueue_script( 'profile-cct-autocomplete' );
 					endif;
-					
+
 					if ( $visible['display_alphabet'] == 'true' ):
 						?>
 						<div class="profile-cct-search-alphabet profile-cct-search-input">
@@ -130,7 +130,7 @@ class Profile_CCT_Widget extends WP_Widget {
 						</div>
 						<?php
 					endif;
-					
+
 					if ( $visible['display_orderby'] == 'true' ):
 						?>
 						<div class="profile-cct-search-orderby profile-cct-search-input">
@@ -141,7 +141,7 @@ class Profile_CCT_Widget extends WP_Widget {
 								<option value="meta_value">Last Name</option>
 								<option value="post_date">Date Added</option>
 							</select>
-							
+
 							<label for="profile-cct-order">Order</label>
 							<select name="order" id="profile-cct-order">
 								<option value="ASC" selected="selected">Ascending A - Z</option>
@@ -150,7 +150,7 @@ class Profile_CCT_Widget extends WP_Widget {
 						</div>
 						<?php
 					endif;
-					
+
 					if ( ! empty( $visible['display_tax'] ) ):
 						foreach ( $visible['display_tax'] as $taxonomy_id => $value ):
 							$taxonomy = get_taxonomy($taxonomy_id);
@@ -179,7 +179,7 @@ class Profile_CCT_Widget extends WP_Widget {
 		<?php
 		return ob_get_clean();
 	}
-	
+
 }
 
 // Lets initate the widget

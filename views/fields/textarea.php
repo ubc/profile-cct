@@ -1,13 +1,13 @@
-<?php 
+<?php
 /**
  * Profile_CCT_Textarea class.
- * 
+ *
  * @extends Profile_CCT_Field
  */
 class Profile_CCT_Textarea extends Profile_CCT_Field {
 	/**
 	 * default_options
-	 * 
+	 *
 	 * @var mixed
 	 * @access public
 	 */
@@ -20,10 +20,10 @@ class Profile_CCT_Textarea extends Profile_CCT_Field {
 		'empty'       => '',
 		'after'       => '',
 	);
-	
+
 	/**
 	 * field function.
-	 * 
+	 *
 	 * @access public
 	 * @return void
 	 */
@@ -34,14 +34,14 @@ class Profile_CCT_Textarea extends Profile_CCT_Field {
 			'size'    => 25,
 			'row'     => 2,
 			'cols'    => 20,
-			'default' => $this->data['default'],
-			'value'   => ( isset( $this->data['textarea'] ) ? $this->data['textarea']  : null ),
+			'default' => ( isset( $this->data['default'] ) ) ? $this->data['default'] : '',
+			'value'   => ( isset( $this->data['textarea'] ) ? $this->data['textarea'] : null ),
 		) );
 	}
-	
+
 	/**
 	 * display function.
-	 * 
+	 *
 	 * @access public
 	 * @return void
 	 */
@@ -52,10 +52,10 @@ class Profile_CCT_Textarea extends Profile_CCT_Field {
 			'value'        => ( isset( $this->data['textarea'] ) ? $this->data['textarea']  : null ),
 		) );
 	}
-	
+
 	/**
 	 * shell function.
-	 * 
+	 *
 	 * @access public
 	 * @static
 	 * @param mixed $options
@@ -63,13 +63,13 @@ class Profile_CCT_Textarea extends Profile_CCT_Field {
 	 * @return void
 	 */
 	public static function shell( $options, $data ) {
-		new Profile_CCT_Textarea( $options, $data ); 
+		new Profile_CCT_Textarea( $options, $data );
 	}
 }
 
 /**
  * profile_cct_textarea_shell function.
- * 
+ *
  * @access public
  * @param mixed $options
  * @param mixed $data
