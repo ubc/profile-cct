@@ -394,9 +394,11 @@ class Profile_CCT {
 	 * @param mixed $name
 	 * @return void
 	 */
-	function has_cap( $caps, $cap, $name ){
-		if( $caps['publish_profile_cct'] && in_array( 'upload_files', $cap) )
+	public function has_cap( $caps, $cap, $name ) {
+
+		if ( isset( $caps['publish_profile_cct'] ) && $caps['publish_profile_cct'] && in_array( 'upload_files', $cap ) ) {
 			$caps['upload_files'] = true;
+		}
 
 		return $caps;
 	}
