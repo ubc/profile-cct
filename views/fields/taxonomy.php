@@ -41,6 +41,25 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
     function field() {
 		global $post;
 
+		if ( ! is_object( $post ) ) {
+			$post_id              = -99; // negative ID, to avoid clash with a valid post
+			$my_post                 = new stdClass();
+			$my_post->ID             = $post_id;
+			$my_post->post_author    = 1;
+			$my_post->post_date      = current_time( 'mysql' );
+			$my_post->post_date_gmt  = current_time( 'mysql', 1 );
+			$my_post->post_title     = 'Some title or other';
+			$my_post->post_content   = 'Whatever you want here. Maybe some cat pictures....';
+			$my_post->post_status    = 'publish';
+			$my_post->comment_status = 'closed';
+			$my_post->ping_status    = 'closed';
+			$my_post->post_name      = 'fake-page-' . rand( 1, 99999 ); // append random number to avoid clash
+			$my_post->post_type      = 'page';
+			$my_post->filter         = 'raw'; // important!
+		}
+
+		$post_to_use = ( is_a( $post, 'WP_Post' ) ) ? $post : $my_post;
+
 		if ( is_file( 'includes/meta-boxes.php' ) ):
 			require_once('includes/meta-boxes.php');
 		endif;
@@ -48,6 +67,7 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 		$data = array(
 			'args' => array(
 				'taxonomy' => $this->options['type'],
+				'type' => 'taxonomy',
 			),
 		);
 
@@ -62,7 +82,7 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 			?>
 			<select>
 				<?php
-					wp_terms_checklist( $post->ID, array(
+					wp_terms_checklist( $post_to_use->ID, array(
 						'descendants_and_self' => 0,
 						'selected_cats'        => false,
 						'popular_cats'         => false,
@@ -74,9 +94,9 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 			</select>
 			<?php
 		elseif ( is_taxonomy_hierarchical( $this->options['type'] ) ):
-			call_user_func( 'post_categories_meta_box', $post, $data );
+			call_user_func( 'post_categories_meta_box', $post_to_use, $data );
 		else:
-			call_user_func( 'post_tags_meta_box', $post, $data );
+			call_user_func( 'post_tags_meta_box', $post_to_use, $data );
 		endif;
 	}
 
@@ -111,6 +131,7 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 		$profile = Profile_CCT::get_object();
 
 		foreach ( $profile->taxonomies as $taxonomy ):
+
 			// Add it to the fields
 			$sanitized_single = str_replace( '-', '_', sanitize_title( $taxonomy['single'] ) );
 			$fields[] = array(
@@ -154,6 +175,7 @@ class Profile_CCT_Taxonomy_Field extends Profile_CCT_Field {
 	}
 
 	public static function meta_box_content( $post, $args ) {
+
 		$taxonomy = $args['args']['taxonomy'];
 		$display = $args['args']['display'];
 		?>

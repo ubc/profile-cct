@@ -220,7 +220,7 @@ class Profile_CCT_Admin {
 		$current_fields = array();
 		foreach ( $contexts as $context ):
 			foreach ( (array) self::get_option( $where, 'fields', $context ) as $field ):
-				$current_fields[] = $field['type'];
+				$current_fields[] = ( isset( $field['type'] ) ) ? $field['type'] : null;
 			endforeach;
 		endforeach;
 
@@ -336,6 +336,8 @@ class Profile_CCT_Admin {
 
 			if ( is_array( $fields ) ):
 				foreach ( $fields as $field ):
+					// file_put_contents( WP_CONTENT_DIR . '/debug.log', print_r( $field, true ), FILE_APPEND );
+
 					$field['is_active'] = 1;
 					self::$current_form_fields[$field['type']] = $field;
 				endforeach;
@@ -850,6 +852,7 @@ class Profile_CCT_Admin {
 			call_user_func( 'profile_cct_'.$context.'_shell', $data );
 		else:
 			$fields = self::get_option( self::$page, 'fields', $context );
+// file_put_contents( WP_CONTENT_DIR . '/debug.log', print_r( array( self::$page, $context, $fields, $data ), true ), FILE_APPEND );
 
 			if ( 'display' == self::$action ):
 				if ( empty( $fields ) ) return; // Don't dispay the shell if it is empty. There's no need.
@@ -871,8 +874,13 @@ class Profile_CCT_Admin {
 				<?php
 				echo $shell;
 				if ( is_array( $fields ) ):
-					foreach ( $fields as $field ):
-						$field_data = ( isset( $data[ $field['type'] ] ) ) ? $data[ $field['type'] ] : array();
+					foreach ( $fields as $field ) :
+
+						if ( ! isset( $field['type'] ) ) {
+							continue;
+						}
+
+						$field_data = ( isset( $field['type'] ) && isset( $data[ $field['type'] ] ) ) ? $data[ $field['type'] ] : array();
 						if ( function_exists( 'profile_cct_' . $field['type'] . '_shell' ) ) :
 							call_user_func( 'profile_cct_' . $field['type'] . '_shell', $field, $field_data );
 						else :
@@ -1140,13 +1148,13 @@ class Profile_CCT_Admin {
 		$profile = Profile_CCT::get_object();
 		$context = $_POST['context'];
 
-		if ( in_array( $_POST['where'], array( 'form', 'page', 'list' ) ) ):
+		if ( isset( $_POST['where'] ) && in_array( $_POST['where'], array( 'form', 'page', 'list' ) ) ):
 			$where = $_POST['where'];
 		else:
 			$where = 'form';
 		endif;
 
-		if ( in_array( $_POST['width'], array( 'full', 'half', 'one-third', 'two-third' ) ) ):
+		if ( isset( $_POST['width'] ) && in_array( $_POST['width'], array( 'full', 'half', 'one-third', 'two-third' ) ) ):
 			$width = $_POST['width'];
 		else:
 			$width = 'full';
@@ -1159,12 +1167,12 @@ class Profile_CCT_Admin {
 			if ( is_numeric( $_POST['field_index'] ) ):
 				switch ($where):
 				case "form":
-					$url_prefix = trim( $_POST['url_prefix'] );
+					$url_prefix = ( isset( $_POST['url_prefix'] ) ) ? trim( $_POST['url_prefix'] ) : '';
 
-					$options[$_POST['field_index']]['label']       = $_POST['label'];
-					$options[$_POST['field_index']]['description'] = $_POST['description'];
-					$options[$_POST['field_index']]['show']        = $_POST['show'];
-					$options[$_POST['field_index']]['multiple']    = isset( $_POST['multiple'] ) && $_POST['multiple'] ? $_POST['multiple'] : 0;
+					$options[$_POST['field_index']]['label']       = ( isset( $_POST['label'] ) ) ? $_POST['label'] : '';
+					$options[$_POST['field_index']]['description'] = ( isset( $_POST['description'] ) ) ? $_POST['description'] : '';
+					$options[$_POST['field_index']]['show']        = ( isset( $_POST['show'] ) ) ? $_POST['show'] : '';
+					$options[$_POST['field_index']]['multiple']    = ( isset( $_POST['multiple'] ) && $_POST['multiple'] ) ? $_POST['multiple'] : 0;
 					$options[$_POST['field_index']]['url_prefix']  = $url_prefix;
 
 					// Save the url prefix also in the settings array.

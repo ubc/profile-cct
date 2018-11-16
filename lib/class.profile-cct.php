@@ -824,6 +824,7 @@ class Profile_CCT {
 
 				if ( $fields ):
 					foreach ( $fields as $i => $field ):
+
 						$data = ( isset( $user_data[$field['type']] ) ? $user_data[$field['type']] : null );
 
                         $callback = 'profile_cct_'.$field['type'].'_shell';
@@ -899,7 +900,7 @@ class Profile_CCT {
 		endif;
 	}
 
-	function modify_row_actions( $actions, $post ) {
+	public static function modify_row_actions( $actions, $post ) {
 		global $current_user;
 
 		if ( $post->post_type == "profile_cct" ) {
@@ -908,11 +909,6 @@ class Profile_CCT {
 				unset($actions['inline hide-if-no-js']);
 			}
 
-			if ( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG ) {
-				error_log( print_r($post, TRUE));
-				error_log( print_r($current_user, TRUE));
-				error_log( print_r($actions, TRUE));
-			}
 		}
 		return $actions;
 	}
