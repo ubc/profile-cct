@@ -19,6 +19,7 @@ Class Profile_CCT_Data extends Profile_CCT_Field {
 	}
 
 	function display() {
+
 		require_once( PROFILE_CCT_DIR_PATH.'inc/simple_html_dom.php' );
 
 		if ( empty( $this->data['url'] ) ):
@@ -31,6 +32,7 @@ Class Profile_CCT_Data extends Profile_CCT_Field {
 		else:
 			$profile = Profile_CCT::get_object();
 			$url = $profile->settings['data_url'][$this->type].$this->data['url'];
+
 			if ( ! Profile_CCT::string_starts_with( $url, 'http://') && ! Profile_CCT::string_starts_with( $url, 'https://' ) ) $url = 'http://'.$url;
 
 			// Attempt to get page

@@ -33,6 +33,7 @@ class Profile_CCT_Field {
 	var $data;
 
 	function __construct ( $options_or_post, $data ) {
+
 		if ( self::is_post( $options_or_post ) ):
 			//This means the parameters were passed from do_meta_boxes, and are not correctly configured.
 			$options = $data['args']['options'];
@@ -64,7 +65,6 @@ class Profile_CCT_Field {
 		$this->show_multiple = ( isset( $this->options['show_multiple'] ) ? $this->options['show_multiple'] : false );
 		$this->multiple      = ( isset( $this->options['multiple'] ) ? $this->options['multiple'] : false );
 		$this->data          = $data;
-
 
 		ob_start();
 		$this->start_field();
@@ -573,6 +573,7 @@ class Profile_CCT_Field {
 	 * @return void
 	 */
 	function display_shell( $attr = array() ) {
+
 		$tag        = ( isset( $attr['tag'] )   ? $attr['tag'] : 'div' );
 		$class_attr = ( isset( $attr['class'] ) ? 'class="'.$attr['class'].'"' : '' );
 

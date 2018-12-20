@@ -29,6 +29,7 @@ class Profile_CCT {
 	 */
 	function __construct () {
 		add_action( 'init', array( $this, 'load' ) );
+
 		$this->settings   = $this->get_settings( 'settings' );
 		$this->taxonomies = $this->get_settings( 'taxonomy' );
 
@@ -965,7 +966,7 @@ class Profile_CCT {
 	 * @param mixed $field
 	 * @return void
 	 */
-	function add_global_field( $field, $field_index = NULL, $skip_local ) {
+	function add_global_field( $field, $field_index = null, $skip_local = null ) {
 		global $blog_id;
 		$global_settings = get_site_option( PROFILE_CCT_SETTING_GLOBAL, array() );
 

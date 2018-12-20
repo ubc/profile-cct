@@ -66,17 +66,19 @@ function file_get_html($url, $use_include_path = false, $context=null, $offset =
 {
     // We DO force the tags to be terminated.
     $dom = new simple_html_dom(null, $lowercase, $forceTagsClosed, $target_charset, $defaultBRText);
-    
+
 	// For sourceforge users: uncomment the next line and comment the retreive_url_contents line 2 lines down if it is not already done.
-    $contents = file_get_contents($url, $use_include_path, $context, $offset);
+    // $contents = file_get_contents($url, $use_include_path, $context, $offset);
+    $contents = wp_remote_retrieve_body( wp_remote_get( esc_url_raw( $url ) ) );
+
 	// Paperg - use our own mechanism for getting the contents as we want to control the timeout.
 	// $contents = retrieve_url_contents($url);
-	
+
     if (empty($contents))
     {
         return false;
     }
-	
+
     // The second parameter can force the selectors to all be lowercase.
     $dom->load($contents, $lowercase, $stripRN);
     return $dom;
