@@ -2,7 +2,7 @@
 Class Profile_CCT_Website extends Profile_CCT_Field {
 	/**
 	 * default_options
-	 *
+	 * 
 	 * @var mixed
 	 * @access public
 	 */
@@ -19,20 +19,20 @@ Class Profile_CCT_Website extends Profile_CCT_Field {
 		'empty'         => '',
 		'after'         => '',
 	);
-
+	
 	var $shell = array(
 		'class' => 'website',
 	);
-
+	
 	/**
 	 * field function.
-	 *
+	 * 
 	 * @access public
 	 * @return void
 	 */
 	function field() {
 		$current_user = wp_get_current_user();
-
+		
 		$this->input_text( array(
 			'field_id' => 'website',
 			'label'    => 'Website - http://{value}',
@@ -45,10 +45,10 @@ Class Profile_CCT_Website extends Profile_CCT_Field {
 			'size'     => 35,
 		) );
 	}
-
+	
 	/**
 	 * display function.
-	 *
+	 * 
 	 * @access public
 	 * @return void
 	 */
@@ -61,10 +61,10 @@ Class Profile_CCT_Website extends Profile_CCT_Field {
 			'force_link'   => true,
 		) );
 	}
-
+	
 	/**
 	 * shell function.
-	 *
+	 * 
 	 * @access public
 	 * @static
 	 * @param mixed $options
@@ -72,18 +72,18 @@ Class Profile_CCT_Website extends Profile_CCT_Field {
 	 * @return void
 	 */
 	public static function shell( $options, $data ) {
-		new Profile_CCT_Website( $options, $data );
-	}
+		new Profile_CCT_Website( $options, $data ); 
+	}	
 }
 
 /**
  * profile_cct_website_shell function.
- *
+ * 
  * @access public
  * @param mixed $options
  * @param mixed $data
  * @return void
  */
 function profile_cct_website_shell( $options, $data ) {
-	Profile_CCT_Website::shell( $options, $data );
+	Profile_CCT_Website::shell( $options, $data ); 
 }
