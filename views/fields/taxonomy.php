@@ -288,7 +288,7 @@ class Profile_CCT_Checkbox_Walker extends Walker {
 		$output .= ob_get_clean();
 	}
 	
-	function start_el( &$output, $category, $depth, $args, $id = 0 ) {
+	function start_el( &$output, $category, $depth = 0, $args = array(), $id = 0 ) {
 		extract($args);
 		if ( empty($taxonomy) )
 		$taxonomy = 'category';
@@ -321,7 +321,7 @@ class Profile_CCT_Checkbox_Walker extends Walker {
 class Profile_CCT_Dropdown_Walker extends Walker {
 	var $db_fields = array ( 'parent' => 'parent', 'id' => 'term_id' );
 	
-	function start_el( &$output, $category, $depth, $args, $id = 0 ) {
+	function start_el( &$output, $category, $depth = 0, $args = array(), $id = 0 ) {
 		extract($args);
 		
 		print_r($args);
